@@ -5,13 +5,17 @@ import java.util.List;
 
 public abstract class Card {
 
-    private String description;
+    protected static String name;
+
+    protected static int ID;
+
+    protected String description;
 
     public String getDescription() {
         return description;
     }
 
-    public abstract int getEffectID(){
-        return effect.ID;
+    public int getEffectID(){
+        return ID;
     };
 }
