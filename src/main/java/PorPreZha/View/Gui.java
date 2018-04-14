@@ -3,6 +3,10 @@ package PorPreZha.View;
 import javax.swing.*;
 
 public class Gui {
+    public static void main() {
+        Gui gui = new Gui();
+        gui.init();
+    }
     private JFrame frame;
     private JButton button;
     private JTextField username, token, post;

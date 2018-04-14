@@ -12,7 +12,7 @@ public class RoundTrack {
     }
 
     private int actualRound;
-    private ListOfDices dices[];
+    private ListOfDices[] dices;
 
     RoundTrack() {
         dices = new ListOfDices[Game.GameConstants.ROUND_NUM];
@@ -20,8 +20,7 @@ public class RoundTrack {
     }
 
     void addDice(Riserva riserva) {
-        for (Dice d : riserva.dices
-             ) {
+        for (Dice d : riserva.dices) {
             dices[actualRound].add(d);
         }
     }
