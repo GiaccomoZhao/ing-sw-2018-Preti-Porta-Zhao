@@ -184,7 +184,7 @@ public class Game {
             iFirstPlayer = 0;
     }
 
-    /* @ensures playerList.contain(player)
+    /* @ensures playerList.contains(player)
        @signals (GamePlayerFullException e) \old(playerList).size >= max
        @signals (InvalidPlayerException e) param == null
        @signals (PlayerAlreadyPresentException e) (*unique Player already present in game*)
