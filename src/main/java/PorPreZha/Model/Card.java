@@ -18,4 +18,7 @@ public abstract class Card {
     public int getEffectID(){
         return ID;
     };
+
+    public
+
 }
