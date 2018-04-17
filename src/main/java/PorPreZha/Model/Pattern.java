@@ -2,7 +2,11 @@ package PorPreZha.Model;
 
 public class Pattern {
 
-    Box[][] pattern;
+    private Box[][] pattern;
+
+    public Box getBox(int i, int j){
+        return pattern[i][j];
+    }
 
 
 
