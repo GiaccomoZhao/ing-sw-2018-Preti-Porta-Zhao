@@ -16,7 +16,13 @@ public class Dice {
     public enum ColorDice {RED, YELLOW, GREEN, BLUE, PURPLE, WHITE};
 
     public Dice(ColorDice colorDice) {
+
         this.colorDice = colorDice;
+    }
+
+    public Dice(ColorDice colorDice, int number) {
+        this.colorDice = colorDice;
+        this.number=number;
     }
 
     public void roll(){

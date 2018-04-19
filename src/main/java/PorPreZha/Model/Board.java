@@ -1,56 +1,132 @@
 package PorPreZha.Model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class Board {
 
     private final Pattern pattern;
     private Dice[][] board;
-    private int quantity;
+    private int diceQuantity;
 
     public Board(Pattern pattern) {
+
         this.pattern = pattern;
-        this.board = new Dice[5][4];
-        this.quantity=0;
+        this.board = new Dice[4][5];
+        this.diceQuantity=0;
     }
 
-    public ArrayList<Point> move(Dice dice){
-        ArrayList<Point> validMoves;
-        if(quantity==0){
-            validMoves=new ArrayList<Point>(14);
-            int i=0;
-            for(i=0; i < 5; i++ ) {
-                if(pattern.getBox(i, 0).freeBox() || (!pattern.getBox(i, 0).white() && pattern.getBox(i, 0).getColor().equals(dice.colorDice) ) ||
-                        (!pattern.getBox(i, 0).noNumber() && pattern.getBox(i, 0).getNumber()==(dice.getDiceNumber())) )
-                    validMoves.add(new Point(i, 0));
-                if(pattern.getBox(i, 3).freeBox() )
-                    validMoves.add(new Point(i, 3));
+    public Boolean occupiedBox(int x, int y){
 
-            }
-            for(i=0; i < 4; i++ ) {
-                if(pattern.getBox(0, i).freeBox())
-                    validMoves.add(new Point(0, i));
-                if(pattern.getBox(4, i).freeBox() )
-                    validMoves.add(new Point(4, i));
-
-            }
-            return validMoves;
-        }
-        validMoves=new ArrayList<Point>();
-        return validMoves;
-    }
-
-
-
-    public boolean insertDice(Dice dice, Point point){
-        //Sposta controllo in player
-        if(this.move(dice).contains(point)) {
-            this.board[point.getX()][point.getY()] = dice;
-            quantity++;
+        if (board[x][y]==null)
+            return false;
+        else
             return true;
+
+    }
+
+    //Return true if dice1 can be placed adjacent to dice2
+    public Boolean compatibleDice(Dice dice1, Dice dice2){
+
+        if(dice1.colorDice.equals(dice2.colorDice))
+            return false;
+        if(dice1.getDiceNumber()==dice2.getDiceNumber())
+            return false;
+
+        return true;
+
+    }
+
+    public Boolean adjacentDice(Dice dice, int x, int y){
+
+        int counter=0;
+        if(x>0 && occupiedBox(x-1, y) ){
+            if(!compatibleDice(dice, board[x-1][y]))
+                return false;
+            else
+                counter++;
+
         }
+        if(x<3 && occupiedBox(x+1, y)){
+            if(!compatibleDice(dice, board[x+1][y]))
+                return false;
+            else
+                counter++;
+
+        }
+        if(y>0 && occupiedBox(x, y-1)){
+            if(!compatibleDice(dice, board[x][y-1]))
+                return false;
+            else
+                counter++;
+        }
+        if(y<4 && occupiedBox(x, y+1)){
+            if(!compatibleDice(dice, board[x][y+1]))
+                return false;
+            else
+                counter++;
+        }
+
+        if(counter>0)
+            return true;
+
+        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+            return true;
+        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+            return true;
+        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+            return true;
+        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+            return true;
+
         return false;
     }
 
+
+
+
+
+    public boolean insertDice(Dice dice, int x, int y) {
+
+        if (validMove(dice, x, y)) {
+            board[x][y] = dice;
+            diceQuantity++;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean validMove(Dice dice, int x, int y){
+
+        //Check if the pattern constraint is respected by dice
+       if(!pattern.getBox(x, y).checkCostraint(dice) )
+           return Boolean.FALSE ;
+
+        // Check if dice is the first die of the player and if the position is an edge or corner space
+        if(diceQuantity==0 ){
+            if(pattern.checkEdges(x, y))
+                return Boolean.TRUE;
+            else
+                return Boolean.FALSE;
+        }
+
+        //Check if the box is already occupied
+        if( this.occupiedBox(x, y))
+            return Boolean.FALSE;
+
+        //Check if the die is adjacent to a previously placed die
+
+        if(!this.adjacentDice(dice, x, y))
+            return false;
+
+        //valid Move
+        return Boolean.TRUE;
+
+    }
+
+    public Dice getDice(int x, int y){
+        if(board[x][y]!=null)
+            return board[x][y];
+        else
+            return new Dice(Dice.ColorDice.WHITE, 0);
+
+    }
 }
