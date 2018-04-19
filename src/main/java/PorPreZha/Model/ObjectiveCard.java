@@ -8,4 +8,8 @@ public abstract class ObjectiveCard extends Card {
     public int numScore;
 
     int abstract apply(Board board){};
+
+    public ObjectiveCard() {
+
+    }
 }
