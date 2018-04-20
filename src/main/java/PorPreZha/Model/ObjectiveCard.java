@@ -5,11 +5,22 @@ import java.util.List;
 
 public abstract class ObjectiveCard extends Card {
 
-    public int numScore;
 
-    int abstract apply(Board board){};
+    private static int numScore;
 
-    public ObjectiveCard() {
+    int[] numScores={6,5,5,4,2,2,2,5,0,4,0,0,0,0,0};
+
+    public ObjectiveCard(Effect effect){
+
+        super(effect);
+        int i=0;
+        while(effect.ID<=15){
+            ObjectiveCard.numScore=numScores[i];
+        }
 
     }
+
+
+    public int apply(Board board){};
+
 }
