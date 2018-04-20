@@ -75,7 +75,7 @@ public class Game {
         gameID = new Random().nextLong();   // senseless until we have a global server
         roundTrack = new RoundTrack();
 
-        playerList = new ArrayList<>();
+        this.playerList = playerList;
         iCurrentPlayer = iFirstPlayer = 0;
         bCountClockwise = false;
 
