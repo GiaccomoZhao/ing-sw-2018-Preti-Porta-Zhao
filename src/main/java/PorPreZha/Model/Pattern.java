@@ -514,7 +514,7 @@ public class Pattern {
            }
        }
     }
-
+    
 
     public Box getBox(int x, int y){
 
