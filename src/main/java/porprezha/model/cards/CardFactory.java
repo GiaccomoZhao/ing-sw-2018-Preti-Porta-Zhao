@@ -1,4 +1,6 @@
-package PorPreZha.Model;
+package porprezha.model.cards;
+
+import porprezha.model.cards.Card;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,16 +24,16 @@ public class CardFactory {
 
     public List<Card> createCard(String cardType, int lenghtList){
 
-        private List<int> extractionNumberList;
+        List<Integer> extractionNumberList;
 
 
         if(cardType.equals(CardTypes.PUBLIC_OBJECTIVE_CARD)){
 
-            extractionNumberList = new LinkedList(10);
+            extractionNumberList = new LinkedList();    // 10
 
             for (int i=0; i<10;i++){
 
-                extractionNumberList
+//                extractionNumberList
 
             }
 
@@ -45,5 +47,6 @@ public class CardFactory {
         if(cardType.equals(CardTypes.TOOL_CARD)){
 
         }
+        return  null;
     }
 }

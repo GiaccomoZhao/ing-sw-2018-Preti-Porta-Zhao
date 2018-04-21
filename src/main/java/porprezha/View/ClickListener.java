@@ -1,4 +1,4 @@
-package porprezha.View;
+package porprezha.view;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
