@@ -55,6 +55,11 @@ public class TestDrive {
             }
             System.out.println();
         }
+
+        Boolean as=false;
+        int index= Dice.ColorDice.RED.ordinal();
+        System.out.println(index);
+
     }
 
 

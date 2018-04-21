@@ -1,7 +1,7 @@
 package porprezha.model;
 
-import porprezha.model.cards.PrivateObjectiveCard;
 import porprezha.model.dices.Dice;
+import porprezha.model.cards.*;
 
 import java.util.Random;
 

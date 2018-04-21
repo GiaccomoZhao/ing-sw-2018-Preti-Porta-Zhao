@@ -6,35 +6,41 @@ import java.util.Random;
 
 public class DiceBag {
 
-    ArrayList<Dice> dices;
+    private ArrayList<Dice> diceSet;
 
+    //Constructor creates an arraylist of 90 dice, 18 for each color
     public DiceBag() {
-        this.dices = new ArrayList(90);
+        this.diceSet = new ArrayList(90);
         for(int i=0; i<18; i++){
-            dices.add( new Dice( Dice.ColorDice.RED));
-            dices.add( new Dice( Dice.ColorDice.YELLOW));
-            dices.add( new Dice( Dice.ColorDice.GREEN));
-            dices.add( new Dice( Dice.ColorDice.BLUE));
-            dices.add( new Dice( Dice.ColorDice.PURPLE));
+            diceSet.add( new Dice( Dice.ColorDice.RED));
+            diceSet.add( new Dice( Dice.ColorDice.YELLOW));
+            diceSet.add( new Dice( Dice.ColorDice.GREEN));
+            diceSet.add( new Dice( Dice.ColorDice.BLUE));
+            diceSet.add( new Dice( Dice.ColorDice.PURPLE));
 
         }
     }
 
-    public ArrayList<Dice> GetRandomDices(int numberOfPlayers){
+    //This method extracts 2*numberofplayers + 1 random dice from the dicebag and returns the list
+    public ArrayList<Dice> GetRandomDices(int numberOfPlayers) throws IndexOutOfBoundsException
+    {
         ArrayList<Dice> draftPool= new ArrayList<Dice>(2*numberOfPlayers +1 );
-        if(numberOfPlayers>4) return null;
+        // Wrong number of player case
+        if(numberOfPlayers>4 || numberOfPlayers<1)
+            throw new IndexOutOfBoundsException();
+
         int iterator= numberOfPlayers*2+1;
         int extraction;
-        Dice dado;
+        Dice die;
         while(iterator>0){
 
             Random random = new Random();
 
-            extraction =random.nextInt(dices.size());
-            dado =dices.get(extraction);
-            dado.roll();
-            draftPool.add(dado);
-            dices.remove(extraction);
+            extraction =random.nextInt(diceSet.size());
+            die =diceSet.get(extraction);
+            die.roll();
+            draftPool.add(die);
+            diceSet.remove(extraction);
             iterator--;
 
         }

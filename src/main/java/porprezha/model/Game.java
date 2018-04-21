@@ -3,10 +3,10 @@ package porprezha.model;
 import porprezha.exceptions.GamePlayerFullException;
 import porprezha.exceptions.InvalidPlayerException;
 import porprezha.exceptions.PlayerAlreadyPresentException;
-import porprezha.model.cards.PublicObjectiveCard;
 import porprezha.model.cards.ToolCard;
 import porprezha.model.track.RoundTrack;
 import porprezha.model.track.ScoreTrack;
+import porprezha.model.cards.*;
 
 import java.util.*;
 

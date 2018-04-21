@@ -1,8 +1,16 @@
 package porprezha.model.cards;
 
 
-public class PrivateObjectiveCard extends ObjectiveCard {
+import javax.tools.Tool;
+
+public class PrivateObjectiveCard  extends ObjectiveCard {
+
     public PrivateObjectiveCard(Effect effect) {
         super(effect);
+    }
+
+    @Override
+    public int apply(Board board) {
+        return 0;
     }
 }

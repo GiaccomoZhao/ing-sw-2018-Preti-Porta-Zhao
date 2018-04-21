@@ -1,11 +1,16 @@
 package porprezha.model.cards;
-
 import porprezha.model.dices.Dice;
+
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static porprezha.model.dices.Dice.ColorDice.*;
 
 
-public class ToolCard extends Card{
+
+public class ToolCard extends Card {
 
     private static int tokensQuantity;
 
