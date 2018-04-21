@@ -15,6 +15,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard {
 
         int i, j;
         int point=0;
+
         switch(this.effect.ID){
 
             case 0:
