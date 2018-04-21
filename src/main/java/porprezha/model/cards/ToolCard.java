@@ -17,7 +17,7 @@ public class ToolCard extends Card {
     private static Dice.ColorDice cardColor;
     Dice.ColorDice[] cardColors={PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE};
 
-    public ToolCard(Effect effect){
+    public ToolCard(porprezha.model.cards.Card.Effect effect){
 
         super(effect);
         int i=0;
