@@ -3,62 +3,31 @@ package porprezha.control;
 import porprezha.model.Game;
 import porprezha.model.GameInterface;
 import porprezha.model.Player;
+import porprezha.model.cards.Board;
+import porprezha.model.cards.PrivateObjectiveCard;
+import porprezha.model.cards.PublicObjectiveCard;
 import porprezha.model.database.DatabaseInterface;
 
 import java.util.List;
 
-public class GameController implements GameControllerInterface {
+public class GameController implements GameControllerInterface, Runnable {
 
-    public enum StateMachine {
-		WAITING_FOR_PLAYER, // INITIAL STATE, Waiting for host's Start
-		STARTED,            // Flag, STARTED < state < FINISHED means a game is running
-		PLAYER_PREPARING,  // Give player cards etc.
-		GAME_PREPARING,     // Place toolCard and public object and decide the first player
-		PLAYING,            // During round phase
-		FINISHED,           // Flag, state > FINISHED means game has already been finished
-		ENDING;             // LAST STATE, Player watching score and chatting
-
-		private static StateMachine[] states = values();    // make private static copy of the values avoids copying each time it is used
-
-		public StateMachine getState() {
-			return this;
-		}
-
-		// we have a cycle sequence state machine
-		public StateMachine getNextState() {
-			return this.ordinal() != StateMachine.ENDING.ordinal() ?
-					states[this.ordinal() + 1] :
-					StateMachine.WAITING_FOR_PLAYER;
-		}
-
-		public boolean isGameRunning() {
-			return hasGameStarted() && !hasGameFinished();
-		}
-
-		public boolean hasGameStarted() {
-			return this.getState().ordinal() >= StateMachine.STARTED.ordinal();
-		}
-
-		public boolean hasGameFinished() {
-			return this.getState().ordinal() >= StateMachine.FINISHED.ordinal();
-		}
-	}
 
 
     // *********************************
     // ---------- Attributes -----------
 
-    private Game game;
-	private GameInterface gameInterface;
+	private GameInterface game;
 	private DatabaseInterface databaseInt;
-
     private StateMachine state;
+
+    private Object playTimeOut;
 
 
     // *********************************
     // ----------- Methods -------------
 
-    public GameController(Game game) {
+    public GameController(GameInterface game) {
         this.game = game;
     }
 
@@ -66,22 +35,63 @@ public class GameController implements GameControllerInterface {
         return state;
     }
 
+	@Override
+	public void run() {
+        playerPrepare();
+        gamePrepare();
+        for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
+            playRound();
+        }
+        endGame();
 
-    // *********************************
+        /* TODO: wait all players exit then thread terminates
+         * let players chat after game
+         * let players save game registration from GameDatabase
+         * after exiting from game, player can download registration from ServerController
+         * GameDatabase should be read by players in a hour time, then they will be cleared from server
+         */
+	}
+
+
+    // player call this
+    public void pass() {
+        notifyAll();
+    }
+
+
+    /* @requires parameter != null
+     * @ensure (*return sum of all game's public and player's private objectives*)
+     */
+    public int calcScore(Player player) {
+        int scorePublic = 0;
+        int scorePrivate = 0;
+        Board board = player.getBoard();
+
+        // sum of private objectives
+        List<PrivateObjectiveCard> privateObjectiveCardList = privateObjectiveCardList = player.getPrivateObjectiveCardList();
+        for (PrivateObjectiveCard privateObjectiveCard : privateObjectiveCardList) {
+            scorePrivate += privateObjectiveCard.apply(board);
+        }
+        System.out.println(this + ": sum of private objectives = " + scorePrivate);
+
+        // sum of public objectives
+        List<PublicObjectiveCard> publicObjectiveCardList = game.getPublicObjectiveCardList();
+        for (PublicObjectiveCard publicObjectiveCard : publicObjectiveCardList) {
+            scorePublic += publicObjectiveCard.apply(board);
+        }
+        System.out.println(this + ": sum of public objectives = " + scorePublic);
+
+        return scorePrivate + scorePublic;
+    }
+
+	// *********************************
     // ---------- Game Logic -----------
+    // --------- Inner Methods ---------    can be private
 
 	public void start() {
 		System.out.println("Game: Start");
 		game.orderPlayers();
 		state = StateMachine.STARTED;
-		/* TODO: open a thread
-        game.playerPrepare();
-        game.gamePrepare();
-        for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
-            game.playRound();
-        }
-        game.endGame();
-        */
 	}
 
 
@@ -104,7 +114,7 @@ public class GameController implements GameControllerInterface {
 		// with observer.update: player.choosePatternCard();
         if (game.isSolitaire()) {
 			player.setFavorToken(0);
-			player.takePrivateObjectCard(null); // TODO: 2 random cards
+			player.setPrivateObjectCardList(null); // TODO: 2 random cards
 		} else {
 			// give a random private card
 			// give 2 random PatternCard to choose one from 4 faces
@@ -143,39 +153,53 @@ public class GameController implements GameControllerInterface {
        @       (*rotate clockwise and counter-clockwise, so every player has 2 times at round*)
        @ */
 	public void playRound() {
+	    Player player;
 	    List<Player> playerList = game.getPlayerList();
 		state = StateMachine.PLAYING;
-		for (int i = 0; i < 2 * playerList.size(); i++) {
 // TODO:            draftPool.reroll(); // remove and put new dices
-			//wait everybody for a timeout then pass or player pass
-			game.getCurrentPlayer().play();   // let player play
+		for (int i = 0; i < 2 * playerList.size(); i++) {
+            player = game.getCurrentPlayer();
+            // let player play
+            player.play();
 
-			//TODO: put this in a thread, or use other solution like Timer or while sleep nanoTime
-			try {
-				wait(Game.GameConstants.secondsToMillis(
-						Game.GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+            /* TODO: should i create a thread to receive actions?
+             *
+             * 3 optional actions:
+             *   1. pick and place a Dice from Draft Pool to Board
+             *   2. buy and use a Tool Card when player wantss
+             *   3. pass/finish
+             */
+
+            //wait everybody for a timeout then pass or player pass
+			//possible other solution: Timer or while sleep nanoTime
+            while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
+                try {
+                    wait(Game.GameConstants.secondsToMillis(
+                            Game.GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
 			game.rotatePlayer();
 		}
 	}
 
-	// player call this
-	public void pass() {
-		notifyAll();
-	}
 
-	private int calcScore() {
-		return 0;
-	}
+    public void endGame() {
+        List<Player> playerList = game.getPlayerList();
+        Player player;
 
-	public void endGame() {
-		System.out.println("Game: End");
-		;
-		System.out.println("Score = " + calcScore());
-		state = StateMachine.ENDING;
-	}
+        state = StateMachine.ENDING;
 
+        System.out.println( "\n\n\t\tGAME OVER\n\n\n" +
+                                "\t\t  Score  \n");
+        for (int i = 0; i < playerList.size(); i++) {
+            player = playerList.get(i);
+            System.out.format("  %10s\t%-5d\n",
+                    playerList.get(i), calcScore(player));
+        }
+
+        // TODO: save all in databases
+    }
 }

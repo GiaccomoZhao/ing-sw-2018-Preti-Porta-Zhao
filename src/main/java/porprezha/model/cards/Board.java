@@ -15,6 +15,10 @@ public class Board {
         this.diceQuantity=0;
     }
 
+    public Pattern getPattern() {
+        return pattern;
+    }
+
     public Boolean occupiedBox(int x, int y){
 
         if (board[x][y]==null)
