@@ -76,7 +76,7 @@ public class Game implements GameInterface {
         gameID = new Random().nextLong();   // senseless until we have a global server
         roundTrack = new RoundTrack();
 
-        playerList = new ArrayList<>();
+        this.playerList = playerList;
         resetPlayerIndexes();
 
         if(playerList.size() == 1) {

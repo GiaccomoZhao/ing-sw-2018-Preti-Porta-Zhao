@@ -7,8 +7,8 @@ import porprezha.control.ServerControllerInterface;
 import porprezha.model.Game;
 import porprezha.model.Player;
 
-
-public class GameTest {
+// test of integrity
+public class ServerTest {
     @Test
     public static void main(String[] args) throws Exception {
         ServerControllerInterface server = new ServerController(0);

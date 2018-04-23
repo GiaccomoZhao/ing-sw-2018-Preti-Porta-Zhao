@@ -7,11 +7,14 @@ import porprezha.model.cards.Board;
 import porprezha.model.cards.PrivateObjectiveCard;
 import porprezha.model.cards.PublicObjectiveCard;
 import porprezha.model.database.DatabaseInterface;
+import sun.rmi.runtime.Log;
 
 import java.util.List;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public class GameController implements GameControllerInterface, Runnable {
-
+    static Logger logger = Logger.getLogger(GameController.class.getName());
 
 
     // *********************************
@@ -40,6 +43,7 @@ public class GameController implements GameControllerInterface, Runnable {
         playerPrepare();
         gamePrepare();
         for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
+            System.out.format("%-2d Round starts:\n", iRound);
             playRound();
         }
         endGame();
@@ -72,14 +76,16 @@ public class GameController implements GameControllerInterface, Runnable {
         for (PrivateObjectiveCard privateObjectiveCard : privateObjectiveCardList) {
             scorePrivate += privateObjectiveCard.apply(board);
         }
-        System.out.println(this + ": sum of private objectives = " + scorePrivate);
+//        System.out.println(this + ": sum of private objectives = " + scorePrivate);
+        logger.info("Sum of private objectives = " + scorePrivate);
 
         // sum of public objectives
         List<PublicObjectiveCard> publicObjectiveCardList = game.getPublicObjectiveCardList();
         for (PublicObjectiveCard publicObjectiveCard : publicObjectiveCardList) {
             scorePublic += publicObjectiveCard.apply(board);
         }
-        System.out.println(this + ": sum of public objectives = " + scorePublic);
+//        System.out.println(this + ": sum of public objectives = " + scorePublic);
+        logger.info("Sum of public objectives = " + scorePublic);
 
         return scorePrivate + scorePublic;
     }
@@ -107,6 +113,7 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*a quantity of Favor Tokens equals to difficulty of Pattern Card*)
        @ */
 	public void playerPrepare() {
+        System.out.println("Players Preparing");
         List<Player> playerList = game.getPlayerList();
         Player player = playerList.get(0);
 		state = StateMachine.PLAYER_PREPARING;
@@ -132,6 +139,7 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*place 3 Tool Cards*)
        @ */
 	public void gamePrepare() {
+        System.out.println("Game Preparing");
 		state = StateMachine.GAME_PREPARING;
 //        randToolCard();
 //        View.update();
@@ -153,12 +161,15 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*rotate clockwise and counter-clockwise, so every player has 2 times at round*)
        @ */
 	public void playRound() {
+        System.out.println("Start to Play");
 	    Player player;
 	    List<Player> playerList = game.getPlayerList();
 		state = StateMachine.PLAYING;
 // TODO:            draftPool.reroll(); // remove and put new dices
 		for (int i = 0; i < 2 * playerList.size(); i++) {
             player = game.getCurrentPlayer();
+            System.out.format("%20s plays", player.getName());
+
             // let player play
             player.play();
 
@@ -196,7 +207,7 @@ public class GameController implements GameControllerInterface, Runnable {
                                 "\t\t  Score  \n");
         for (int i = 0; i < playerList.size(); i++) {
             player = playerList.get(i);
-            System.out.format("  %10s\t%-5d\n",
+            System.out.format("  %20s\t%-5d\n",
                     playerList.get(i), calcScore(player));
         }
 
