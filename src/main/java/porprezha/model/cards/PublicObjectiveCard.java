@@ -187,35 +187,38 @@ public class PublicObjectiveCard extends ObjectiveCard{
               for(i=0; i < 4; i++) {
                   for (j = 0; j < 5; j++){
 
-                      colorSupport=board.getDice(i, j).colorDice;
+                      if(board.getDice(i,j).colorDice!= Dice.ColorDice.WHITE){
+                          colorSupport=board.getDice(i, j).colorDice;
 
-                      if(i>0&&j>0)
-                          if(board.getDice(i-1,j-1).colorDice==colorSupport){
-                              supportDiagonal[i][j]=true;
-                              supportDiagonal[i-1][j-1]=true;
-                          }
+                          if(i>0&&j>0)
+                              if(board.getDice(i-1,j-1).colorDice==colorSupport){
+                                  supportDiagonal[i][j]=true;
+                                  supportDiagonal[i-1][j-1]=true;
+                              }
 
-                      if(i>0&&j<4)
-                          if(board.getDice(i-1,j+1).colorDice==colorSupport){
-                              supportDiagonal[i][j]=true;
-                              supportDiagonal[i-1][j+1]=true;
-                          }
+                          if(i>0&&j<4)
+                              if(board.getDice(i-1,j+1).colorDice==colorSupport){
+                                  supportDiagonal[i][j]=true;
+                                  supportDiagonal[i-1][j+1]=true;
+                              }
 
-                      if(i<3&&j>0)
-                          if(board.getDice(i+1,j-1).colorDice==colorSupport){
-                              supportDiagonal[i][j]=true;
-                              supportDiagonal[i+1][j-1]=true;
-                          }
+                          if(i<3&&j>0)
+                              if(board.getDice(i+1,j-1).colorDice==colorSupport){
+                                  supportDiagonal[i][j]=true;
+                                  supportDiagonal[i+1][j-1]=true;
+                              }
 
-                      if(i<3&&j<4)
-                          if(board.getDice(i+1,j+1).colorDice==colorSupport){
-                              supportDiagonal[i][j]=true;
-                              supportDiagonal[i+1][j+1]=true;
-                          }
+                          if(i<3&&j<4)
+                              if(board.getDice(i+1,j+1).colorDice==colorSupport){
+                                  supportDiagonal[i][j]=true;
+                                  supportDiagonal[i+1][j+1]=true;
+                              }
+                      }
+
 
                   }
               }
-              
+
               for(i=0;i<4;i++){
                   for(j=0;j<5;j++){
 
