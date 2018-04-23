@@ -27,7 +27,7 @@ public class Board {
     //Return true if dice1 can be placed adjacent to dice2
     public Boolean compatibleDice(Dice dice1, Dice dice2){
 
-        if(dice1.colorDice.equals(dice2.colorDice))
+        if(dice1.getColorDice().equals(dice2.getColorDice()))
             return false;
         if(dice1.getDiceNumber()==dice2.getDiceNumber())
             return false;
@@ -130,5 +130,9 @@ public class Board {
         else
             return new Dice(Dice.ColorDice.WHITE, 0);
 
+    }
+
+    public int getDiceQuantity() {
+        return diceQuantity;
     }
 }

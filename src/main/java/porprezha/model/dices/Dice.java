@@ -35,5 +35,8 @@ public class Dice {
         return this.number;
     }
 
+    public ColorDice getColorDice() {
+        return colorDice;
+    }
 }
 
