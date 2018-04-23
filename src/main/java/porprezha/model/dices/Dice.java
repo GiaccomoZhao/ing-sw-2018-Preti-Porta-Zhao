@@ -4,6 +4,9 @@ import java.util.Random;
 public class Dice {
 
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     private int number;
     public final ColorDice colorDice;

@@ -3,26 +3,23 @@ package porprezha.model;
 import porprezha.model.dices.Dice;
 import porprezha.model.cards.*;
 
+import java.util.List;
 import java.util.Random;
 
 public class Player {
-    class PatternCard{}
-    class GameBoard {
-        public void takePatternCard(PatternCard patterCard) {
-            ;
-        }
-    }
-    class ScoreMark {}
+
 
     private Long playerID;
     private String name;
     private int position;
-    private GameBoard gameBoard;
-    private ScoreMark scoreMark;    // thinking to move this to
+
+    private Board board;
+    private List<PrivateObjectiveCard> privateObjectiveCardList;
+//    private ScoreMark scoreMark;    // thinking to move this to
     private int favorToken;    // or list of class FavoreToken{Image i} ?
-    private PrivateObjectiveCard privateObjectiveCard;
 
     private boolean bPass;
+
 
     public Player() {
         favorToken = Game.GameConstants.FAVOR_TOKEN_QUANTITY;
@@ -54,8 +51,8 @@ public class Player {
         this.position = position;
     }
 
-    public GameBoard getGameBoard() {
-        return gameBoard;
+    public Board getBoard() {
+        return board;
     }
 
     public int getFavorToken() {
@@ -66,19 +63,28 @@ public class Player {
         this.favorToken = favorToken;
     }
 
-    public void takePrivateObjectCard(PrivateObjectiveCard privateObjectiveCard) {
-        this.privateObjectiveCard = privateObjectiveCard;
+    public List<PrivateObjectiveCard> getPrivateObjectiveCardList() {
+        return privateObjectiveCardList;
     }
 
-    public void takeBoard(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
+    public void setPrivateObjectCardList(List<PrivateObjectiveCard> privateObjectiveCardList) {
+        this.privateObjectiveCardList = privateObjectiveCardList;
     }
 
-    public void choosePatternCard (PatternCard patternCard) {
-        this.gameBoard.takePatternCard(patternCard);
+    public boolean hasPassed() {    // TODO: can someone help me to make a better name for this method?
+        return bPass;
     }
 
-    public void takeDice(Dice dice) {
+    public void passes(boolean bPass) {
+        this.bPass = bPass;
+    }
+
+    public void choosePatternCard (Pattern pattern) {
+        this.board = new Board(pattern);
+    }
+
+    public void placeDice(Dice dice, int x, int y) {
+        board.insertDice(dice, x, y);
     }
 
     /* 3 optional actions:

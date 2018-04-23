@@ -1,6 +1,7 @@
 package porprezha.model.cards;
 
-public abstract class Card {
+public abstract class
+Card {
 
 
     public final Effect effect;

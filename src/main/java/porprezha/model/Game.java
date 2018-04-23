@@ -10,7 +10,7 @@ import porprezha.model.cards.*;
 
 import java.util.*;
 
-public class Game {
+public class Game implements GameInterface {
     public static class GameConstants {
         private GameConstants() {
         }
@@ -59,8 +59,9 @@ public class Game {
     // player list management attributes
     private List<Player> playerList;
     private Player currentPlayer;
-    private int iFirstPlayer;    // index of first player in current round
-    private int iCurrentPlayer;
+    private int iCurrentPlayer;     // keep currentPlayer always == playerList.get(iCurrentPlayer)
+    private int iFirstPlayer;       // index of first player in current round -- or index of next round when this round has already finished
+    private int iLastPlayer;        // index of player that play 2 consecutive times, on this player we'll turn the rotation direction, toggling bCounterClockwise
     private boolean bCountClockwise;
 
     private boolean bSolitaire;
@@ -75,9 +76,8 @@ public class Game {
         gameID = new Random().nextLong();   // senseless until we have a global server
         roundTrack = new RoundTrack();
 
-        playerList = new ArrayList<>();
-        iCurrentPlayer = iFirstPlayer = 0;
-        bCountClockwise = false;
+        this.playerList = playerList;
+        resetPlayerIndexes();
 
         if(playerList.size() == 1) {
             bSolitaire = true;
@@ -88,16 +88,38 @@ public class Game {
         diceQuantity = Game.GameConstants.DICE_QUANTITY;
     }
 
-    public int getRoundIndex() {
-        return roundTrack.getRound();
+    /* @requires playerList.size() > 0
+     * @ensure (* indexes have be set correctly as at starting *)
+     */
+    void resetPlayerIndexes() {
+        iCurrentPlayer = 0;
+        iFirstPlayer = 0;
+        iLastPlayer = playerList.size()-1;
+        bCountClockwise = false;
     }
 
     public boolean isSolitaire() {
         return bSolitaire;
     }
 
+    public SolitaireDifficulty getSolitaireDifficulty() {
+        return solitaireDifficulty;
+    }
+
+    public int getRoundIndex() {
+        return roundTrack.getRound();
+    }
+
     public int getDiceQuantity() {
         return diceQuantity;
+    }
+
+    public List<PublicObjectiveCard> getPublicObjectiveCardList() {
+        return publicObjectiveCardList;
+    }
+
+    public List<ToolCard> getToolCardList() {
+        return toolCardList;
     }
 
 
@@ -117,7 +139,9 @@ public class Game {
         return currentPlayer;
     }
 
-    private void setCurrentPlayer() {
+    // these are unique 2 method that modify currentPlayer directly
+    // and they are private methods
+    private void setCurrentPlayerByIndex() {
         this.currentPlayer = playerList.get(iCurrentPlayer);
     }
 
@@ -125,41 +149,77 @@ public class Game {
         this.currentPlayer = currentPlayer;
     }
 
-    // set Player to next one and return him
+    /* requires (playerList.size() > 0) &&
+     * requires (0 <= iFirstPlayer < playerList.size) &&
+     * requires (0 <= iLastPlayer < playerList.size) &&
+     * requires (* counting from iFirstPlayer to iLastPlayer has playerList.size() 's elements *)
+     * ensure (* this is UNIQUE public method that MODIFies currentPlayer attribute *) &&
+     * ensure (* indexes are correctly set as the request said above *) &&
+     * ensure (* iCurrentPlayer is the nextPlayer's index (see code comment below) *)
+     * ensure (0 <= iCurrentPlayer < playerList.size) &&
+     * ensure currentPlayer = playerList(iCurrentPlayer)
+     */
     public Player rotatePlayer() {
+        // case anti clock
         if (bCountClockwise) {
+            if(iCurrentPlayer == iFirstPlayer) {
+                // when first player has already played for second time
+                // first player became last player in next round
+                // and the player after old first player as new first player
+                bCountClockwise = false;    // turn back in clockwise
+                nextPlayer();       // change index of current player
+                iLastPlayer = iFirstPlayer;
+                iFirstPlayer = iCurrentPlayer;
+            } else {
+                nextPlayer();
+            }
+        } else {
+        // case clock wise
+            if(iCurrentPlayer == iLastPlayer) {
+                // arrived at last player he'll play 2 time consecutively
+                // so we do not call nextPlayer and just change rotation direction (clockwise)
+                bCountClockwise = true;
+            } else {
+                nextPlayer();
+            }
+        }
+        return currentPlayer;   // nextPlayer() method changes this attribute
+    }
+
+
+    /* requires (playerList.size() > 0)
+     * ensure (0 <= iCurrentPlayer < playerList.size) &&
+     * ensure (currentPlayer = playerList(iCurrentPlayer)&&
+     * ensure (* index of current player referee to the next one correctly *)
+     */
+    // a simply increasing/decreasing rotation algorithm
+    private Player nextPlayer() {
+        if (bCountClockwise) {
+            // case anti clock: index decreases
             if (iCurrentPlayer == 0) {
                 iCurrentPlayer = playerList.size() - 1;
             } else {
                 iCurrentPlayer--;
             }
         } else {
+            // case clock wise: index increases
             if (iCurrentPlayer == playerList.size() - 1) {
                 iCurrentPlayer = 0;
             } else
                 iCurrentPlayer++;
         }
-        setCurrentPlayer(); // change currentPlayer
+        setCurrentPlayerByIndex(); // change currentPlayer
         return currentPlayer;
     }
 
 
-    /* @requires playerList.size() > 0
-       @ensure (*we have a loop of index that refers entire playerList*)
-       @ */
-    public void nextFirstPlayer() {
-        if (iFirstPlayer < playerList.size() - 1)
-            iFirstPlayer++;
-        else
-            iFirstPlayer = 0;
-    }
-
-
+    // TODO: this block of code should be transferred in serverController
     /* @ensures playerList.contains(player)
        @signals (GamePlayerFullException e) \old(playerList).size >= max
        @signals (InvalidPlayerException e) param == null
        @signals (PlayerAlreadyPresentException e) (*unique Player already present in game*)
-       @ */
+       @ *//*
+
     public void addPlayer(Player newPlayer) throws GamePlayerFullException, InvalidPlayerException, PlayerAlreadyPresentException {
         if (playerList.size() >= Game.GameConstants.MAX_PLAYER_QUANTITY)
             throw new GamePlayerFullException();
@@ -178,12 +238,14 @@ public class Game {
         playerList.remove(player);
 //        bSolitaire = playerList.size() == 1 ? true : false;
     }
+*/
 
 
     /* @requires playerList.size > 0
        @ensure (*a random order*) ||
                (*Order players based on the last time the player has been to the TEACHER's DESK*)
        @ */
+
     public void orderPlayers() {
         if (playerList.size() <= 1) {
             return;
