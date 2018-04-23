@@ -56,11 +56,12 @@ public class BoardTest {
     }
 
     @Test
-    public void adjacentDice() {
+    public void adjacentDiceTest() {
         board.insertDice(die, 0,0);
         assertTrue(board.adjacentDice(die,1,1));
-        assertFalse((board.adjacentDice(die,0,1));
-        Asser
+        assertFalse(board.adjacentDice(die,0,1));
+        assertTrue(board.adjacentDice(die1, 0, 1));
+
 
 
 
@@ -84,7 +85,7 @@ public class BoardTest {
 
 
     @Test
-    public void getDice() {
+    public void getDiceTest() {
 
         assertEquals(board.getDice(0,0).colorDice, die0.getColorDice());
         assertEquals(board.getDice(0,0).getDiceNumber(), die0.getDiceNumber());
