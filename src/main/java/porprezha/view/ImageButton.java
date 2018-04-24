@@ -1,7 +1,5 @@
 package porprezha.view;
 
-import com.sun.glass.ui.Size;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,7 +8,7 @@ import java.util.logging.Logger;
 public class ImageButton extends JPanel implements MouseListener, MouseMotionListener {
     private JLabel label;
     private boolean bClickedDown = false;
-    private Size size;  // default image size
+    private Point size;  // default image size
     private Point position;
     private String imageSource = "1x5.jpg";
 
@@ -25,9 +23,9 @@ public class ImageButton extends JPanel implements MouseListener, MouseMotionLis
         ImageIcon icon = createImageIcon(imageSource, "red dice number 1");
         this.label = new JLabel("Image text", icon, JLabel.CENTER);
         label.setToolTipText("This is a ImageIcon with text");
-        position = new Point(0, 0);
-        size = new Size(0,0);
-        this.setPreferredSize(new Dimension(size.width, size.height));
+        position = new Point(10, 10);
+        size = new Point(10, 10);
+        this.setPreferredSize(new Dimension(size.x, size.y));
 
         label.setOpaque(true);
         label.setBackground(Color.BLACK);

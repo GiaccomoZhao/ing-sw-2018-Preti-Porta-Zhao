@@ -1,5 +1,5 @@
 
-package porprezha.Model;
+package porprezha.model;
 import porprezha.model.dices.Dice;
 import static org.junit.Assert.assertTrue;
 
