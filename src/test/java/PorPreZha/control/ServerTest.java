@@ -1,4 +1,4 @@
-package PorPreZha.control;
+package porprezha.control;
 
 import org.junit.Test;
 import porprezha.control.GameControllerInterface;

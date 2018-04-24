@@ -7,7 +7,6 @@ import porprezha.model.cards.Board;
 import porprezha.model.cards.PrivateObjectiveCard;
 import porprezha.model.cards.PublicObjectiveCard;
 import porprezha.model.database.DatabaseInterface;
-import sun.rmi.runtime.Log;
 
 import java.util.List;
 import java.util.logging.LogRecord;

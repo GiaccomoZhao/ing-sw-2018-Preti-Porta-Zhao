@@ -14,7 +14,7 @@ public class TestDrive {
 
         DraftPool draftPool = new DraftPool(dicebag, 4 );
 
-        Pattern pattern = new Pattern(0);
+        Pattern pattern = new Pattern(Pattern.TypePattern.AURORA_SAGRADIS);
 
 
         for (int i = 0; i <4 ; i++) {
