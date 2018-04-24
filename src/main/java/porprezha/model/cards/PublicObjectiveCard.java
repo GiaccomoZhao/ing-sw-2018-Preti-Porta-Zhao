@@ -21,10 +21,10 @@ public class PublicObjectiveCard extends ObjectiveCard{
         int point=0;
         int counter=0;
         int helper=1;
-        int[] num = new int[0];
+        int[] num = new int[6];
 
 
-      switch(this.effect.ID){
+      switch(this.effect.ID-1){
 
           case 0:
 

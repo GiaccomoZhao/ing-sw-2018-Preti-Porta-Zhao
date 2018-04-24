@@ -1,4 +1,4 @@
-package porprezha.Model;
+package porprezha.model;
 import org.junit.*;
 import porprezha.model.dices.Dice;
 import porprezha.model.dices.DiceBag;
