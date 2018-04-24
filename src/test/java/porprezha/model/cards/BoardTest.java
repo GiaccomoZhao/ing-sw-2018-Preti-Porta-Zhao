@@ -1,10 +1,7 @@
-package porprezha.Model.cards;
+package porprezha.model.cards;
 
 import org.junit.Before;
 import org.junit.Test;
-import porprezha.model.cards.Board;
-import porprezha.model.cards.Box;
-import porprezha.model.cards.Pattern;
 import porprezha.model.dices.Dice;
 
 import static org.junit.Assert.*;

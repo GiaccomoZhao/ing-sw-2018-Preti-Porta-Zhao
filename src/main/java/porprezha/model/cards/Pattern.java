@@ -533,11 +533,13 @@ public class Pattern {
 
 
        }
-       for(int y=0;y<HEIGHT;y++){
-           for(int x=0;x<WIDTH;x++){
-            if(pattern[y][x]==null)
-                pattern[y][x]=new Box();
-           }
+
+       for(int i=0; i<HEIGHT; i++){
+           for(int j=0; j<WIDTH; j++)
+           {
+               if(pattern[i][j]==null)
+                   pattern[i][j]=new Box();
+               }
        }
     }
 
@@ -552,7 +554,7 @@ public class Pattern {
 
     public Box getBox(int x, int y){
 
-        return pattern[y][x];
+        return pattern[x][y];
     }
 
     public int getDifficulty() {
@@ -565,9 +567,9 @@ public class Pattern {
         return namePattern;
     }
 
-    public Boolean checkEdges(int x, int y){
+    public Boolean checkEdges(int i, int j){
 
-        if(x==0 || x==WIDTH-1 || y==0 || y==HEIGHT-1 )
+        if(i==0 || i==WIDTH-1 || j==0 || j==HEIGHT-1 )
             return Boolean.TRUE;
         else
             return Boolean.FALSE;
@@ -582,10 +584,10 @@ public class Pattern {
             System.out.print("───");
         }
         System.out.println("──╮");
-        for (int y = 0; y < getHeight(); y++) {
+        for (int x = 0; x < getHeight(); x++) {
             System.out.print("│ ");
-            for (int x = 0; x < getWidth(); x++) {
-                Box box = getBox(x, y);
+            for (int y = 0; y < getWidth(); y++) {
+                Box box = getBox(x,y);
                 System.out.format("%C%d ", box.getColor().name().charAt(0), box.getNumber());
             }
             System.out.println("┃");

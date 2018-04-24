@@ -16,6 +16,7 @@ public class TestDrive {
 
         Pattern pattern = new Pattern(Pattern.TypePattern.AURORA_SAGRADIS);
 
+        System.out.println("Pattern");
 
         for (int i = 0; i <4 ; i++) {
             for (int j = 0; j<5 ; j++) {
@@ -26,6 +27,7 @@ public class TestDrive {
         }
         System.out.println();
 
+        System.out.println("Draftpool");
         for (Dice cas:
              draftPool.diceList()) {
             System.out.print(cas.getDiceNumber());
@@ -48,6 +50,7 @@ public class TestDrive {
 
         board.insertDice(dice1, 0,1);
         board.insertDice(dice2, 1, 1);
+        System.out.println("Board");
         for (int i = 0; i <4 ; i++) {
             for (int j = 0; j<5 ; j++) {
                 System.out.print(board.getDice(i,j).getDiceNumber());
