@@ -1,5 +1,4 @@
 package porprezha.model.cards;
-import porprezha.exceptions.InvalidIdException;
 import porprezha.model.dices.Dice;
 import porprezha.model.dices.DraftPool;
 import porprezha.model.track.RoundTrack;

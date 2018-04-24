@@ -18,13 +18,13 @@ public class PrivateObjectiveCard  extends ObjectiveCard {
         int i, j;
         int point=0;
 
-        switch(this.effect.ID){
+        switch(this.effect.ID-11){
 
             case 0:
 
                 for(i=0; i < 4; i++) {
                     for (j = 0; j < 5; j++){
-                        if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.RED))
+                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.RED))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -36,7 +36,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard {
 
                 for(i=0; i < 4; i++) {
                     for (j = 0; j < 5; j++){
-                        if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.YELLOW))
+                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.YELLOW))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -48,7 +48,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard {
 
                 for(i=0; i < 4; i++) {
                     for (j = 0; j < 5; j++){
-                        if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.GREEN))
+                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.GREEN))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -60,7 +60,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard {
 
                 for(i=0; i < 4; i++) {
                     for (j = 0; j < 5; j++){
-                        if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.BLUE))
+                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.BLUE))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -72,7 +72,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard {
 
                 for(i=0; i < 4; i++) {
                     for (j = 0; j < 5; j++){
-                        if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.PURPLE))
+                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.PURPLE))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
