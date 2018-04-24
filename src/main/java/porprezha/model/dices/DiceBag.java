@@ -47,4 +47,8 @@ public class DiceBag {
         return draftPool;
 
     }
+
+    public int diceBagSize(){
+        return diceSet.size();
+    }
 }

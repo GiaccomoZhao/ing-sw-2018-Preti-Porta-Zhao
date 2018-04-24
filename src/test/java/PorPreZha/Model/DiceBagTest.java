@@ -19,8 +19,9 @@ public class DiceBagTest {
 
             list =diceBag.GetRandomDices(4);
             int sizeL= list.size();
+            int sizeB= diceBag.diceBagSize();
             assertEquals(9, sizeL);
-
+            assertEquals(81, sizeB);
     }
 
 

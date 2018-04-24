@@ -1,6 +1,7 @@
 package porprezha.model.cards;
 import porprezha.model.dices.Dice;
-
+import porprezha.model.dices.DraftPool;
+import porprezha.model.track.RoundTrack;
 
 
 import java.util.ArrayList;
@@ -28,11 +29,44 @@ public class ToolCard extends Card {
         }
     }
 
-    public void use(){};
-
     public void addTokens(){
         tokensQuantity=tokensQuantity+1;
     }
+
+    public void use(Board board, DraftPool draftPool, Dice dice, int  dicePosition, boolean operation, RoundTrack roundTrack) {
+
+        switch (this.effect.ID) {
+
+            case 0:
+
+                if(dice.getDiceNumber()!=6&&operation)
+                    draftPool.chooseDice(dicePosition).setNumber(draftPool.chooseDice(dicePosition).getDiceNumber()+1);
+
+                if(dice.getDiceNumber()!=1&&!operation)
+                        draftPool.chooseDice(dicePosition).setNumber(draftPool.chooseDice(dicePosition).getDiceNumber()-1);
+
+                break;
+
+            case 4:
+
+
+
+            case 9:
+
+                if((draftPool.chooseDice(dicePosition).getDiceNumber()-6)<0){
+                    draftPool.chooseDice(dicePosition).setNumber(7-draftPool.chooseDice(dicePosition).getDiceNumber());
+                }
+
+                else
+                    draftPool.chooseDice(dicePosition).setNumber(draftPool.chooseDice(dicePosition).getDiceNumber()-5);
+
+                break;
+
+
+        }
+
+    }
+
 
 
 }
