@@ -7,7 +7,9 @@ import javax.tools.Tool;
 public class PrivateObjectiveCard  extends ObjectiveCard {
 
     public PrivateObjectiveCard(Effect effect) {
+
         super(effect);
+
     }
 
     @Override

@@ -1,4 +1,5 @@
 package porprezha.model.cards;
+import porprezha.exceptions.InvalidIdException;
 import porprezha.model.dices.Dice;
 import porprezha.model.dices.DraftPool;
 import porprezha.model.track.RoundTrack;
@@ -13,29 +14,29 @@ import static porprezha.model.dices.Dice.ColorDice.*;
 
 public class ToolCard extends Card {
 
-    private static int tokensQuantity;
 
-    private static Dice.ColorDice cardColor;
+    private int tokensQuantity;
+
+    private  Dice.ColorDice cardColor;
+
     Dice.ColorDice[] cardColors={PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE};
 
-    public ToolCard(porprezha.model.cards.Card.Effect effect){
-
+    public ToolCard(Effect effect) {
         super(effect);
-        int i=0;
-        while(15<effect.ID){
-           ToolCard.tokensQuantity=0;
-           ToolCard.cardColor=cardColors[i];
-           i++;
-        }
+        //if(effect.ID<16) throw  new InvalidIdException();
+
+        this.tokensQuantity = 0;
+        this.cardColor = cardColors[this.effect.ID-16];
     }
 
     public void addTokens(){
-        tokensQuantity=tokensQuantity+1;
+
+        tokensQuantity = tokensQuantity + 1;
     }
 
     public void use(Board board, DraftPool draftPool, Dice dice, int  dicePosition, boolean operation, RoundTrack roundTrack) {
 
-        switch (this.effect.ID) {
+        switch (this.effect.ID-16) {
 
             case 0:
 

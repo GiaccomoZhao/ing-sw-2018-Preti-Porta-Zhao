@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class PublicObjectiveCard extends ObjectiveCard{
 
     public PublicObjectiveCard(Effect effect) {
+
         super(effect);
     }
 
