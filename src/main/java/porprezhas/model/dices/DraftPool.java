@@ -37,6 +37,19 @@ public class DraftPool {
         return listDice;
     }
 
+    public Dice diceSubstitute(Dice newDice, int position){
+
+        Dice oldDice;
+
+        if(position <= draftPool.size()) {
+            oldDice = draftPool.remove(position);
+            draftPool.add(newDice);
+            return oldDice;
+        }
+
+        return null;
+    }
+
 
 
 }
