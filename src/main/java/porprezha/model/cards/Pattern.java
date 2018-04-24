@@ -533,13 +533,12 @@ public class Pattern {
 
 
        }
-
-       for(int i=0; i<HEIGHT; i++){
-           for(int j=0; j<WIDTH; j++)
-           {
-               if(pattern[i][j]==null)
-                   pattern[i][j]=new Box();
-               }
+        for(int i=0; i<HEIGHT; i++){
+            for(int j=0; j<WIDTH; j++)
+            {
+                if(pattern[i][j]==null)
+                    pattern[i][j]=new Box();
+            }
        }
     }
 
@@ -598,6 +597,68 @@ public class Pattern {
         }
         System.out.println("━━╯");
         //           System.out.format("%C%d\t", pattern.getBox(y,x));
+    }
 
+    public void print2() {
+//        ┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐
+//        │　　　　　　　　　　　　　　　　　　　│
+//        └─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+        System.out.println("\nPattern name: " + getNamePattern());
+        System.out.print("┌───");
+        for (int i = 0; i < getWidth(); i++) {
+            System.out.print("───");
+        }
+        System.out.println("──┐");
+        for (int y = 0; y < getHeight(); y++) {
+            System.out.print("│ ");
+            for (int x = 0; x < getWidth(); x++) {
+                Box box = getBox(x, y);
+                System.out.format("%d%C ", box.getNumber(), box.getColor().name().charAt(0));
+            }
+            System.out.println("│");
+        }
+        System.out.print("└───");
+        for (int i = 0; i < getWidth(); i++) {
+            System.out.print("───");
+        }
+        System.out.println("─┘");
+        //           System.out.format("%C%d\t", pattern.getBox(y,x));
+    }
+    public void print3() {
+        System.out.println("\nPattern name: " + getNamePattern());
+        System.out.print("╔══");
+//        ╔╗╚════║║║╝
+//        ╧ ╤ ╟┼╢──│
+        for (int i = 0; i < getWidth()-1; i++) {
+            System.out.print("═══╤══");
+        }
+        System.out.println("═══╗");
+        for (int y = 0; y < getHeight(); y++) {
+            System.out.print("║");
+            for (int x = 0; x < getWidth(); x++) {
+                Box box = getBox(x, y);
+                System.out.format(" %d%C ", box.getNumber(), box.getColor().name().charAt(0));
+                if( x!= getWidth()-1) {
+                    if(x%2 == 0)
+                       System.out.print("|");
+                    else
+                       System.out.print("│");
+                }
+            }
+            System.out.println("║");
+            if(y != getHeight()-1) {
+                System.out.print("╟──");
+                for (int x = 0; x < getWidth() - 1; x++) {
+                    System.out.print("───┼──");
+                }
+                System.out.println("───╢");
+            }
+        }
+        System.out.print("╚══");
+        for (int i = 0; i < getWidth()-1; i++) {
+            System.out.print("═══╧══");
+        }
+        System.out.println("═══╝");
+        //           System.out.format("%C%d\t", pattern.getBox(y,x));
     }
 }
