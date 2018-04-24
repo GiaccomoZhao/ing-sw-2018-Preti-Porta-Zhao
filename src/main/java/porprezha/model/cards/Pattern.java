@@ -575,9 +575,27 @@ public class Pattern {
     }
 
 
+    public void print() {
+        System.out.println("\nPattern name: " + getNamePattern());
+        System.out.print("╭──");
+        for (int i = 0; i < getWidth(); i++) {
+            System.out.print("───");
+        }
+        System.out.println("──╮");
+        for (int y = 0; y < getHeight(); y++) {
+            System.out.print("│ ");
+            for (int x = 0; x < getWidth(); x++) {
+                Box box = getBox(x, y);
+                System.out.format("%C%d ", box.getColor().name().charAt(0), box.getNumber());
+            }
+            System.out.println("┃");
+        }
+        System.out.print("╰━━");
+        for (int i = 0; i < getWidth(); i++) {
+            System.out.print("━━━");
+        }
+        System.out.println("━━╯");
+        //           System.out.format("%C%d\t", pattern.getBox(y,x));
 
-
-
-
-
+    }
 }
