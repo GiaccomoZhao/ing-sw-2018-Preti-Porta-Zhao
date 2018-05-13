@@ -1,5 +1,6 @@
 package porprezhas.control;
 
+import com.github.javafaker.Faker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,13 @@ public class ServerTest {
         server = new ServerController(0);
         players = new ArrayList<>();
         for (int i = 0; i < NUM_PLAYER; i++) {
-            String playerName = "P" + i;
+            Faker faker = new Faker();
+
+//            String name = faker.name().fullName();
+            String firstName = faker.name().firstName();
+//            String lastName = faker.name().lastName();
+
+            String playerName = firstName; //"P" + i;
             players.add(new Player(playerName));
             server.join(players.get(i));
         }
@@ -43,7 +50,7 @@ public class ServerTest {
 
     @After
     public void tearDown() throws Exception {
-        System.out.println("server tear down");
+        System.out.println("\n\nServer tear down");
     }
 
 
@@ -74,26 +81,10 @@ public class ServerTest {
 
         (gameThread = new Thread((Runnable) newGame)).start();
 
-/*      Game.orderPlayers() already prints it
-        //Check player list Order
-        synchronized (System.out) {   // to avoid the thread prints something inside this block of message
-            for (GameControllerInterface gameController :
-                    gameControllers) {
-                List<Player> playerList = gameController.getGame().getPlayerList();
-                System.out.println("\n  Order       Name          Order of join  ");
-                for (int i = 0; i < playerList.size(); i++) {
-                                        //    12345678901234   12345678901234
-                    System.out.printf("Player %2d.  %-14s" + "\t%-14s\n", i, playerList.get(i).getName(), players.get(i).getName());
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
-*/
 
         //Check player play order. GameController already prints it. Just wait the game ends.
         try {
-            gameThread.join(60 * 1000);
+            gameThread.join(80 * 1000 + 3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -22,9 +22,9 @@ public class Game implements GameInterface {
         public static final int FAVOR_TOKEN_QUANTITY = 3;
         public static final int TIMEOUT_PREPARING_SEC = 10; //60;
         public static final int TIMEOUT_ROUND_SEC = 3; //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
-        public static final int TIMEOUT_ROUND_SOLITAIRE_SEC = 3;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
+        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 0.1;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
 
-        public static int secondsToMillis(int seconds) {
+        public static double secondsToMillis(double seconds) {
             return  seconds * 1000;
         }
     }

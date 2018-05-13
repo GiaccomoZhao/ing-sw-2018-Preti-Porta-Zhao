@@ -79,8 +79,8 @@ public class GameController implements GameControllerInterface, Runnable {
                 scorePrivate += privateObjectiveCard.apply(board);
             }
         }
-//        System.out.println(this + ": sum of private objectives = " + scorePrivate);
-        logger.info("Sum of private objectives = " + scorePrivate);
+//        System.out.println(player.getName() + ": sum of private objectives = " + scorePrivate);
+//        logger.info("" + Player.getName() + "\tSum of private objectives = " + scorePrivate);
 
         // sum of public objectives
         List<PublicObjectiveCard> publicObjectiveCardList = game.getPublicObjectiveCardList();
@@ -90,7 +90,7 @@ public class GameController implements GameControllerInterface, Runnable {
             }
         }
 //        System.out.println(this + ": sum of public objectives = " + scorePublic);
-        logger.info("Sum of public objectives = " + scorePublic);
+//        logger.info("" + Player.getName() + "\tSum of public objectives = " + scorePublic);
 
         return scorePrivate + scorePublic;
     }
@@ -166,7 +166,6 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*rotate clockwise and counter-clockwise, so every player has 2 times at round*)
        @ */
 	public synchronized void playRound() {
-        System.out.println("Start to Play");
 	    Player player;
 	    List<Player> playerList = game.getPlayerList();
 		state = StateMachine.PLAYING;
@@ -176,7 +175,7 @@ public class GameController implements GameControllerInterface, Runnable {
 
             Date dNow = new Date( );
             SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss:SS");
-            System.out.format("Turn of player n.%-2d  %-14s\t%s\n", player.getPosition(), player.getName(), ft.format(dNow));
+            System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition(), player.getName(), ft.format(dNow));
 
             // let player play
             player.play();  // WARNING: this statement must be in the same synchronized block of wait()
@@ -194,7 +193,7 @@ public class GameController implements GameControllerInterface, Runnable {
             while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
                 try {
                     synchronized(playTimeOut) {
-                        playTimeOut.wait(Game.GameConstants.secondsToMillis(
+                        playTimeOut.wait( (int) Game.GameConstants.secondsToMillis(
                                 Game.GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC));
                         pass();
                         player.passes(true);
@@ -225,11 +224,12 @@ public class GameController implements GameControllerInterface, Runnable {
 
         state = StateMachine.ENDING;
 
-        System.out.println( "\n\n\t\tGAME OVER\n\n\n" +
-                                "\t\t  Score  \n");
+        System.out.println( "\n\n\n" +
+                            "  ***** >>> GAME OVER <<< *****  \n\n" +
+                            "              Score              \n");
         for (int i = 0; i < playerList.size(); i++) {
             player = playerList.get(i);
-            System.out.format("  %-15s %5d\n",
+            System.out.format("    %-15s \t%5d\n",
                     playerList.get(i).getName(), calcScore(player));
         }
 
