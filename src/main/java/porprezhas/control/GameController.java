@@ -49,7 +49,7 @@ public class GameController implements GameControllerInterface, Runnable {
         playerPrepare();
         gamePrepare();
         for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
-            System.out.format("\nRound %-2d starts: {\n", iRound);
+            System.out.format("\nRound %-2d starts: {\n", iRound + 1);
             playRound();
             System.out.println("}");
         }
@@ -175,7 +175,7 @@ public class GameController implements GameControllerInterface, Runnable {
 
             Date dNow = new Date( );
             SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss:SS");
-            System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition(), player.getName(), ft.format(dNow));
+            System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition() + 1, player.getName(), ft.format(dNow));
 
             // let player play
             player.play();  // WARNING: this statement must be in the same synchronized block of wait()

@@ -261,7 +261,7 @@ public class Game implements GameInterface {
         for (int i = 0; i < playerList.size(); i++) {
             Player player = playerList.get(i);
             player.setPosition(i);
-            System.out.printf("\t n.%-2d\t%s\n", player.getPosition(), player.getName());
+            System.out.printf("\t n.%-2d\t%s\n", player.getPosition() + 1, player.getName());
         }
         System.out.println();
     }
