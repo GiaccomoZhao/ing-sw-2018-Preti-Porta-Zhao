@@ -1,7 +1,9 @@
 package porprezhas.model;
 
+import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.cards.*;
+import porprezhas.model.dices.Pattern;
 
 import java.util.List;
 import java.util.Random;
@@ -21,9 +23,16 @@ public class Player {
     private boolean bPass;
 
 
+    public Player(String name) {
+        favorToken = Game.GameConstants.FAVOR_TOKEN_QUANTITY;
+        playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
+        this.name = name;
+    }
+
     public Player() {
         favorToken = Game.GameConstants.FAVOR_TOKEN_QUANTITY;
         playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
+        name = new String("noName");
     }
 
 
@@ -93,6 +102,7 @@ public class Player {
      *   3. pass/finish
      */
     public void play() {
+        bPass = false;
         // set flag to unlock view actions
     }
 

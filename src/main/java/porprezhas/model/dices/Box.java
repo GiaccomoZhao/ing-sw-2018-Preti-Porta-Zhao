@@ -1,4 +1,4 @@
-package porprezhas.model.cards;
+package porprezhas.model.dices;
 
 import porprezhas.model.dices.Dice;
 

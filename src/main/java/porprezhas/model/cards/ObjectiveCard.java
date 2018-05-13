@@ -1,6 +1,7 @@
 package porprezhas.model.cards;
 
 
+import porprezhas.model.dices.Board;
 
 public abstract class ObjectiveCard extends Card {
 
