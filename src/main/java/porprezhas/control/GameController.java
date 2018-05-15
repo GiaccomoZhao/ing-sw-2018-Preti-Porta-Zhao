@@ -7,6 +7,7 @@ import porprezhas.model.dices.Board;
 import porprezhas.model.cards.PrivateObjectiveCard;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.database.DatabaseInterface;
+import porprezhas.model.dices.Pattern;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -120,17 +121,22 @@ public class GameController implements GameControllerInterface, Runnable {
 	public void playerPrepare() {
         System.out.println("Players Preparing");
         List<Player> playerList = game.getPlayerList();
-        Player player = playerList.get(0);
+
 		state = StateMachine.PLAYER_PREPARING;
 		// wait playerList choose Pattern Card
 		// with observer.update: player.choosePatternCard();
         if (game.isSolitaire()) {
+            Player player = playerList.get(0);
 			player.setFavorToken(0);
 			player.setPrivateObjectCardList(null); // TODO: 2 random cards
 		} else {
 			// give a random private card
 			// give 2 random PatternCard to choose one from 4 faces
 			// give favorTokens based on difficulty of patternCard
+            for (Player player: playerList) {
+                Pattern pattern = new Pattern(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
+                player.choosePatternCard(pattern);
+            }
 		}
 	}
 
@@ -169,7 +175,7 @@ public class GameController implements GameControllerInterface, Runnable {
 	    Player player;
 	    List<Player> playerList = game.getPlayerList();
 		state = StateMachine.PLAYING;
-// TODO:            draftPool.reroll(); // remove and put new dices
+             // remove and put new dices
 		for (int i = 0; i < 2 * playerList.size(); i++) {
             player = game.getCurrentPlayer();
 
@@ -187,11 +193,14 @@ public class GameController implements GameControllerInterface, Runnable {
              *   2. buy and use a Tool Card when player wants
              *   3. pass/finish
              */
+            game.InsertDice(0, 0, 3);
 
             //wait everybody for a timeout then pass or player pass
 			//possible other solution: Timer or while sleep nanoTime
             while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
+
                 try {
+
                     synchronized(playTimeOut) {
                         playTimeOut.wait( (int) Game.GameConstants.secondsToMillis(
                                 Game.GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC));
@@ -235,4 +244,5 @@ public class GameController implements GameControllerInterface, Runnable {
 
         // TODO: save all in databases
     }
+
 }

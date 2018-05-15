@@ -1,6 +1,6 @@
 package porprezhas.control;
 
-import com.sun.media.jfxmedia.events.PlayerStateListener;
+//import com.sun.media.jfxmedia.events.PlayerStateListener;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
@@ -54,7 +54,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 
 	@Override
-	public synchronized void join(Player newPlayer) {
+	public synchronized void join(Player newPlayer) throws RemoteException {
         System.out.println("A new player has joined.  ID = " + newPlayer.getPlayerID() + "\t Name = " + newPlayer.getName());
         GameControllerInterface gameController = getGameControllerByPlayer(newPlayer);
         if(null != gameController) {
@@ -74,7 +74,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 	// TODO: a test
 	// create a new game from
-	public GameControllerInterface createNewGame() {
+	public GameControllerInterface createNewGame() throws RemoteException {
 	    // before start: check all player on line
         // create a new game with 1-4 players
         int playerQuantity = (playerBuffer.size() >= Game.GameConstants.MAX_PLAYER_QUANTITY) ?

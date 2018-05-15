@@ -1,16 +1,31 @@
 package porprezhas.model;
 
+import org.omg.CORBA.portable.RemarshalException;
+import porprezhas.RMI.Server.ModelObservable;
 import porprezhas.control.GameController;
 import porprezhas.model.cards.ToolCard;
+import porprezhas.model.dices.Dice;
+import porprezhas.model.dices.DiceBag;
+import porprezhas.model.dices.DraftPool;
+import porprezhas.model.dices.Pattern;
 import porprezhas.model.track.RoundTrack;
-import porprezhas.model.track.ScoreTrack;
+
 import porprezhas.model.cards.*;
 
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class Game implements GameInterface {
+public class Game extends ModelObservable implements GameInterface {
     static Logger logger = Logger.getLogger(GameController.class.getName());
+
+    public DiceBag getDiceBag() {
+        return diceBag;
+    }
+
+    public DraftPool getDraftPool() {
+        return draftPool;
+    }
 
     public static class GameConstants {
         private GameConstants() {
@@ -22,7 +37,7 @@ public class Game implements GameInterface {
         public static final int FAVOR_TOKEN_QUANTITY = 3;
         public static final int TIMEOUT_PREPARING_SEC = 10; //60;
         public static final int TIMEOUT_ROUND_SEC = 3; //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
-        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 0.1;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
+        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 2;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
 
         public static double secondsToMillis(double seconds) {
             return  seconds * 1000;
@@ -53,7 +68,9 @@ public class Game implements GameInterface {
 
     private final Long gameID;      // for internet game, but we need a server
     private RoundTrack roundTrack;
-    private ScoreTrack scoreTrack;
+    private DiceBag diceBag;
+    private DraftPool draftPool;
+
     private List<PublicObjectiveCard> publicObjectiveCardList;
     private List<ToolCard> toolCardList;
 
@@ -73,10 +90,11 @@ public class Game implements GameInterface {
     // *********************************
     // ------ Basic Class Methods ------
 
-    public Game(List<Player> playerList, SolitaireDifficulty difficulty) {
+    public Game(List<Player> playerList, SolitaireDifficulty difficulty) throws RemoteException {
         gameID = new Random().nextLong();   // senseless until we have a global server
         roundTrack = new RoundTrack();
-
+        diceBag = new DiceBag();
+        draftPool = new DraftPool(diceBag, playerList.size());
         this.playerList = new ArrayList<>(playerList);
         resetPlayerIndexes();
         setCurrentPlayerByIndex();    // can be commented because gameController always calls Game.OrderPlayers() that calls this method
@@ -109,7 +127,7 @@ public class Game implements GameInterface {
     }
 
     public int getRoundIndex() {
-        return roundTrack.getRound();
+        return roundTrack.getActualRound();
     }
 
     public int getDiceQuantity() {
@@ -162,7 +180,8 @@ public class Game implements GameInterface {
      * ensure currentPlayer = playerList(iCurrentPlayer)
      */
     public Player rotatePlayer() {
-        // case anti clock
+
+       // case anti clock
         if (bCountClockwise) {
             if(iCurrentPlayer == iFirstPlayer) {
                 // when first player has already played for second time
@@ -184,7 +203,12 @@ public class Game implements GameInterface {
             } else {
                 nextPlayer();
             }
+
         }
+
+        setChanged();
+        notifyObservers();
+
 //        logger.info("It is turn of player n." + iCurrentPlayer);
         return currentPlayer;   // nextPlayer() method changes this attribute
     }
@@ -266,4 +290,31 @@ public class Game implements GameInterface {
         System.out.println();
     }
 
+    public synchronized Boolean InsertDice(int indexDice, int xPose, int yPose){
+        Dice dice = draftPool.chooseDice(indexDice);
+        if(getCurrentPlayer().getBoard().insertDice(dice, xPose, yPose)){
+            setChanged();
+            notifyObservers();
+            for (int i = 0; i <4 ; i++) {
+                for (int j = 0; j<5 ; j++) {
+                    System.out.print(getCurrentPlayer().getBoard().getDice(i,j).getDiceNumber());
+                    System.out.print(getCurrentPlayer().getBoard().getDice(i,j).colorDice + " ");
+                }
+                System.out.println();
+            }
+            return true;
+        }
+        else
+            return false;
+
+    }
+
+    public void prepare(){
+
+        for (Player player: playerList) {
+            Pattern pattern = new Pattern(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
+            player.choosePatternCard(pattern);
+        }
+
+    }
 }
