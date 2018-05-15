@@ -51,4 +51,20 @@ public class DiceBag {
     public int diceBagSize(){
         return diceSet.size();
     }
+
+
+    public void addDice(Dice dice){
+        diceSet.add(dice);
+    }
+
+    public Dice extractDice(){
+
+        Random random = new Random();
+        Dice die;
+        int extraction;
+
+        extraction = random.nextInt(diceSet.size());
+        die =diceSet.get(extraction);
+        return die;
+    }
 }
