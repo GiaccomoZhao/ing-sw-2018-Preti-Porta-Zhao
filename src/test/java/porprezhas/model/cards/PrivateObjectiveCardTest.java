@@ -2,6 +2,7 @@ package porprezhas.model.cards;
 
 import org.junit.Before;
 import org.junit.Test;
+import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 
 import static org.junit.Assert.*;

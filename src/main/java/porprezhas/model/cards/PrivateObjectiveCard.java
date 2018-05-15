@@ -1,4 +1,5 @@
 package porprezhas.model.cards;
+import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 
 public class PrivateObjectiveCard  extends ObjectiveCard {

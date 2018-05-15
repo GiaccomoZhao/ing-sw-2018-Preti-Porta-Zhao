@@ -1,14 +1,16 @@
 package porprezhas.control;
 
+import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 
 import java.rmi.Remote;
 
 public interface GameControllerInterface extends Remote {
-    void start();       // start a thread that manage whole game process
+    void startGame();       // startGame a thread that manage whole game process
     void pass();        // unblock thread
     int calcScore(Player player);
     StateMachine getState();    // when server want to know what is game doing -- running or waiting player exit
+    GameInterface getGame();
 
     // do i put this in concrete class or in interface? depends by getState method
     public enum StateMachine {

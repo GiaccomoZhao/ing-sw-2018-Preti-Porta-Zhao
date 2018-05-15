@@ -2,7 +2,10 @@ package porprezhas.model.cards;
 
 import org.junit.Before;
 import org.junit.Test;
+import porprezhas.model.dices.Board;
+import porprezhas.model.dices.Box;
 import porprezhas.model.dices.Dice;
+import porprezhas.model.dices.Pattern;
 
 import static org.junit.Assert.*;
 

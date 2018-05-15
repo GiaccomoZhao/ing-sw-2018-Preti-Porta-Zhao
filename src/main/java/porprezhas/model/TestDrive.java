@@ -1,7 +1,7 @@
 package porprezhas.model;
 
-import porprezhas.model.cards.Board;
-import porprezhas.model.cards.Pattern;
+import porprezhas.model.dices.Board;
+import porprezhas.model.dices.Pattern;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;

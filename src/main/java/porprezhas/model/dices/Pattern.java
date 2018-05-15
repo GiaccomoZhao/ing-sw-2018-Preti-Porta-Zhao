@@ -1,7 +1,5 @@
-package porprezhas.model.cards;
+package porprezhas.model.dices;
 
-
-import porprezhas.model.dices.Dice;
 
 public class Pattern {
     public enum TypePattern {
@@ -577,6 +575,10 @@ public class Pattern {
 
 
     public void print() {
+        print3();
+    }
+
+    public void print1() {
         System.out.println("\nPattern name: " + getNamePattern());
         System.out.print("╭──");
         for (int i = 0; i < getWidth(); i++) {
@@ -636,7 +638,7 @@ public class Pattern {
         for (int y = 0; y < getHeight(); y++) {
             System.out.print("║");
             for (int x = 0; x < getWidth(); x++) {
-                Box box = getBox(x, y);
+                Box box = getBox(y, x);
                 System.out.format(" %d%C ", box.getNumber(), box.getColor().name().charAt(0));
                 if( x!= getWidth()-1) {
                     if(x%2 == 0)

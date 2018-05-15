@@ -1,13 +1,17 @@
 package porprezhas.model;
 
+import porprezhas.control.GameController;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.track.RoundTrack;
 import porprezhas.model.track.ScoreTrack;
 import porprezhas.model.cards.*;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Game implements GameInterface {
+    static Logger logger = Logger.getLogger(GameController.class.getName());
+
     public static class GameConstants {
         private GameConstants() {
         }
@@ -16,11 +20,11 @@ public class Game implements GameInterface {
         public static final int MAX_PLAYER_QUANTITY = 4;
         public static final int ROUND_NUM = 10;
         public static final int FAVOR_TOKEN_QUANTITY = 3;
-        public static final int TIMEOUT_PREPARING_SEC = 60;
-        public static final int TIMEOUT_ROUND_SEC = 33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
-        public static final int TIMEOUT_ROUND_SOLITAIRE_SEC = 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
+        public static final int TIMEOUT_PREPARING_SEC = 10; //60;
+        public static final int TIMEOUT_ROUND_SEC = 3; //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
+        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 0.1;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
 
-        public static int secondsToMillis(int seconds) {
+        public static double secondsToMillis(double seconds) {
             return  seconds * 1000;
         }
     }
@@ -73,8 +77,9 @@ public class Game implements GameInterface {
         gameID = new Random().nextLong();   // senseless until we have a global server
         roundTrack = new RoundTrack();
 
-        this.playerList = playerList;
+        this.playerList = new ArrayList<>(playerList);
         resetPlayerIndexes();
+        setCurrentPlayerByIndex();    // can be commented because gameController always calls Game.OrderPlayers() that calls this method
 
         if(playerList.size() == 1) {
             bSolitaire = true;
@@ -180,6 +185,7 @@ public class Game implements GameInterface {
                 nextPlayer();
             }
         }
+//        logger.info("It is turn of player n." + iCurrentPlayer);
         return currentPlayer;   // nextPlayer() method changes this attribute
     }
 
@@ -243,12 +249,21 @@ public class Game implements GameInterface {
                (*Order players based on the last time the player has been to the TEACHER's DESK*)
        @ */
 
-    public void orderPlayers() {
+    public synchronized  void orderPlayers() {
         if (playerList.size() <= 1) {
-            return;
+            ;
         } else {
             Collections.shuffle(playerList);
         }
+        setCurrentPlayerByIndex();
+
+        System.out.println("\nPlayer list: ");
+        for (int i = 0; i < playerList.size(); i++) {
+            Player player = playerList.get(i);
+            player.setPosition(i);
+            System.out.printf("\t n.%-2d\t%s\n", player.getPosition(), player.getName());
+        }
+        System.out.println();
     }
 
 }

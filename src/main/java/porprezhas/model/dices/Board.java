@@ -1,6 +1,4 @@
-package porprezhas.model.cards;
-
-import porprezhas.model.dices.Dice;
+package porprezhas.model.dices;
 
 public class Board {
 

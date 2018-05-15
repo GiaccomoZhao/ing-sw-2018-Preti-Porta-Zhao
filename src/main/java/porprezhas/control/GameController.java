@@ -3,11 +3,13 @@ package porprezhas.control;
 import porprezhas.model.Game;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
-import porprezhas.model.cards.Board;
+import porprezhas.model.dices.Board;
 import porprezhas.model.cards.PrivateObjectiveCard;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.database.DatabaseInterface;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -30,19 +32,26 @@ public class GameController implements GameControllerInterface, Runnable {
 
     public GameController(GameInterface game) {
         this.game = game;
+        playTimeOut = new Object(); // Lock
     }
 
     public StateMachine getState() {
         return state;
     }
 
-	@Override
+    public GameInterface getGame() {
+        return game;
+    }
+
+    @Override
 	public void run() {
+        startGame();
         playerPrepare();
         gamePrepare();
         for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
-            System.out.format("%-2d Round starts:\n", iRound);
+            System.out.format("\nRound %-2d starts: {\n", iRound);
             playRound();
+            System.out.println("}");
         }
         endGame();
 
@@ -55,12 +64,6 @@ public class GameController implements GameControllerInterface, Runnable {
 	}
 
 
-    // player call this
-    public void pass() {
-        notifyAll();
-    }
-
-
     /* @requires parameter != null
      * @ensure (*return sum of all game's public and player's private objectives*)
      */
@@ -71,19 +74,23 @@ public class GameController implements GameControllerInterface, Runnable {
 
         // sum of private objectives
         List<PrivateObjectiveCard> privateObjectiveCardList = privateObjectiveCardList = player.getPrivateObjectiveCardList();
-        for (PrivateObjectiveCard privateObjectiveCard : privateObjectiveCardList) {
-            scorePrivate += privateObjectiveCard.apply(board);
+        if(null != privateObjectiveCardList) {
+            for (PrivateObjectiveCard privateObjectiveCard : privateObjectiveCardList) {
+                scorePrivate += privateObjectiveCard.apply(board);
+            }
         }
-//        System.out.println(this + ": sum of private objectives = " + scorePrivate);
-        logger.info("Sum of private objectives = " + scorePrivate);
+//        System.out.println(player.getName() + ": sum of private objectives = " + scorePrivate);
+//        logger.info("" + Player.getName() + "\tSum of private objectives = " + scorePrivate);
 
         // sum of public objectives
         List<PublicObjectiveCard> publicObjectiveCardList = game.getPublicObjectiveCardList();
-        for (PublicObjectiveCard publicObjectiveCard : publicObjectiveCardList) {
-            scorePublic += publicObjectiveCard.apply(board);
+        if(null != publicObjectiveCardList) {
+            for (PublicObjectiveCard publicObjectiveCard : publicObjectiveCardList) {
+                scorePublic += publicObjectiveCard.apply(board);
+            }
         }
 //        System.out.println(this + ": sum of public objectives = " + scorePublic);
-        logger.info("Sum of public objectives = " + scorePublic);
+//        logger.info("" + Player.getName() + "\tSum of public objectives = " + scorePublic);
 
         return scorePrivate + scorePublic;
     }
@@ -92,8 +99,8 @@ public class GameController implements GameControllerInterface, Runnable {
     // ---------- Game Logic -----------
     // --------- Inner Methods ---------    can be private
 
-	public void start() {
-		System.out.println("Game: Start");
+	public void startGame() {
+		System.out.println("\n\n\n***** >>> Game Start <<< *****\n");
 		game.orderPlayers();
 		state = StateMachine.STARTED;
 	}
@@ -158,24 +165,26 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*a Pool of 2 * PlayerList.size() + 1 Dices*)&&
        @       (*rotate clockwise and counter-clockwise, so every player has 2 times at round*)
        @ */
-	public void playRound() {
-        System.out.println("Start to Play");
+	public synchronized void playRound() {
 	    Player player;
 	    List<Player> playerList = game.getPlayerList();
 		state = StateMachine.PLAYING;
 // TODO:            draftPool.reroll(); // remove and put new dices
 		for (int i = 0; i < 2 * playerList.size(); i++) {
             player = game.getCurrentPlayer();
-            System.out.format("%20s plays", player.getName());
+
+            Date dNow = new Date( );
+            SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss:SS");
+            System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition(), player.getName(), ft.format(dNow));
 
             // let player play
-            player.play();
+            player.play();  // WARNING: this statement must be in the same synchronized block of wait()
 
             /* TODO: should i create a thread to receive actions?
              *
              * 3 optional actions:
              *   1. pick and place a Dice from Draft Pool to Board
-             *   2. buy and use a Tool Card when player wantss
+             *   2. buy and use a Tool Card when player wants
              *   3. pass/finish
              */
 
@@ -183,8 +192,12 @@ public class GameController implements GameControllerInterface, Runnable {
 			//possible other solution: Timer or while sleep nanoTime
             while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
                 try {
-                    wait(Game.GameConstants.secondsToMillis(
-                            Game.GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC));
+                    synchronized(playTimeOut) {
+                        playTimeOut.wait( (int) Game.GameConstants.secondsToMillis(
+                                Game.GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC));
+                        pass();
+                        player.passes(true);
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -194,6 +207,16 @@ public class GameController implements GameControllerInterface, Runnable {
 		}
 	}
 
+	// player call this
+	public synchronized void pass() {
+        synchronized(playTimeOut) {
+            playTimeOut.notifyAll();
+        }
+	}
+
+	private int calcScore() {
+		return 0;
+	}
 
     public void endGame() {
         List<Player> playerList = game.getPlayerList();
@@ -201,12 +224,13 @@ public class GameController implements GameControllerInterface, Runnable {
 
         state = StateMachine.ENDING;
 
-        System.out.println( "\n\n\t\tGAME OVER\n\n\n" +
-                                "\t\t  Score  \n");
+        System.out.println( "\n\n\n" +
+                            "  ***** >>> GAME OVER <<< *****  \n\n" +
+                            "              Score              \n");
         for (int i = 0; i < playerList.size(); i++) {
             player = playerList.get(i);
-            System.out.format("  %20s\t%-5d\n",
-                    playerList.get(i), calcScore(player));
+            System.out.format("    %-15s \t%5d\n",
+                    playerList.get(i).getName(), calcScore(player));
         }
 
         // TODO: save all in databases

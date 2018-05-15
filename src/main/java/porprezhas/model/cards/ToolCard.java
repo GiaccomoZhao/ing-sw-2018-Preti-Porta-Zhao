@@ -1,4 +1,5 @@
 package porprezhas.model.cards;
+import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DraftPool;
 
