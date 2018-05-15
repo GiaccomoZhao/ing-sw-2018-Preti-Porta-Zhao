@@ -1,42 +1,38 @@
 package porprezhas.model.track;
 
 import porprezhas.model.Game;
+import porprezhas.model.dices.Dice;
+import porprezhas.model.dices.DraftPool;
 
 import java.util.ArrayList;
 
 
 public class RoundTrack {
-    class Dice { ;}
-    class DraftPool {ListOfDices dices ;}
-    class ListOfDices extends ArrayList<Dice> {
-        ;
-    }
 
-    private int actualRound;
-    private ArrayList<Dice>[] dices;
+    ArrayList<Dice>[] track;
+    int actualRound;
 
     public RoundTrack() {
-        dices = new ListOfDices[Game.GameConstants.ROUND_NUM];
-        actualRound = 0;
+        track= new ArrayList[10];
+        actualRound=1;
     }
-
-
-    public void addDice(DraftPool draftPool) {
-        for (Dice d : draftPool.dices) {
-            dices[actualRound].add(d);
-
-        }
-    }
-
-    public void removeDice(Dice dice) {
-            dices[actualRound].remove(dice);
-    }
-
-    public void addDice(Dice dice) {
-        dices[getRound()].add(dice);
-    }
-
-    public int getRound() {
+    public int getActualRound() {
         return actualRound;
+    }
+
+    public ArrayList<Dice> getRoundDice(int round){
+        return track[round-1];
+    }
+
+    public void addDice(DraftPool draftPool){
+        track[actualRound-1]=draftPool.diceList();
+        actualRound++;
+    }
+    public void addExternalDice(int round,Dice dice){
+        track[round-1].add(dice);
+    }
+
+    public void removeDice(int round,Dice dice){
+        track[round-1].remove(dice);
     }
 }

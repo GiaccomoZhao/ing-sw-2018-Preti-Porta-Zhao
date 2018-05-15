@@ -8,9 +8,12 @@ public class PrivateObjectiveCardFactory implements CardFactory {
     ArrayList<Integer> numberList;
     int numberOfPlayer;
 
+    public static final int PRIVATE_OBJECTIVE_CARD_NUMBER = 5;
+
+
     public PrivateObjectiveCardFactory( int numberOfPlayer) {
-        numberList = new ArrayList<Integer>(5);
-        for (int i = 0; i < 5; i++) {
+        numberList = new ArrayList<Integer>(PRIVATE_OBJECTIVE_CARD_NUMBER);
+        for (int i = 0; i < PRIVATE_OBJECTIVE_CARD_NUMBER; i++) {
             numberList.set(i, i);
         }
         this.numberOfPlayer=numberOfPlayer;

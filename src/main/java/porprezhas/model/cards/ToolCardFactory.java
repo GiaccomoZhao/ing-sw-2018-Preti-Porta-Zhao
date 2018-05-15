@@ -8,12 +8,14 @@ public class ToolCardFactory implements CardFactory {
 
     ArrayList<Card> cards;
     ArrayList<Integer> numberList;
+    public static final int TOOL_CARD_NUMBER = 12;
+    public static final int LIST_LENGHT = 3;
 
     public ToolCardFactory() {
 
 
-        numberList = new ArrayList<Integer>(12);
-        for(int i=0; i<12; i++){
+        numberList = new ArrayList<Integer>(TOOL_CARD_NUMBER);
+        for(int i=0; i<TOOL_CARD_NUMBER; i++){
             numberList.set(i,i);
         }
 
@@ -27,7 +29,7 @@ public class ToolCardFactory implements CardFactory {
 
         cards= new ArrayList<>();
 
-        for(int i=0; i < 3; i++){
+        for(int i=0; i < LIST_LENGHT; i++){
 
 
             cardId = random.nextInt(numberList.size() - 1);
