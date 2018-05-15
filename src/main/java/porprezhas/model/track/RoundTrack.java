@@ -28,4 +28,11 @@ public class RoundTrack {
         track[actualRound-1]=draftPool.diceList();
         actualRound++;
     }
+    public void addExternalDice(int round,Dice dice){
+        track[round-1].add(dice);
+    }
+
+    public void removeDice(int round,Dice dice){
+        track[round-1].remove(dice);
+    }
 }
