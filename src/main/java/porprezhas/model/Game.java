@@ -1,13 +1,9 @@
 package porprezhas.model;
 
-import org.omg.CORBA.portable.RemarshalException;
 import porprezhas.RMI.Server.ModelObservable;
 import porprezhas.control.GameController;
 import porprezhas.model.cards.ToolCard;
-import porprezhas.model.dices.Dice;
-import porprezhas.model.dices.DiceBag;
-import porprezhas.model.dices.DraftPool;
-import porprezhas.model.dices.Pattern;
+import porprezhas.model.dices.*;
 import porprezhas.model.track.RoundTrack;
 
 import porprezhas.model.cards.*;
@@ -37,7 +33,7 @@ public class Game extends ModelObservable implements GameInterface {
         public static final int FAVOR_TOKEN_QUANTITY = 3;
         public static final int TIMEOUT_PREPARING_SEC = 10; //60;
         public static final int TIMEOUT_ROUND_SEC = 3; //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
-        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 2;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
+        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 5;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
 
         public static double secondsToMillis(double seconds) {
             return  seconds * 1000;
@@ -94,7 +90,7 @@ public class Game extends ModelObservable implements GameInterface {
         gameID = new Random().nextLong();   // senseless until we have a global server
         roundTrack = new RoundTrack();
         diceBag = new DiceBag();
-        draftPool = new DraftPool(diceBag, playerList.size());
+        draftPool = new DraftPool(diceBag, playerList.size());    //this will be created by controller before every round
         this.playerList = new ArrayList<>(playerList);
         resetPlayerIndexes();
         setCurrentPlayerByIndex();    // can be commented because gameController always calls Game.OrderPlayers() that calls this method
@@ -180,8 +176,7 @@ public class Game extends ModelObservable implements GameInterface {
      * ensure currentPlayer = playerList(iCurrentPlayer)
      */
     public Player rotatePlayer() {
-
-       // case anti clock
+        // case anti clock
         if (bCountClockwise) {
             if(iCurrentPlayer == iFirstPlayer) {
                 // when first player has already played for second time
@@ -203,7 +198,6 @@ public class Game extends ModelObservable implements GameInterface {
             } else {
                 nextPlayer();
             }
-
         }
 
         setChanged();
@@ -211,6 +205,11 @@ public class Game extends ModelObservable implements GameInterface {
 
 //        logger.info("It is turn of player n." + iCurrentPlayer);
         return currentPlayer;   // nextPlayer() method changes this attribute
+    }
+
+    public void newTurn() {
+        currentPlayer.setPickableDice(1);
+        currentPlayer.setUsedToolCard(false);
     }
 
 
@@ -236,6 +235,7 @@ public class Game extends ModelObservable implements GameInterface {
                 iCurrentPlayer++;
         }
         setCurrentPlayerByIndex(); // change currentPlayer
+
         return currentPlayer;
     }
 
@@ -291,30 +291,60 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public synchronized Boolean InsertDice(int indexDice, int xPose, int yPose){
-        Dice dice = draftPool.chooseDice(indexDice);
-        if(getCurrentPlayer().getBoard().insertDice(dice, xPose, yPose)){
-            setChanged();
-            notifyObservers();
-            for (int i = 0; i <4 ; i++) {
-                for (int j = 0; j<5 ; j++) {
-                    System.out.print(getCurrentPlayer().getBoard().getDice(i,j).getDiceNumber());
-                    System.out.print(getCurrentPlayer().getBoard().getDice(i,j).colorDice + " ");
-                }
-                System.out.println();
-            }
-            return true;
-        }
-        else
-            return false;
+        // check that there is only a insert at turn
+        if(currentPlayer.getPickableDice() > 0) {
+/*            if(draftPool.diceList().size() == 0)
+                System.out.println("00000000000000");
+            System.out.println("size of draft pool = " + draftPool.diceList().size());
+*/            Dice dice = draftPool.diceList().get(indexDice);
+            if (getCurrentPlayer().getBoard().insertDice(dice, xPose, yPose)) {
+                currentPlayer.setPickableDice(currentPlayer.getPickableDice() -1);
+                draftPool.chooseDice(indexDice);
 
+                setChanged();
+                notifyObservers();
+                return true;
+            } else
+                return false;   // not valid
+        } else {
+            return false;   // not valid
+        }
     }
 
-    public void prepare(){
+    public void setPattern(Player p, Pattern pattern) {
+        if(p.getBoard() == null)    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
+          p.choosePatternCard(pattern);   // here we create a new board associating it to the passed pattern
+    }
 
-        for (Player player: playerList) {
-            Pattern pattern = new Pattern(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
-            player.choosePatternCard(pattern);
+    public void nextRound() {
+        getDraftPool().setDraftPool(getDiceBag(), playerList.size());
+    }
+
+    public int calcScore(Player player) {
+        int scorePublic = 0;
+        int scorePrivate = 0;
+        Board board = player.getBoard();
+
+        // sum of private objectives
+        List<PrivateObjectiveCard> privateObjectiveCardList = player.getPrivateObjectiveCardList();
+        if(null != privateObjectiveCardList) {
+            for (PrivateObjectiveCard privateObjectiveCard : privateObjectiveCardList) {
+                scorePrivate += privateObjectiveCard.apply(board);
+            }
         }
+//        System.out.println(player.getName() + ": sum of private objectives = " + scorePrivate);
+//        logger.info("" + Player.getName() + "\tSum of private objectives = " + scorePrivate);
 
+        // sum of public objectives
+        List<PublicObjectiveCard> publicObjectiveCardList = this.getPublicObjectiveCardList();
+        if(null != publicObjectiveCardList) {
+            for (PublicObjectiveCard publicObjectiveCard : publicObjectiveCardList) {
+                scorePublic += publicObjectiveCard.apply(board);
+            }
+        }
+//        System.out.println(this + ": sum of public objectives = " + scorePublic);
+//        logger.info("" + Player.getName() + "\tSum of public objectives = " + scorePublic);
+
+        return scorePrivate + scorePublic;
     }
 }

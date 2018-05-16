@@ -1,6 +1,5 @@
 package porprezhas.control;
 
-//import com.sun.media.jfxmedia.events.PlayerStateListener;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
@@ -60,7 +59,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         if(null != gameController) {
             // player is already in Game
             // TODO: send a message to client:
-            // player.setGameController(gameController);
+            // client.player.setGameController(gameController);
             System.out.println("But he is already inside a running game. Putting new player in that game!");
 
         } else {
@@ -95,7 +94,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 */
         playerBuffer.removeAll(subBuffer);
         // TODO: send a message to client:
-        // for(Player player : subBuffer) player.setGameController(gameController);
+        // for(Player player : subBuffer) player.getClient().player.setGameController(gameController);
         return gameControllerList.get(gameControllerList.size() - 1);
 	}
 
@@ -120,7 +119,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 }
             }
         }
-        return null;    // throw game not found ?
+        return null;    // NOTE: throw game not found ?
     }
 
 

@@ -19,7 +19,7 @@ public class DraftPool {
         Dice choosenDice;
 
         if(dice <= draftPool.size()){
-            choosenDice=draftPool.remove(dice);
+            choosenDice = draftPool.remove(dice);
 
             return choosenDice;
         }

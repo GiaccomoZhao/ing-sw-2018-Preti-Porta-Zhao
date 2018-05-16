@@ -18,7 +18,7 @@ public class TestTotal {
 
 
         ServerController server ;
-        GameControllerInterface newGame;
+        GameControllerInterface newGameController;
         List<Player> players;
         Thread gameThread;
 
@@ -41,13 +41,18 @@ public class TestTotal {
             server.join(players.get(i));
         }
 
-            newGame = (GameController) server.getGameControllers().get(0);
+        newGameController = (GameController) server.getGameControllers().get(0);
 
-            Game game = (Game) newGame.getGame();
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind("game", game);
-        (gameThread = new Thread((Runnable) newGame)).start();
+        Game game = (Game) newGameController.getGame();
+        Registry registry = LocateRegistry.getRegistry();
+        registry.rebind("game", game);
+        (gameThread = new Thread((Runnable) newGameController)).start();
 
+        gameThread.sleep(3000);
 
+//        while(gameThread.isAlive()) {
+//            newGameController.insertDice(0, 0, 3);
+//            newGameController.pass();
+//        }
     }
 }

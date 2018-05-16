@@ -3,6 +3,7 @@ package porprezhas.model;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
+import porprezhas.model.dices.Pattern;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -21,4 +22,8 @@ public interface GameInterface {
     public DraftPool getDraftPool();
     public Boolean InsertDice(int indexDice, int xPose, int yPose);
     boolean isSolitaire();
+    void setPattern(Player player, Pattern pattern);
+    void nextRound();
+    int calcScore(Player player);
+    void newTurn();
 }

@@ -22,19 +22,24 @@ public class Player {
 
     private boolean bPass;
 
+    private boolean bUsedToolCard;
+    private int pickableDice;
+
 
     public Player(String name) {
         favorToken = Game.GameConstants.FAVOR_TOKEN_QUANTITY;
         playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
         this.name = name;
+        bUsedToolCard = false;
+        pickableDice = 1;
     }
-
+/*
     public Player() {
         favorToken = Game.GameConstants.FAVOR_TOKEN_QUANTITY;
         playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
         name = new String("noName");
     }
-
+*/
 
     public Long getPlayerID() {
         return playerID;
@@ -86,6 +91,22 @@ public class Player {
 
     public void passes(boolean bPass) {
         this.bPass = bPass;
+    }
+
+    public boolean hasUsedToolCard() {
+        return bUsedToolCard;
+    }
+
+    public void setUsedToolCard(boolean bUsedToolCard) {
+        this.bUsedToolCard = bUsedToolCard;
+    }
+
+    public int getPickableDice() {
+        return pickableDice;
+    }
+
+    public void setPickableDice(int pickableDice) {
+        this.pickableDice = pickableDice;
     }
 
     public void choosePatternCard (Pattern pattern) {

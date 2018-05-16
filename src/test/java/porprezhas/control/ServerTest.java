@@ -80,8 +80,11 @@ public class ServerTest {
 
 
         (gameThread = new Thread((Runnable) newGame)).start();
-
-
+        try {
+            gameThread.wait(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //Check player play order. GameController already prints it. Just wait the game ends.
         try {
             gameThread.join(80 * 1000 + 3000);

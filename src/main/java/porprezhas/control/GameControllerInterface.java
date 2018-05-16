@@ -2,6 +2,7 @@ package porprezhas.control;
 
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
+import porprezhas.model.dices.Pattern;
 
 import java.rmi.Remote;
 
@@ -11,12 +12,14 @@ public interface GameControllerInterface extends Remote {
     int calcScore(Player player);
     StateMachine getState();    // when server want to know what is game doing -- running or waiting player exit
     GameInterface getGame();
+    void choosePattern(Player player, Pattern pattern);
+    void insertDice(Integer indexDice, Integer xPose, Integer yPose);
 
     // do i put this in concrete class or in interface? depends by getState method
     public enum StateMachine {
         WAITING_FOR_PLAYER, // INITIAL STATE, Waiting for host's Start
         STARTED,            // Flag, STARTED < state < FINISHED means a game is running
-        PLAYER_PREPARING,  // Give player cards etc.
+        PLAYER_PREPARING,   // Give player cards etc.
         GAME_PREPARING,     // Place toolCard and public object and decide the first player
         PLAYING,            // During round phase
         FINISHED,           // Flag, state > FINISHED means game has already been finished

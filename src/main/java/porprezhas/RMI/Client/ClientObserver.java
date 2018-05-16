@@ -4,6 +4,7 @@ package porprezhas.RMI.Client;
 
 import porprezhas.RMI.RemoteObservable;
 import porprezhas.RMI.RemoteObserver;
+import porprezhas.model.Game;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -36,6 +37,14 @@ public class ClientObserver implements RemoteObserver {
 
     @Override
     public void update(RemoteObservable ob, Object arg) throws RemoteException {
-        System.out.println("Aggiorno la view");
+        Game game = (Game) ob;  // TODO:
+        System.out.println("Player: " + game.getCurrentPlayer().getName());
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 5; j++) {
+                System.out.print(game.getCurrentPlayer().getBoard().getDice(i, j).getDiceNumber());
+                System.out.print(game.getCurrentPlayer().getBoard().getDice(i, j).colorDice + " ");
+            }
+            System.out.println();
+        }
     }
 }
