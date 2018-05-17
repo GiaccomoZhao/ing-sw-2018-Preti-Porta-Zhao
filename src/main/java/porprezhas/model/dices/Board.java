@@ -8,17 +8,27 @@ public class Board {
     private final Pattern pattern;
     private Dice[][] board;
     private int diceQuantity;
+    private final int HEIGHT = 4;
+    private final int WIDTH = 5;
 
 
     public Board(Pattern pattern) {
 
         this.pattern = pattern;
-        this.board = new Dice[4][5];
+        this.board = new Dice[HEIGHT][WIDTH];
         this.diceQuantity=0;
     }
 
     public Pattern getPattern() {
         return pattern;
+    }
+
+    public int getHeight() {
+        return HEIGHT;
+    }
+
+    public int getWidth() {
+        return WIDTH;
     }
 
     public Boolean occupiedBox(int x, int y){
