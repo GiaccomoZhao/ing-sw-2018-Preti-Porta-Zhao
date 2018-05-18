@@ -25,7 +25,7 @@ public class BoardTest {
         die = mock(Dice.class);
         die1 = mock(Dice.class);
         die0 = mock(Dice.class);
-        board = new Board(pattern);
+        board = new Board(pattern.getTypePattern());
         box = mock(Box.class);
 
 

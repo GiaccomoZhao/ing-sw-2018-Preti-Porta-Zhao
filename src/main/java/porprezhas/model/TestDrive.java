@@ -41,7 +41,7 @@ public class TestDrive {
         System.out.println();
 
 
-        Board board = new Board(pattern);
+        Board board = new Board(pattern.getTypePattern());
         //System.out.println(board.insertDice(dice, 0,1));
 
         //System.out.println(board.insertDice(dice1, 0,1));

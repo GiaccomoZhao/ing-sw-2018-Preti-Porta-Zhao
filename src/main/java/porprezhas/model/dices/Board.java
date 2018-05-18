@@ -12,11 +12,12 @@ public class Board {
     private final int WIDTH = 5;
 
 
-    public Board(Pattern pattern) {
+    public Board(Pattern.TypePattern typePattern) {
 
-        this.pattern = pattern;
+        this.pattern = new Pattern (typePattern);
         this.board = new Dice[HEIGHT][WIDTH];
         this.diceQuantity=0;
+        System.out.println(pattern.getNamePattern());
     }
 
     public Pattern getPattern() {
@@ -342,5 +343,136 @@ public class Board {
              }
      }
 
+     // for TEST use, now that we haven't view yet.
+     // the print quality strongly depends by the font of the terminal:
+     // @Param bFixedFont = true if the terminal has fixed size for every character!
+     public boolean print(boolean bFixedFont) {
+         // get information
+         Pattern pattern = getPattern();
+         char number;
+         char color;
+
+         // start printing
+//        ╔╗╚════║║║╝
+//        ╧ ╤ ╟┼╢──│
+
+         // print TOP border
+         if(bFixedFont) {
+             System.out.print("╔══");
+         } else {
+             System.out.print("╔══");
+         }
+         for (int i = 0; i < this.getWidth() - 1; i++) {
+             if(bFixedFont) {
+                 System.out.print("══╤══");
+             } else {
+                 System.out.print("═══╤══");
+             }
+         }
+         if(bFixedFont)
+             System.out.println("══╗");
+         else
+             System.out.println("═══╗");
+
+
+         // print all board and pattern LINEs
+         for (int y = 0; y < this.getHeight(); y++) {
+
+             // FIRST Line
+             // print a part of LEFT border
+             System.out.print("║");
+
+             //       *****************
+             // print **>>> BOARD <<<**
+             for (int x = 0; x < this.getWidth(); x++) {
+                 // print DICE
+                 Dice dice = this.getDice(y, x);
+                 number = (char) ('0' + dice.getDiceNumber());
+                 color = dice.getColorDice().name().charAt(0);
+                 if(number == '0')
+                     number = ' ';
+                 if(color == 'W')
+                     color = ' ';
+                 System.out.format(" %c%C ", number, color);
+
+                 // print mid column separator
+                 if (x != this.getWidth() - 1) {
+                     // switching between large and small separator to adapt the width size to 2 normal char + a space
+                     if (x % 2 == 0) {
+                         System.out.print("|");
+                     } else {
+                         System.out.print("│");
+                     }
+                 }
+             }
+             System.out.println("║");
+
+             // SECOND Line
+             // print a part of LEFT border
+             System.out.print("║");
+
+             // print **>>> PATTERN <<<**
+             //       *******************
+             for (int x = 0; x < pattern.getWidth(); x++) {
+                 //
+                 Box box = pattern.getBox(y, x);
+                 number = (char) ('0' + box.getNumber());
+                 color = box.getColor().name().toLowerCase().charAt(0);
+                 if(number == '0')
+                     number = ' ';
+                 if(color == 'w')
+                     color = ' ';
+                 System.out.format(" %c%c ", number, color);
+
+                 // print mid column separator
+                 if (x != this.getWidth() - 1) {
+                     // switching between large and small separator to adapt the width size to 2 normal char + a space
+                     if (x % 2 == 0) {
+                         System.out.print("|");
+                     } else {
+                         System.out.print("│");
+                     }
+                 }
+             }
+
+             // print a part of RIGHT border
+             System.out.println("║");
+
+             // print horizontal separator + left and right border
+             if (y != this.getHeight() - 1) {
+                 System.out.print("╟──");
+                 for (int x = 0; x < this.getWidth() - 1; x++) {
+                     if(bFixedFont) {
+                         System.out.print("──┼──");
+                     } else {
+                         System.out.print("───┼──");
+                     }
+                 }
+                 if(bFixedFont) {
+                     System.out.println("──╢");
+                 } else {
+                     System.out.println("───╢");
+                 }
+             }
+         }
+
+         // print BOTTOM border
+         if(bFixedFont)
+             System.out.print("╚══");
+         else
+             System.out.print("╚══");
+         for (int i = 0; i < this.getWidth() - 1; i++) {
+             if(bFixedFont)
+                 System.out.print("══╧══");
+             else
+                 System.out.print("═══╧══");
+         }
+         if(bFixedFont)
+             System.out.println("══╝");
+         else
+             System.out.println("═══╝");
+
+         return true; // printed successfully
+     }
 
 }

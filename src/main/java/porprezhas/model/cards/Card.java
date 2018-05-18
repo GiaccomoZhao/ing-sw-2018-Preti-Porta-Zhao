@@ -1,5 +1,11 @@
 package porprezhas.model.cards;
 
+import porprezhas.model.dices.Board;
+import porprezhas.model.dices.Dice;
+import porprezhas.model.dices.DiceBag;
+import porprezhas.model.dices.DraftPool;
+import porprezhas.model.track.RoundTrack;
+
 public abstract class
 Card {
 
@@ -56,6 +62,8 @@ Card {
         this.effect=effect;
     }
 
+    public String getName() { return effect.name; }
+
     public String getDescription() {
         return effect.description;
     }
@@ -64,6 +72,7 @@ Card {
         return effect.ID;
     }
 
+    public abstract int apply(Board board);
 
-
+    public abstract void use(Board board, DraftPool draftPool, int xStart1, int yStart1, int xDestination1, int yDestination1, int xStart2, int yStart2, int xDestination2, int yDestination2, Dice dice1, int  number, boolean operation, RoundTrack roundTrack, DiceBag diceBag);
 }

@@ -5,41 +5,40 @@ import porprezhas.model.dices.Dice;
 import porprezhas.model.cards.*;
 import porprezhas.model.dices.Pattern;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Player {
 
-
+    // player identity attribute
     private Long playerID;
     private String name;
     private int position;
 
+    // Game play attribute
+    private List<Pattern.TypePattern> patternsToChoose;
     private Board board;
-    private List<PrivateObjectiveCard> privateObjectiveCardList;
+    private List<Card> privateObjectiveCardList;
 //    private ScoreMark scoreMark;    // thinking to move this to
-    private int favorToken;    // or list of class FavoreToken{Image i} ?
+    private int nFavorToken;
 
+    // Game control attribute
     private boolean bPass;
-
     private boolean bUsedToolCard;
     private int pickableDice;
 
 
     public Player(String name) {
-        favorToken = Game.GameConstants.FAVOR_TOKEN_QUANTITY;
         playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
         this.name = name;
+        nFavorToken = 0;
+        privateObjectiveCardList = new ArrayList<>();
+        patternsToChoose = new ArrayList<>();
+
         bUsedToolCard = false;
         pickableDice = 1;
     }
-/*
-    public Player() {
-        favorToken = Game.GameConstants.FAVOR_TOKEN_QUANTITY;
-        playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
-        name = new String("noName");
-    }
-*/
 
     public Long getPlayerID() {
         return playerID;
@@ -49,12 +48,12 @@ public class Player {
         this.playerID = playerID;
     }
 
-    public String getName (){
-        return new String(name);
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
-        name = new String(name);
+        this.name = name;
     }
 
     public int getPosition() {
@@ -70,18 +69,32 @@ public class Player {
     }
 
     public int getFavorToken() {
-        return favorToken;
+        return nFavorToken;
     }
 
-    public void setFavorToken(int favorToken) {
-        this.favorToken = favorToken;
+    private void setFavorToken(int favorToken) {
+        this.nFavorToken = favorToken;
     }
 
-    public List<PrivateObjectiveCard> getPrivateObjectiveCardList() {
-        return privateObjectiveCardList;
+// converts from pattern difficulty to nFavorToken quantity
+    public void setFavorTokenByDifficulty(int difficulty) {
+        int nFavorToken = difficulty;
+        setFavorToken(nFavorToken);
     }
 
-    public void setPrivateObjectCardList(List<PrivateObjectiveCard> privateObjectiveCardList) {
+    public List<Pattern.TypePattern> getPatternsToChoose() {
+        return new ArrayList<>(patternsToChoose);
+    }
+
+    public void setPatternsToChoose(List<Pattern.TypePattern> patternsToChoose) {
+        this.patternsToChoose = patternsToChoose;
+    }
+
+    public List<Card> getPrivateObjectiveCardList() {
+        return new ArrayList<Card>(privateObjectiveCardList);
+    }   // return a new list to protect the list being not modified by external class
+
+    public void setPrivateObjectCardList(List<Card> privateObjectiveCardList) {
         this.privateObjectiveCardList = privateObjectiveCardList;
     }
 
@@ -109,8 +122,9 @@ public class Player {
         this.pickableDice = pickableDice;
     }
 
-    public void choosePatternCard (Pattern pattern) {
-        this.board = new Board(pattern);
+    public void choosePatternCard (int indexPatternType) {
+        this.board = new Board(
+                getPatternsToChoose().get(indexPatternType));
     }
 
     public void placeDice(Dice dice, int x, int y) {

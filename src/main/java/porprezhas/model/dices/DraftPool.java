@@ -1,14 +1,17 @@
 package porprezhas.model.dices;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DraftPool {
 
-    private ArrayList<Dice> draftPool;
+    private List<Dice> draftPool;
+
+    public DraftPool() {
+    }
 
     public DraftPool(DiceBag diceBag, int numberOfPlayers) {
         this.draftPool = diceBag.GetRandomDices(numberOfPlayers);
-
     }
 
     public void setDraftPool(DiceBag diceBag, int numberOfPlayers) {
