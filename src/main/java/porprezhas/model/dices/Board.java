@@ -13,11 +13,9 @@ public class Board {
 
 
     public Board(Pattern.TypePattern typePattern) {
-
         this.pattern = new Pattern (typePattern);
         this.board = new Dice[HEIGHT][WIDTH];
         this.diceQuantity=0;
-        System.out.println(pattern.getNamePattern());
     }
 
     public Pattern getPattern() {

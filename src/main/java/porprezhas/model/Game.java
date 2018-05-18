@@ -361,23 +361,19 @@ public class Game extends ModelObservable implements GameInterface {
 
     public void playerPostPrepare() {
         if (!this.isSolitaire()) {
+            System.out.println();
             for (Player player : playerList) {
                 Board board = player.getBoard();
                 // set default(first) pattern value when not chosen
                 if (board == null) {    // this control is done by setPattern() too, but i put this here to emphasize that the pattern can be chosen only one time
                     this.setPattern(player, 0);
-                    System.out.println("Ciao: " + player.getBoard().getPattern().getDifficulty());
                 }
                 // Give a quantity of favorTokens based on the difficulty of patternCard
-                if(player.getBoard() == null)
-                    System.out.println("AAAAAAAAA");
-                else if(player.getBoard().getPattern() == null)
-                    System.out.println("BBBBBBBBBB");
-                this.setPattern(player, 0);
-                Pattern p = board.getPattern();     // TODO: Fix here!!!
-                int difficulty = p.getDifficulty();
-                player.setFavorTokenByDifficulty( difficulty );
+                Pattern pattern = player.getBoard().getPattern();
+                player.setFavorTokenByDifficulty( pattern.getDifficulty() );
+                System.out.printf("Player: %12s\tpattern =%s\n", player.getName(), pattern.getNamePattern());
             }
+            System.out.println();
         }
     }
 
