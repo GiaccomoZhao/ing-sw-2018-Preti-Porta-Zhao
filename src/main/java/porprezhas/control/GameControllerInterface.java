@@ -2,7 +2,6 @@ package porprezhas.control;
 
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
-import porprezhas.model.dices.Pattern;
 
 import java.rmi.Remote;
 
@@ -11,8 +10,11 @@ public interface GameControllerInterface extends Remote {
     int calcScore(Player player);
     StateMachine getState();    // when server want to know what is game doing -- running or waiting player exit
     GameInterface getGame();
-    void choosePattern(Player player, int indexPatternType);
+
+    boolean choosePattern(Player player, int indexPatternType);
     boolean insertDice(Integer indexDice, Integer xPose, Integer yPose);
+    boolean useToolCard();  // TODO:
+
 
     // do i put this in concrete class or in interface? depends by getState method
     public enum StateMachine {

@@ -86,7 +86,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         // cut and past the Players to factory
         gameController =
                 new GameController(
-                        new Game(player, Game.SolitaireDifficulty.NORMAL));
+                        new Game(player, difficulty));
         gameControllerList.add( gameController );
         // NOTE: make player leave from the queue before creating single game
         playerBuffer.remove(player);    // if player has joined but want play single game

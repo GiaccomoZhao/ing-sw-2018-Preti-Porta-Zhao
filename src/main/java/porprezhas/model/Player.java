@@ -114,22 +114,31 @@ public class Player {
         this.bUsedToolCard = bUsedToolCard;
     }
 
-    public int getPickableDice() {
-        return pickableDice;
+    public boolean isDicePickable() {
+        return pickableDice > 0;
     }
 
-    public void setPickableDice(int pickableDice) {
-        this.pickableDice = pickableDice;
+    public void resetPickableDice() {
+        pickableDice = Game.GameConstants.DICE_PER_TURN;
     }
 
-    public void choosePatternCard (int indexPatternType) {
-        this.board = new Board(
-                getPatternsToChoose().get(indexPatternType));
+    public void addPickableDice() {
+        pickableDice ++;
+    }
+
+    public boolean choosePatternCard (int indexPatternType) {
+        if(indexPatternType < patternsToChoose.size()) {
+            this.board = new Board(
+                    patternsToChoose.get(indexPatternType));
+            return true;
+        }
+        return false;
     }
 
     public void placeDice(Dice dice, int x, int y) {
         board.insertDice(dice, x, y);
-    }
+        pickableDice--;
+        }
 
     /* 3 optional actions:
      *   1. choose a Dice from Draft Pool

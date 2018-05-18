@@ -6,7 +6,6 @@ import porprezhas.model.Player;
 import porprezhas.model.database.DatabaseInterface;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -265,23 +264,33 @@ public class GameController implements GameControllerInterface, Runnable {
         }
     }
 
-    public void choosePattern(Player player, int indexPatternType) {      //NOTE: pattern or indexPattern?
+    public boolean choosePattern(Player player, int indexPatternType) {      //NOTE: pattern or indexPattern?
 	                                                                 // for anti-cheat we must use indexPattern and verify the player is true
+        boolean bSet = false;
+        boolean bAllSet = true;
 	    if(state.equals(StateMachine.PLAYER_PREPARING)) {
-            game.setPattern(player, indexPatternType);
+            bSet = game.setPattern(player, indexPatternType);
         }
         // unlock timeout when all player has chosen
         for (Player p : game.getPlayerList()) {
             if(null == p.getBoard()) {
-                return; // replace this with a boolean would reduce code readability
+                bAllSet = false;
             }
         }
-        synchronized(chooseTimeOut) {
-            chooseTimeOut.notifyAll();
+        if(bAllSet) {
+            synchronized (chooseTimeOut) {
+                chooseTimeOut.notifyAll();
+            }
         }
+        return bSet;
     }
 
     public boolean insertDice(Integer indexDice, Integer xPose, Integer yPose) {
         return game.InsertDice(indexDice, xPose, yPose);
+    }
+
+    public boolean useToolCard(){
+//       game.useToolCard();
+        return false;
     }
 }

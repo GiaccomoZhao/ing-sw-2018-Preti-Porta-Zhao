@@ -27,12 +27,13 @@ public class Game extends ModelObservable implements GameInterface {
         }
 
         public static final int DICE_QUANTITY = 90;
+        public static final int DICE_PER_TURN = 1;
         public static final int MAX_PLAYER_QUANTITY = 4;
         public static final int ROUND_NUM = 10;
 //        public static final int FAVOR_TOKEN_QUANTITY = 3;
-        public static final double TIMEOUT_PREPARING_SEC = 1;   //60;
-        public static final double TIMEOUT_ROUND_SEC = 0.5;     //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
-        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 1;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
+        public static final double TIMEOUT_PREPARING_SEC = 5;   //60;
+        public static final double TIMEOUT_ROUND_SEC = 3;     //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
+        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 5;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
 
         public static double secondsToMillis(double seconds) {
             return seconds * 1000;
@@ -231,7 +232,7 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public void newTurn() {
-        currentPlayer.setPickableDice(1);
+        currentPlayer.resetPickableDice();
         currentPlayer.setUsedToolCard(false);
     }
 
@@ -371,7 +372,6 @@ public class Game extends ModelObservable implements GameInterface {
                 // Give a quantity of favorTokens based on the difficulty of patternCard
                 Pattern pattern = player.getBoard().getPattern();
                 player.setFavorTokenByDifficulty( pattern.getDifficulty() );
-                System.out.printf("Player: %12s\tpattern =%s\n", player.getName(), pattern.getNamePattern());
             }
             System.out.println();
         }
@@ -389,6 +389,9 @@ public class Game extends ModelObservable implements GameInterface {
 
     public void nextRound() {
         getDraftPool().setDraftPool(getDiceBag(), playerList.size());
+
+        setChanged();
+        notifyObservers();
     }
 
     public int calcScore(Player player) {
@@ -427,16 +430,13 @@ public class Game extends ModelObservable implements GameInterface {
 
 
     public synchronized boolean InsertDice(int indexDice, int xPose, int yPose) {
-        // check that there is only a insert at turn
-        if (currentPlayer.getPickableDice() > 0) {
-/*            if(draftPool.diceList().size() == 0)
-                System.out.println("00000000000000");
-            System.out.println("size of draft pool = " + draftPool.diceList().size());
-*/
-            Dice dice = draftPool.diceList().get(indexDice);
-            if (getCurrentPlayer().getBoard().insertDice(dice, xPose, yPose)) {
-                currentPlayer.setPickableDice(currentPlayer.getPickableDice() - 1);
-                draftPool.chooseDice(indexDice);
+        Dice dice = draftPool.diceList().get(indexDice);
+
+        if (currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
+            if (currentPlayer.getBoard().validMove(dice, xPose, yPose)) {
+
+                dice = draftPool.chooseDice(indexDice);
+                currentPlayer.placeDice(dice, xPose, yPose);
 
                 setChanged();
                 notifyObservers();
@@ -448,8 +448,15 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public void setPattern(Player p, int indexPatternType) {
-        if (p.getBoard() == null)    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
-            p.choosePatternCard(indexPatternType);   // here we create a new board associating it to the passed pattern
+    public boolean setPattern(Player p, int indexPatternType) {
+        if (p.getBoard() == null) {    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
+            boolean bChosen = p.choosePatternCard(indexPatternType);   // here we create a new board associating it to the passed pattern
+            if(bChosen) {
+                setChanged();
+                notifyObservers();
+                return bChosen;
+            }
+        }
+        return false;
     }
 }

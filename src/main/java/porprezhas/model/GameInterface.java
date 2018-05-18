@@ -1,9 +1,7 @@
 package porprezhas.model;
 
-import porprezhas.model.cards.Card;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
-import porprezhas.model.dices.Pattern;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public interface GameInterface {
     boolean InsertDice(int indexDice, int xPose, int yPose);
     boolean isSolitaire();
     int getRoundTimeOut();
-    void setPattern(Player player, int indexPatternType);
+    boolean setPattern(Player player, int indexPatternType);
     void nextRound();
     int calcScore(Player player);
     void newTurn();
