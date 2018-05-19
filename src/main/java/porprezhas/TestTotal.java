@@ -79,7 +79,7 @@ public class TestTotal {
 
         // Give Game Controller Actions, We'll see Game skip all round timeout
         while(newGameController.getState().isGameRunning()) {
-            Thread.sleep(9,860);
+            Thread.sleep(6,860);
             if (game.getCurrentPlayer().isDicePickable()) {
                 boolean bPlaced = false;
                 boolean bUsed = false;
@@ -96,6 +96,9 @@ public class TestTotal {
                     System.out.println("\t\tno Action\n");
             }
             newGameController.pass();
+            Thread.sleep(3);
         }
+        gameThread.join(1000);
+        System.out.println("\n\n\n-- Server tear down.");
     }
 }
