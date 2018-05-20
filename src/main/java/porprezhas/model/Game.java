@@ -2,7 +2,6 @@ package porprezhas.model;
 
 import porprezhas.RMI.Server.ModelObservable;
 import porprezhas.control.GameController;
-import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
 import porprezhas.model.track.RoundTrack;
 
@@ -28,15 +27,16 @@ public class Game extends ModelObservable implements GameInterface {
         }
 
         public static final int DICE_QUANTITY = 90;
+        public static final int DICE_PER_TURN = 1;
         public static final int MAX_PLAYER_QUANTITY = 4;
         public static final int ROUND_NUM = 10;
-        public static final int FAVOR_TOKEN_QUANTITY = 3;
-        public static final int TIMEOUT_PREPARING_SEC = 10; //60;
-        public static final int TIMEOUT_ROUND_SEC = 3; //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
+//        public static final int FAVOR_TOKEN_QUANTITY = 3;
+        public static final double TIMEOUT_PREPARING_SEC = 5;   //60;
+        public static final double TIMEOUT_ROUND_SEC = 3;     //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
         public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 5;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
 
         public static double secondsToMillis(double seconds) {
-            return  seconds * 1000;
+            return seconds * 1000;
         }
     }
 
@@ -53,8 +53,8 @@ public class Game extends ModelObservable implements GameInterface {
 
         // convert difficulty to number of Tool Card to give at Solitaire player
         // EXTREME -> 1  and  BEGINNER -> 5
-        private int toToolCardsQuantity() {
-            return size - this.ordinal() + 1;
+        public int toToolCardsQuantity() {
+            return size - this.ordinal();
         }
     }
 
@@ -62,13 +62,16 @@ public class Game extends ModelObservable implements GameInterface {
     // *********************************
     // --- Declaration of Attributes ---
 
-    private final Long gameID;      // for internet game, but we need a server
+    private final Long gameID;
     private RoundTrack roundTrack;
     private DiceBag diceBag;
     private DraftPool draftPool;
 
-    private List<PublicObjectiveCard> publicObjectiveCardList;
-    private List<ToolCard> toolCardList;
+    private PrivateObjectiveCardFactory privateObjectiveCardFactory;
+    private PublicObjectiveCardFactory publicObjectiveCardFactory;
+    private ToolCardFactory toolCardFactory;
+    private List<Card> publicObjectiveCardList;
+    private List<Card> toolCardList;
 
     // player list management attributes
     private List<Player> playerList;
@@ -86,22 +89,37 @@ public class Game extends ModelObservable implements GameInterface {
     // *********************************
     // ------ Basic Class Methods ------
 
-    public Game(List<Player> playerList, SolitaireDifficulty difficulty) throws RemoteException {
-        gameID = new Random().nextLong();   // senseless until we have a global server
+    public Game(Player player, SolitaireDifficulty difficulty) throws RemoteException {
+        gameID = new Random().nextLong();   // transfer this to super()
+        bSolitaire = true;
+        solitaireDifficulty = difficulty;
+        playerList = new ArrayList<>();    // TODO: generalization
+        playerList.add(player);
+        privateObjectiveCardFactory = new PrivateObjectiveCardFactory(1);
+        publicObjectiveCardFactory = new PublicObjectiveCardFactory(1);
+        toolCardFactory = new ToolCardFactory(difficulty);
+        reset();
+    }
+
+    public Game(List<Player> playerList) throws RemoteException {
+        gameID = new Random().nextLong();   // create a unique string or number
+        bSolitaire = false;
+        this.playerList = new ArrayList<>(playerList);
+        privateObjectiveCardFactory = new PrivateObjectiveCardFactory(playerList.size());
+        publicObjectiveCardFactory = new PublicObjectiveCardFactory(playerList.size());
+        toolCardFactory = new ToolCardFactory(playerList.size());
+        reset();
+    }
+
+    private void reset() {  // NOTE: will be super();
         roundTrack = new RoundTrack();
         diceBag = new DiceBag();
-        draftPool = new DraftPool(diceBag, playerList.size());    //this will be created by controller before every round
-        this.playerList = new ArrayList<>(playerList);
+//        draftPool = new DraftPool(diceBag, playerList.size());    // this shouldn't extract dice from the bag here
+        draftPool = new DraftPool();    // this will be created by controller before every round
+        diceQuantity = Game.GameConstants.DICE_QUANTITY;
+
         resetPlayerIndexes();
         setCurrentPlayerByIndex();    // can be commented because gameController always calls Game.OrderPlayers() that calls this method
-
-        if(playerList.size() == 1) {
-            bSolitaire = true;
-            solitaireDifficulty = difficulty;
-        } else {
-            bSolitaire = false;
-        }
-        diceQuantity = Game.GameConstants.DICE_QUANTITY;
     }
 
     /* @requires playerList.size() > 0
@@ -110,7 +128,7 @@ public class Game extends ModelObservable implements GameInterface {
     void resetPlayerIndexes() {
         iCurrentPlayer = 0;
         iFirstPlayer = 0;
-        iLastPlayer = playerList.size()-1;
+        iLastPlayer = playerList.size() - 1;
         bCountClockwise = false;
     }
 
@@ -130,17 +148,23 @@ public class Game extends ModelObservable implements GameInterface {
         return diceQuantity;
     }
 
-    public List<PublicObjectiveCard> getPublicObjectiveCardList() {
+    public List<Card> getPublicObjectiveCardList() {
         return publicObjectiveCardList;
     }
 
-    public List<ToolCard> getToolCardList() {
+    public List<Card> getToolCardList() {
         return toolCardList;
     }
 
+    public int getRoundTimeOut() {
+        return (int) Game.GameConstants.secondsToMillis(
+                isSolitaire() ?
+                        GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC :
+                        Game.GameConstants.TIMEOUT_ROUND_SEC);
+    }
 
     // *********************************
-    // ----- Player list management ----    // should i put this in a new class file?
+    // ----- Player list management ----    //NOTE: should i put this in a new class file?
 
     // return a new object that has reference to same elements
     public List<Player> getPlayerList() {
@@ -178,7 +202,7 @@ public class Game extends ModelObservable implements GameInterface {
     public Player rotatePlayer() {
         // case anti clock
         if (bCountClockwise) {
-            if(iCurrentPlayer == iFirstPlayer) {
+            if (iCurrentPlayer == iFirstPlayer) {
                 // when first player has already played for second time
                 // first player became last player in next round
                 // and the player after old first player as new first player
@@ -190,8 +214,8 @@ public class Game extends ModelObservable implements GameInterface {
                 nextPlayer();
             }
         } else {
-        // case clock wise
-            if(iCurrentPlayer == iLastPlayer) {
+            // case clock wise
+            if (iCurrentPlayer == iLastPlayer) {
                 // arrived at last player he'll play 2 time consecutively
                 // so we do not call nextPlayer and just change rotation direction (clockwise)
                 bCountClockwise = true;
@@ -208,7 +232,7 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public void newTurn() {
-        currentPlayer.setPickableDice(1);
+        currentPlayer.resetPickableDice();
         currentPlayer.setUsedToolCard(false);
     }
 
@@ -273,9 +297,9 @@ public class Game extends ModelObservable implements GameInterface {
                (*Order players based on the last time the player has been to the TEACHER's DESK*)
        @ */
 
-    public synchronized  void orderPlayers() {
+    public synchronized void orderPlayers() {
         if (playerList.size() <= 1) {
-            ;
+            ;   // do nothing
         } else {
             Collections.shuffle(playerList);
         }
@@ -290,16 +314,129 @@ public class Game extends ModelObservable implements GameInterface {
         System.out.println();
     }
 
-    public synchronized Boolean InsertDice(int indexDice, int xPose, int yPose){
-        // check that there is only a insert at turn
-        if(currentPlayer.getPickableDice() > 0) {
-/*            if(draftPool.diceList().size() == 0)
-                System.out.println("00000000000000");
-            System.out.println("size of draft pool = " + draftPool.diceList().size());
-*/            Dice dice = draftPool.diceList().get(indexDice);
-            if (getCurrentPlayer().getBoard().insertDice(dice, xPose, yPose)) {
-                currentPlayer.setPickableDice(currentPlayer.getPickableDice() -1);
-                draftPool.chooseDice(indexDice);
+
+    // **********************************
+    // ---------- Game Control ----------
+
+    /* @requires playerList.size() > 0
+       @ensure (*in Solitaire*) &&
+       @       (*Player choose a difficulty 1 to 5*) &&
+       @       (*the Player receives 2 Private Objective Cards*) &&
+       @       (*2 random PatternCard to choose one from 4 faces*) &&
+       @       (*FavorTokens == 0*) ||
+       @ensure (*in Multi-player game*) &&
+       @       (*every Player receives: 2 random PatternCard to choose one from 4 faces*) &&
+       @       (*a random hidden Private Objective Card*) &&
+       @       (*a quantity of Favor Tokens equals to difficulty of Pattern Card*)
+       @ */
+    public void playerPrePrepare() {
+        if (this.isSolitaire()) {
+            Player player = playerList.get(0);
+//            player.setFavorToken(0);
+            player.setPrivateObjectCardList(
+                    privateObjectiveCardFactory.createCard() );
+        } else {
+
+            // give a random private card
+            for (int i = 0; i < playerList.size(); i++) {
+                Player player = playerList.get(i);
+                player.setPrivateObjectCardList(
+                        privateObjectiveCardFactory.createCard() );
+            }
+
+            // give 2 random PatternCard to choose one from 4 faces
+            List<Pattern.TypePattern> patternTypes = Arrays.asList(Pattern.TypePattern.values());
+            Collections.shuffle(patternTypes);
+
+            for (int i = 0; i < playerList.size(); i++) {
+                playerList.get(i).
+                        setPatternsToChoose(patternTypes.subList(4 * i, 4 * (i + 1)));
+            }
+
+            // notify clients, now they should choose a pattern
+            setChanged();
+            notifyObservers();
+            // the caller will wait player choose() for a certain time
+        }
+    }
+
+    public void playerPostPrepare() {
+        if (!this.isSolitaire()) {
+            System.out.println();
+            for (Player player : playerList) {
+                Board board = player.getBoard();
+                // set default(first) pattern value when not chosen
+                if (board == null) {    // this control is done by setPattern() too, but i put this here to emphasize that the pattern can be chosen only one time
+                    this.setPattern(player, 0);
+                }
+                // Give a quantity of favorTokens based on the difficulty of patternCard
+                Pattern pattern = player.getBoard().getPattern();
+                player.setFavorTokenByDifficulty( pattern.getDifficulty() );
+            }
+            System.out.println();
+        }
+    }
+
+    public void gamePrepare() {
+        toolCardList = toolCardFactory.createCard();
+        publicObjectiveCardList = publicObjectiveCardFactory.createCard();
+        this.orderPlayers();
+
+        // notify all players that the Game is ready to play
+        setChanged();
+        notifyObservers();
+    }
+
+    public void nextRound() {
+        getDraftPool().setDraftPool(getDiceBag(), playerList.size());
+
+        setChanged();
+        notifyObservers();
+    }
+
+    public int calcScore(Player player) {
+        int scorePublic = 0;
+        int scorePrivate = 0;
+        Board board = player.getBoard();
+
+        // sum of private objectives
+        List<Card> privateObjectiveCardList = player.getPrivateObjectiveCardList();
+        if (null != privateObjectiveCardList) {
+            for (Card privateObjectiveCard : privateObjectiveCardList) {
+                scorePrivate += privateObjectiveCard.apply(board);
+            }
+        }
+//        System.out.println(player.getName() + ": sum of private objectives = " + scorePrivate);
+//        logger.info("" + Player.getName() + "\tSum of private objectives = " + scorePrivate);
+
+        // sum of public objectives
+        List<Card> publicObjectiveCardList = this.getPublicObjectiveCardList();
+        if (null != publicObjectiveCardList) {
+            for (Card publicObjectiveCard : publicObjectiveCardList) {
+                scorePublic += publicObjectiveCard.apply(board);
+            }
+        }
+//        System.out.println(this + ": sum of public objectives = " + scorePublic);
+//        logger.info("" + Player.getName() + "\tSum of public objectives = " + scorePublic);
+
+        return scorePrivate + scorePublic;
+    }
+
+
+    // **********************************
+    // ---------- Game Action -----------
+
+//    public int calcScore(Player player) {
+
+
+    public synchronized boolean InsertDice(int indexDice, int xPose, int yPose) {
+        Dice dice = draftPool.diceList().get(indexDice);
+
+        if (currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
+            if (currentPlayer.getBoard().validMove(dice, xPose, yPose)) {
+
+                dice = draftPool.chooseDice(indexDice);
+                currentPlayer.placeDice(dice, xPose, yPose);
 
                 setChanged();
                 notifyObservers();
@@ -311,40 +448,15 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public void setPattern(Player p, Pattern pattern) {
-        if(p.getBoard() == null)    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
-          p.choosePatternCard(pattern);   // here we create a new board associating it to the passed pattern
-    }
-
-    public void nextRound() {
-        getDraftPool().setDraftPool(getDiceBag(), playerList.size());
-    }
-
-    public int calcScore(Player player) {
-        int scorePublic = 0;
-        int scorePrivate = 0;
-        Board board = player.getBoard();
-
-        // sum of private objectives
-        List<PrivateObjectiveCard> privateObjectiveCardList = player.getPrivateObjectiveCardList();
-        if(null != privateObjectiveCardList) {
-            for (PrivateObjectiveCard privateObjectiveCard : privateObjectiveCardList) {
-                scorePrivate += privateObjectiveCard.apply(board);
+    public boolean setPattern(Player p, int indexPatternType) {
+        if (p.getBoard() == null) {    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
+            boolean bChosen = p.choosePatternCard(indexPatternType);   // here we create a new board associating it to the passed pattern
+            if(bChosen) {
+                setChanged();
+                notifyObservers();
+                return bChosen;
             }
         }
-//        System.out.println(player.getName() + ": sum of private objectives = " + scorePrivate);
-//        logger.info("" + Player.getName() + "\tSum of private objectives = " + scorePrivate);
-
-        // sum of public objectives
-        List<PublicObjectiveCard> publicObjectiveCardList = this.getPublicObjectiveCardList();
-        if(null != publicObjectiveCardList) {
-            for (PublicObjectiveCard publicObjectiveCard : publicObjectiveCardList) {
-                scorePublic += publicObjectiveCard.apply(board);
-            }
-        }
-//        System.out.println(this + ": sum of public objectives = " + scorePublic);
-//        logger.info("" + Player.getName() + "\tSum of public objectives = " + scorePublic);
-
-        return scorePrivate + scorePublic;
+        return false;
     }
 }

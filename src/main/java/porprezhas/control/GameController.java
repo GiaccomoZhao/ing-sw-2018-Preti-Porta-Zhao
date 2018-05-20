@@ -3,11 +3,7 @@ package porprezhas.control;
 import porprezhas.model.Game;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
-import porprezhas.model.dices.Board;
-import porprezhas.model.cards.PrivateObjectiveCard;
-import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.database.DatabaseInterface;
-import porprezhas.model.dices.Pattern;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,16 +22,30 @@ public class GameController implements GameControllerInterface, Runnable {
     private StateMachine state;
 
     private Object playTimeOut;
+    private Object chooseTimeOut;
 
 
     // *********************************
     // ---------- Game Logic -----------
     // --------- Inner Methods ---------    can be private
 
-    public void startGame() {
-        System.out.println("\n\n\n***** >>> Game Start <<< *****\n");
-        game.orderPlayers();
+    private void startGame() {
+        System.out.println("" + "\n\n\n***** >>> Game Start <<< *****\n");
         state = StateMachine.STARTED;
+
+        game.playerPrePrepare();
+
+        System.out.println("" + "Players Preparing");
+        state = StateMachine.PLAYER_PREPARING;
+    }
+
+    private void setup() {
+        System.out.println("" + "Game Preparing");
+        state = StateMachine.GAME_PREPARING;
+
+        game.playerPostPrepare();
+
+        game.gamePrepare();
     }
 
 
@@ -50,33 +60,33 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*a random hidden Private Objective Card*) &&
        @       (*a quantity of Favor Tokens equals to difficulty of Pattern Card*)
        @ */
-    public void playerPrepare() {
-        System.out.println("Players Preparing");
+/*    private void playerPrepare() {
         List<Player> playerList = game.getPlayerList();
 
-        state = StateMachine.PLAYER_PREPARING;
-        // wait playerList choose Pattern Card
-        // with observer.update: player.choosePatternCard();
         if (game.isSolitaire()) {
+            // select a difficulty then
             Player player = playerList.get(0);
-            player.setFavorToken(0);
-            player.setPrivateObjectCardList(null); // TODO: 2 random cards
+            player.setFavorToken(0);    // single player uses dice instead of tokens
+            player.setPrivateObjectCardList(null);
         } else {
+            // wait playerList choose Pattern Card
+            // with observer.update: player.choosePatternCard();
+
             // give a random private card
             // give 2 random PatternCard to choose one from 4 faces
             // give favorTokens based on difficulty of patternCard
             for (Player player: playerList) {
+                player.setPrivateObjectCardList(new ArrayList<>( ));
                 if(player.getBoard() == null)
                 {
                     Pattern pattern = new Pattern(Pattern.TypePattern.KALEIDOSCOPIC_DREAM); //NOTE: this should be one of 2 random pattern of player
-                    game.setPattern(player, pattern);
-//                    player.choosePatternCard(pattern);
+//                    game.setPattern(player, pattern);
                 }
             }
         }
     }
 
-
+*/
     /* @requires playerList.size() > 0
        @ensure (*in Solitaire*) &&
        @       (*place 2 Public Objective Cards*) &&
@@ -85,20 +95,20 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*place 3 Public Objective Cards*) &&
        @       (*place 3 Tool Cards*)
        @ */
-    public void gamePrepare() {
+/*    private void gamePrepare() {
         System.out.println("Game Preparing");
         state = StateMachine.GAME_PREPARING;
 //        randToolCard();
 //        View.update();
         if (game.isSolitaire()) {
-//			publicObjectiveCardList = new ArrayList<PublicObjectiveCard>(2);        // TODO: give them a concrete value
+//			publicObjectiveCardList = new ArrayList<PublicObjectiveCard>(2);
 //			toolCardList = new ArrayList<ToolCard>(solitaireDifficulty.toToolCardsQuantity());
         } else {
 //			publicObjectiveCardList = new ArrayList<PublicObjectiveCard>(3);
 //			toolCardList = new ArrayList<ToolCard>(3);
         }
     }
-
+*/
 
     /*
        @ensure (*in Solitaire*) &&
@@ -107,7 +117,7 @@ public class GameController implements GameControllerInterface, Runnable {
        @       (*a Pool of 2 * PlayerList.size() + 1 Dices*)&&
        @       (*rotate clockwise and counter-clockwise, so every player has 2 times at round*)
        @ */
-    public synchronized void playRound() {
+    private synchronized void playRound() {
         Player player;
         List<Player> playerList = game.getPlayerList();
         state = StateMachine.PLAYING;
@@ -134,8 +144,7 @@ public class GameController implements GameControllerInterface, Runnable {
             while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
                 try {
                     synchronized(playTimeOut) {
-                        playTimeOut.wait( (int) Game.GameConstants.secondsToMillis(
-                                Game.GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC));
+                        playTimeOut.wait( game.getRoundTimeOut() );
                         pass();
                         player.passes(true);
                     }
@@ -148,19 +157,24 @@ public class GameController implements GameControllerInterface, Runnable {
         }
     }
 
-    public void endGame() {
+    private void endGame() {
         List<Player> playerList = game.getPlayerList();
-        Player player;
 
         state = StateMachine.ENDING;
+
+        // print Board!
+        System.out.println("" +  "\n\n");
+        for (Player player : playerList) {
+            System.out.println("\nPlayer name: " + player.getName());
+            player.getBoard().print(true);
+        }
 
         System.out.println( "\n\n\n" +
                 "  ***** >>> GAME OVER <<< *****  \n\n" +
                 "              Score              \n");
-        for (int i = 0; i < playerList.size(); i++) {
-            player = playerList.get(i);
-            System.out.format("    %-15s \t%5d\n",
-                    playerList.get(i).getName(), calcScore(player));
+        for (Player player : playerList) {
+            System.out.format("    %-15s \t%4d\n",
+                    player.getName(), calcScore(player));
         }
 
         // TODO: save all in databases
@@ -174,6 +188,8 @@ public class GameController implements GameControllerInterface, Runnable {
     public GameController(GameInterface game) {
         this.game = game;
         playTimeOut = new Object(); // Lock
+        chooseTimeOut = new Object(); // Lock
+//        pass(); // notifyAll to clear all the locks
     }
 
     public StateMachine getState() {
@@ -186,12 +202,30 @@ public class GameController implements GameControllerInterface, Runnable {
 
     @Override
 	public void run() {
+        // Give player private card and then the pattern to choose
         startGame();
-        playerPrepare();
-        gamePrepare();
+
+        // wait player choose a pattern for a certain time
+        boolean bChosen = false;
+        while(!bChosen) {
+            try {
+                synchronized(chooseTimeOut) {
+                    chooseTimeOut.wait( (int) Game.GameConstants.secondsToMillis(
+                            Game.GameConstants.TIMEOUT_PREPARING_SEC));
+                    chooseTimeOut.notifyAll();
+                    setup();
+                    bChosen = true;
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // ROUND phase
         for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
-            System.out.format("\nRound %-2d starts: {\n", iRound + 1);
-            game.nextRound(); //create a new draftPool
+//            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
+            System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
+            game.nextRound(); //Prepare for next round: create a new draftPool
             playRound();
             System.out.println("}");
         }
@@ -205,14 +239,20 @@ public class GameController implements GameControllerInterface, Runnable {
          */
 	}
 
+    @Override
+    public String toString() {
+        return "GameController: ";
+    }
 
 
-    // *********************************
+
+// *********************************
     // ------- External Methods --------            // Clients call these
     // TODO: Command Pattern?
 
     /* @requires parameter != null
      * @ensure (*return sum of all game's public and player's private objectives*)
+     * @param Player who have to be calculated, can be different from the player who asks
      */
     public int calcScore(Player player) {
         return game.calcScore(player);
@@ -224,13 +264,33 @@ public class GameController implements GameControllerInterface, Runnable {
         }
     }
 
-    public void choosePattern(Player player, Pattern pattern) {      //NOTE: pattern or indexPattern?
+    public boolean choosePattern(Player player, int indexPatternType) {      //NOTE: pattern or indexPattern?
 	                                                                 // for anti-cheat we must use indexPattern and verify the player is true
-	    if(state.equals(StateMachine.PLAYER_PREPARING))
-    	    game.setPattern(player, pattern);
+        boolean bSet = false;
+        boolean bAllSet = true;
+	    if(state.equals(StateMachine.PLAYER_PREPARING)) {
+            bSet = game.setPattern(player, indexPatternType);
+        }
+        // unlock timeout when all player has chosen
+        for (Player p : game.getPlayerList()) {
+            if(null == p.getBoard()) {
+                bAllSet = false;
+            }
+        }
+        if(bAllSet) {
+            synchronized (chooseTimeOut) {
+                chooseTimeOut.notifyAll();
+            }
+        }
+        return bSet;
     }
 
-    public void insertDice(Integer indexDice, Integer xPose, Integer yPose) {
-        game.InsertDice(indexDice, xPose, yPose);
+    public boolean insertDice(Integer indexDice, Integer xPose, Integer yPose) {
+        return game.InsertDice(indexDice, xPose, yPose);
+    }
+
+    public boolean useToolCard(){
+//       game.useToolCard();
+        return false;
     }
 }

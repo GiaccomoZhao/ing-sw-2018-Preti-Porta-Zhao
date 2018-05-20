@@ -7,15 +7,22 @@ public class PublicObjectiveCardFactory implements CardFactory {
 
     ArrayList<Card> cards;
     ArrayList<Integer> numberList;
+    private final int numberOfCard;
+
     public static final int PUBLIC_OBJECTIVE_CARD_NUMBER = 10;
     public static final int LIST_LENGHT = 3;
 
-    public PublicObjectiveCardFactory() {
-        numberList = new ArrayList<Integer>(PUBLIC_OBJECTIVE_CARD_NUMBER);
+    public PublicObjectiveCardFactory(int numberOfPlayer) {
+        numberList = new ArrayList<Integer>();
 
         for (int i = 0; i < PUBLIC_OBJECTIVE_CARD_NUMBER; i++) {
-            numberList.set(i, i);
+            numberList.add(i);
         }
+
+        if (numberOfPlayer == 1)
+            this.numberOfCard = 2;
+        else
+            this.numberOfCard = 3;
     }
 
     @Override
@@ -25,7 +32,7 @@ public class PublicObjectiveCardFactory implements CardFactory {
 
             cards= new ArrayList<>();
 
-            for(int i=0; i <LIST_LENGHT ; i++){
+            for(int i=0; i <numberOfCard ; i++){
 
 
                 cardId = random.nextInt(numberList.size() - 1);

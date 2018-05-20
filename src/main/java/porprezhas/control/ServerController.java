@@ -71,9 +71,34 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
 	}
 
-	// TODO: a test
-	// create a new game from
+    @Override
+    public synchronized void leave(Player player) throws RemoteException {
+        playerBuffer.remove(player);
+    }
+
+    // TODO: a test
+	// create a new single game
+	public GameControllerInterface createNewGame(Player player, Game.SolitaireDifficulty difficulty) throws RemoteException {
+	    GameControllerInterface gameController; // save return value
+
+        System.out.println("Creating a single game from player " + player.getName() + ".");
+
+        // cut and past the Players to factory
+        gameController =
+                new GameController(
+                        new Game(player, difficulty));
+        gameControllerList.add( gameController );
+        // NOTE: make player leave from the queue before creating single game
+        playerBuffer.remove(player);    // if player has joined but want play single game
+        // TODO: send a message to client:  like token
+        // for(Player player : subBuffer) player.getClient().player.setGameController(gameController);
+        return gameController;
+	}
+
+
+	// create a new multi-player game
 	public GameControllerInterface createNewGame() throws RemoteException {
+	    GameControllerInterface gameController; // to save return value
 	    // before start: check all player on line
         // create a new game with 1-4 players
         int playerQuantity = (playerBuffer.size() >= Game.GameConstants.MAX_PLAYER_QUANTITY) ?
@@ -84,19 +109,20 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         System.out.println("Creating a new game of " + playerQuantity + " players");
 
         // cut and past the Players to factory
-        gameControllerList.add(
+        gameController =
                 new GameController(
-                new Game(subBuffer,
-                        Game.SolitaireDifficulty.NORMAL)));
+                        new Game(subBuffer));
 /*                gameControllerFactory.create(
                         subBuffer,
-                        Game.SolitaireDifficulty.NORMAL));
+                        Game.SolitaireDifficulty.NORMAL);
 */
+        gameControllerList.add( gameController );
         playerBuffer.removeAll(subBuffer);
-        // TODO: send a message to client:
+        // TODO: send a message to client:  like token
         // for(Player player : subBuffer) player.getClient().player.setGameController(gameController);
-        return gameControllerList.get(gameControllerList.size() - 1);
+        return gameController;
 	}
+
 
 	@Override
 	public boolean isAlreadyInGame(Player player) throws RemoteException {
@@ -112,8 +138,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 	    // A reverted counter duo to the players usually call this when a new game has just started
         for (int i = gameControllerList.size() - 1; i >= 0; i--) {
             List<Player> playerList = new ArrayList<>(gameControllerList.get(i).getGame().getPlayerList());
-            for (Player p :
-                    playerList) {
+            for (Player p : playerList) {
                 if(p.equals(player)) {
                     return  gameControllerList.get(i);
                 }

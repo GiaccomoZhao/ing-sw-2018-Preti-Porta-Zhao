@@ -1,8 +1,12 @@
 package porprezhas.model.dices;
 
 
+import java.lang.reflect.Type;
+
 public class Pattern {
+    // 24 types + 1
     public enum TypePattern {
+        VOID,   // for test use
         KALEIDOSCOPIC_DREAM,
         VIRTUS,
         AURORAE_MAGNIFICUS,
@@ -32,11 +36,13 @@ public class Pattern {
     private final int HEIGHT = 4;
     private final int WIDTH = 5;
     private final String namePattern;
+    private final TypePattern typePattern;
     private final int difficulty;
     private Box[][] pattern;
 
     public Pattern(TypePattern typePattern) {
        pattern = new Box[HEIGHT][WIDTH];
+        this. typePattern = typePattern;
 
        switch(typePattern){
            case KALEIDOSCOPIC_DREAM:
@@ -525,7 +531,7 @@ public class Pattern {
                break;
 
 
-           default:
+           default: // VOID
                 namePattern="noName";
                 difficulty=0;
 
@@ -557,6 +563,10 @@ public class Pattern {
     public int getDifficulty() {
 
         return difficulty;
+    }
+
+    public TypePattern getTypePattern() {
+        return typePattern;
     }
 
     public String getNamePattern() {
