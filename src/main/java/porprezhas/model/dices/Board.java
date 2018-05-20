@@ -290,7 +290,7 @@ public class Board {
 
 
 
-    //this function marks the cells that are reachable from a certain cell
+    //this function "marks" the cells that are reachable from a certain cell
     public void markCell(int x,int y, int X, int Y){
 
         if(x>0&&y>0)
