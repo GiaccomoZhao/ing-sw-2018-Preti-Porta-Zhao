@@ -1,9 +1,10 @@
 package porprezhas.model.dices;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import porprezhas.model.dices.Board;
 
-public class Board {
+public class Board implements Serializable {
 
     private final Pattern pattern;
     private Dice[][] board;
@@ -243,6 +244,10 @@ public class Board {
 
     public int getDiceQuantity() {
         return diceQuantity;
+    }
+
+    public void setDiceQuantity(int diceQuantity) {
+        this.diceQuantity = diceQuantity;
     }
 
 

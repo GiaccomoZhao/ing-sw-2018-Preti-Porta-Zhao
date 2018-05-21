@@ -6,8 +6,10 @@ import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.track.RoundTrack;
 
+import java.io.Serializable;
+
 public abstract class
-Card {
+Card implements Serializable {
 
 
     public final Effect effect;

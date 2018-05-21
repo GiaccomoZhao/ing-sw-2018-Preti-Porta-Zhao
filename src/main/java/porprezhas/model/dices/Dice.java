@@ -1,7 +1,8 @@
 
 package porprezhas.model.dices;
+import java.io.Serializable;
 import java.util.Random;
-public class Dice {
+public class Dice implements Serializable {
 
 
     public void setNumber(int number) {

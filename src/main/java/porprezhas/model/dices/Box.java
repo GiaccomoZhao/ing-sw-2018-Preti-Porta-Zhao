@@ -2,7 +2,9 @@ package porprezhas.model.dices;
 
 import porprezhas.model.dices.Dice;
 
-public class Box {
+import java.io.Serializable;
+
+public class Box implements Serializable {
     private Dice.ColorDice color;
     private int number;
 

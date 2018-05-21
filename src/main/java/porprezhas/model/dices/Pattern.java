@@ -1,9 +1,10 @@
 package porprezhas.model.dices;
 
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 
-public class Pattern {
+public class Pattern implements Serializable {
     // 24 types + 1
     public enum TypePattern {
         VOID,   // for test use

@@ -5,12 +5,16 @@ import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.track.RoundTrack;
 
-public class PublicObjectiveCard extends ObjectiveCard{
+import java.io.Serializable;
+
+public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
     public PublicObjectiveCard(Effect effect) {
 
         super(effect);
     }
+
+
 
     @Override
     public void use(Board board, DraftPool draftPool, int xStart1, int yStart1, int xDestination1, int yDestination1, int xStart2, int yStart2, int xDestination2, int yDestination2, Dice dice1, int number, boolean operation, RoundTrack roundTrack, DiceBag diceBag) {

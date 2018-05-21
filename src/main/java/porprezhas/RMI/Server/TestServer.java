@@ -8,7 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class TestServer {
-    public static void main(String[] args)
+  /*  public static void main(String[] args)
             throws RemoteException, AlreadyBoundException, MalformedURLException {
 
         System.out.println("Constructing server implementation...");
@@ -18,5 +18,5 @@ public class TestServer {
         registry.rebind("game", centralWarehouse);
 
 
-    }
+    }*/
 }

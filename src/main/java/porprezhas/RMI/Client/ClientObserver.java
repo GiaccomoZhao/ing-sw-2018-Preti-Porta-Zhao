@@ -5,20 +5,26 @@ package porprezhas.RMI.Client;
 import porprezhas.RMI.RemoteObservable;
 import porprezhas.RMI.RemoteObserver;
 import porprezhas.model.Game;
+import porprezhas.model.GameInterface;
+import porprezhas.model.Player;
 
+import javax.swing.text.View;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ClientObserver implements RemoteObserver {
 
     private RemoteObservable remoteObservable;
+    private ViewClient viewClient;
 
-    public ClientObserver( String ObjectRmiName) throws RemoteException, NotBoundException {
-
+    public ClientObserver(String ObjectRmiName, ViewClient viewClient) throws RemoteException, NotBoundException {
+        this.viewClient=viewClient;
         UnicastRemoteObject.exportObject(this, 0);
         Registry registry= LocateRegistry.getRegistry();
         System.out.print("RMI registry bindings: ");
@@ -37,14 +43,22 @@ public class ClientObserver implements RemoteObserver {
 
     @Override
     public void update(RemoteObservable ob, Object arg) throws RemoteException {
-        Game game = (Game) ob;  // TODO:
-        System.out.println("Player: " + game.getCurrentPlayer().getName());
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.print(game.getCurrentPlayer().getBoard().getDice(i, j).getDiceNumber());
-                System.out.print(game.getCurrentPlayer().getBoard().getDice(i, j).colorDice + " ");
-            }
-            System.out.println();
-        }
+
+        viewClient.updateClient((RemoteObservable) arg);
+
+
+        /*System.out.println( "\n\n\n" +
+                "  ***** >>> GAME OVER <<< *****  \n\n" +
+                "              Score              \n");
+        for (Player playera : players) {
+            System.out.format("    %-15s \t\n",
+                    player.getName());*/
+
+
+
     }
+
+
+
+
 }
