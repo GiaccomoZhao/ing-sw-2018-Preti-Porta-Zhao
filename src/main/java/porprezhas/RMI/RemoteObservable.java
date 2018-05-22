@@ -19,5 +19,6 @@ public interface RemoteObservable extends Remote {
 
     Game.NotifyState getGameNotifyState() throws  RemoteException;
     Player getFirstPlayer() throws RemoteException;
+     int getiCurrentPlayer() throws RemoteException;
 
 }

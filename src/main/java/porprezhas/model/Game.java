@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static porprezhas.model.Game.NotifyState.BOARD_CREATED;
 import static porprezhas.model.Game.NotifyState.DICE_INSERTED;
 
 public class Game extends ModelObservable implements GameInterface {
@@ -60,7 +61,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_FIRST_PLAYER, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED}
+    public enum NotifyState{NEW_FIRST_PLAYER, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -152,6 +153,10 @@ public class Game extends ModelObservable implements GameInterface {
 
     public int getDiceQuantity() {
         return diceQuantity;
+    }
+
+    public int getiCurrentPlayer() throws RemoteException{
+        return iCurrentPlayer;
     }
 
     public Player getFirstPlayer() throws RemoteException{
@@ -472,6 +477,7 @@ public class Game extends ModelObservable implements GameInterface {
         if (p.getBoard() == null) {    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
             boolean bChosen = p.choosePatternCard(indexPatternType);   // here we create a new board associating it to the passed pattern
             if(bChosen) {
+                gameNotifyState = BOARD_CREATED;
                 setChanged();
                 notifyObservers(this);
                 return bChosen;
