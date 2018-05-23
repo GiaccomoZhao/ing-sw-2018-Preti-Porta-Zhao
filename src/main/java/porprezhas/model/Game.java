@@ -38,8 +38,8 @@ public class Game extends ModelObservable implements GameInterface {
         public static final double TIMEOUT_ROUND_SEC = 3;     //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
         public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 5;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
 
-        public static double secondsToMillis(double seconds) {
-            return seconds * 1000;
+        public static long secondsToMillis(double seconds) {
+            return (long) seconds * 1000;
         }
     }
 
@@ -177,8 +177,8 @@ public class Game extends ModelObservable implements GameInterface {
         return toolCardList;
     }
 
-    public int getRoundTimeOut() {
-        return (int) Game.GameConstants.secondsToMillis(
+    public long getRoundTimeOut() {
+        return Game.GameConstants.secondsToMillis(
                 isSolitaire() ?
                         GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC :
                         Game.GameConstants.TIMEOUT_ROUND_SEC);

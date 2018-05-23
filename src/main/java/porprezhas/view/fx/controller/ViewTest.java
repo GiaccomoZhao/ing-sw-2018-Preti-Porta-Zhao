@@ -1,9 +1,13 @@
-package porprezhas.view.controller;
+package porprezhas.view.fx.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,11 +16,40 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import jdk.internal.dynalink.linker.GuardedInvocation;
+import porprezhas.model.Player;
+import porprezhas.model.dices.Pattern;
 
 public class ViewTest extends Application {
+    public static class GUIConstants {
+        public static final int ICON_QUANTITY = 145;   // index from 0 to 144
+    }
 
     private Stage primaryStage;
     private AnchorPane rootLayout;
+
+
+    List<Player> players;
+    List<GameViewController.PlayerInfo> playersInfo;
+
+    GameViewController gameViewController;
+
+    public ViewTest() {
+        players = new ArrayList<>();
+        players.add( new Player("me"));
+        players.add( new Player("p1"));
+        players.add( new Player("p2"));
+        players.add( new Player("p3"));
+
+        this.playersInfo = new ArrayList<>();
+        Random random = new Random();
+        for (Player player : players) {
+            playersInfo.add(new GameViewController.PlayerInfo(
+                    player.getName(),
+                    random.nextInt(GUIConstants.ICON_QUANTITY),
+                    Pattern.TypePattern.values()[1]));
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -36,6 +69,13 @@ public class ViewTest extends Application {
             event.consume();    // consume close_request, because we are going to handle it
             quitGame();
         });
+
+        primaryStage.maximizedProperty().addListener((ov, t, t1) -> {
+            gameViewController.updateSize();
+//            if(bDebug)
+//                System.out.println("maximized:" + t1.booleanValue());
+        });
+
     }
 
     private void quitGame() {
@@ -84,12 +124,19 @@ public class ViewTest extends Application {
      */
     public void initRootLayout() {
         try {
-            // Load root layout from fxml file.
+            // create a FXMLLoader and open fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ViewTest.class.getResource("/GameView.fxml"));
-            rootLayout = loader.load();
-//            rootLayout = loader.load(getClass().getResource("/GameView.fxml"));
+            loader.setLocation(getClass().getResource("/GameView.fxml"));
+            if(loader == null)
+                System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/GameView.fxml") + ")");
+            // Create a controller instance, passing the information about players
+            gameViewController = new GameViewController(playersInfo);
+            // Set it in the FXMLLoader
+            loader.setController(gameViewController);
 
+            // Load root layout from fxml file.
+            rootLayout = loader.load();     // NOTE: If you get ERROR in this line, it may because you haven't mark the folder 'resource' as resources root
+                                            //       look for folder resource on the project root path, there is a folder resource, right click and choose in the end of list: 'Mark directory as'
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);

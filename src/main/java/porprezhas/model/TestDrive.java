@@ -31,7 +31,7 @@ public class TestDrive {
         for (Dice cas:
              draftPool.diceList()) {
             System.out.print(cas.getDiceNumber());
-            System.out.print(cas.colorDice);
+            System.out.print(cas.getColorDice());
         };
 
         Dice dice0=draftPool.chooseDice(0);
@@ -54,7 +54,7 @@ public class TestDrive {
         for (int i = 0; i <4 ; i++) {
             for (int j = 0; j<5 ; j++) {
                 System.out.print(board.getDice(i,j).getDiceNumber());
-                System.out.print(board.getDice(i,j).colorDice + " ");
+                System.out.print(board.getDice(i,j).getColorDice() + " ");
             }
             System.out.println();
         }

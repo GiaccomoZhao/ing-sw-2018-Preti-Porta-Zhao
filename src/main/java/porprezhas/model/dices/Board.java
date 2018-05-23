@@ -203,7 +203,7 @@ public class Board implements Serializable {
 
     public boolean validMoveWithoutNumberRestrictions(Dice dice, int x, int y){
 
-        if ((this.getPattern().getBox(x,y).freeBox())||(!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.colorDice))) {
+        if ((this.getPattern().getBox(x,y).freeBox())||(!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.getColorDice()))) {
             //Check if the box is already occupied
             if (this.occupiedBox(x, y))
                 return Boolean.FALSE;
@@ -219,7 +219,7 @@ public class Board implements Serializable {
 
     public boolean validMoveWithoutAdjacentRestrictions(Dice dice, int x, int y){
 
-        if ((this.getPattern().getBox(x,y).freeBox())||((!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.colorDice))&&(!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.colorDice)))) {
+        if ((this.getPattern().getBox(x,y).freeBox())||((!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.getColorDice()))&&(!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.getColorDice())))) {
             //Check if the box is already occupied
             if (this.occupiedBox(x, y))
                 return Boolean.FALSE;

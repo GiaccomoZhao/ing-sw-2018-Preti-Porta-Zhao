@@ -37,11 +37,11 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
               for(i=0; i < 4; i++) {
                   for (j = 0; j < 5; j++){
-                      if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.WHITE))
+                      if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
-                      counter = counter + (board.getDice(i, j).colorDice.ordinal()+1);
-                        helper= helper*(board.getDice(i, j).colorDice.ordinal()+1);
+                      counter = counter + (board.getDice(i, j).getColorDice().ordinal()+1);
+                        helper= helper*(board.getDice(i, j).getColorDice().ordinal()+1);
                   }
                   if(counter==15 && helper==120)
                       point++;
@@ -53,11 +53,11 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
               for(j=0; j < 5; j++) {
                   for (i = 0; i < 4; i++){
-                      if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.WHITE))
+                      if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
-                      counter = counter + (board.getDice(i, j).colorDice.ordinal()+1);
-                      helper= helper*(board.getDice(i, j).colorDice.ordinal()+1);
+                      counter = counter + (board.getDice(i, j).getColorDice().ordinal()+1);
+                      helper= helper*(board.getDice(i, j).getColorDice().ordinal()+1);
                   }
                   if((counter==10 && helper==24)||(counter==11 && helper==30)||(counter==12 && helper==40)||(counter==13 && helper==60)||(counter==14 && helper==120))
                       point++;
@@ -69,7 +69,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
               for(i=0; i < 4; i++) {
                   for (j = 0; j < 5; j++){
-                      if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.WHITE))
+                      if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
                       counter = counter + (board.getDice(i, j).getDiceNumber());
@@ -87,7 +87,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
               for(j=0; j < 5; j++) {
                   for (i = 0; i< 4; i++){
-                      if(board.getDice(i, j).colorDice.equals(Dice.ColorDice.WHITE))
+                      if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
                       counter = counter + (board.getDice(i, j).getDiceNumber());
@@ -195,29 +195,29 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               for(i=0; i < 4; i++) {
                   for (j = 0; j < 5; j++){
 
-                      if(board.getDice(i,j).colorDice!= Dice.ColorDice.WHITE){
-                          colorSupport=board.getDice(i, j).colorDice;
+                      if(board.getDice(i,j).getColorDice()!= Dice.ColorDice.WHITE){
+                          colorSupport=board.getDice(i, j).getColorDice();
 
                           if(i>0&&j>0)
-                              if(board.getDice(i-1,j-1).colorDice==colorSupport){
+                              if(board.getDice(i-1,j-1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i-1][j-1]=true;
                               }
 
                           if(i>0&&j<4)
-                              if(board.getDice(i-1,j+1).colorDice==colorSupport){
+                              if(board.getDice(i-1,j+1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i-1][j+1]=true;
                               }
 
                           if(i<3&&j>0)
-                              if(board.getDice(i+1,j-1).colorDice==colorSupport){
+                              if(board.getDice(i+1,j-1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i+1][j-1]=true;
                               }
 
                           if(i<3&&j<4)
-                              if(board.getDice(i+1,j+1).colorDice==colorSupport){
+                              if(board.getDice(i+1,j+1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i+1][j+1]=true;
                               }
@@ -245,7 +245,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               for(i=0; i < 4; i++) {
                   for (j = 0; j < 5; j++){
                       for(counter=0;counter<6;counter++) {
-                          if(board.getDice(i,j).colorDice.ordinal()+1 == counter +1)
+                          if(board.getDice(i,j).getColorDice().ordinal()+1 == counter +1)
                               num[counter] = num[counter] + 1;
                       }
                   }

@@ -1,14 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0">
+<HBox fx:id="pane" prefHeight="160.0" prefWidth="280.0" style="-fx-border-color: #FF9812;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="porprezhas.view.fx.controller.EnemyViewController">
+    <children>
+        <Label prefHeight="57.0" prefWidth="57.0" HBox.hgrow="NEVER">
+            <graphic>
+                <ImageView fx:id="icon" fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="head/64x64/head_62.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <padding>
+                <Insets left="4.0" right="4.0" top="4.0" />
+            </padding>
+        </Label>
+        <VBox prefHeight="200.0" prefWidth="160.0" HBox.hgrow="SOMETIMES">
+            <children>
+                <Label fx:id="name" minWidth="160.0" prefHeight="20.0" prefWidth="160.0" text="贝姐">
+                    <padding>
+                        <Insets left="12.0" top="4.0" />
+                    </padding>
+                </Label>
+                <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="1.0" prefWidth="0.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="160.0" prefWidth="160.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="2.5" prefWidth="0.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="0.0" percentHeight="1.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="128.0" prefHeight="128.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="0.0" percentHeight="11.5" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <GridPane fx:id="board" gridLinesVisible="true" minHeight="128.0" minWidth="160.0" prefHeight="128.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 
-</AnchorPane>
+                                                                <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                        </GridPane>
+                    </children>
+                </GridPane>
+            </children>
+        </VBox>
+        <AnchorPane minWidth="42.0" prefHeight="200.0" prefWidth="32.0">
+            <children>
+                <ImageView fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="32.0">
+                    <image>
+                        <Image url="other/bag.png" />
+                    </image>
+                </ImageView>
+                <FlowPane alignment="TOP_CENTER" prefHeight="32.0" prefWidth="32.0" rowValignment="TOP" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
+                    <children>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="other/circle.png" />
+                            </image>
+                            <FlowPane.margin>
+                                <Insets left="1.0" right="1.0" />
+                            </FlowPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="other/circle.png" />
+                            </image>
+                            <FlowPane.margin>
+                                <Insets />
+                            </FlowPane.margin>
+                        </ImageView>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="26.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="other/circle.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="other/circle.png" />
+                            </image>
+                        </ImageView>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="other/circle.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </FlowPane>
+                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
+                    <image>
+                        <Image url="other/timeout.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </AnchorPane>
+    </children>
+   <opaqueInsets>
+      <Insets top="10.0" />
+   </opaqueInsets>
+</HBox>

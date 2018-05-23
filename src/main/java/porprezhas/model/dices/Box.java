@@ -50,7 +50,7 @@ public class Box implements Serializable {
     public Boolean checkCostraint(Dice dice){
         if(this.freeBox())
             return Boolean.TRUE;
-        if(!this.white() && this.color.equals(dice.colorDice))
+        if(!this.white() && this.color.equals(dice.getColorDice()))
             return Boolean.TRUE;
         if(this.number== dice.getDiceNumber())
             return Boolean.TRUE;

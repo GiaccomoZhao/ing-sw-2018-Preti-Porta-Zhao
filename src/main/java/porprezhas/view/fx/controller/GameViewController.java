@@ -1,226 +1,341 @@
-package porprezhas.view.controller;
+package porprezhas.view.fx.controller;
 
-import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.ImageCursor;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
 import porprezhas.model.dices.Dice;
+import porprezhas.model.dices.Pattern;
+import porprezhas.view.fx.Image.DiceView;
 
-import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import static javafx.scene.effect.BlendMode.SRC_OVER;
+import static porprezhas.view.fx.controller.EnemyViewController.*;
 
 public class GameViewController {
-    private final String pathToDice = new String("dice/46x46/");
+    private final boolean bDebug = false;
+
     private final String pathToCursor = new String("cursor/");
+    private final String pathToBackground = new String("background/");
 
     // these will be initialized by the FXMLLoader when the load() method is called
     @FXML private StackPane gamePane;   // fx:id="gamePane"
-    @FXML private HBox enemyPane1;
-    @FXML private HBox enemyPane2;
-    @FXML private HBox enemyPane3;
-    @FXML private Label enemy1_name;
-    @FXML private Label enemy2_name;
-    @FXML private Label enemy3_name;
-    @FXML private Label enemy1_icon;
-    @FXML private Label enemy2_icon;
-    @FXML private Label enemy3_icon;
-    @FXML private GridPane enemy1_board;
-    @FXML private GridPane enemy2_board;
-    @FXML private GridPane enemy3_board;
-
-    class EnemyView {
-        public HBox pane;
-        public Label name;
-        public Label icon;
-        public GridPane board;
-
-        EnemyView(HBox pane, Label name, Label icon, GridPane board) {
-            this.pane = pane;
-            this.name = name;
-            this.icon = icon;
-            this.board = board;
-        }
-    }
-    EnemyView[] enemy = new EnemyView[3];
-
-    private ImageView[][] diceView;
+    @FXML private HBox playerPane;     // parent of board, used to resize board
+    @FXML private VBox boardParent;        // parent of board, used to resize board
+    @FXML private GridPane board;
+    @FXML private VBox enemyPanesParent;
+    @FXML private Button buttonPass;
 
     private ImageCursor cursorHand;
     private ImageCursor cursorHandDown;
     private ImageCursor cursorHandUp;
 
+
+    private final int COLUMN = 5;
+    private final int ROW = 4;
+
+
+    //  ***** VIDEO Setting attributes *****
+    // TODO: this can be imported in the VIDEO settings
+    final double enemyPaneSpacingRatio = 0.3 ;   // should be in range [0, 1]
+
+    final double buttonSpacingRatio = 0.3;        // sum of 2 button ratio should be in range [0,1], otherwise the board's size would decrease
+    final double buttonIncreaseRatio = 0.3;       // if the sum == 1 then the board size would keep width/height ratio
+
+    // these are the dimension we designed for enemy board
+    final double desiredWidth = 260.0;
+    final double desiredHeight = 160.0;
+    final double referenceHeight = 500.0;   // this is the reference min height of the gamePane with 3 enemies
+    final double paneWidthFactor = desiredWidth / desiredHeight;    // this is the ratio between width and height of a single enemy pane
+    final double heightFactor = desiredHeight / referenceHeight;    // this is the ratio of enemy panel's height on entire game's height
+
+    // dimension configured for player panel
+    final double playerPaneWidth = 340.0;
+    final double desiredRatio = 128.0 / 160.0;    // desiredHeight / desiredWidth
+    final double playerPaneWidthFactor = 240.0 / playerPaneWidth;
+
+
+
+
+    // Game Variable
+    List<EnemyViewController> enemyViewControllers;
+    Pane[] enemyPanes;
+    List<GridPane> boardList;
+
+    public static class PlayerInfo {
+        public String name;
+        public int iconId;
+        public Pattern.TypePattern typePattern;
+
+        public PlayerInfo(String name, int iconId, Pattern.TypePattern typePattern) {
+            this.name = name;
+            this.iconId = iconId;
+            this.typePattern = typePattern;
+        }
+    }
+    final List<PlayerInfo> playersInfo;
+
+    final int num_player;
+
+
+    // @requires playersInfo.size >= 1
+    // @Param playersInfo.get(0).typePattern == player.typePattern &&
+    //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
+    public GameViewController(List<PlayerInfo> playersInfo) {
+        if(bDebug)
+            System.out.println("Constructing GameView");
+        this.playersInfo = playersInfo;
+        this.num_player = playersInfo.size();
+        if(this.num_player > 1)
+            enemyPanes = new Pane[this.num_player-1];
+        else
+            enemyPanes = null;
+        boardList = new ArrayList<>(num_player);
+        enemyViewControllers = new ArrayList<>();
+/*        for (int i = 0; i < num_player; i++) {
+            boardList.add(new GridPane());
+        }*/
+        if(bDebug)
+            System.out.println("GameView Constructed");
+    }
+
+    // this will be called by JavaFX
     public void initialize() {
+        if(bDebug)
+            System.out.println("Initializing GameView");
+        boardList.add(board);
+
+        // Load enemy panels and setup them
+        // add enemy boards
+        try {
+            setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // setup our game GUI
+        setGameCursor();
+        setBackground();
+
+        // add GamePane(include all players panel) Resize Listener
+        setResizeListener();
+
+        // add player panel(include board, button, etc.) Resize and Drag Listener
+        setupPlayerPaneListener();
+
+        // set pattern to all player
+        setupPattern();
+
+
+
+        // insert a lot of dices to test
+        for (int col = 0; col < COLUMN; col++) {
+            for (int row = 0; row < ROW; row++) {
+                Random random = new Random();
+                if (random.nextInt(10) < 6)
+                    addDice(board, col, row,
+                            new Dice(random.nextInt(6) + 1, Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
+                    );
+            }
+        }
+        for (int i = 0; i < enemyViewControllers.size(); i++) {
+            GridPane board = enemyViewControllers.get(i).getBoard();
+            for (int col = 0; col < COLUMN; col++) {
+                for (int row = 0; row < ROW; row++) {
+                    Random random = new Random();
+                    if (random.nextInt(10) < 6)
+                        addDice(board, col, row,
+                                new Dice(random.nextInt(6) + 1, Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
+                        );
+                }
+            }
+        }
+    }
+
+    private void setupPattern() {
+//        for (PlayerInfo playerInfo : playersInfo) {
+        for (int i = 0; i < playersInfo.size(); i++) {
+//            GridPane board = enemyPanes[i].getChildren();
+            GridPane gridPane;
+            PlayerInfo playerInfo = playersInfo.get(i);
+            if( i == 0) {
+                gridPane = this.board;
+            } else {
+                 gridPane = enemyViewControllers.get(i - 1).getBoard();
+            }
+            setPattern(gridPane, playerInfo.typePattern);
+            if(bDebug)
+                System.out.println(gridPane + "\t" + playerInfo.typePattern);
+            boardList.add(gridPane);
+        }
+    }
+
+    private void setupPlayerPaneListener() {
+        addBoardResizeListener(board);  // used to adapt dice in the grid
+        addBoardDragListener(board);    // implements dice dragging action
+   }
+
+    private void setEnemyPanes() throws IOException {
+        enemyPanesParent.getChildren().clear();
+        for (int i = 0; i < enemyPanes.length; i++) {
+            // Load the panel from .fxml
+            FXMLLoader loader = new FXMLLoader();   //NOTE: We must create more time loader to get multiple pane; Otherwise only one pane would be displayed
+            loader.setLocation(getClass().getResource("/EnemyPaneView.fxml"));
+            if(loader == null)
+                System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/EnemyPaneView.fxml") + ")");
+            enemyPanes[i] = loader.load();
+
+            // add the enemy panel on the game view
+            enemyPanesParent.getChildren().add(enemyPanes[i]);
+
+            // get controller
+            EnemyViewController enemyViewController = loader.getController();
+            enemyViewControllers.add(enemyViewController);
+            // setup player info
+            enemyViewController.setPlayerInfo(playersInfo.get(i + 1));
+        }
+    }
+
+    private void setGameCursor() {
         cursorHand = new ImageCursor(
-                new Image(pathToCursor + "cursor_hand.png", 64.0, 64.0, true, true));
+                new Image(pathToCursor + "cursor_hand.png", 64.0, 64.0, true, true),
+                12, 12);
         cursorHandDown = new ImageCursor(
                 new Image(pathToCursor + "cursor_hand_down.png") );
         cursorHandUp = new ImageCursor(
                 new Image(pathToCursor + "cursor_hand_up.png") );
 
         gamePane.setCursor(cursorHand);
+    }
 
-        enemy[0] = new EnemyView(enemyPane1, enemy1_name, enemy1_icon, enemy1_board);
-        enemy[1] = new EnemyView(enemyPane2, enemy2_name, enemy2_icon, enemy2_board);
-        enemy[2] = new EnemyView(enemyPane3, enemy3_name, enemy3_icon, enemy3_board);
+    private void setBackground() {
+        Background background = new Background(
+                new BackgroundFill(new ImagePattern(
+                        new Image(pathToBackground + "game.jpeg")),
+                        CornerRadii.EMPTY, Insets.EMPTY));
+        gamePane.setBackground(background);
+    }
 
-        addResizeListener(gamePane);
-        for (int i = 0; i < enemy.length; i++) {
-            addResizeListener(enemy[i].board);
+    private void setResizeListener() {
+        gamePane.heightProperty().addListener( (observable, oldValue, newValue) -> {
+            updateEnemyPaneSize();
+            updatePlayerPaneSize();
+        });
+
+        gamePane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            updatePlayerPaneSize();
+        });
+/*            final double actualWidth = newValue.doubleValue();
+            boolean bMinimum = actualWidth <= referenceHeight;
+            if(bMinimum) {
+                gamePane.setPadding(new Insets(0, 0, 0,
+                        bMinimum ? 0 : actualWidth - actualWidth));
+            }
+        });
+*/
+    }
+
+    // adjust enemy panel size and gap between panels
+    private void updateEnemyPaneSize() {
+
+        // My note:
+        // H: 600 -> 3 x 160 = 480 + 4 x 120/4
+        // H: 300 : 160 - 222
+        // H: 600 : 600 - 222
+        // W: 300 : 260 - 360
+
+//        final double actualHeight = newValue.doubleValue();
+        final double actualHeight = gamePane.getHeight();
+        boolean bMinimum = actualHeight <= referenceHeight;
+//            double minSpacing = (referenceHeight/3 *  (3- (num_player-1)));
+        double totalSpacing =
+                bMinimum ?
+                        0 :
+                        ( actualHeight - (referenceHeight) * (num_player-1)/3 ) * enemyPaneSpacingRatio;
+        double paneHeight =
+                bMinimum ?
+                        actualHeight * heightFactor :
+                        heightFactor * (actualHeight - totalSpacing);
+        double paneWidth = paneHeight * paneWidthFactor;
+
+        // if the height isn't narrow increase size and gap between enemy panels
+        enemyPanesParent.setSpacing(totalSpacing / (num_player-1 +1));
+
+        for ( Pane pane: enemyPanes) {
+            pane.setPrefWidth(paneWidth);
+            pane.setPrefHeight(paneHeight);
+/*                if(enemyPanes.length == 1) {
+                    enemyPanesParent.setPadding(new Insets((newValue.doubleValue() - enemyPanes[0].getHeight())/10, 0, 0, 0));
+                }
+*/
+        }
+    }
+
+    // adjust Player panel size, working on button size and layout padding
+    private void updatePlayerPaneSize() {
+        double width = playerPane.getWidth();
+        double height = playerPane.getHeight();
+        double w = width * playerPaneWidthFactor;
+        if (w > height / desiredRatio && true) {
+            double inc = (w - height / desiredRatio);
+            double spacing = inc * buttonSpacingRatio;
+            double buttonSize = 68 + inc * buttonIncreaseRatio;
+            buttonPass.setPrefWidth(buttonSize);
+            ((Pane) buttonPass.getParent()).setPadding(new Insets(
+                    spacing / 2, spacing / 2, spacing / 2, spacing / 2));
         }
 
-        final int COLUMN = enemy[0].board.getColumnConstraints().size();
-        final int ROW = enemy[0].board.getRowConstraints().size();
-        diceView = new ImageView[COLUMN][ROW];
+        // 160x128
+        // player pane width = 350; player board width = 240
+        //
 
-        for (int i = 0; i < enemy.length; i++) {
-            for (int col = 0; col < COLUMN; col++) {
-                for (int row = 0; row < ROW; row++) {
-                    Random random = new Random();
-                    if(random.nextBoolean())
-                        diceView[col][row] = addDice(enemy[i].board, col, row, random.nextInt(6) +1, Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length -1)].name().toLowerCase().charAt(0));
-                }
+//            board.prefHeightProperty().bind(board.widthProperty().multiply(128.0/160.0));
+//            board.prefWidthProperty().bind(board.heightProperty());
+        // since prefHeightProperty().bind() doesn't work because we have auto fill checked.
+        // we do this:
+
+
+/*            // this is the accepted solution
+            double width = playerPane.getWidth();
+            double height = playerPane.getHeight();
+            double w = width * playerPaneWidthFactor;
+            if (w > height / desiredRatio && true) {
+                double inc = (w - height / desiredRatio );
+                double spacing = inc * buttonSpacingRatio;
+                double buttonSize = 68 + inc * buttonIncreaseRatio;
+                buttonPass.setPrefWidth(buttonSize);
+                ((Pane) buttonPass.getParent()).setPadding(new Insets(
+                        spacing / 2, spacing / 2, spacing / 2, spacing / 2));
+//                System.out.println("inc = " + inc);
+            }*/
+/*             if( h > w * desiredRatio) {
+                // height is higher, we adjust the height in base width
+                w *= desiredRatio;
+            } else {
+                // adjust width in base height
+                h /= desiredRatio;
             }
-            addBoardListener(enemy[i].board);
-        }
+            boardParent.setPrefSize(w, h);
 
+            System.out.println("\np width = " + playerPane.getWidth() + "\tp height = " + playerPane.getHeight());
+            System.out.println("v width = " + boardParent.getWidth() + "\tv height = " + boardParent.getHeight());
+            System.out.println("w = " + w + "\th = " + h);
+*/    }
 
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
-//            System.out.println("Height: " + gamePane.getHeight() + " Width: " + gamePane.getWidth());
-            // H: 600 -> 3 x 160 = 480 + 4 x 120/4
-            // H: 300 : 160 - 222
-            // H: 600 : 600 - 222
-            // W: 300 : 260 - 360
-            System.out.println(newValue.intValue() + "\t" + 260.0 / 500.0 * newValue.doubleValue());
-            for (int i = 0; i < enemy.length; i++) {
-                Pane pane = enemy[i].pane;
-                pane.setPrefWidth( newValue.doubleValue() * 260.0 / 500.0);
-                if(newValue.intValue() > 500) {
-                    double width = pane.getHeight()* 260.0 / 500.0;
-                    pane.setPadding(new Insets(
-                            pane.getHeight() * 0.1 / 3.0,
-                            width * 0.1,
-                            0, 0 ));
-                }
-            }
-        };
-//        gamePane.widthProperty().addListener(stageSizeListener);
-        gamePane.heightProperty().addListener(stageSizeListener);
-
+    public void updateSize() {
+        updateEnemyPaneSize();
+        updatePlayerPaneSize();
     }
 
-    private void gameResizeListener() {
-        ;
-    }
-
-    private ImageView addDice(GridPane board, int col, int row, int num, char color){
-        System.out.println(pathToDice + num + color + ".png");
-        ImageView diceImage = new ImageView(new Image (pathToDice + num + color + ".png"));
-//        diceImage.setFitHeight(32);
-        diceImage.fitHeightProperty().bind(
-                board.heightProperty().divide(4));
-        diceImage.fitWidthProperty().bind(
-                board.widthProperty().divide(5));
-//                board.getRowConstraints().get(row).prefHeightProperty().multiply(1));
-//        diceImage.fitWidthProperty().bind(
-//                board.getColumnConstraints().get(col).prefWidthProperty().multiply(1));
-//        diceImage.setPreserveRatio(true);
-        diceImage.setSmooth(true);
-        diceImage.setCache(true);
-
-        // Action
-        addDiceListener(diceImage);
-
-        board.add(diceImage, col, row);
-        return diceImage;
-    }
-
-    private void addDiceListener(ImageView imageView) {
-        imageView.setOnDragDetected(event -> {
-            Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
-
-            /* Put a image on a dragboard */
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(imageView.getImage());
-            db.setContent(content);
-
-            db.setDragView(imageView.getImage(), 10, 10);
-
-            event.consume();
-        });
-
-        imageView.setOnDragDone(event -> {
-            /* the drag and drop gesture ended */
-            /* if the data was successfully moved, clear it */
-            if (event.getTransferMode() == TransferMode.MOVE) {
-                ;
-            }
-            event.consume();
-        });
-    }
-
-    private void addBoardListener(GridPane board) {
-        board.setOnDragOver(event -> {
-            /* data is dragged over the target */
-            /* accept it only if it is not dragged from the same node
-             * and if it has a string data */
-            if (event.getGestureSource() != board &&
-                    event.getDragboard().hasString()) {
-                /* allow for both copying and moving, whatever user chooses */
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-
-            event.consume();
-        });
-
-        board.setOnDragEntered(event -> {
-            /* the drag-and-drop gesture entered the target */
-            /* show to the user that it is an actual gesture target */
-            System.out.println(this + "Entered");
-            if (event.getGestureSource() != board &&
-                    event.getDragboard().hasString()) {
-//                ((Node) event.getSource()).setCursor(cursorHand);
-            }
-
-            event.consume();
-        });
-
-        board.setOnDragExited(event -> {
-            /* mouse moved away, remove the graphical cues */
-//            board.setCursor(cursorHandUp);
-
-            event.consume();
-        });
-    }
-
-
-    private void addResizeListener(Pane pane) {
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
-//                System.out.println("Height: " + pane.getHeight() + " Width: " + pane.getWidth());
-                pane.setPrefWidth(5.0 / 4.0 * pane.getHeight());
-//            System.out.println(5.0 / 4.0 * pane.getHeight() + "\th = " + pane.getHeight());
-        };
-//        gamePane.widthProperty().addListener(stageSizeListener);
-        pane.heightProperty().addListener(stageSizeListener);
-
-//        System.out.println("1" + pane);
-
-//        img.fitWidthProperty().bind(stage.widthProperty());
-
-//        pane.prefHeightProperty().bind(
-//                pane.widthProperty());
-//        pane.prefWidthProperty().bind(pane.prefHeightProperty().multiply(
-//                pane.getPrefWidth() / pane.getPrefHeight()));
-
-//        List<Node> items = gamePane.getChildren();
+    @FXML protected void onPass(ActionEvent event) {
+        System.out.println("PASS");
     }
 }

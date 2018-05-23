@@ -210,7 +210,7 @@ public class GameController implements GameControllerInterface, Runnable {
         while(!bChosen) {
             try {
                 synchronized(chooseTimeOut) {
-                    chooseTimeOut.wait( (int) Game.GameConstants.secondsToMillis(
+                    chooseTimeOut.wait( Game.GameConstants.secondsToMillis(
                             Game.GameConstants.TIMEOUT_PREPARING_SEC));
                     chooseTimeOut.notifyAll();
                     setup();

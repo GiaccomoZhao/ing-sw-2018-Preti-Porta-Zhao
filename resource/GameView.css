@@ -1,0 +1,54 @@
+.image_fill {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.image_24x24{
+    width: 24px;
+    height: 24px;
+}
+
+.image_32x32{
+    width: 32px;
+    height: 32px;
+}
+
+.image_42x42{
+    width: 42px;
+    height: 42px;
+}
+
+.image_48x48{
+    width: 48px;
+    height: 48px;
+}
+
+.image_54x54{
+    width: 54px;
+    height: 54px;
+}
+
+.image_64x64{
+    width: 64px;
+    height: 64px;
+}
+
+
+.tab-close-button {
+    -fx-background-color: transparent;
+    -fx-background-image: url("other/setting.png");
+}
+.background-image {
+    -fx-background-image: url("background/game.jpeg");
+    -fx-background-repeat: stretch;
+    -fx-background-position: center center;
+    -fx-background-size: cover;
+}
+.my-rect {
+    -fx-fill: yellow;
+    -fx-stroke: green;
+    -fx-stroke-width: 5;
+    -fx-stroke-dash-array: 12 2 4 2;
+    -fx-stroke-dash-offset: 6;
+    -fx-stroke-line-cap: butt;
+}
