@@ -1,0 +1,1400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <SplitPane dividerPositions="0.8125" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <StackPane prefHeight="150.0" prefWidth="200.0">
+                    <children>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="650.0">
+                            <children>
+                                <HBox prefHeight="598.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                        <AnchorPane prefHeight="598.0" prefWidth="300.0" HBox.hgrow="SOMETIMES">
+                                            <children>
+                                                <HBox prefHeight="598.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <children>
+                                                        <VBox prefHeight="598.0" prefWidth="300.0" HBox.hgrow="SOMETIMES">
+                                                            <children>
+                                                                <HBox prefHeight="3000.0" prefWidth="3000.0" VBox.vgrow="ALWAYS">
+                                                                    <children>
+                                                                        <Label prefHeight="57.0" prefWidth="57.0" HBox.hgrow="SOMETIMES">
+                                                                            <graphic>
+                                                                                <ImageView fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/head/MonstersInfoAtlas1.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                            </graphic>
+                                                                            <padding>
+                                                                                <Insets left="4.0" right="4.0" top="4.0" />
+                                                                            </padding>
+                                                                            <HBox.margin>
+                                                                                <Insets />
+                                                                            </HBox.margin>
+                                                                        </Label>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="SOMETIMES">
+                                                                            <children>
+                                                                                <Label prefHeight="20.0" prefWidth="160.0" text="Barba Rossa">
+                                                                                    <padding>
+                                                                                        <Insets left="10.0" top="4.0" />
+                                                                                    </padding>
+                                                                                </Label>
+                                                                                <GridPane gridLinesVisible="true" prefHeight="156.0" prefWidth="160.0" VBox.vgrow="SOMETIMES">
+                                                                                    <columnConstraints>
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                    </columnConstraints>
+                                                                                    <rowConstraints>
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                    </rowConstraints>
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                </GridPane>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox minWidth="42.0" prefHeight="200.0" prefWidth="68.0" HBox.hgrow="NEVER">
+                                                                            <children>
+                                                                                <ImageView fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/bag.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="16.0" left="10.0" top="36.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                                <FlowPane alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" rowValignment="TOP">
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets left="1.0" right="1.0" />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="26.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                    <VBox.margin>
+                                                                                        <Insets left="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </FlowPane>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/timeout.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                    <VBox.margin>
+                                                                        <Insets top="5.0" />
+                                                                    </VBox.margin>
+                                                                </HBox>
+                                                                <Pane prefHeight="200.0" prefWidth="50.0" />
+                                                                <HBox layoutX="10.0" layoutY="20.0" prefHeight="3000.0" prefWidth="3000.0" VBox.vgrow="SOMETIMES">
+                                                                    <children>
+                                                                        <Label prefHeight="57.0" prefWidth="57.0" HBox.hgrow="NEVER">
+                                                                            <graphic>
+                                                                                <ImageView fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/head/《地下城王朝》UI与音乐素材-地下城王朝-手游资源包-Ico_爱给网_aigei_com1.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                            </graphic>
+                                                                            <padding>
+                                                                                <Insets left="4.0" right="4.0" top="4.0" />
+                                                                            </padding>
+                                                                        </Label>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="SOMETIMES">
+                                                                            <children>
+                                                                                <Label prefHeight="20.0" prefWidth="160.0" text="贝姐">
+                                                                                    <padding>
+                                                                                        <Insets left="12.0" top="4.0" />
+                                                                                    </padding>
+                                                                                </Label>
+                                                                                <GridPane gridLinesVisible="true" prefHeight="156.0" prefWidth="160.0" VBox.vgrow="SOMETIMES">
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                    <columnConstraints>
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                    </columnConstraints>
+                                                                                    <rowConstraints>
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                    </rowConstraints>
+                                                                                </GridPane>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox minWidth="42.0" prefHeight="200.0" prefWidth="68.0">
+                                                                            <children>
+                                                                                <ImageView fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/帝国塔防3UI素材-20140917guanka_爱给网_aigei_com.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="16.0" left="10.0" top="36.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                                <FlowPane alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" rowValignment="TOP">
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets left="1.0" right="1.0" />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="26.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                    <VBox.margin>
+                                                                                        <Insets left="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </FlowPane>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/timeout.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                </HBox>
+                                                                <HBox layoutX="10.0" layoutY="314.0" prefHeight="3000.0" prefWidth="3000.0">
+                                                                    <children>
+                                                                        <StackPane prefHeight="150.0" prefWidth="0.0">
+                                                                            <children>
+                                                                                <Label prefHeight="54.0" prefWidth="54.0" StackPane.alignment="TOP_RIGHT">
+                                                                                    <padding>
+                                                                                        <Insets left="5.0" right="4.0" top="4.0" />
+                                                                                    </padding>
+                                                                                    <graphic>
+                                                                                        <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/《潮爆三国》UI资源/物品技能图标/ptns_3005.jpg" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </graphic>
+                                                                                </Label>
+                                                                                <Label prefHeight="54.0" prefWidth="54.0" StackPane.alignment="TOP_RIGHT">
+                                                                                    <graphic>
+                                                                                        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/head/《赤壁》界面UI素材包-gameart8.comUI634_爱给网_aigei_com.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </graphic>
+                                                                                    <padding>
+                                                                                        <Insets left="4.0" right="4.0" top="4.0" />
+                                                                                    </padding>
+                                                                                </Label>
+                                                                            </children>
+                                                                        </StackPane>
+                                                                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="SOMETIMES">
+                                                                            <children>
+                                                                                <Label prefHeight="20.0" prefWidth="160.0" text="Ex-Calibur">
+                                                                                    <padding>
+                                                                                        <Insets left="12.0" top="4.0" />
+                                                                                    </padding>
+                                                                                </Label>
+                                                                                <GridPane gridLinesVisible="true" prefHeight="156.0" prefWidth="160.0" VBox.vgrow="SOMETIMES">
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                    <columnConstraints>
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                    </columnConstraints>
+                                                                                    <rowConstraints>
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                    </rowConstraints>
+                                                                                </GridPane>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox minWidth="42.0" prefHeight="200.0" prefWidth="68.0">
+                                                                            <children>
+                                                                                <ImageView fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/bag.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="16.0" left="10.0" top="36.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                                <FlowPane alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" rowValignment="TOP">
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets left="1.0" right="1.0" />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="26.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                    <VBox.margin>
+                                                                                        <Insets left="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </FlowPane>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/timeout.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                    <VBox.margin>
+                                                                        <Insets bottom="10.0" />
+                                                                    </VBox.margin>
+                                                                </HBox>
+                                                            </children>
+                                                        </VBox>
+                                                        <Label prefHeight="598.0" prefWidth="100.0" HBox.hgrow="SOMETIMES" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                            <padding>
+                                                <Insets right="5.0" />
+                                            </padding>
+                                        </AnchorPane>
+                                        <AnchorPane prefHeight="598.0" prefWidth="350.0" HBox.hgrow="SOMETIMES">
+                                            <children>
+                                                <GridPane layoutX="5.0" prefHeight="598.0" prefWidth="344.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="340.0" prefWidth="3400.0" />
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints minHeight="32.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints minHeight="200.0" prefHeight="200.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints minHeight="260.0" prefHeight="260.0" vgrow="SOMETIMES" />
+                                                    </rowConstraints>
+                                                    <children>
+                                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowSpan="2">
+                                                            <children>
+                                                                <GridPane disable="true" minHeight="60.0" minWidth="320.0" prefHeight="1200.0" prefWidth="320.0" HBox.hgrow="SOMETIMES">
+                                                                    <columnConstraints>
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                    </columnConstraints>
+                                                                    <rowConstraints>
+                                                                        <RowConstraints minHeight="35.0" prefHeight="42.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                    </rowConstraints>
+                                                                    <children>
+                                                                        <HBox alignment="CENTER" prefHeight="32.0" prefWidth="320.0" spacing="2.0" GridPane.columnSpan="10">
+                                                                            <children>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_1.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_2.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_3.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_4.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_5.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_6.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_7.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_8.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_9.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/num_10.png" />
+                                                                                    </image>
+                                                                                </ImageView>
+                                                                            </children>
+                                                                        </HBox>
+                                                                    </children>
+                                                                </GridPane>
+                                                                <VBox minHeight="16.0" minWidth="16.0" prefHeight="32.0" prefWidth="32.0" HBox.hgrow="SOMETIMES">
+                                                                    <children>
+                                                                        <Button alignment="CENTER" contentDisplay="CENTER" minHeight="16.0" minWidth="16.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" styleClass="background-image" text="▼" textAlignment="CENTER" textOverrun="CLIP" VBox.vgrow="SOMETIMES">
+                                                                            <font>
+                                                                                <Font size="7.0" />
+                                                                            </font>
+                                                                        </Button>
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets top="32.0" />
+                                                                    </padding>
+                                                                </VBox>
+                                                            </children>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER" minHeight="200.0" minWidth="200.0" prefHeight="2000.0" prefWidth="2000.0" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
+                                                            <children>
+                                                                <ImageView fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                                    <image>
+                                                                        <Image url="@../../resource/icons/Disc.png" />
+                                                                    </image>
+                                                                </ImageView>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="30.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                        <HBox alignment="CENTER" minHeight="200.0" minWidth="200.0" prefHeight="2000.0" prefWidth="2000.0" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
+                                                            <children>
+                                                                <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="200.0" prefWidth="200.0" vgap="10.0">
+                                                                    <children>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/1y.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="94.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="110.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="126.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="142.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="158.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="94.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="110.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="126.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <cursor>
+                                                                                <Cursor fx:constant="HAND" />
+                                                                            </cursor>
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                                                                    </padding>
+                                                                    <styleClass>
+                                                                        <String fx:value="background-image" />
+                                                                        <String fx:value="image_24x24" />
+                                                                    </styleClass>
+                                                                    <HBox.margin>
+                                                                        <Insets />
+                                                                    </HBox.margin>
+                                                                </FlowPane>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="30.0" />
+                                                            </padding>
+                                                        </HBox>
+                                                        <VBox minHeight="240.0" minWidth="340.0" prefHeight="2600.0" prefWidth="3400.0" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.vgrow="SOMETIMES">
+                                                            <children>
+                                                                <HBox alignment="BASELINE_LEFT" minHeight="48.0" minWidth="240.0" prefHeight="48.0" prefWidth="240.0" spacing="20.0">
+                                                                    <children>
+                                                                        <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="SOMETIMES">
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/《潮爆三国》UI资源/物品技能图标/event_11.jpg" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/《潮爆三国》UI资源/物品技能图标/item_100203.jpg" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <ImageView fitHeight="42.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <image>
+                                                                                <Image url="@../../resource/icons/《潮爆三国》UI资源/物品技能图标/event_21.jpg" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets bottom="6.0" left="20.0" />
+                                                                    </padding>
+                                                                    <VBox.margin>
+                                                                        <Insets />
+                                                                    </VBox.margin>
+                                                                </HBox>
+                                                                <HBox minHeight="200.0" minWidth="240.0" prefHeight="200.0" prefWidth="240.0" VBox.vgrow="SOMETIMES">
+                                                                    <children>
+                                                                        <VBox prefHeight="192.0" prefWidth="240.0" HBox.hgrow="SOMETIMES">
+                                                                            <children>
+                                                                                <GridPane gridLinesVisible="true" prefHeight="192.0" prefWidth="240.0" VBox.vgrow="SOMETIMES">
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                            <GridPane.margin>
+                                                                                                <Insets />
+                                                                                            </GridPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                                                                            <cursor>
+                                                                                                <Cursor fx:constant="HAND" />
+                                                                                            </cursor>
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/dice/point/5g.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                    <columnConstraints>
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                    </columnConstraints>
+                                                                                    <rowConstraints>
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                        <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                    </rowConstraints>
+                                                                                </GridPane>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <VBox prefHeight="200.0" prefWidth="42.0">
+                                                                            <children>
+                                                                                <ImageView fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/bag.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="16.0" left="10.0" top="16.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                                <FlowPane alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" rowValignment="TOP">
+                                                                                    <children>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets left="1.0" right="1.0" />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                            <FlowPane.margin>
+                                                                                                <Insets />
+                                                                                            </FlowPane.margin>
+                                                                                        </ImageView>
+                                                                                        <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="26.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                                                            <image>
+                                                                                                <Image url="@../../resource/icons/circle.png" />
+                                                                                            </image>
+                                                                                        </ImageView>
+                                                                                    </children>
+                                                                                    <VBox.margin>
+                                                                                        <Insets left="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </FlowPane>
+                                                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                                    <image>
+                                                                                        <Image url="@../../resource/icons/timeout.png" />
+                                                                                    </image>
+                                                                                    <VBox.margin>
+                                                                                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                                                                                    </VBox.margin>
+                                                                                </ImageView>
+                                                                            </children>
+                                                                            <padding>
+                                                                                <Insets right="4.0" />
+                                                                            </padding>
+                                                                        </VBox>
+                                                                        <AnchorPane>
+                                                                            <children>
+                                                                                <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="Pass" textAlignment="CENTER" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="2.0" />
+                                                                            </children>
+                                                                            <padding>
+                                                                                <Insets bottom="20.0" />
+                                                                            </padding>
+                                                                        </AnchorPane>
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets bottom="5.0" />
+                                                                    </padding>
+                                                                </HBox>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </GridPane>
+                                            </children>
+                                            <HBox.margin>
+                                                <Insets left="5.0" top="10.0" />
+                                            </HBox.margin>
+                                            <padding>
+                                                <Insets left="5.0" right="20.0" />
+                                            </padding></AnchorPane>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </StackPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="150.0">
+                    <children>
+                        <VBox prefHeight="598.0" prefWidth="555.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <AnchorPane prefHeight="128.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                                    <children>
+                                        <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="24.0">
+                                            <image>
+                                                <Image url="@../../resource/icons/setting.png" />
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </AnchorPane>
+                                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="456.0" prefWidth="145.0">
+                                            <children>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <children>
+                                                        <ComboBox prefWidth="150.0" />
+                                                        <ChoiceBox prefWidth="150.0" />
+                                                        <TextField />
+                                                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>
