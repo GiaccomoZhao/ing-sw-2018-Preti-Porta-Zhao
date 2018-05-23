@@ -22,19 +22,13 @@ public class BoardTest {
     @Before
     public void setUp()  {
         pattern = mock(Pattern.class);
-        die = mock(Dice.class);
-        die1 = mock(Dice.class);
-        die0 = mock(Dice.class);
-        board = new Board(pattern.getTypePattern());
+        die = new Dice(Dice.ColorDice.YELLOW,1);
+        die1 = new Dice (Dice.ColorDice.BLUE,2);
+        die0 = new Dice (Dice.ColorDice.WHITE,0);
+        board = new Board(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
         box = mock(Box.class);
 
 
-        when(die.getDiceNumber()).thenReturn(1);
-        when(die1.getDiceNumber()).thenReturn(2);
-        when(die0.getDiceNumber()).thenReturn(0);
-        when(die.getColorDice()).thenReturn(Dice.ColorDice.RED);
-        when(die1.getColorDice()).thenReturn(Dice.ColorDice.BLUE);
-        when(die0.getColorDice()).thenReturn(Dice.ColorDice.WHITE);
 
 
         when(pattern.checkEdges(0,0)).thenReturn(true);

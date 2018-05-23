@@ -7,12 +7,13 @@ import porprezhas.model.dices.DraftPool;
 import porprezhas.model.track.RoundTrack;
 
 
+import java.io.Serializable;
 
 import static porprezhas.model.dices.Dice.ColorDice.*;
 
 
 
-public class ToolCard extends Card {
+public class ToolCard extends Card implements Serializable {
 
 
     private int tokensQuantity;
@@ -28,6 +29,8 @@ public class ToolCard extends Card {
         this.tokensQuantity = 0;
         this.cardColor = cardColors[this.effect.ID-16];
     }
+
+
 
     public void addTokens(){
 

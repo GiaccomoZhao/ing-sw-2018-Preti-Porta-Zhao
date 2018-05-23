@@ -96,9 +96,9 @@ public class TestTotal {
                     System.out.println("\t\tno Action\n");
             }
             newGameController.pass();
-            Thread.sleep(3);
+            Thread.sleep(3000);
         }
-        gameThread.join(1000);
+        gameThread.join(1000000000);
         System.out.println("\n\n\n-- Server tear down.");
     }
 }

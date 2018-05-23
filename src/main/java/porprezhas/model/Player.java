@@ -5,11 +5,12 @@ import porprezhas.model.dices.Dice;
 import porprezhas.model.cards.*;
 import porprezhas.model.dices.Pattern;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Player {
+public class Player implements Serializable {
 
     // player identity attribute
     private Long playerID;
@@ -42,6 +43,14 @@ public class Player {
 
     public Long getPlayerID() {
         return playerID;
+    }
+
+    public boolean isbUsedToolCard() {
+        return bUsedToolCard;
+    }
+
+    public int getPickableDice() {
+        return pickableDice;
     }
 
     public void setPlayerID(Long playerID) {

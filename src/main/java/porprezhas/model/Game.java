@@ -11,6 +11,9 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static porprezhas.model.Game.NotifyState.BOARD_CREATED;
+import static porprezhas.model.Game.NotifyState.DICE_INSERTED;
+
 public class Game extends ModelObservable implements GameInterface {
     static Logger logger = Logger.getLogger(GameController.class.getName());
 
@@ -58,6 +61,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
+    public enum NotifyState{NEW_FIRST_PLAYER, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -66,6 +70,8 @@ public class Game extends ModelObservable implements GameInterface {
     private RoundTrack roundTrack;
     private DiceBag diceBag;
     private DraftPool draftPool;
+
+    private NotifyState gameNotifyState;
 
     private PrivateObjectiveCardFactory privateObjectiveCardFactory;
     private PublicObjectiveCardFactory publicObjectiveCardFactory;
@@ -84,6 +90,7 @@ public class Game extends ModelObservable implements GameInterface {
     private boolean bSolitaire;
     private SolitaireDifficulty solitaireDifficulty;    // in Multi-player we have Player.Pattern.Difficulty
     private int diceQuantity;
+
 
 
     // *********************************
@@ -147,6 +154,20 @@ public class Game extends ModelObservable implements GameInterface {
     public int getDiceQuantity() {
         return diceQuantity;
     }
+
+    public int getiCurrentPlayer() throws RemoteException{
+        return iCurrentPlayer;
+    }
+
+    public Player getFirstPlayer() throws RemoteException{
+        return this.playerList.get(iFirstPlayer);
+    }
+
+
+    public NotifyState getGameNotifyState() throws RemoteException {
+        return gameNotifyState;
+    }
+
 
     public List<Card> getPublicObjectiveCardList() {
         return publicObjectiveCardList;
@@ -223,9 +244,9 @@ public class Game extends ModelObservable implements GameInterface {
                 nextPlayer();
             }
         }
-
+        gameNotifyState = NotifyState.NEW_FIRST_PLAYER;
         setChanged();
-        notifyObservers();
+        notifyObservers(this);
 
 //        logger.info("It is turn of player n." + iCurrentPlayer);
         return currentPlayer;   // nextPlayer() method changes this attribute
@@ -347,15 +368,17 @@ public class Game extends ModelObservable implements GameInterface {
             // give 2 random PatternCard to choose one from 4 faces
             List<Pattern.TypePattern> patternTypes = Arrays.asList(Pattern.TypePattern.values());
             Collections.shuffle(patternTypes);
-
+            ArrayList<Pattern.TypePattern> list;
             for (int i = 0; i < playerList.size(); i++) {
+                list = new ArrayList<Pattern.TypePattern>(patternTypes.subList(4 * i, 4 * (i + 1)));
                 playerList.get(i).
-                        setPatternsToChoose(patternTypes.subList(4 * i, 4 * (i + 1)));
+                        setPatternsToChoose(list);
             }
 
             // notify clients, now they should choose a pattern
+            gameNotifyState = NotifyState.CHOOSE_PATTERN;
             setChanged();
-            notifyObservers();
+            notifyObservers(this);
             // the caller will wait player choose() for a certain time
         }
     }
@@ -383,15 +406,16 @@ public class Game extends ModelObservable implements GameInterface {
         this.orderPlayers();
 
         // notify all players that the Game is ready to play
+        gameNotifyState= NotifyState.GAME_STARTED;
         setChanged();
-        notifyObservers();
+        notifyObservers(this);
     }
 
     public void nextRound() {
         getDraftPool().setDraftPool(getDiceBag(), playerList.size());
-
+        gameNotifyState = NotifyState.NEXT_ROUND;
         setChanged();
-        notifyObservers();
+        notifyObservers(this);
     }
 
     public int calcScore(Player player) {
@@ -438,8 +462,9 @@ public class Game extends ModelObservable implements GameInterface {
                 dice = draftPool.chooseDice(indexDice);
                 currentPlayer.placeDice(dice, xPose, yPose);
 
+                gameNotifyState= DICE_INSERTED;
                 setChanged();
-                notifyObservers();
+                notifyObservers(this);
                 return true;
             } else
                 return false;   // not valid
@@ -452,11 +477,22 @@ public class Game extends ModelObservable implements GameInterface {
         if (p.getBoard() == null) {    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
             boolean bChosen = p.choosePatternCard(indexPatternType);   // here we create a new board associating it to the passed pattern
             if(bChosen) {
+                gameNotifyState = BOARD_CREATED;
                 setChanged();
-                notifyObservers();
+                notifyObservers(this);
                 return bChosen;
             }
         }
         return false;
+    }
+
+    @Override
+    public Player getActualPlayer() throws RemoteException {
+        return currentPlayer;
+    }
+
+    @Override
+    public ArrayList<Player> getPlayers() throws RemoteException {
+        return new ArrayList<Player>(playerList);
     }
 }

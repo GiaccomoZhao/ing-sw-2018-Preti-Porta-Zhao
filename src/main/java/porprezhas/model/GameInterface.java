@@ -3,6 +3,7 @@ package porprezhas.model;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 // To create a new Game needs a PlayerList as parameter for construction method
@@ -27,4 +28,7 @@ public interface GameInterface {
     void playerPrePrepare();
     void playerPostPrepare();
     void gamePrepare();
+
+
+
 }

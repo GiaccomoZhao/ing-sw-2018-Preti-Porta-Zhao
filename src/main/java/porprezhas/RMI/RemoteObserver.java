@@ -1,5 +1,7 @@
 package porprezhas.RMI;
 
+import porprezhas.model.Game;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
