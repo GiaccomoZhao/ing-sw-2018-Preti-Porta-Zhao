@@ -52,6 +52,26 @@ public class Board implements Serializable {
 
     }
 
+    //Return true if dice1 can be placed adjacent to dice2 ignoring color restrictions
+    public Boolean compatibleDiceWithoutColorRestrictions(Dice dice1, Dice dice2){
+
+        if(dice1.getDiceNumber()==dice2.getDiceNumber())
+            return false;
+
+        return true;
+
+    }
+
+    //Return true if dice1 can be placed adjacent to dice2 ignoring number restrictions
+    public Boolean compatibleDiceWithoutNumberRestrictions(Dice dice1, Dice dice2){
+
+        if(dice1.getColorDice()==dice2.getColorDice())
+            return false;
+
+        return true;
+
+    }
+
     public Boolean adjacentDice(Dice dice, int x, int y){
 
         int counter=0;
@@ -97,6 +117,96 @@ public class Board implements Serializable {
         return false;
     }
 
+
+    public Boolean adjacentDiceWithoutColorRestrictions(Dice dice, int x, int y){
+
+        int counter=0;
+        if(x>0 && occupiedBox(x-1, y) ){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[x-1][y]))
+                return false;
+            else
+                counter++;
+
+        }
+        if(x<3 && occupiedBox(x+1, y)){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[x+1][y]))
+                return false;
+            else
+                counter++;
+
+        }
+        if(y>0 && occupiedBox(x, y-1)){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[x][y-1]))
+                return false;
+            else
+                counter++;
+        }
+        if(y<4 && occupiedBox(x, y+1)){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[x][y+1]))
+                return false;
+            else
+                counter++;
+        }
+
+        if(counter>0)
+            return true;
+
+        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+            return true;
+        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+            return true;
+        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+            return true;
+        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+            return true;
+
+        return false;
+    }
+
+    public Boolean adjacentDiceWithoutNumberRestrictions(Dice dice, int x, int y){
+
+        int counter=0;
+        if(x>0 && occupiedBox(x-1, y) ){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x-1][y]))
+                return false;
+            else
+                counter++;
+
+        }
+        if(x<3 && occupiedBox(x+1, y)){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x+1][y]))
+                return false;
+            else
+                counter++;
+
+        }
+        if(y>0 && occupiedBox(x, y-1)){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x][y-1]))
+                return false;
+            else
+                counter++;
+        }
+        if(y<4 && occupiedBox(x, y+1)){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x][y+1]))
+                return false;
+            else
+                counter++;
+        }
+
+        if(counter>0)
+            return true;
+
+        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+            return true;
+        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+            return true;
+        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+            return true;
+        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+            return true;
+
+        return false;
+    }
 
 
     public boolean insertDice(Dice dice, int x, int y) {
@@ -186,13 +296,13 @@ public class Board implements Serializable {
 
     public boolean validMoveWithoutColorRestrictions(Dice dice, int x, int y){
 
-            if ((this.getPattern().getBox(x,y).freeBox())||(this.getPattern().getBox(x, y).getNumber() == dice.getDiceNumber())) {
+            if ((this.getPattern().getBox(x,y).freeBox())||(this.getPattern().getBox(x, y).getNumber() == dice.getDiceNumber())||(this.getPattern().getBox(x, y).getNumber() == 0)) {
                 //Check if the box is already occupied
                 if (this.occupiedBox(x, y))
                     return Boolean.FALSE;
                 //Check if the die is adjacent to a previously placed die
-                if (!this.adjacentDice(dice, x, y))
-                    return false;
+                if (!this.adjacentDiceWithoutColorRestrictions(dice, x, y))
+                    return Boolean.FALSE;
                 //valid Move
                 return Boolean.TRUE;
             }
@@ -208,7 +318,7 @@ public class Board implements Serializable {
             if (this.occupiedBox(x, y))
                 return Boolean.FALSE;
             //Check if the die is adjacent to a previously placed die
-            if (!this.adjacentDice(dice, x, y))
+            if (!this.adjacentDiceWithoutNumberRestrictions(dice, x, y))
                 return false;
             //valid Move
             return Boolean.TRUE;
@@ -259,11 +369,18 @@ public class Board implements Serializable {
 
         boolean flag=false;
 
+        for(int i=0;i<4;i++){
+            for(int j=0;j<5;j++){
+                dummyBoard[i][j]=Boolean.FALSE;
+            }
+        }
+
+
         for(int i=0; i<4; i++){
             for(int j=0; j<5; j++){
                 if(!flag) {
                     if (!((i == 1 && (0 < j && j < 4)) || (i == 2 && (0 < j && j < 4)))) {
-                        if (occupiedBox(i, j)) {
+                        if (occupiedBox(i, j)&&!(i==x&&j==y)) {
                             dummyBoard[i][j] = true;
                             markCell(i, j, x, y);
                             flag=true;
@@ -274,14 +391,19 @@ public class Board implements Serializable {
             }
         }
 
-        for(int i=0;i<4;i++){
-            for(int j=0;j<5;j++){
 
-                if(i!=x||j!=y)
-                    if(dummyBoard[i][j]==false&&occupiedBox(i,j))
+        for(int i=0;i<4;i++){
+
+            for(int j=0;j<5;j++){
+                if(!((i==x)&&(j==y))) {
+                    if ((!dummyBoard[i][j])&&(occupiedBox(i, j))){
+
                         return false;
 
+                    }
 
+
+                }
             }
         }
 
@@ -299,51 +421,70 @@ public class Board implements Serializable {
 
         if(x>0&&y>0)
             if(occupiedBox(x-1,y-1)&&(x-1!=X||y-1!=Y)){
-                dummyBoard[x-1][y-1]=true;
-                markCell( x-1, y-1 ,X,Y);
+                if(!dummyBoard[x-1][y-1]){
+                    dummyBoard[x-1][y-1]=true;
+                    markCell( x-1, y-1 ,X,Y);
+                }
             }
 
          if(x>0)
              if(occupiedBox(x-1,y)&&(x-1!=X||y!=Y)){
-                dummyBoard[x-1][y]=true;
-                markCell(x-1,y,X,Y);
+                 if(!dummyBoard[x-1][y]) {
+                     dummyBoard[x - 1][y] = true;
+                     markCell(x - 1, y, X, Y);
+                 }
              }
 
          if(x>0&&y<4)
              if(occupiedBox(x-1,y+1)&&(x-1!=X||y+1!=Y)){
-                 dummyBoard[x-1][y+1]=true;
-                 markCell(x-1,y+1,X,Y);
+                 if(!dummyBoard[x-1][y+1]) {
+                     dummyBoard[x - 1][y + 1] = true;
+                     markCell(x - 1, y + 1, X, Y);
+                 }
              }
 
          if(y>0)
              if(occupiedBox(x,y-1)&&(x!=X||y-1!=Y)){
-                 dummyBoard[x][y-1]=true;
-                 markCell(x,y-1,X,Y);
+                 if(!dummyBoard[x][y-1]){
+                     dummyBoard[x][y-1]=true;
+                     markCell(x,y-1,X,Y);
+                 }
              }
 
          if(y<4)
              if(occupiedBox(x,y+1)&&(x!=X||y+1!=Y)){
-                 dummyBoard[x][y+1]=true;
-                 markCell(x,y+1,X,Y);
+                 if(!dummyBoard[x][y+1]) {
+                     dummyBoard[x][y + 1] = true;
+                     markCell(x, y + 1, X, Y);
+                 }
              }
 
          if(x<3&&y>0)
              if(occupiedBox(x+1,y-1)&&(x+1!=X||y-1!=Y)){
-                 dummyBoard[x+1][y-1]=true;
-                 markCell(x+1,y-1,X,Y);
+                 if(!dummyBoard[x+1][y-1]){
+                     dummyBoard[x+1][y-1]=true;
+                     markCell(x+1,y-1,X,Y);
+                 }
+
              }
 
          if(x<3)
              if(occupiedBox(x+1,y)&&(x+1!=X||y!=Y)){
-                 dummyBoard[x+1][y]=true;
-                 markCell(x+1,y,X,Y);
+                 if(!dummyBoard[x+1][y]){
+                     dummyBoard[x+1][y]=true;
+                     markCell(x+1,y,X,Y);
+                 }
+
              }
 
-         if(x<3&&y<4)
-             if(occupiedBox(x+1,y+1)&&(x+1!=X||y+1!=Y)){
-                 dummyBoard[x+1][y+1]=true;
-                 markCell(x+1,y+1,X,Y);
+         if(x<3&&y<4) {
+             if (occupiedBox(x + 1, y + 1) && (x + 1 != X || y + 1 != Y)) {
+                 if(!dummyBoard[x+1][y+1]){
+                     dummyBoard[x + 1][y + 1] = true;
+                     markCell(x + 1, y + 1, X, Y);
+                 }
              }
+         }
      }
 
      // for TEST use, now that we haven't view yet.
