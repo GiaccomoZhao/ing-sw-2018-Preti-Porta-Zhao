@@ -12,7 +12,7 @@ public class TestClient {
 
         //System.setSecurityManager(new RMISecurityManager());
         ViewClient viewClient= new ViewClient(0);
-        ClientObserver testObserver= new ClientObserver("casa", viewClient);
+        ClientObserver testObserver= new ClientObserver( viewClient, 0);
         Registry registry= LocateRegistry.getRegistry();
        registry.rebind("view", testObserver);
 

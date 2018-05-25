@@ -4,16 +4,17 @@ import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 public interface GameControllerInterface extends Remote {
-    void pass();        // unblock thread
-    int calcScore(Player player);
-    StateMachine getState();    // when server want to know what is game doing -- running or waiting player exit
-    GameInterface getGame();
+    void pass() throws RemoteException;        // unblock thread
+    int calcScore(Player player) throws RemoteException;
+    StateMachine getState() throws RemoteException;    // when server want to know what is game doing -- running or waiting player exit
+    GameInterface getGame() throws RemoteException;
 
-    boolean choosePattern(Player player, int indexPatternType);
-    boolean insertDice(Integer indexDice, Integer xPose, Integer yPose);
-    boolean useToolCard();  // TODO:
+   boolean choosePattern(Player player, int indexPatternType) throws RemoteException;
+    boolean insertDice(Integer indexDice, Integer xPose, Integer yPose) throws RemoteException;
+    boolean useToolCard() throws RemoteException;  // TODO:
 
 
     // do i put this in concrete class or in interface? depends by getState method
@@ -28,7 +29,7 @@ public interface GameControllerInterface extends Remote {
 
         private static StateMachine[] states = values();    // make private static copy of the values avoids copying each time it is used
 
-        public StateMachine getState() {
+        public StateMachine getState()  {
             return this;
         }
 
@@ -51,4 +52,8 @@ public interface GameControllerInterface extends Remote {
             return this.getState().ordinal() >= StateMachine.FINISHED.ordinal();
         }
     }
+    Boolean insertedDice(int dicePosition, int xBoard, int yBoard) throws RemoteException;
+    Boolean chooseDPattern(String namePattern) throws RemoteException;
+    Boolean passUser() throws RemoteException;
+    Boolean usedToolCard() throws RemoteException;
 }

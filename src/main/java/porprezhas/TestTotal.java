@@ -28,9 +28,11 @@ public class TestTotal {
 
 
             server = new ServerController(0);
-
+        Registry registry= LocateRegistry.getRegistry();
+        registry.rebind("serverController", server);
         players = new ArrayList<>();
-        for (int i = 0; i < NUM_PLAYER; i++) {
+
+        for (int i = 0; i < 0; i++) {
             Faker faker = new Faker();
 
 
@@ -42,11 +44,13 @@ public class TestTotal {
             server.join(players.get(i));
         }
 
+        Thread.sleep(40000);
         newGameController = (GameController) server.getGameControllers().get(0);
         Game game = (Game) newGameController.getGame();
 
-        Registry registry = LocateRegistry.getRegistry();
-        registry.rebind("game", game);
+
+
+
 
         (gameThread = new Thread((Runnable) newGameController)).start();
 
@@ -96,7 +100,7 @@ public class TestTotal {
                     System.out.println("\t\tno Action\n");
             }
             newGameController.pass();
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         }
         gameThread.join(1000000000);
         System.out.println("\n\n\n-- Server tear down.");

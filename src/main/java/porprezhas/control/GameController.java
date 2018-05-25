@@ -5,12 +5,17 @@ import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 import porprezhas.model.database.DatabaseInterface;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class GameController implements GameControllerInterface, Runnable {
+public class GameController extends UnicastRemoteObject implements GameControllerInterface, Runnable {
     static Logger logger = Logger.getLogger(GameController.class.getName());
 
 
@@ -185,11 +190,14 @@ public class GameController implements GameControllerInterface, Runnable {
     // *********************************
     // -------- Public Methods ---------
 
-    public GameController(GameInterface game) {
+    public GameController(GameInterface game) throws RemoteException {
+        super();
         this.game = game;
         playTimeOut = new Object(); // Lock
         chooseTimeOut = new Object(); // Lock
 //        pass(); // notifyAll to clear all the locks
+
+
     }
 
     public StateMachine getState() {
@@ -292,5 +300,25 @@ public class GameController implements GameControllerInterface, Runnable {
     public boolean useToolCard(){
 //       game.useToolCard();
         return false;
+    }
+
+    @Override
+    public Boolean insertedDice(int dicePosition, int xBoard, int yBoard) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Boolean chooseDPattern(String namePattern) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Boolean passUser() throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Boolean usedToolCard() throws RemoteException {
+        return null;
     }
 }

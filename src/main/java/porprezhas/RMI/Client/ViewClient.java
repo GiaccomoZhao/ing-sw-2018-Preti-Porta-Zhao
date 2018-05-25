@@ -50,6 +50,11 @@ public class ViewClient {
 
         for (Player player :
                 players) {
+            System.out.printf(player.getName()+ "              \t\t\t\t" );
+        }
+        System.out.println();
+        for (Player player :
+                players) {
 
 
             pattern = player.getBoard().getPattern();

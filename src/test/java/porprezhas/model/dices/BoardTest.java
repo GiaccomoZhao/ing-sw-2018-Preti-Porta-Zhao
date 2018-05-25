@@ -101,7 +101,7 @@ public class BoardTest {
     @Test
     public void getDiceTest() {
 
-        assertEquals(board.getDice(0, 0).colorDice, die0.getColorDice());
+        assertEquals(board.getDice(0, 0).getColorDice(), die0.getColorDice());
         assertEquals(board.getDice(0, 0).getDiceNumber(), die0.getDiceNumber());
 
         board.insertDice(die, 0, 0);
