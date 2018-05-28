@@ -6,19 +6,16 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.*;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import jdk.internal.dynalink.linker.GuardedInvocation;
+import porprezhas.model.Game;
 import porprezhas.model.Player;
+import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
+import porprezhas.view.fx.component.ConfirmBox;
+
 
 public class ViewTest extends Application {
     public static class GUIConstants {
@@ -29,10 +26,10 @@ public class ViewTest extends Application {
     private AnchorPane rootLayout;
 
 
-    List<Player> players;
-    List<GameViewController.PlayerInfo> playersInfo;
+    private List<Player> players;
+    private List<GameViewController.PlayerInfo> playersInfo;
 
-    GameViewController gameViewController;
+    private GameViewController gameViewController;
 
     public ViewTest() {
         players = new ArrayList<>();
@@ -56,11 +53,50 @@ public class ViewTest extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("tester");
 
+        // initialize the layout from fxml and
+        // setup the game GUI in base the player info!!!
         initRootLayout();
+
+        // application GUI logic
         initMainLogic();
 
-//        gamePane = (StackPane) rootLayout.lookup("#gamePane");
 
+        Random random = new Random();
+        for (int col = 0; col < Game.GameConstants.ROUND_NUM; col++) {
+            if (random.nextInt(10) < 2) {
+                for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
+                    gameViewController.addDiceToRoundTrack(col,
+                            new Dice(random.nextInt(6) + 1,
+                                    Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
+                    );
+                }
+            } else {
+                gameViewController.addDiceToRoundTrack(col,
+                        new Dice(random.nextInt(6) + 1,
+                                Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]) );
+                for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
+                    if (random.nextInt(10) < 3) {
+                        gameViewController.addDiceToRoundTrack(col,
+                                new Dice(random.nextInt(6) + 1,
+                                        Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]) );
+
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < gameViewController.num_player; i++) {
+            // insert a lot of dices to test
+            for (int col = 0; col < GameViewController.BOARD_COLUMN; col++) {
+                for (int row = 0; row < GameViewController.BOARD_ROW; row++) {
+                    if (random.nextInt(10) < 6) {
+                        gameViewController.addDice(i,
+                                new Dice(random.nextInt(6) + 1,
+                                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                                col, row );
+                    }
+                }
+            }
+        }
 //        showElementOverview();
     }
 
@@ -69,53 +105,19 @@ public class ViewTest extends Application {
             event.consume();    // consume close_request, because we are going to handle it
             quitGame();
         });
-
+/*      this is notified before maximizing the window, I have to work with old size, so this is useless....
         primaryStage.maximizedProperty().addListener((ov, t, t1) -> {
             gameViewController.updateSize();
 //            if(bDebug)
 //                System.out.println("maximized:" + t1.booleanValue());
         });
-
+*/
     }
 
     private void quitGame() {
-
-        Boolean bQuit = ConfirmBox.display("Title", "Are you sure to quit during a Game?");
+        Boolean bQuit = new ConfirmBox().display("Title", "Are you sure to quit during a Game?");
         if(bQuit) {
             primaryStage.close();
-        }
-    }
-
-    static class ConfirmBox {   // TODO: use this for request a Cards
-        static boolean answer;
-        public static boolean display(String title, String message) {
-            Stage window = new Stage();
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.setMinWidth(200);
-            Label label = new Label();
-            label.setText(message);
-
-            Button yesButton = new Button("Yes");
-            Button noButton = new Button("No");
-
-            yesButton.setOnAction(event -> {
-                answer = true;
-                window.close();
-            });
-            noButton.setOnAction(event -> {
-                answer = false;
-                window.close();
-            });
-
-            VBox layout = new VBox(10);
-            layout.getChildren().addAll(label, yesButton, noButton);
-            layout.setAlignment(Pos.CENTER);
-            layout.setPadding(new Insets(10, 12 ,16, 12));
-            Scene scene  =new Scene(layout);
-            window.setScene(scene);
-            window.showAndWait();
-
-            return answer;
         }
     }
 
@@ -129,13 +131,14 @@ public class ViewTest extends Application {
             loader.setLocation(getClass().getResource("/GameView.fxml"));
             if(loader == null)
                 System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/GameView.fxml") + ")");
+
             // Create a controller instance, passing the information about players
             gameViewController = new GameViewController(playersInfo);
             // Set it in the FXMLLoader
-            loader.setController(gameViewController);
+            loader.setController(gameViewController);   // I haven't set the controller in fxml because i want the controller get setup at construction
 
             // Load root layout from fxml file.
-            rootLayout = loader.load();     // NOTE: If you get ERROR in this line, it may because you haven't mark the folder 'resource' as resources root
+            rootLayout = loader.load();     // NOTE: If you get ONLY one ERROR in this line, it may because you haven't mark the folder 'resource' as resources root
                                             //       look for folder resource on the project root path, there is a folder resource, right click and choose in the end of list: 'Mark directory as'
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);

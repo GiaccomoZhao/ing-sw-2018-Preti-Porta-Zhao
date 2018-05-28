@@ -34,7 +34,7 @@ public class ImageButton extends JPanel implements MouseListener, MouseMotionLis
         if(rectangle.width > 0 && rectangle.height > 0) {
             icon.setImage(getScaledImage(icon.getImage(), rectangle.width, rectangle.height));
         }
-        label = new JLabel(icon);//("Image text", icon, JLabel.CENTER);
+        label = new JLabel(icon);//("Image text", iconId, JLabel.CENTER);
         label.setToolTipText("This is a ImageIcon with text");
 //        position = new Point(10, 10);
 //        size = new Point(100, 100);

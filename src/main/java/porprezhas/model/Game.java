@@ -30,8 +30,9 @@ public class Game extends ModelObservable implements GameInterface {
         }
 
         public static final int DICE_QUANTITY = 90;
-        public static final int DICE_PER_TURN = 1;
         public static final int MAX_PLAYER_QUANTITY = 4;
+        public static final int MAX_DICE_PER_ROUND = 2*MAX_PLAYER_QUANTITY +1;
+        public static final int DICE_PICK_PER_TURN = 1;
         public static final int ROUND_NUM = 10;
 //        public static final int FAVOR_TOKEN_QUANTITY = 3;
         public static final double TIMEOUT_PREPARING_SEC = 5;   //60;

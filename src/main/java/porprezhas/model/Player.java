@@ -128,7 +128,7 @@ public class Player implements Serializable {
     }
 
     public void resetPickableDice() {
-        pickableDice = Game.GameConstants.DICE_PER_TURN;
+        pickableDice = Game.GameConstants.DICE_PICK_PER_TURN;
     }
 
     public void addPickableDice() {

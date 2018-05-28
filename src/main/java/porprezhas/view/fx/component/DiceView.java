@@ -1,6 +1,5 @@
-package porprezhas.view.fx.Image;
+package porprezhas.view.fx.component;
 
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import porprezhas.model.dices.Dice;
@@ -12,7 +11,7 @@ public class DiceView extends ImageView {
 
     private int column;
     private int row;
-//    private Node parent;
+
     private Dice dice;
 
     public DiceView() {
@@ -20,6 +19,7 @@ public class DiceView extends ImageView {
     }
     public DiceView(Dice dice, int column, int row) {
         super();
+//        System.out.println(pathToDice + dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png");
         setImage( new Image (pathToDice +
                 dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png") );
         this.column = column;
@@ -56,23 +56,24 @@ public class DiceView extends ImageView {
         boolean bOutput = false;
         Scanner scanner = new Scanner(string);
 
+        // I know this block of code can be simplified by one REGEX, but the following code should be more clearer
         scanner.useDelimiter(",");
 
         scanner.findInLine("column=");
         column = scanner.nextInt();
-        if(bOutput) System.out.println(column);
+        if(bOutput) System.out.print("col=" + column);   // I have to print one by one because scanner would throw a exception when a value is not correct
 
         scanner.findInLine("row=");
         row = scanner.nextInt();
-        if(bOutput) System.out.println(row);
+        if(bOutput) System.out.print("\trow=" + row);
 
         scanner.findInLine("dice=");
         int number = scanner.nextInt();
-        if(bOutput) System.out.println(number);
+        if(bOutput) System.out.print("\tnum=" + number);
 
         scanner.findInLine("color=(\\w+)");
         String szColor = scanner.match().group(1);
-        if(bOutput) System.out.println(szColor);
+        if(bOutput) System.out.println("\tcolor=" + szColor);
 
         scanner.close();
 

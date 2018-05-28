@@ -1,76 +1,88 @@
 package porprezhas.view.fx.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.scene.ImageCursor;
-import javafx.scene.control.Button;
+import javafx.scene.*;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import porprezhas.model.Game;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.Image.DiceView;
+import porprezhas.view.fx.component.BoardView;
+import porprezhas.view.fx.component.DiceView;
+import porprezhas.view.fx.component.RoundTrackBoardView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
-import java.util.Random;
 
-import static porprezhas.view.fx.controller.EnemyViewController.*;
+import static porprezhas.Useful.*;
 
 public class GameViewController {
     private final boolean bDebug = false;
+    private final boolean bShowFrame = false;
 
     private final String pathToCursor = new String("cursor/");
     private final String pathToBackground = new String("background/");
 
+    public final static int BOARD_COLUMN = 5;
+    public final static int BOARD_ROW = 4;
+
+
+    //  ***** JavaFX attributes *****
     // these will be initialized by the FXMLLoader when the load() method is called
     @FXML private StackPane gamePane;   // fx:id="gamePane"
-    @FXML private HBox playerPane;     // parent of board, used to resize board
-    @FXML private VBox boardParent;        // parent of board, used to resize board
-    @FXML private GridPane board;
+    @FXML private HBox playerPane;     // parent of playerBoard, used to resize playerBoard
+//    @FXML private VBox playerBoardParent;        // parent of playerBoard, used to resize playerBoard
+    @FXML private GridPane playerBoard;
     @FXML private VBox enemyPanesParent;
     @FXML private Button buttonPass;
+//    @FXML private GridPane roundTrackDiceTable;
+    @FXML private HBox roundTrack;
+    @FXML private VBox diceListReference;   // this is used because grid pane didn't cover all the space of parent grid pane
 
     private ImageCursor cursorHand;
     private ImageCursor cursorHandDown;
     private ImageCursor cursorHandUp;
 
 
-    private final int COLUMN = 5;
-    private final int ROW = 4;
-
-
     //  ***** VIDEO Setting attributes *****
     // TODO: this can be imported in the VIDEO settings
-    final double enemyPaneSpacingRatio = 0.3 ;   // should be in range [0, 1]
+    private final double enemyPaneSpacingRatio = 0.3 ;  // should be in range [0, 1]
 
-    final double buttonSpacingRatio = 0.3;        // sum of 2 button ratio should be in range [0,1], otherwise the board's size would decrease
-    final double buttonIncreaseRatio = 0.3;       // if the sum == 1 then the board size would keep width/height ratio
-
-    // these are the dimension we designed for enemy board
-    final double desiredWidth = 260.0;
-    final double desiredHeight = 160.0;
-    final double referenceHeight = 500.0;   // this is the reference min height of the gamePane with 3 enemies
-    final double paneWidthFactor = desiredWidth / desiredHeight;    // this is the ratio between width and height of a single enemy pane
-    final double heightFactor = desiredHeight / referenceHeight;    // this is the ratio of enemy panel's height on entire game's height
-
-    // dimension configured for player panel
-    final double playerPaneWidth = 340.0;
-    final double desiredRatio = 128.0 / 160.0;    // desiredHeight / desiredWidth
-    final double playerPaneWidthFactor = 240.0 / playerPaneWidth;
+    private final double buttonSpacingRatio = 0.4;      // sum of 2 button ratio should be in range [0,1.4], otherwise the playerBoard's size would decrease
+    private final double buttonIncreaseRatio = 1.0;     // if the sum == 1.4 then the playerBoard size would keep width/height ratio
+                                                        // NB. this value of 1.4 may depends by monitor
+    private final double defaultPassButtonMinSize = 60;          // this should be bigger than 60, for big resolution monitor would need a bigger value
 
 
 
+    //  ***** Game ViewController attributes *****
+    private List<EnemyViewController> enemyViewControllers;
+    private Pane[] enemyPanes;      // panel of 0-3 enemies, contain board, name, icon
+    //private List<VBox> roundTrackLists;
 
-    // Game Variable
-    List<EnemyViewController> enemyViewControllers;
-    Pane[] enemyPanes;
-    List<GridPane> boardList;
+    private List<BoardView> boardList;      // board of all player
+    private RoundTrackBoardView roundTrackBoard;
+//    private List<DiceView>[] roundTrackDiceLists;   // make care about List<String> is not a Object. But our List<DiceView> is a Object.
+    private boolean[] bShowRoundTrackList;  // save which list are shown
+    private boolean bShowRoundTrackDices;   // has clicked show_all button
 
-    public static class PlayerInfo {
+
+    //  ***** Player attributes *****
+    final int num_player;
+    final List<PlayerInfo> playersInfo;
+    public static class PlayerInfo {    // NOTE: should i create a new class?
         public String name;
         public int iconId;
         public Pattern.TypePattern typePattern;
@@ -81,15 +93,12 @@ public class GameViewController {
             this.typePattern = typePattern;
         }
     }
-    final List<PlayerInfo> playersInfo;
-
-    final int num_player;
 
 
     // @requires playersInfo.size >= 1
     // @Param playersInfo.get(0).typePattern == player.typePattern &&
     //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
-    public GameViewController(List<PlayerInfo> playersInfo) {
+    public GameViewController(List<PlayerInfo> playersInfo) {   // NOTE: during the construction method the fxml variables haven't be set yet
         if(bDebug)
             System.out.println("Constructing GameView");
         this.playersInfo = playersInfo;
@@ -100,90 +109,293 @@ public class GameViewController {
             enemyPanes = null;
         boardList = new ArrayList<>(num_player);
         enemyViewControllers = new ArrayList<>();
+        roundTrackBoard = new RoundTrackBoardView(Game.GameConstants.ROUND_NUM, Game.GameConstants.MAX_DICE_PER_ROUND);
 /*        for (int i = 0; i < num_player; i++) {
             boardList.add(new GridPane());
         }*/
+//        roundTrackLists = new ArrayList<>();
+/*        roundTrackDiceLists = new ArrayList[Game.GameConstants.ROUND_NUM];
+        for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+            roundTrackDiceLists[i] = new ArrayList<>();
+        }
+*/
+        bShowRoundTrackList = new boolean[Game.GameConstants.ROUND_NUM];
+        bShowRoundTrackDices = true;
         if(bDebug)
             System.out.println("GameView Constructed");
     }
+
 
     // this will be called by JavaFX
     public void initialize() {
         if(bDebug)
             System.out.println("Initializing GameView");
-        boardList.add(board);
 
-        // Load enemy panels and setup them
-        // add enemy boards
-        try {
-            setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
+        setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
 
-        // setup our game GUI
+        // create BoardList and set pattern image to all player
+        setupBoard();
+
+        // attach RoundTrack dice table
+        setupRoundTrack();
+
+
+        // setup our game GUI with following methods
+        // Images
         setGameCursor();
         setBackground();
 
-        // add GamePane(include all players panel) Resize Listener
-        setResizeListener();
+        // Listeners
+        setResizeListener();        // add Resize Listener for GamePane(including all players panel, round track, etc)
+        setupRoundTrackListener();  // add action listener for round track's dice list dropping
 
-        // add player panel(include board, button, etc.) Resize and Drag Listener
-        setupPlayerPaneListener();
+/*
+        for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+            VBox vBox = new VBox();
+            vBox.setAlignment(Pos.TOP_CENTER);
+            vBox.setBorder(new Border(new BorderStroke(Color.RED,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            roundTrackLists.add(vBox);
+            roundTrackDiceTable.add(vBox, i, 1, 1, 8);
+        }
+*/
+    }
+    // return a round number from 1 to ROUND_NUM
+    private int getRoundNumberFromEvent(InputEvent event) throws Exception {
+        Object eventSource;
+        double eventX;
+        double eventSceneX;
+        if(event instanceof MouseEvent) {
+            MouseEvent mouseEvent = (MouseEvent) event;
+            eventSource = mouseEvent.getSource();
+            eventX = mouseEvent.getX();
+            eventSceneX = mouseEvent.getSceneX();
+        } else if(event instanceof  DragEvent) {
+            DragEvent dragEvent = (DragEvent) event;
+            eventSource = dragEvent.getSource();
+            eventX = dragEvent.getX();
+            eventSceneX = dragEvent.getSceneX();
+        } else
+            throw new Exception();
 
-        // set pattern to all player
-        setupPattern();
+        // if we have placed round number in a HBox
+        if(eventSource instanceof HBox) {
+            int iRound = (int) (eventX / ((HBox) eventSource).getWidth() * Game.GameConstants.ROUND_NUM);
+            if (iRound > Game.GameConstants.ROUND_NUM)
+                return Game.GameConstants.ROUND_NUM ;
+            return iRound +1;
+        }
 
+        // if we are moving on a DiceView, We can simply return it's attribute
+        else if (eventSource instanceof DiceView) {
+            return ((DiceView) eventSource).getColumn();
+        }
 
-
-        // insert a lot of dices to test
-        for (int col = 0; col < COLUMN; col++) {
-            for (int row = 0; row < ROW; row++) {
-                Random random = new Random();
-                if (random.nextInt(10) < 6)
-                    addDice(board, col, row,
-                            new Dice(random.nextInt(6) + 1, Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
-                    );
+        // if we have a normal ImageView, We have to calculate his position in Parent
+        else if (eventSource instanceof ImageView) {    // NOTE: 2018-5-25 we are using this currently
+            ImageView imageView = ((ImageView) eventSource);
+            if(imageView.getParent() instanceof  HBox) {
+                HBox parent = (HBox) imageView.getParent();
+                int iRound = (int) (imageView.getLayoutX() / parent.getWidth() * Game.GameConstants.ROUND_NUM);
+//                System.out.println("Calculated round = " + iRound);
+                if( iRound > Game.GameConstants.ROUND_NUM)
+                    return Game.GameConstants.ROUND_NUM ;
+                return iRound +1;
             }
         }
-        for (int i = 0; i < enemyViewControllers.size(); i++) {
-            GridPane board = enemyViewControllers.get(i).getBoard();
-            for (int col = 0; col < COLUMN; col++) {
-                for (int row = 0; row < ROW; row++) {
-                    Random random = new Random();
-                    if (random.nextInt(10) < 6)
-                        addDice(board, col, row,
-                                new Dice(random.nextInt(6) + 1, Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
-                        );
-                }
-            }
+
+        // if we are moving on the Round Track
+        else if (eventSource instanceof GridPane) {
+            GridPane gridPane = ((GridPane) eventSource);
+            Bounds bounds = gridPane.localToScene(gridPane.getBoundsInLocal());
+            double x = eventSceneX;
+            double width = bounds.getWidth();
+            int iRound = (int) ((x - bounds.getMinX()) / width * Game.GameConstants.ROUND_NUM);
+            if( iRound > Game.GameConstants.ROUND_NUM)
+                return Game.GameConstants.ROUND_NUM ;
+            return iRound +1;
         }
+
+        // not in those case
+        System.err.println(eventSource);
+        throw new Exception();
     }
 
-    private void setupPattern() {
-//        for (PlayerInfo playerInfo : playersInfo) {
+    private void setupRoundTrackListener() {
+        // set show/hide round dice list listener on every round number image view
+        for (Node node : roundTrack.getChildren()) {
+            ImageView roundNumberImage = (ImageView) node;
+
+            // drop down the list of dice
+            roundNumberImage.setOnMouseEntered(event -> {
+                try {
+                    int iRound = getRoundNumberFromEvent(event);
+                    showRoundTrackDices(iRound, true);
+                } catch (Exception e) {
+                    System.err.println(roundNumberImage);
+                    e.printStackTrace();
+                }
+            });
+            roundNumberImage.setOnDragEntered(event -> {
+//                System.out.println("entered");
+                try {
+                    int iRound = getRoundNumberFromEvent(event);
+                    showRoundTrackDices(iRound, true);
+                } catch (Exception e) {
+                    System.err.println(roundNumberImage);
+                    e.printStackTrace();
+                }
+            });
+
+
+            // NOTE: OnDragOver{acceptTransferModes(TransferMode.ANY)} is need for OnDragDropped
+            roundNumberImage.setOnDragOver(event -> {
+                event.acceptTransferModes(TransferMode.ANY);
+                event.consume();
+            });
+            roundNumberImage.setOnDragDropped(event -> {
+//                System.out.print("Dropped. \t");
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                    // read Dice date
+                    DiceView diceView = new DiceView();
+                    diceView.fromString(db.getString());
+//                    System.out.println(db.getString());
+
+                    // calculate place position
+                    try {
+                        int iRound = getRoundNumberFromEvent(event);
+                        // place down
+//                        System.out.println("round number = " + iRound);
+                        if (null != roundTrackBoard.addDice(diceView.getDice(), iRound-1, 0)) {
+                            success = true;
+                        }
+                    }catch (Exception e){
+                        System.err.println(roundNumberImage);
+                        e.printStackTrace();
+                    }
+//                System.out.println(((GridPane)event.getSource()).getLayoutY() + " \t" + ((GridPane)event.getTarget()).getLayoutY());
+//                System.out.println("Dropped to " + col + "\t" + row);
+                }
+                /* let the source know whether the string was successfully
+                 * transferred and used */
+                event.setDropCompleted(success);
+
+                event.consume();
+            });
+
+            // close drop down list
+            roundNumberImage.setOnMouseExited(event -> {
+                Bounds bounds = roundNumberImage.localToScene(roundNumberImage.getBoundsInLocal());
+                double x = event.getSceneX();
+                double y = event.getSceneY();
+                double leftBound = bounds.getMinX();
+                double rightBound = bounds.getMaxX();
+                double topBound = bounds.getMinY();
+//                    System.out.println("x=" + x + "\ty=" + y + "\tleft=" + leftBound + " \tright=" + rightBound + " \ttop=" + topBound);
+                // when the cursor went out of left or right or top bound, or on the bound limits
+                if (!isValueBetween(x, leftBound, rightBound) ||
+                        y <= topBound) {
+//                        System.out.println("Exited");
+                    try {
+                        int iRound = getRoundNumberFromEvent(event);
+                        showRoundTrackDices(iRound, false);
+                    } catch (Exception e) {
+                        System.err.println("" + roundNumberImage);
+                    }
+                }
+            });
+        }
+
+        // close all round track lists
+        roundTrackBoard.getBoard().setOnMouseExited(event -> {
+            if(bDebug)
+                System.out.println("Exit from round track board");
+            showRoundTrackDices(-1, false);
+        });
+
+        // close the list when move out from the dice list, when we don't want show all
+        roundTrackBoard.getBoard().setOnMouseMoved(event -> {
+//            if(bDebug)
+//                System.out.println("Move in round track board. \tbShow=" + bShowRoundTrackDices);
+
+            // do close any list when player pressed show_all button
+            if(bShowRoundTrackDices) {
+                return;
+            } else {    // or when some dice has been dragging
+                boolean bDragging = false;
+                for (BoardView boardView : boardList) {
+                    if(boardView.isbDragging()) {
+                        bDragging = true;
+                        break;
+                    }
+                }
+                if(bDragging == true)
+                    return;
+            }
+
+            // hide all the list that is not current one, we show one list at time without button press
+            try {
+                int iRound = getRoundNumberFromEvent(event);
+//                System.out.println("round = " + iRound);
+                for (int i = 1; i <= Game.GameConstants.ROUND_NUM; i++) {
+                    if(i != iRound && bShowRoundTrackList[i-1]) {
+                        showRoundTrackDices(i, false);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("" + event);
+            }
+        });
+/*        roundTrack.setOnMouseMoved(event -> {
+            onMovingInRoundTrack(event);
+        });
+*/    }
+
+    private void setupRoundTrack() {
+        if( roundTrack.getParent() instanceof GridPane) {
+            GridPane parentGridPane = (GridPane) roundTrack.getParent();
+
+//            roundTrackBoard.getBoard().prefWidthProperty().bind( parentGridPane.widthProperty() );
+//            roundTrackBoard.getBoard().prefHeightProperty().bind( parentGridPane.heightProperty());
+
+            if(bShowFrame) {
+                parentGridPane.setGridLinesVisible(true);
+            }
+
+            parentGridPane.add(roundTrackBoard.getBoard(), 0, 1, parentGridPane.getColumnConstraints().size(), parentGridPane.getRowConstraints().size()-1);
+            roundTrackBoard.getBoard().toBack();
+        }
+        if(bShowFrame) {
+            roundTrackBoard.getBoard().setBorder(new Border(new BorderStroke(Color.AQUA,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            roundTrackBoard.getBoard().setGridLinesVisible(true);
+        }
+        showRoundTrackDices(-1, false);
+    }
+
+    private void setupBoard() {
+        boardList.clear();  // this must be redundant but i want keep safe
         for (int i = 0; i < playersInfo.size(); i++) {
-//            GridPane board = enemyPanes[i].getChildren();
             GridPane gridPane;
             PlayerInfo playerInfo = playersInfo.get(i);
             if( i == 0) {
-                gridPane = this.board;
+                gridPane = this.playerBoard;
             } else {
                  gridPane = enemyViewControllers.get(i - 1).getBoard();
             }
-            setPattern(gridPane, playerInfo.typePattern);
+            if(gridPane == null)
+                System.err.println(this + " \tindex=" + i + "\tboard=" + gridPane);
+            boardList.add(new BoardView(gridPane));
+            boardList.get(i).setPattern(playerInfo.typePattern);
             if(bDebug)
-                System.out.println(gridPane + "\t" + playerInfo.typePattern);
-            boardList.add(gridPane);
+                System.out.println(boardList.get(i).getBoard() + " \tpatter=" + playerInfo.typePattern);
         }
     }
 
-    private void setupPlayerPaneListener() {
-        addBoardResizeListener(board);  // used to adapt dice in the grid
-        addBoardDragListener(board);    // implements dice dragging action
-   }
-
-    private void setEnemyPanes() throws IOException {
+    private void setEnemyPanes() {
         enemyPanesParent.getChildren().clear();
         for (int i = 0; i < enemyPanes.length; i++) {
             // Load the panel from .fxml
@@ -191,7 +403,11 @@ public class GameViewController {
             loader.setLocation(getClass().getResource("/EnemyPaneView.fxml"));
             if(loader == null)
                 System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/EnemyPaneView.fxml") + ")");
-            enemyPanes[i] = loader.load();
+            try {
+                enemyPanes[i] = loader.load();  // if there is a error, it may be caused by incorrect setting in EnemyPaneView.fxml
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             // add the enemy panel on the game view
             enemyPanesParent.getChildren().add(enemyPanes[i]);
@@ -226,25 +442,35 @@ public class GameViewController {
 
     private void setResizeListener() {
         gamePane.heightProperty().addListener( (observable, oldValue, newValue) -> {
-            updateEnemyPaneSize();
-            updatePlayerPaneSize();
+            updateEnemyPaneSize(newValue.doubleValue());
+//            updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());  // because we don't know the new value of height
         });
 
-        gamePane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            updatePlayerPaneSize();
+        playerPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+            updatePlayerPaneSize(playerPane.getWidth(), newValue.doubleValue());
         });
-/*            final double actualWidth = newValue.doubleValue();
-            boolean bMinimum = actualWidth <= referenceHeight;
-            if(bMinimum) {
-                gamePane.setPadding(new Insets(0, 0, 0,
-                        bMinimum ? 0 : actualWidth - actualWidth));
-            }
+        playerPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+            updatePlayerPaneSize(newValue.doubleValue(), playerPane.getHeight());
         });
-*/
+
+        ((Pane) roundTrack.getParent()).widthProperty().addListener((observable, oldValue, newValue) -> {
+            updateRoundTrackSize(newValue.doubleValue(), ((Pane) roundTrack.getParent()).getHeight());
+        });
+        ((Pane) roundTrack.getParent()).heightProperty().addListener((observable, oldValue, newValue) -> {
+            updateRoundTrackSize(((Pane) roundTrack.getParent()).getWidth(), newValue.doubleValue());
+        });
     }
 
     // adjust enemy panel size and gap between panels
-    private void updateEnemyPaneSize() {
+    private void updateEnemyPaneSize(double gamePaneHeight) {
+
+        // these are the dimension we designed for enemy board
+        final int designedEnemyNumber = 3;
+        final double desiredEnemyPaneWidth = 260.0;
+        final double desiredEnemyPaneHeight = 160.0;
+        final double referenceEnemyPaneHeight = 500.0;   // this is the reference min height of the gamePane with 3 enemies
+        final double enemyPaneWidthFactor = desiredEnemyPaneWidth / desiredEnemyPaneHeight;    // this is the ratio between width and height of a single enemy pane
+        final double enemyPaneHeightFactor = desiredEnemyPaneHeight / referenceEnemyPaneHeight;    // this is the ratio of enemy panel's height on entire game's height
 
         // My note:
         // H: 600 -> 3 x 160 = 480 + 4 x 120/4
@@ -252,23 +478,23 @@ public class GameViewController {
         // H: 600 : 600 - 222
         // W: 300 : 260 - 360
 
-//        final double actualHeight = newValue.doubleValue();
-        final double actualHeight = gamePane.getHeight();
-        boolean bMinimum = actualHeight <= referenceHeight;
-//            double minSpacing = (referenceHeight/3 *  (3- (num_player-1)));
+        final double newHeight = gamePaneHeight;    // final is used to mark this read only
+        boolean bMinimum = newHeight <= referenceEnemyPaneHeight;
+//            double minSpacing = (referenceEnemyPaneHeight/3 *  (3- (num_player-1)));
         double totalSpacing =
                 bMinimum ?
                         0 :
-                        ( actualHeight - (referenceHeight) * (num_player-1)/3 ) * enemyPaneSpacingRatio;
+                        ( newHeight - (referenceEnemyPaneHeight) * (num_player-1)/designedEnemyNumber ) * enemyPaneSpacingRatio;
         double paneHeight =
                 bMinimum ?
-                        actualHeight * heightFactor :
-                        heightFactor * (actualHeight - totalSpacing);
-        double paneWidth = paneHeight * paneWidthFactor;
+                        newHeight * enemyPaneHeightFactor :
+                        enemyPaneHeightFactor * (newHeight - totalSpacing);
+        double paneWidth = paneHeight * enemyPaneWidthFactor;
 
         // if the height isn't narrow increase size and gap between enemy panels
-        enemyPanesParent.setSpacing(totalSpacing / (num_player-1 +1));
-
+        enemyPanesParent.setSpacing(totalSpacing / (num_player-1 +1));  // num_player -1 == enemy_num;
+                                                                        // +1 for spacing top and bottom too,
+                                                                        // -1 if you just want increase the gap
         for ( Pane pane: enemyPanes) {
             pane.setPrefWidth(paneWidth);
             pane.setPrefHeight(paneHeight);
@@ -280,59 +506,153 @@ public class GameViewController {
     }
 
     // adjust Player panel size, working on button size and layout padding
-    private void updatePlayerPaneSize() {
-        double width = playerPane.getWidth();
-        double height = playerPane.getHeight();
-        double w = width * playerPaneWidthFactor;
-        if (w > height / desiredRatio && true) {
-            double inc = (w - height / desiredRatio);
+    private void updatePlayerPaneSize(double playerPaneWidth, double playerPaneHeight) {
+        if(bDebug)
+            System.out.println("playerPane: w=" + playerPaneWidth + "\th=" + playerPaneHeight);
+
+        // dimension configured for player panel
+        final double playerPaneDesiredWidth = 340.0;
+        final double playerPaneDesiredRatio = 128.0 / 160.0;    // desiredEnemyPaneHeight / desiredEnemyPaneWidth
+        final double playerPaneWidthFactor = 240.0 / playerPaneDesiredWidth;
+
+        double w = playerPaneWidth * playerPaneWidthFactor;
+        if (w > playerPaneHeight / playerPaneDesiredRatio) {
+            double inc = (w - playerPaneHeight / playerPaneDesiredRatio);
             double spacing = inc * buttonSpacingRatio;
-            double buttonSize = 68 + inc * buttonIncreaseRatio;
+            double buttonSize = defaultPassButtonMinSize + inc * buttonIncreaseRatio;
             buttonPass.setPrefWidth(buttonSize);
             ((Pane) buttonPass.getParent()).setPadding(new Insets(
                     spacing / 2, spacing / 2, spacing / 2, spacing / 2));
+        } else {
+            buttonPass.setPrefWidth(defaultPassButtonMinSize);
+            ((Pane) buttonPass.getParent()).setPadding(new Insets(0, 0, 0, 0));
         }
+   }
 
-        // 160x128
-        // player pane width = 350; player board width = 240
-        //
+   // this resize only the round numbers
+   private void updateRoundTrackSize (double roundTrackParentWidth, double roundTrackHeight) {
+       if (bDebug)
+           System.out.println("update round track: w=" + roundTrackParentWidth + "\th=" + roundTrackHeight);
+       final double referenceButtonSize = 24;  // estimated button size, not necessary to have an accurate measure of this
+       double height = roundTrackHeight;   // roundTrack number icon height
+       double width = (roundTrackParentWidth - referenceButtonSize) / 10;  // roundTrack number icon width, 10 numbers
+       if (width >= height) {
+           width = height;     // adapt to height
+       } else {
+           height = width;     // adapt to width, cut height
+       }
+       for (Node node : roundTrack.getChildren()) {
+           ImageView imageView = (ImageView) node;
+           imageView.setFitHeight(width);  // height == width
+           imageView.setFitWidth(width);
+//            imageView.setPreserveRatio(true); // this is the default value
+       }
+   }
 
-//            board.prefHeightProperty().bind(board.widthProperty().multiply(128.0/160.0));
-//            board.prefWidthProperty().bind(board.heightProperty());
-        // since prefHeightProperty().bind() doesn't work because we have auto fill checked.
-        // we do this:
+   public void updateSize() {
+        updateEnemyPaneSize(gamePane.getHeight());
+        updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());
+        updateRoundTrackSize( ((Pane) roundTrack.getParent()).getWidth(),
+                              ((Pane) roundTrack.getParent()).getHeight());
+    }
+
+    public void addDice(int indexPlayer, Dice dice, int col, int row) {
+        boardList.get(indexPlayer).addDice(dice, col, row);
+    }
+
+    public void addDiceToRoundTrack(int round0_9, Dice dice){
+        DiceView diceImage = roundTrackBoard.addDice(dice, round0_9, 0);
+//        if(null != diceImage)
+//        diceImage.setPreserveRatio(false);
+
+//        diceImage.fitWidthProperty().bind( diceListReference.widthProperty() );
+//        diceImage.fitHeightProperty().bind( diceListReference.heightProperty().divide(Game.GameConstants.MAX_DICE_PER_ROUND));
+    }
 
 
-/*            // this is the accepted solution
-            double width = playerPane.getWidth();
-            double height = playerPane.getHeight();
-            double w = width * playerPaneWidthFactor;
-            if (w > height / desiredRatio && true) {
-                double inc = (w - height / desiredRatio );
-                double spacing = inc * buttonSpacingRatio;
-                double buttonSize = 68 + inc * buttonIncreaseRatio;
-                buttonPass.setPrefWidth(buttonSize);
-                ((Pane) buttonPass.getParent()).setPadding(new Insets(
-                        spacing / 2, spacing / 2, spacing / 2, spacing / 2));
-//                System.out.println("inc = " + inc);
-            }*/
-/*             if( h > w * desiredRatio) {
-                // height is higher, we adjust the height in base width
-                w *= desiredRatio;
-            } else {
-                // adjust width in base height
-                h /= desiredRatio;
+    // on
+
+    //@Param iRound The number of the round dice list to show, from 1 to ROUND_NUM
+    //              if it's out of range, we show/hide all
+    public boolean showRoundTrackDices(int iRound, boolean bShow) {
+//            System.out.println("round = " + iRound);
+        GridPane gridPane = roundTrackBoard.getBoard();
+        if(bShowFrame)
+            roundTrackBoard.getBoard().setGridLinesVisible(true);
+
+        try {
+            // show the specified round's dices
+            if (isValueBetweenInclusive(iRound, 1, Game.GameConstants.ROUND_NUM) ){
+
+                // set bShowRoundTrackDices false when all list are hidden
+                bShowRoundTrackList[iRound -1] = bShow; // iRound is a index that starts from 1
+                if(!bShow && bShowRoundTrackDices == true) {
+                    int i;
+                    for (i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+                        if(bShowRoundTrackList[i] == true) {
+                            break;
+                        }
+                    }
+                    if(i == Game.GameConstants.ROUND_NUM) {
+                        bShowRoundTrackDices = false;
+                    }
+                }
+
+                // show-hide a list of dices
+                for (Node node : gridPane.getChildren()) {
+                    if(node instanceof ImageView) {
+                        if (gridPane.getColumnIndex(node) == iRound - 1) {    // the index start from 0, while iRound from 1
+                            node.setVisible(bShow);
+//                            node.setDisable(bShow);
+                            if(bShow)
+                                roundTrackBoard.getBoard().toFront();
+                            else
+                                roundTrackBoard.getBoard().toBack();
+                        }
+                    }
+                }
+            } else  {
+
+                // set all booleans = bShow
+                bShowRoundTrackDices = bShow;
+                for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+                    bShowRoundTrackList[i] = bShow;
+                }
+
+                // show-hide all round track dices
+                for (Node node : gridPane.getChildren()) {
+                    if(node instanceof ImageView) {
+                        node.setVisible(bShow);
+//                        node.setDisable(bShow);
+                        if(bShow)
+                            roundTrackBoard.getBoard().toFront();
+                        else
+                            roundTrackBoard.getBoard().toBack();
+                    }
+                }
             }
-            boardParent.setPrefSize(w, h);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bShow;
+    }
 
-            System.out.println("\np width = " + playerPane.getWidth() + "\tp height = " + playerPane.getHeight());
-            System.out.println("v width = " + boardParent.getWidth() + "\tv height = " + boardParent.getHeight());
-            System.out.println("w = " + w + "\th = " + h);
-*/    }
+    @FXML protected  void onShowRoundTrackDices(ActionEvent event) {
+        showRoundTrackDices(-1, !bShowRoundTrackDices);
+    }
 
-    public void updateSize() {
-        updateEnemyPaneSize();
-        updatePlayerPaneSize();
+    @FXML protected void onMovingInRoundTrack(MouseEvent event) {
+        try { return; } catch (Exception e) { e.printStackTrace(); }
+        int i = (int) (event.getX() / ((HBox) event.getSource()).getWidth() *10);
+        if( i > 10)
+            i  = 9;
+        System.out.println("Moving on " + (i+1) );
+    }
+    @FXML protected void onTabelEntered(MouseEvent event) {
+        System.out.println("Tabel Entered!");
+    }
+    @FXML protected void onTabelExited(MouseEvent event) {
+        System.out.println("Tabel Exited");
     }
 
     @FXML protected void onPass(ActionEvent event) {
