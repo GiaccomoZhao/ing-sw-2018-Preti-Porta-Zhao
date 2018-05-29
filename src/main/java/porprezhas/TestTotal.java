@@ -43,14 +43,11 @@ public class TestTotal {
             players.add(new Player(playerName));
             server.join(players.get(i));
         }
+        while(server.getGameControllers().size()<=0)
+            Thread.sleep(2000);
 
-        Thread.sleep(40000);
         newGameController = (GameController) server.getGameControllers().get(0);
         Game game = (Game) newGameController.getGame();
-
-
-
-
 
         (gameThread = new Thread((Runnable) newGameController)).start();
 
@@ -82,9 +79,10 @@ public class TestTotal {
         }
 
         // Give Game Controller Actions, We'll see Game skip all round timeout
-        while(newGameController.getState().isGameRunning()) {
-            Thread.sleep(6,860);
-            if (game.getCurrentPlayer().isDicePickable()) {
+        /*while(newGameController.getState().isGameRunning()) {
+
+
+           /* if (game.getCurrentPlayer().isDicePickable()) {
                 boolean bPlaced = false;
                 boolean bUsed = false;
                 for (int x = 0; !bPlaced && x < game.getCurrentPlayer().getBoard().getHeight(); x++) {
@@ -99,10 +97,11 @@ public class TestTotal {
                 if (!bPlaced && !bUsed)
                     System.out.println("\t\tno Action\n");
             }
-            newGameController.pass();
+
             Thread.sleep(1000);
-        }
-        gameThread.join(1000000000);
+            newGameController.pass();
+        }*/
+        gameThread.join(1000000);
         System.out.println("\n\n\n-- Server tear down.");
     }
 }

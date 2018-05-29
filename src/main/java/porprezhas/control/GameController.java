@@ -303,8 +303,13 @@ public class GameController extends UnicastRemoteObject implements GameControlle
     }
 
     @Override
-    public Boolean insertedDice(int dicePosition, int xBoard, int yBoard) throws RemoteException {
-        return null;
+    public Boolean insertedDice(int dicePosition, int xBoard, int yBoard, String username) throws RemoteException {
+        if(username.equals(this.getGame().getCurrentPlayer().getName()))
+            if(game.InsertDice(dicePosition, xBoard, yBoard))
+                return true;
+        return false;
+        //TO_DO FIX
+
     }
 
     @Override
@@ -313,8 +318,12 @@ public class GameController extends UnicastRemoteObject implements GameControlle
     }
 
     @Override
-    public Boolean passUser() throws RemoteException {
-        return null;
+    public Boolean passUser(String username) throws RemoteException {
+        if(username.equals(this.getGame().getCurrentPlayer().getName()))
+            this.pass();
+        else
+            return false;
+        return true;
     }
 
     @Override

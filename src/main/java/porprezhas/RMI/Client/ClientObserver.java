@@ -47,16 +47,7 @@ public class ClientObserver implements RemoteObserver {
         viewClient.updateClient((RemoteObservable) arg);
 
 
-        /*System.out.println( "\n\n\n" +
-                "  ***** >>> GAME OVER <<< *****  \n\n" +
-                "              Score              \n");
-        for (Player playera : players) {
-            System.out.format("    %-15s \t\n",
-                    player.getName());*/
-
-
-
-    }
+        }
 
 
 

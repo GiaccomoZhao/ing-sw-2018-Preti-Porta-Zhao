@@ -87,7 +87,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 registry.rebind("game".concat(String.valueOf(indexGameController)), gamet);
                 MainViewInterface view;
                 for (Player readyPlayer:
-                     gamet.getPlayerList()) {
+                        gamet.getPlayerList()) {
                     view =(MainViewInterface)viewClient.get(readyPlayer.getName());
                     view.addGameController(indexGameController);
                 }
@@ -175,6 +175,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     @Override
     public Boolean joinGame(String username) throws RemoteException {
+        MainViewInterface mainView= null;
+        String clientView = username.concat("MainView");
+        try {
+            mainView= (MainViewInterface) registry.lookup(clientView);
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+        viewClient.put(username, mainView);
         for (Player findPlayer:
                 loggedPlayer) {
             if(findPlayer.getName().equals(username)) {
@@ -195,14 +203,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         loggedPlayer.add(new Player(username));
 
-        MainViewInterface mainView= null;
-        String clientView = username.concat("MainView");
-        try {
-             mainView= (MainViewInterface) registry.lookup(clientView);
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        }
-        viewClient.put(username, mainView);
+
         return true;
     }
 
