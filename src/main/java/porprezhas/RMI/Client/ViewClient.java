@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class ViewClient {
 
     private Player player;
+    private Player currentPlayer;
     private Boolean first;
     private Boolean firstPlayer;
     private final int numberPlayer;
@@ -23,13 +24,14 @@ public class ViewClient {
     private ArrayList<Player> players;
     private final int HEIGHT = 4;
     private final int WIDTH = 5;
-
-
-    public ViewClient(int numberPlayer) {
+    private String username;
+    private Boolean gameStarted= false;
+    public ViewClient(int numberPlayer, String username) {
 
         first = false;
         firstPlayer= false;
         this.numberPlayer= numberPlayer;
+        this.username=username;
     }
 
 
@@ -50,7 +52,10 @@ public class ViewClient {
 
         for (Player player :
                 players) {
-            System.out.printf(player.getName()+ "              \t\t\t\t" );
+            if(player.getName().equals(this.currentPlayer.getName()))
+                System.out.printf("▶ ");
+            else System.out.printf("  ");
+            System.out.printf("%-25s\t\t",player.getName() );
         }
         System.out.println();
         for (Player player :
@@ -214,10 +219,36 @@ public class ViewClient {
 
         public void updateClient(RemoteObservable game) throws RemoteException {
 
-        Game.NotifyState state = game.getGameNotifyState();
+         Game.NotifyState state = game.getGameNotifyState();
          players = game.getPlayers();
+         this.currentPlayer= game.getActualPlayer();
+         if(gameStarted) {
+             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+             if (game.getActualPlayer().getName().equals(this.username))
+                 System.out.println("Questo è il tuo turno!");
+             else
+                 System.out.println("Ora sta giocando: " + game.getActualPlayer().getName());
 
+             System.out.println(" ");
 
+             System.out.println("Riserva:");
+             for(int i=0; i< game.getDraftpoolRmi().diceList().size(); i++){
+                 System.out.printf("    (%d)      ", i+1);
+
+             }
+             System.out.println(" ");
+             for (Dice dice :
+                     game.getDraftpoolRmi().diceList()) {
+                 String colorForm=  dice.getColorDice().toString();
+                 colorForm=colorForm.concat("]");
+                 System.out.printf(" [%d %-6s   ", dice.getDiceNumber(), colorForm);
+             }
+
+             System.out.println("\n");
+             printAll(false, 4);
+
+         }
+//①②③④⑤⑥⑦⑧⑨⑩
         switch(state){
 
             case NEW_FIRST_PLAYER:
@@ -240,6 +271,8 @@ public class ViewClient {
             case GAME_STARTED:
 
                 System.out.println("Game started!");
+                this.gameStarted=true;
+                this.printAll(false, 4);
                 break;
 
             case NEXT_ROUND:
@@ -252,9 +285,9 @@ public class ViewClient {
 
                     localPlayers= players;
                     player= players.get(game.getiCurrentPlayer());
-                    System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+                   // System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
                     System.out.println(player.getName() + " inserted a dice:");
-                    this.printAll(false, 4);
+                    //this.printAll(false, 4);
                     first=true;
 
                 break;
@@ -267,5 +300,10 @@ public class ViewClient {
 
 
 
+    }
+
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 }
