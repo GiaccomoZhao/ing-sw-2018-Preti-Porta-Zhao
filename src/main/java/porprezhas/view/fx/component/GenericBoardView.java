@@ -1,12 +1,14 @@
 package porprezhas.view.fx.component;
 
 import javafx.collections.ObservableList;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import porprezhas.model.dices.Dice;
 
 import javax.swing.text.html.ImageView;
+import java.util.Collection;
 
 public abstract class GenericBoardView {
     private final int COLUMN;   // default value
@@ -128,8 +130,18 @@ public abstract class GenericBoardView {
         return diceImage;
     }
 
+
+    // Refresh
+    // @ensure board.get(col, row).dice() == diceMatrix[col][row]
     public void update() {
-        board.getChildren().clear();
+         board.getChildren().clear();
+/*        for (int i = 0; i < board.getChildren().size(); i++) {
+            Node node = board.getChildren().get(i);
+            if(node instanceof DiceView)
+                board.getChildren().remove(i);
+        }
+*/
+        // reInsert dices
         for (int col = 0; col < COLUMN; col++) {
             for (int row = 0; row < ROW; row++) {
                 if(null != diceMatrix[col][row]) {
@@ -152,6 +164,7 @@ public abstract class GenericBoardView {
             dragboard.setContent(content);
 
             dragboard.setDragView(diceView.getImage(), diceView.getFitWidth()/2, diceView.getFitHeight()/2);
+//            diceView.setCursor(Cursor.NONE);
 
             event.consume();
             bDragging = true;
@@ -172,8 +185,8 @@ public abstract class GenericBoardView {
 
     protected void addBoardDragListener() {
         board.setOnDragDropped(event -> {
-            /* data dropped */
-            /* if there is a string data on dragBoard, read it and use it */
+            // data dropped
+            // if there is a string data on dragBoard, read it and use it
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasString()) {
@@ -206,9 +219,9 @@ public abstract class GenericBoardView {
             event.consume();
         });
         board.setOnDragOver(event -> {
-            /* data is dragged over the target */
-            /* accept it only if it is not dragged from the same node
-             * and if it has a string data */
+            // data is dragged over the target
+            // accept it only if it is not dragged from the same node
+            // and if it has a string data
             if (event.getGestureSource() != board &&
                     event.getDragboard().hasString()) {
                 /* allow for both copying and moving, whatever user chooses */

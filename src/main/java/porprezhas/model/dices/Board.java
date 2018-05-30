@@ -117,6 +117,27 @@ public class Board implements Serializable {
         return false;
     }
 
+    public Boolean aloneDice(Dice dice, int x, int y){
+
+        if(x>0 && occupiedBox(x-1, y) )
+            return false;
+        if(x<3 && occupiedBox(x+1, y))
+            return false;
+        if(y>0 && occupiedBox(x, y-1))
+            return false;
+        if(y<4 && occupiedBox(x, y+1))
+            return false;
+        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+            return false;
+        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+            return false;
+        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+            return false;
+        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+            return false;
+
+        return true;
+    }
 
     public Boolean adjacentDiceWithoutColorRestrictions(Dice dice, int x, int y){
 
@@ -258,9 +279,11 @@ public class Board implements Serializable {
 
     public Dice removeDice(int x, int y){
 
+        Dice auxDice;
         if(canBeRemoved(x,y)){
+            auxDice=getDice(x,y);
             board[x][y]=null;
-            return getDice(x,y);
+            return auxDice;
         }
         return null;
     }
@@ -304,6 +327,7 @@ public class Board implements Serializable {
                 if (!this.adjacentDiceWithoutColorRestrictions(dice, x, y))
                     return Boolean.FALSE;
                 //valid Move
+
                 return Boolean.TRUE;
             }
         else
@@ -327,17 +351,19 @@ public class Board implements Serializable {
             return Boolean.FALSE;
     }
 
-    public boolean validMoveWithoutAdjacentRestrictions(Dice dice, int x, int y){
+    public boolean validMoveWithoutAdjacentRestrictions(Dice dice, int x, int y) {
 
-        if ((this.getPattern().getBox(x,y).freeBox())||((!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.getColorDice()))&&(!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.getColorDice())))) {
-            //Check if the box is already occupied
-            if (this.occupiedBox(x, y))
-                return Boolean.FALSE;
-            //valid Move
-            return Boolean.TRUE;
+        if ((this.getPattern().getBox(x, y).freeBox()) || ((this.getPattern().getBox(x, y).getNumber()==0) && this.getPattern().getBox(x, y).getColor().equals(dice.getColorDice())) || ((this.getPattern().getBox(x, y).getColor() == Dice.ColorDice.WHITE) && this.getPattern().getBox(x, y).getNumber()==(dice.getDiceNumber()))) {
+            if (aloneDice(dice, x, y)) {
+                //Check if the box is already occupied
+                if (this.occupiedBox(x, y))
+                    return Boolean.FALSE;
+
+                //valid Move
+                return Boolean.TRUE;
+            }
         }
-        else
-            return Boolean.FALSE;
+        return Boolean.FALSE;
     }
 
 

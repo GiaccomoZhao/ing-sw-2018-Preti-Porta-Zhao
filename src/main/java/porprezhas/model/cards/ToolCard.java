@@ -60,7 +60,7 @@ public class ToolCard extends Card implements Serializable {
             case 1:
 
                 if(board.canBeRemoved(xStart1,yStart1))
-                    board.insertDiceWithoutColorRestrictions(board.removeDice(xStart1,yStart1),xDestination1,yDestination1);
+                board.insertDiceWithoutColorRestrictions(board.removeDice(xStart1,yStart1),xDestination1,yDestination1);
                 break;
 
             case 2:
@@ -89,12 +89,11 @@ public class ToolCard extends Card implements Serializable {
 
 
             case 5:
-
-                //rolls a choosen die from the draftPool and, if cannot placed in the board, re-adds it to the draftPool
+                //rolls a choosen die from the draftPool and, if it cannot placed in the board, re-adds it to the draftPool
                 Dice rolledDice;
-                rolledDice=draftPool.chooseDice(number);
+                rolledDice = draftPool.chooseDice(number);
                 rolledDice.roll();
-                boolean flag=false;
+                boolean flag = false;
 
                 for(int i=0; i<4; i++){
                     for(int j=0; j<5; j++){
@@ -103,8 +102,8 @@ public class ToolCard extends Card implements Serializable {
                     }
                 }
 
-                if(!flag)
-                    draftPool.diceList().add(rolledDice);
+                /*if(!flag)*/
+                    draftPool.addDice(rolledDice);
                break;
 
                //this card can be used only on the second turn before drafting

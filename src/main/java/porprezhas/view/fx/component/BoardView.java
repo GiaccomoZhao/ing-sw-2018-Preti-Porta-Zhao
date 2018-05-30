@@ -7,8 +7,9 @@ import javafx.scene.paint.ImagePattern;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 
+import static porprezhas.view.fx.GuiSettings.*;
+
 public class BoardView extends GenericBoardView {// extends GridPane {
-    private static final String pathToPattern = new String("pattern/");
 
 
     // create a BoardView by passing a configured(may in FXML) GridPane

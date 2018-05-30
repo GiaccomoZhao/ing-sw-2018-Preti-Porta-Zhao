@@ -151,6 +151,7 @@ public class BoardTest {
         assertEquals(board.getDiceQuantity(),1);
         assertTrue(board.insertDiceWithoutAdjacentRestrictions(die1,3,3));
         assertEquals(board.getDiceQuantity(),2);
+        assertFalse(board.insertDiceWithoutAdjacentRestrictions(die3,2,2));
 
     }
 

@@ -1,6 +1,5 @@
 package porprezhas.view.fx.controller;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,26 +13,19 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import porprezhas.model.Game;
-import porprezhas.model.dices.Dice;
-import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.component.BoardView;
-import porprezhas.view.fx.component.DiceView;
-import porprezhas.view.fx.component.RoundTrackBoardView;
+import porprezhas.model.*;
+import porprezhas.model.dices.*;
+import porprezhas.view.fx.component.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
+import java.util.Random;
 
 import static porprezhas.Useful.*;
+import static porprezhas.view.fx.GuiSettings.*;
 
 public class GameViewController {
-    private final boolean bDebug = false;
-    private final boolean bShowFrame = false;
-
-    private final String pathToCursor = new String("cursor/");
-    private final String pathToBackground = new String("background/");
 
     public final static int BOARD_COLUMN = 5;
     public final static int BOARD_ROW = 4;
@@ -42,18 +34,18 @@ public class GameViewController {
     //  ***** JavaFX attributes *****
     // these will be initialized by the FXMLLoader when the load() method is called
     @FXML private StackPane gamePane;   // fx:id="gamePane"
+
+    @FXML private VBox enemyPanesParent;    // contain all enemies board
+
     @FXML private HBox playerPane;     // parent of playerBoard, used to resize playerBoard
-//    @FXML private VBox playerBoardParent;        // parent of playerBoard, used to resize playerBoard
     @FXML private GridPane playerBoard;
-    @FXML private VBox enemyPanesParent;
     @FXML private Button buttonPass;
+
 //    @FXML private GridPane roundTrackDiceTable;
     @FXML private HBox roundTrack;
     @FXML private VBox diceListReference;   // this is used because grid pane didn't cover all the space of parent grid pane
 
-    private ImageCursor cursorHand;
-    private ImageCursor cursorHandDown;
-    private ImageCursor cursorHandUp;
+    @FXML private HBox draftPoolParent;
 
 
     //  ***** VIDEO Setting attributes *****
@@ -72,9 +64,15 @@ public class GameViewController {
     private Pane[] enemyPanes;      // panel of 0-3 enemies, contain board, name, icon
     //private List<VBox> roundTrackLists;
 
-    private List<BoardView> boardList;      // board of all player
+    private List<BoardView> boardList;      // board of all players
     private RoundTrackBoardView roundTrackBoard;
 //    private List<DiceView>[] roundTrackDiceLists;   // make care about List<String> is not a Object. But our List<DiceView> is a Object.
+    private DraftPoolView draftPoolView;
+
+    private ImageCursor cursorHand;
+    private ImageCursor cursorHandDown;
+    private ImageCursor cursorHandUp;
+
     private boolean[] bShowRoundTrackList;  // save which list are shown
     private boolean bShowRoundTrackDices;   // has clicked show_all button
 
@@ -95,6 +93,11 @@ public class GameViewController {
     }
 
 
+
+    // *************************************
+    // ********** <<< Methods >>> **********
+
+
     // @requires playersInfo.size >= 1
     // @Param playersInfo.get(0).typePattern == player.typePattern &&
     //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
@@ -103,12 +106,14 @@ public class GameViewController {
             System.out.println("Constructing GameView");
         this.playersInfo = playersInfo;
         this.num_player = playersInfo.size();
-        if(this.num_player > 1)
+//        if(this.num_player > 1)
             enemyPanes = new Pane[this.num_player-1];
-        else
-            enemyPanes = null;
+//        else
+//            enemyPanes = new Pane[0];
         boardList = new ArrayList<>(num_player);
+
         enemyViewControllers = new ArrayList<>();
+
         roundTrackBoard = new RoundTrackBoardView(Game.GameConstants.ROUND_NUM, Game.GameConstants.MAX_DICE_PER_ROUND);
 /*        for (int i = 0; i < num_player; i++) {
             boardList.add(new GridPane());
@@ -121,6 +126,9 @@ public class GameViewController {
 */
         bShowRoundTrackList = new boolean[Game.GameConstants.ROUND_NUM];
         bShowRoundTrackDices = true;
+
+        draftPoolView = new DraftPoolView();
+
         if(bDebug)
             System.out.println("GameView Constructed");
     }
@@ -139,6 +147,9 @@ public class GameViewController {
 
         // attach RoundTrack dice table
         setupRoundTrack();
+
+        //
+        setupDraftPool();
 
 
         // setup our game GUI with following methods
@@ -161,6 +172,10 @@ public class GameViewController {
         }
 */
     }
+
+
+
+
     // return a round number from 1 to ROUND_NUM
     private int getRoundNumberFromEvent(InputEvent event) throws Exception {
         Object eventSource;
@@ -222,6 +237,12 @@ public class GameViewController {
         throw new Exception();
     }
 
+    private void setupDraftPool() {
+        draftPoolView.setup(draftPoolParent);
+    }
+
+
+
     private void setupRoundTrackListener() {
         // set show/hide round dice list listener on every round number image view
         for (Node node : roundTrack.getChildren()) {
@@ -269,7 +290,7 @@ public class GameViewController {
                         int iRound = getRoundNumberFromEvent(event);
                         // place down
 //                        System.out.println("round number = " + iRound);
-                        if (null != roundTrackBoard.addDice(diceView.getDice(), iRound-1, 0)) {
+                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
                             success = true;
                         }
                     }catch (Exception e){
@@ -308,6 +329,8 @@ public class GameViewController {
                 }
             });
         }
+
+        // BOARD's listener
 
         // close all round track lists
         roundTrackBoard.getBoard().setOnMouseExited(event -> {
@@ -354,6 +377,7 @@ public class GameViewController {
         });
 */    }
 
+
     private void setupRoundTrack() {
         if( roundTrack.getParent() instanceof GridPane) {
             GridPane parentGridPane = (GridPane) roundTrack.getParent();
@@ -361,19 +385,22 @@ public class GameViewController {
 //            roundTrackBoard.getBoard().prefWidthProperty().bind( parentGridPane.widthProperty() );
 //            roundTrackBoard.getBoard().prefHeightProperty().bind( parentGridPane.heightProperty());
 
-            if(bShowFrame) {
+            if(bShowGridLines) {
                 parentGridPane.setGridLinesVisible(true);
             }
 
             parentGridPane.add(roundTrackBoard.getBoard(), 0, 1, parentGridPane.getColumnConstraints().size(), parentGridPane.getRowConstraints().size()-1);
             roundTrackBoard.getBoard().toBack();
         }
-        if(bShowFrame) {
+        if(bShowFrames) {
             roundTrackBoard.getBoard().setBorder(new Border(new BorderStroke(Color.AQUA,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        }
+        if(bShowGridLines) {
             roundTrackBoard.getBoard().setGridLinesVisible(true);
         }
-        showRoundTrackDices(-1, false);
+        showRoundTrackDices(-1, bShowRoundTrackDices);  // use bShowRoundTrackDices that is initialized in constructor as the default value
+        roundTrackBoard.setup();
     }
 
     private void setupBoard() {
@@ -433,11 +460,11 @@ public class GameViewController {
     }
 
     private void setBackground() {
-        Background background = new Background(
-                new BackgroundFill(new ImagePattern(
-                        new Image(pathToBackground + "game.jpeg")),
-                        CornerRadii.EMPTY, Insets.EMPTY));
-        gamePane.setBackground(background);
+            Background background = new Background(
+                    new BackgroundFill(new ImagePattern(
+                            new Image(pathToBackground + "game.jpeg")),
+                            CornerRadii.EMPTY, Insets.EMPTY));
+            gamePane.setBackground(background);
     }
 
     private void setResizeListener() {
@@ -549,93 +576,11 @@ public class GameViewController {
        }
    }
 
-   public void updateSize() {
-        updateEnemyPaneSize(gamePane.getHeight());
-        updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());
-        updateRoundTrackSize( ((Pane) roundTrack.getParent()).getWidth(),
-                              ((Pane) roundTrack.getParent()).getHeight());
-    }
-
-    public void addDice(int indexPlayer, Dice dice, int col, int row) {
-        boardList.get(indexPlayer).addDice(dice, col, row);
-    }
-
-    public void addDiceToRoundTrack(int round0_9, Dice dice){
-        DiceView diceImage = roundTrackBoard.addDice(dice, round0_9, 0);
-//        if(null != diceImage)
-//        diceImage.setPreserveRatio(false);
-
-//        diceImage.fitWidthProperty().bind( diceListReference.widthProperty() );
-//        diceImage.fitHeightProperty().bind( diceListReference.heightProperty().divide(Game.GameConstants.MAX_DICE_PER_ROUND));
-    }
 
 
-    // on
 
-    //@Param iRound The number of the round dice list to show, from 1 to ROUND_NUM
-    //              if it's out of range, we show/hide all
-    public boolean showRoundTrackDices(int iRound, boolean bShow) {
-//            System.out.println("round = " + iRound);
-        GridPane gridPane = roundTrackBoard.getBoard();
-        if(bShowFrame)
-            roundTrackBoard.getBoard().setGridLinesVisible(true);
-
-        try {
-            // show the specified round's dices
-            if (isValueBetweenInclusive(iRound, 1, Game.GameConstants.ROUND_NUM) ){
-
-                // set bShowRoundTrackDices false when all list are hidden
-                bShowRoundTrackList[iRound -1] = bShow; // iRound is a index that starts from 1
-                if(!bShow && bShowRoundTrackDices == true) {
-                    int i;
-                    for (i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
-                        if(bShowRoundTrackList[i] == true) {
-                            break;
-                        }
-                    }
-                    if(i == Game.GameConstants.ROUND_NUM) {
-                        bShowRoundTrackDices = false;
-                    }
-                }
-
-                // show-hide a list of dices
-                for (Node node : gridPane.getChildren()) {
-                    if(node instanceof ImageView) {
-                        if (gridPane.getColumnIndex(node) == iRound - 1) {    // the index start from 0, while iRound from 1
-                            node.setVisible(bShow);
-//                            node.setDisable(bShow);
-                            if(bShow)
-                                roundTrackBoard.getBoard().toFront();
-                            else
-                                roundTrackBoard.getBoard().toBack();
-                        }
-                    }
-                }
-            } else  {
-
-                // set all booleans = bShow
-                bShowRoundTrackDices = bShow;
-                for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
-                    bShowRoundTrackList[i] = bShow;
-                }
-
-                // show-hide all round track dices
-                for (Node node : gridPane.getChildren()) {
-                    if(node instanceof ImageView) {
-                        node.setVisible(bShow);
-//                        node.setDisable(bShow);
-                        if(bShow)
-                            roundTrackBoard.getBoard().toFront();
-                        else
-                            roundTrackBoard.getBoard().toBack();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bShow;
-    }
+    // ******************************************
+    // ********** <<< FXML Methods >>> **********
 
     @FXML protected  void onShowRoundTrackDices(ActionEvent event) {
         showRoundTrackDices(-1, !bShowRoundTrackDices);
@@ -657,5 +602,95 @@ public class GameViewController {
 
     @FXML protected void onPass(ActionEvent event) {
         System.out.println("PASS");
+
+        // for test
+        Random random = new Random();
+        List<Dice> diceList = new ArrayList<>();
+        for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
+            diceList.add(
+                    new Dice(random.nextInt(6) + 1,
+                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
+            );
+        }
+        draftPoolView.reroll(diceList);
+    }
+
+
+
+
+    // ********************************************
+    // ********** <<< Public Methods >>> **********
+
+    public void setDraftPool(List<Dice> newDiceList) {
+        draftPoolView.reroll(newDiceList);
+    }
+
+   public void updateSize() {
+        updateEnemyPaneSize(gamePane.getHeight());
+        updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());
+        updateRoundTrackSize( ((Pane) roundTrack.getParent()).getWidth(),
+                              ((Pane) roundTrack.getParent()).getHeight());
+    }
+
+    public DiceView addDice(int indexPlayer, Dice dice, int col, int row) {
+        return boardList.get(indexPlayer).addDice(dice, col, row);
+    }
+
+    public DiceView addDiceToRoundTrack(Dice dice, int round0_9){
+        DiceView diceImage = roundTrackBoard.addDice(dice, round0_9, 0);
+//        if(null != diceImage)
+//        diceImage.setPreserveRatio(false);
+
+//        diceImage.fitWidthProperty().bind( diceListReference.widthProperty() );
+//        diceImage.fitHeightProperty().bind( diceListReference.heightProperty().divide(Game.GameConstants.MAX_DICE_PER_ROUND));
+        return diceImage;
+    }
+
+
+    // on
+
+    //@Param iRound The number of the round dice list to show, from 1 to ROUND_NUM
+    //              if it's out of range, we show/hide all
+    public boolean showRoundTrackDices(int iRound, boolean bShow) {
+//            System.out.println("round = " + iRound);
+        GridPane gridPane = roundTrackBoard.getBoard();
+        if(bShowGridLines)
+            roundTrackBoard.getBoard().setGridLinesVisible(true);
+
+        try {
+            // show the specified round's dices
+            if (isValueBetweenInclusive(iRound, 1, Game.GameConstants.ROUND_NUM) ){
+
+                // set bShowRoundTrackDices false when all list are hidden
+                bShowRoundTrackList[iRound -1] = bShow; // iRound is a index that starts from 1
+                if(!bShow && bShowRoundTrackDices == true) {
+                    int i;
+                    for (i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+                        if(bShowRoundTrackList[i] == true) {
+                            break;
+                        }
+                    }
+                    if(i == Game.GameConstants.ROUND_NUM) {
+                        bShowRoundTrackDices = false;
+                    }
+                }
+
+                // show-hide a list of dices
+                roundTrackBoard.show(iRound, bShow);
+            } else  {
+
+                // set all booleans = bShow
+                bShowRoundTrackDices = bShow;
+                for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+                    bShowRoundTrackList[i] = bShow;
+                }
+
+                // show-hide all round track dices
+                roundTrackBoard.show(iRound, bShow);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bShow;
     }
 }
