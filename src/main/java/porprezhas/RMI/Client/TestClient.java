@@ -11,8 +11,8 @@ public class TestClient {
     public static void main(String[] args) throws RemoteException, NotBoundException, AlreadyBoundException {
 
         //System.setSecurityManager(new RMISecurityManager());
-        ViewClient viewClient= new ViewClient(0);
-        ClientObserver testObserver= new ClientObserver("casa", viewClient);
+        ViewClient viewClient= new ViewClient(0, "A");
+        ClientObserver testObserver= new ClientObserver( viewClient, 0);
         Registry registry= LocateRegistry.getRegistry();
        registry.rebind("view", testObserver);
 

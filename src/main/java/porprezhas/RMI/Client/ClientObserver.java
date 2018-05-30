@@ -23,12 +23,12 @@ public class ClientObserver implements RemoteObserver {
     private RemoteObservable remoteObservable;
     private ViewClient viewClient;
 
-    public ClientObserver(String ObjectRmiName, ViewClient viewClient) throws RemoteException, NotBoundException {
+    public ClientObserver( ViewClient viewClient, int indexGame) throws RemoteException, NotBoundException {
         this.viewClient=viewClient;
         UnicastRemoteObject.exportObject(this, 0);
         Registry registry= LocateRegistry.getRegistry();
         System.out.print("RMI registry bindings: ");
-        remoteObservable  = (RemoteObservable) registry.lookup("game");
+        remoteObservable  = (RemoteObservable) registry.lookup("game".concat(String.valueOf(indexGame)));
         try
         {
             remoteObservable.addObserver(this);
@@ -47,16 +47,7 @@ public class ClientObserver implements RemoteObserver {
         viewClient.updateClient((RemoteObservable) arg);
 
 
-        /*System.out.println( "\n\n\n" +
-                "  ***** >>> GAME OVER <<< *****  \n\n" +
-                "              Score              \n");
-        for (Player playera : players) {
-            System.out.format("    %-15s \t\n",
-                    player.getName());*/
-
-
-
-    }
+        }
 
 
 

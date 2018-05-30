@@ -2,6 +2,7 @@ package porprezhas.RMI;
 
 import porprezhas.model.Game;
 import porprezhas.model.Player;
+import porprezhas.model.dices.DraftPool;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -20,5 +21,7 @@ public interface RemoteObservable extends Remote {
     Game.NotifyState getGameNotifyState() throws  RemoteException;
     Player getFirstPlayer() throws RemoteException;
      int getiCurrentPlayer() throws RemoteException;
+     DraftPool getDraftpoolRmi() throws RemoteException;
+
 
 }

@@ -1,14 +1,16 @@
 package porprezhas.control;
 
+import porprezhas.RMI.MainViewInterface;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class ServerController extends UnicastRemoteObject implements ServerControllerInterface {
@@ -21,14 +23,23 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 	private volatile List<Player> playerBuffer;
 
-	public ServerController(int port) throws RemoteException {
+	private List<Player> loggedPlayer;
+
+    private HashMap viewClient;
+
+    private  Registry registry;
+
+    public ServerController(int port) throws RemoteException {
 		super(port);
 		playerBuffer = new LinkedList<>();
 		gameControllerList = new LinkedList<>();
+		loggedPlayer = new ArrayList<>();
+		viewClient = new HashMap();
+        registry= LocateRegistry.getRegistry();
 	}
 
 
-    private GameControllerInterface getGameControllerByPlayer (Player player) {
+    private GameControllerInterface getGameControllerByPlayer (Player player) throws RemoteException {
 /*        for (Player p :
              playerBuffer) {
             if(p.equals(player))
@@ -67,6 +78,20 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
             if (playerBuffer.size() == Game.GameConstants.MAX_PLAYER_QUANTITY) {
                 createNewGame();
+
+                GameControllerInterface actualGameController = getGameControllerByPlayer(newPlayer);
+                int indexGameController = gameControllerList.indexOf(actualGameController);
+                String rmiGameControllerName = "GameController".concat(String.valueOf(indexGameController));
+                registry.rebind(rmiGameControllerName, actualGameController);
+                Game gamet= (Game) actualGameController.getGame();
+                registry.rebind("game".concat(String.valueOf(indexGameController)), gamet);
+                MainViewInterface view;
+                for (Player readyPlayer:
+                        gamet.getPlayerList()) {
+                    view =(MainViewInterface)viewClient.get(readyPlayer.getName());
+                    view.addGameController(indexGameController);
+                }
+
             }
         }
 	}
@@ -92,6 +117,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         playerBuffer.remove(player);    // if player has joined but want play single game
         // TODO: send a message to client:  like token
         // for(Player player : subBuffer) player.getClient().player.setGameController(gameController);
+        //send to clients gameController
         return gameController;
 	}
 
@@ -146,6 +172,66 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         return null;    // NOTE: throw game not found ?
     }
+
+    @Override
+    public Boolean joinGame(String username) throws RemoteException {
+        MainViewInterface mainView= null;
+        String clientView = username.concat("MainView");
+        try {
+            mainView= (MainViewInterface) registry.lookup(clientView);
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+        viewClient.put(username, mainView);
+        for (Player findPlayer:
+                loggedPlayer) {
+            if(findPlayer.getName().equals(username)) {
+                this.join(findPlayer);
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean login(String username) throws RemoteException {
+        for (Player findPlayer:
+             loggedPlayer) {
+            if(findPlayer.getName().equals(username))
+                return false;
+        }
+        loggedPlayer.add(new Player(username));
+
+
+        return true;
+    }
+
+    @Override
+    public Boolean logout(String username) throws RemoteException {
+        for (Player findPlayer:
+                loggedPlayer) {
+            if(findPlayer.getName().equals(username)){
+                loggedPlayer.remove(findPlayer);
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    /*@Override
+    public int getGameControllerIndex(String username) throws RemoteException {
+        for (Player findPlayer:
+                loggedPlayer) {
+            if(findPlayer.getName().equals(username)){
+                GameController  gameController=(GameController) this.getGameControllerByPlayer(findPlayer);
+                return gameControllerList.indexOf(gameController);
+            }
+
+        }
+        return -1;
+    }*/
 
 
 }

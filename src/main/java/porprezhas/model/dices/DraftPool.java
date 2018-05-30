@@ -1,9 +1,10 @@
 package porprezhas.model.dices;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DraftPool {
+public class DraftPool implements Serializable {
 
     private List<Dice> draftPool;
 
