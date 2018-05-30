@@ -16,12 +16,10 @@ import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.component.ConfirmBox;
 
+import static porprezhas.view.fx.GuiSettings.*;
+
 
 public class ViewTest extends Application {
-    public static class GUIConstants {
-        public static final int ICON_QUANTITY = 145;   // index from 0 to 144
-    }
-
     private Stage primaryStage;
     private AnchorPane rootLayout;
 
@@ -32,18 +30,20 @@ public class ViewTest extends Application {
     private GameViewController gameViewController;
 
     public ViewTest() {
+        // add all players
         players = new ArrayList<>();
         players.add( new Player("me"));
-        players.add( new Player("p1"));
-        players.add( new Player("p2"));
-        players.add( new Player("p3"));
+        players.add( new Player("P2"));
+        players.add( new Player("P3"));
+        players.add( new Player("P4"));
+        players.add( new Player("P5"));
 
         this.playersInfo = new ArrayList<>();
         Random random = new Random();
         for (Player player : players) {
             playersInfo.add(new GameViewController.PlayerInfo(
                     player.getName(),
-                    random.nextInt(GUIConstants.ICON_QUANTITY),
+                    random.nextInt(ICON_QUANTITY),
                     Pattern.TypePattern.values()[1]));
         }
     }
@@ -65,20 +65,22 @@ public class ViewTest extends Application {
         for (int col = 0; col < Game.GameConstants.ROUND_NUM; col++) {
             if (random.nextInt(10) < 2) {
                 for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
-                    gameViewController.addDiceToRoundTrack(col,
+                    gameViewController.addDiceToRoundTrack(
                             new Dice(random.nextInt(6) + 1,
-                                    Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
-                    );
+                                    Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                            col );
                 }
             } else {
-                gameViewController.addDiceToRoundTrack(col,
+                gameViewController.addDiceToRoundTrack(
                         new Dice(random.nextInt(6) + 1,
-                                Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]) );
+                                Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                        col );
                 for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
                     if (random.nextInt(10) < 3) {
-                        gameViewController.addDiceToRoundTrack(col,
+                        gameViewController.addDiceToRoundTrack(
                                 new Dice(random.nextInt(6) + 1,
-                                        Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]) );
+                                        Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                                col );
 
                     }
                 }
@@ -97,6 +99,16 @@ public class ViewTest extends Application {
                 }
             }
         }
+
+        List<Dice> diceList = new ArrayList<>();
+        for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
+            diceList.add(
+                    new Dice(random.nextInt(6) + 1,
+                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
+                    );
+        }
+        gameViewController.setDraftPool(diceList);
+
 //        showElementOverview();
     }
 
@@ -140,6 +152,10 @@ public class ViewTest extends Application {
             // Load root layout from fxml file.
             rootLayout = loader.load();     // NOTE: If you get ONLY one ERROR in this line, it may because you haven't mark the folder 'resource' as resources root
                                             //       look for folder resource on the project root path, there is a folder resource, right click and choose in the end of list: 'Mark directory as'
+            // Solitaire has smaller window size
+            if(playersInfo.size() == 1) {
+                primaryStage.setWidth(SOLITAIRE_WIDTH);
+            }
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);

@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class DiceView extends ImageView {
     private static final String pathToDice = new String("dice/46x46/");
 
+
     private int column;
     private int row;
 
@@ -21,7 +22,7 @@ public class DiceView extends ImageView {
         super();
 //        System.out.println(pathToDice + dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png");
         setImage( new Image (pathToDice +
-                dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png") );
+                dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png") );      // TODO: Load all images in RAM to avoid disk reading during game
         this.column = column;
         this.row = row;
         this.dice = dice;
