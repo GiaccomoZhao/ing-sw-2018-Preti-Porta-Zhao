@@ -10,6 +10,11 @@ public class DraftPool {
     public DraftPool() {
     }
 
+    //constructor used only for testing in toolCardTest
+    public DraftPool(List<Dice> draftPool) {
+        this.draftPool = draftPool;
+    }
+
     public DraftPool(DiceBag diceBag, int numberOfPlayers) {
         this.draftPool = diceBag.GetRandomDices(numberOfPlayers);
     }
@@ -43,10 +48,9 @@ public class DraftPool {
     public Dice diceSubstitute(Dice newDice, int position){
 
         Dice oldDice;
-
-        if(position <= draftPool.size()) {
-            oldDice = draftPool.remove(position);
-            draftPool.add(newDice);
+        if(position-1< draftPool.size()) {
+            oldDice = draftPool.get(position-1);
+            draftPool.set(position-1,newDice);
             return oldDice;
         }
 
@@ -54,5 +58,8 @@ public class DraftPool {
     }
 
 
+    public void addDice(Dice dice){
+        this.draftPool.add(dice);
+    }
 
 }

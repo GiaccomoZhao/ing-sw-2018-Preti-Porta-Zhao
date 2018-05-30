@@ -101,7 +101,7 @@ public class BoardTest {
     @Test
     public void getDiceTest() {
 
-        assertEquals(board.getDice(0, 0).colorDice, die0.getColorDice());
+        assertEquals(board.getDice(0, 0).getColorDice(), die0.getColorDice());
         assertEquals(board.getDice(0, 0).getDiceNumber(), die0.getDiceNumber());
 
         board.insertDice(die, 0, 0);
@@ -151,6 +151,7 @@ public class BoardTest {
         assertEquals(board.getDiceQuantity(),1);
         assertTrue(board.insertDiceWithoutAdjacentRestrictions(die1,3,3));
         assertEquals(board.getDiceQuantity(),2);
+        assertFalse(board.insertDiceWithoutAdjacentRestrictions(die3,2,2));
 
     }
 

@@ -8,11 +8,12 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
 public class DraftPoolTest {
-    Dice dice1, dice2;
-    Dice die1, die2, die3;
+
+    Dice die1, die2, die3,die4,die5,die6,die7,die8,die9,testDie;
     ArrayList<Dice> diceList;
     DiceBag diceBag;
     DraftPool draftPool;
@@ -20,50 +21,73 @@ public class DraftPoolTest {
     @Before
     public void before() {
 
-        diceList= new ArrayList<>(3);
-        die1 = mock(Dice.class);
-        die2 = mock(Dice.class);
-        die3 = mock(Dice.class);
+        diceList= new ArrayList<>(9);
+        die1 = new Dice(1, Dice.ColorDice.RED);
+        die2 = new Dice(2, Dice.ColorDice.BLUE);
+        die3 = new Dice(3, Dice.ColorDice.GREEN);
+        die4 = new Dice(4, Dice.ColorDice.YELLOW);
+        die5 = new Dice(5, Dice.ColorDice.PURPLE);
+        die6 = new Dice(6, Dice.ColorDice.RED);
+        die7 = new Dice(1, Dice.ColorDice.BLUE);
+        die8 = new Dice(2, Dice.ColorDice.GREEN);
+        die9 = new Dice(3, Dice.ColorDice.YELLOW);
+
+        testDie = new Dice(4, Dice.ColorDice.BLUE);
 
         diceList.add(die1);
         diceList.add(die2);
         diceList.add(die3);
-
-        when(die1.getDiceNumber()).thenReturn(1);
-        when(die2.getDiceNumber()).thenReturn(2);
-        when(die3.getDiceNumber()).thenReturn(3);
-        when(die1.getColorDice()).thenReturn(Dice.ColorDice.RED);
-        when(die2.getColorDice()).thenReturn(Dice.ColorDice.BLUE);
-        when(die3.getColorDice()).thenReturn(Dice.ColorDice.GREEN);
-
-
+        diceList.add(die4);
+        diceList.add(die5);
+        diceList.add(die6);
+        diceList.add(die7);
+        diceList.add(die8);
+        diceList.add(die9);
 
         diceBag= mock(DiceBag.class);
-        when(diceBag.GetRandomDices(1)).thenReturn(diceList);
+        when(diceBag.GetRandomDices(4)).thenReturn(diceList);
 
-        draftPool= new DraftPool(diceBag, 1);
+        draftPool= new DraftPool(diceBag, 4);
 
     }
 
     @Test
     public void chooseDiceTest(){
-        assertEquals(draftPool.diceList().size(), 3);
+        assertEquals(draftPool.diceList().size(), 9);
 
         assertEquals(draftPool.chooseDice(0).getColorDice(), die1.getColorDice());
 
-        assertEquals(draftPool.diceList().size(), 2);
+        assertEquals(draftPool.diceList().size(), 8);
 
         assertEquals(draftPool.chooseDice(0).getDiceNumber(), die2.getDiceNumber());
 
-        assertEquals(draftPool.diceList().size(), 1);
+        assertEquals(draftPool.diceList().size(), 7);
 
     }
 
     @Test
     public void diceListTest(){
 
-        assertEquals(draftPool.diceList().size(), 3);
+        assertEquals(draftPool.diceList().size(), 9);
 
+    }
+
+    @Test
+    public void diceSubstituteTest(){
+      assertEquals(draftPool.diceSubstitute(testDie,1),die1);
+      assertEquals(draftPool.diceList().size(),9);
+      assertEquals(draftPool.diceList().get(0).getDiceNumber(),testDie.getDiceNumber());
+      assertEquals(draftPool.diceList().get(0).getColorDice(),testDie.getColorDice());
+
+    }
+
+    @Test
+    public void addDiceTest(){
+        draftPool.chooseDice(1);
+        draftPool.addDice(testDie);
+        assertEquals(draftPool.diceList().size(),9);
+        assertEquals(draftPool.diceList().get(draftPool.diceList().size()-1).getDiceNumber(),testDie.getDiceNumber());
+        assertEquals(draftPool.diceList().get(draftPool.diceList().size()-1).getColorDice(),testDie.getColorDice());
     }
 
 
