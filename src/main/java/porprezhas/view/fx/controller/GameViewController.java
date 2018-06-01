@@ -191,11 +191,11 @@ public class GameViewController {
     private void setupCards() {
         System.out.println("Setup Cards");
 
-        List<String> cardsName = new ArrayList<>();
-        cardsName.add("martelletto");
-        cardsName.add("strip_cutter");
-        cardsName.add("lathekin");
-        setupCardPane(toolCardPane, pathToToolCard, cardsName);
+        List<String> toolCards = new ArrayList<>();
+        toolCards.add(new ToolCard(Card.Effect.TC4).getName());
+        toolCards.add(new ToolCard(Card.Effect.TC2).getName());
+        toolCards.add(new ToolCard(Card.Effect.TC11).getName());
+        setupCardPane(toolCardPane, pathToToolCard, toolCards);
 
         List<String> privateObjectCards = new ArrayList<>();
         privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC1).getName());
@@ -505,6 +505,8 @@ public class GameViewController {
     }
 
     private void setupBoard() {
+        if(bDebug) {
+            System.out.println("Setup board"); }
         boardList.clear();  // this must be redundant but i want keep safe
         for (int i = 0; i < playersInfo.size(); i++) {
             GridPane gridPane;
@@ -524,6 +526,8 @@ public class GameViewController {
     }
 
     private void setEnemyPanes() {
+        if(bDebug) {
+            System.out.println("Loading Enemy Pane"); }
         enemyPanesParent.getChildren().clear();
         for (int i = 0; i < enemyPanes.length; i++) {
             // Load the panel from .fxml
@@ -536,6 +540,9 @@ public class GameViewController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            if(bDebug) {
+                System.out.println("Enemy Pane View Loaded successfully"); }
 
             // add the enemy panel on the game view
             enemyPanesParent.getChildren().add(enemyPanes[i]);

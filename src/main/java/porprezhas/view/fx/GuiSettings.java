@@ -21,10 +21,11 @@ public class GuiSettings {
     // path
     public static final String pathToBackground = "background/";
     public static final String pathToBorder = "border/";
-    public static final String pathToToolCard = "cards/toolCard/";
+    public static final String pathToToolCard = "cards/templateFolder/";
     public static final String pathToPrivateCard = "cards/privateCard/";
     public static final String pathToPublicCard = "cards/publicCard/";
     public static final String pathToPattern = "pattern/";
+    public static final String pathToHeadIcon = "head/64x64x64/";
     public static final String pathToDice = "dice/36x36/";
     public static final String pathToCursor = "cursor/";
     public static final String pathToMusic = "sound/music/";
@@ -35,7 +36,7 @@ public class GuiSettings {
     // number
     public static final int BOARD_COLUMN = 5;
     public static final int BOARD_ROW = 4;
-    public static final int ICON_QUANTITY = 68;   // index from 0 to 67
+    public static final int ICON_QUANTITY = 64;   // index from 1 to 64
     public static final int SOLITAIRE_WIDTH = 550;
     public static final double BOARD_DICE_ZOOM = 0.92;       //this value depends by dice image. for dice_64x64 zoom = 1.12 should be fine
     public static final double TRACK_DICE_ZOOM = 0.8086;       // NOTE: this value must be below 1.0!!! 0.8~0.96 are good.

@@ -18,7 +18,7 @@
             <graphic>
                 <ImageView fx:id="icon" fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="head/64x64/head_62.png" />
+                        <Image url="head/64x64x64/head_62.png" />
                     </image>
                 </ImageView>
             </graphic>

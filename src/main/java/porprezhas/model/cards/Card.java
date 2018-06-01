@@ -33,7 +33,7 @@ Card implements Serializable {
         PRC14("Sfumature Blu - Privata", 14, "Somma dei valori su tutti i dadi blu"),
         PRC15("Sfumature Viola - Privata", 15, "Somma dei valori su tutti i dadi viola"),
         TC1("Pinza Sgrossatrice", 16, "Dopo aver scelto un dado,\naumenta o dominuisci il valore\ndel dado scelto di 1\nNon puoi cambiare\nun 6 in 1 o un 1 in 6 "),
-        TC2("Pinza per Eglomise", 17, "Muovi un qualsiasi dado nella tua\nvetrata ignorando le restrizioni\ndi colore\nDevi rispettare tutte le altre\nrestrizioni di piazzamento"),
+        TC2("Pennello per Eglomise", 17, "Muovi un qualsiasi dado nella tua\nvetrata ignorando le restrizioni\ndi colore\nDevi rispettare tutte le altre\nrestrizioni di piazzamento"),
         TC3("Alesatore per lamina di rame", 18, "Muovi un qualsiasi dado nella tua\nvetrata ignorando le restrizioni\ndi valore\nDevi rispettare tutte le altre\nrestrizioni di piazzamento"),
         TC4("Lathekin", 19, "Muovi esattamente due dadi,\nrispettando tutte le restrizioni di\npiazzamento"),
         TC5("Taglierina circolare", 20, "Dopo aver scelto un dado,\nscambia quel dado con un dado\nsul Tracciato dei Round"),

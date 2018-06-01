@@ -52,7 +52,7 @@ public class ViewTest extends Application {
         for (Player player : players) {
             playersInfo.add(new GameViewController.PlayerInfo(
                     player.getName(),
-                    random.nextInt(ICON_QUANTITY),
+                    random.nextInt(ICON_QUANTITY) +1,
                     Pattern.TypePattern.values()[1]));
         }
     }

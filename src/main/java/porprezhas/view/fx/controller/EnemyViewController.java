@@ -15,10 +15,9 @@ import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.component.BoardView;
 import porprezhas.view.fx.component.DiceView;
 
-public class EnemyViewController {
-    private final boolean bDebug = false;
+import static porprezhas.view.fx.GuiSettings.*;
 
-    private static final String pathToIcon = new String("head/64x64/");
+public class EnemyViewController {
 
     @FXML private HBox enemyPane;    // root of enemy pane
     @FXML private Label name;
@@ -53,7 +52,7 @@ public class EnemyViewController {
         this.playerInfo = playerInfo;
         boardView.setPattern(playerInfo.typePattern);
         this.name.setText(playerInfo.name);
-        this.icon.setImage(new Image(pathToIcon + "head_" + playerInfo.iconId + ".png"));
+        this.icon.setImage(new Image(pathToHeadIcon + "head_" + playerInfo.iconId + ".png"));
     }
 
     // not static field is used for enemy pane
