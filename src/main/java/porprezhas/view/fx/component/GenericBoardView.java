@@ -1,19 +1,16 @@
 package porprezhas.view.fx.component;
 
 import javafx.collections.ObservableList;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import porprezhas.model.dices.Dice;
-
-import javax.swing.text.html.ImageView;
-import java.util.Collection;
+import porprezhas.view.fx.GuiSettings;
 
 public abstract class GenericBoardView {
     private final int COLUMN;   // default value
     private final int ROW;
-    private double DICE_ZOOM = 1.12;    // 1.2 would be already too big
+    private double DICE_ZOOM = GuiSettings.BOARD_DICE_ZOOM;    // 1.2 would be already too big
 
     private GridPane board; // since we can not import this in fxml file, we can not extend GridPane
     private Dice[][] diceMatrix;

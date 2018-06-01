@@ -1,19 +1,26 @@
 package porprezhas.view.fx.controller;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
+import porprezhas.view.fx.component.BackgroundMusicPlayer;
 import porprezhas.view.fx.component.ConfirmBox;
 
 import static porprezhas.view.fx.GuiSettings.*;
@@ -29,6 +36,9 @@ public class ViewTest extends Application {
 
     private GameViewController gameViewController;
 
+
+
+
     public ViewTest() {
         // add all players
         players = new ArrayList<>();
@@ -36,7 +46,6 @@ public class ViewTest extends Application {
         players.add( new Player("P2"));
         players.add( new Player("P3"));
         players.add( new Player("P4"));
-        players.add( new Player("P5"));
 
         this.playersInfo = new ArrayList<>();
         Random random = new Random();
@@ -88,8 +97,8 @@ public class ViewTest extends Application {
         }
         for (int i = 0; i < gameViewController.num_player; i++) {
             // insert a lot of dices to test
-            for (int col = 0; col < GameViewController.BOARD_COLUMN; col++) {
-                for (int row = 0; row < GameViewController.BOARD_ROW; row++) {
+            for (int col = 0; col < BOARD_COLUMN; col++) {
+                for (int row = 0; row < BOARD_ROW; row++) {
                     if (random.nextInt(10) < 6) {
                         gameViewController.addDice(i,
                                 new Dice(random.nextInt(6) + 1,
@@ -109,8 +118,21 @@ public class ViewTest extends Application {
         }
         gameViewController.setDraftPool(diceList);
 
+        ;
 //        showElementOverview();
+        // output FPS
+        new Timer().schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                System.out.println("FPS " + com.sun.javafx.perf.PerformanceTracker.getSceneTracker(primaryStage.getScene()).getInstantFPS());
+            }
+        }, 0, (long) (60*1000.0 / FPS_PRINT_AT_MIN));
+
+        // play background music
+        BackgroundMusicPlayer.playMusic();
     }
+
 
     private void initMainLogic (){
         primaryStage.setOnCloseRequest(event -> {
@@ -156,6 +178,7 @@ public class ViewTest extends Application {
             if(playersInfo.size() == 1) {
                 primaryStage.setWidth(SOLITAIRE_WIDTH);
             }
+
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);

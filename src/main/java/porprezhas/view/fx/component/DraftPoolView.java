@@ -147,9 +147,12 @@ public class DraftPoolView {
             // the drag and drop gesture ended
             // if the data was successfully moved, clear it
             if (event.getTransferMode() == TransferMode.MOVE) {
-                chooseDice( getIndexByDiceView(diceView) ); //clear()
+                int index = getIndexByDiceView(diceView);
+                if(index >= 0) {
+                    chooseDice(index); //clear()
+                    event.consume();
+                }
             }
-            event.consume();
         });
         return diceView;
     }
@@ -182,7 +185,7 @@ public class DraftPoolView {
 
     public Dice chooseDice(int indexDice) {
         DiceView diceView = diceList.remove(indexDice);
-        stackPane.getChildren().remove(diceView);
+        stackPane.getChildren().remove(indexDice);
         return diceView.getDice();
     }
 
@@ -190,20 +193,18 @@ public class DraftPoolView {
         stackPane.getChildren().clear();
         Random random = new Random();
         for (int i = 0; i < newDiceList.size(); i++) {
-            double cx = stackPane.getWidth() - 48;
-            double cy = stackPane.getHeight() - 32;
+            double cx = stackPane.getWidth() - 60;
+            double cy = stackPane.getHeight() - 60;
             DiceView diceView = addDice(newDiceList.get(i),
-                    (Math.abs(random.nextGaussian())%1) * cx,
-                    (Math.abs(random.nextGaussian())%1) * cy,
+                    (3- Math.abs(random.nextGaussian())%3)/3 * cx,
+                    (3-Math.abs(random.nextGaussian())%3)/3 * cy,
                     random.nextDouble()*2*Math.PI);
 /*
             DiceView diceView = addDice(newDiceList.get(i),
                     (int) ((random.nextGaussian() * stackPane.getWidth()) % (stackPane.getWidth()/(2 * Math.sqrt(2)))),
                     (int) ((random.nextGaussian() * stackPane.getHeight()) % (stackPane.getHeight()/(2 * Math.sqrt(2)))));
 */
-        }
-        // set their position
-        for (DiceView diceView : diceList) {
+            // set their position
             playAnimation(diceView, diceView.getColumn(), diceView.getRow());
         }
     }
@@ -213,18 +214,19 @@ public class DraftPoolView {
 
     private void playAnimation (DiceView diceView, int toX, int toY) {
         Random random = new Random();
+        int ranndomDuration = random.nextInt(1000);
 
 //        System.out.println("to x = " + toX + " \tto y =" + toY);
         //定义矩形的淡入淡出效果
-        FadeTransition fadeTransition=new FadeTransition(Duration.millis(2000), diceView);
-        fadeTransition.setFromValue(0.1f);
+        FadeTransition fadeTransition=new FadeTransition(Duration.millis(1600), diceView);
+        fadeTransition.setFromValue(0.01f);
         fadeTransition.setToValue(1.0f);
 //        fadeTransition.setCycleCount(1);
 //        fadeTransition.setAutoReverse(true);
         //fadeTransition.play();
 
         //定义矩形的平移效果
-        TranslateTransition translateTransition=new TranslateTransition(Duration.millis(3000), diceView);
+        TranslateTransition translateTransition=new TranslateTransition(Duration.millis(2000 + ranndomDuration), diceView);
         translateTransition.setFromX(random.nextGaussian() * 100 % 100);
         translateTransition.setFromY(random.nextGaussian() * 100 % 100);
         translateTransition.setToX(toX);
@@ -235,15 +237,15 @@ public class DraftPoolView {
 
         //定义矩形旋转效果
         RotateTransition rotateTransition =
-                new RotateTransition(Duration.millis(4000), diceView);
-        rotateTransition.setByAngle(28*180f);//旋转度数
+                new RotateTransition(Duration.millis(2400 + ranndomDuration), diceView);
+        rotateTransition.setByAngle(1.2f * (2400+ranndomDuration) );//旋转度数
 //        rotateTransition.setCycleCount(1);
 //        rotateTransition.setAutoReverse(true);
         //rotateTransition.play();
 
         //矩形的缩放效果
         ScaleTransition scaleTransition =
-                new ScaleTransition(Duration.millis(1000), diceView);
+                new ScaleTransition(Duration.millis(1600), diceView);
         scaleTransition.setFromX(2f);
         scaleTransition.setFromY(2f);
         scaleTransition.setToX(1f);

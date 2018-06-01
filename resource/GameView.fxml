@@ -3,12 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="gameScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <SplitPane dividerPositions="0.8125" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -56,7 +55,7 @@
                                               <children>
                                                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                                       <children>
-                                                          <GridPane fx:id="roundTrackDiceTable" minHeight="60.0" minWidth="320.0" prefHeight="120.0" prefWidth="320.0" HBox.hgrow="SOMETIMES">
+                                                          <GridPane fx:id="roundTrackDiceTable" alignment="TOP_CENTER" minHeight="60.0" minWidth="320.0" prefHeight="120.0" prefWidth="320.0" HBox.hgrow="SOMETIMES">
                                                               <columnConstraints>
                                                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -71,15 +70,15 @@
                                                               </columnConstraints>
                                                               <rowConstraints>
                                                                   <RowConstraints minHeight="35.0" prefHeight="42.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                                                               </rowConstraints>
                                                               <children>
                                                                   <HBox fx:id="roundTrack" alignment="BOTTOM_CENTER" onMouseMoved="#onMovingInRoundTrack" prefHeight="32.0" prefWidth="320.0" spacing="2.0" GridPane.columnSpan="10" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
@@ -183,30 +182,30 @@
                                                                       <children>
                                                                           <GridPane>
                                                                               <columnConstraints>
-                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="1.0" prefWidth="0.0" />
-                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="160.0" prefWidth="240.0" />
-                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="2.5" prefWidth="0.0" />
+                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="2.0" prefWidth="0.0" />
+                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="160.0" percentWidth="96.0" prefWidth="240.0" />
+                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" percentWidth="2.0" prefWidth="0.0" />
                                                                               </columnConstraints>
                                                                               <rowConstraints>
-                                                                                  <RowConstraints minHeight="0.0" percentHeight="1.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                                  <RowConstraints minHeight="128.0" prefHeight="192.0" vgrow="SOMETIMES" />
-                                                                                  <RowConstraints minHeight="0.0" percentHeight="11.5" prefHeight="48.0" vgrow="SOMETIMES" />
+                                                                                  <RowConstraints minHeight="0.0" percentHeight="2.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                  <RowConstraints minHeight="128.0" percentHeight="88.0" prefHeight="192.0" vgrow="SOMETIMES" />
+                                                                                  <RowConstraints minHeight="0.0" percentHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
                                                                               </rowConstraints>
                                                                               <children>
                                                                                   <GridPane fx:id="playerBoard" gridLinesVisible="true" minHeight="128.0" minWidth="160.0" prefHeight="128.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 
                                                                                       <columnConstraints>
-                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
-                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
-                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
-                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
-                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
+                                                                                          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
                                                                                       </columnConstraints>
                                                                                       <rowConstraints>
-                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="32.0" prefHeight="32.0" valignment="CENTER" vgrow="SOMETIMES" />
                                                                                       </rowConstraints>
                                                                                   </GridPane>
                                                                               </children>
@@ -293,7 +292,7 @@
                           </HBox>
                     </children>
                 </StackPane>
-                <AnchorPane maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="150.0">
+                <AnchorPane maxWidth="500.0" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="150.0">
                     <children>
                         <VBox prefHeight="598.0" prefWidth="555.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
@@ -312,10 +311,44 @@
                                             <children>
                                                 <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <children>
-                                                        <ComboBox prefWidth="150.0" />
-                                                        <ChoiceBox prefWidth="150.0" />
-                                                        <TextField />
-                                                        <ListView prefHeight="200.0" prefWidth="200.0" />
+                                          <TabPane fx:id="tabPane" minHeight="300.0" prefHeight="500.0" prefWidth="150.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES">
+                                            <tabs>
+                                              <Tab onSelectionChanged="#onToolCardTab" text="Tool Card">
+                                                <content>
+                                                  <AnchorPane minHeight="0.0" minWidth="0.0">
+                                                         <children>
+                                                            <StackPane fx:id="toolCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                                               <padding>
+                                                                  <Insets bottom="3.0" left="6.0" right="3.0" top="6.0" />
+                                                               </padding></StackPane>
+                                                         </children></AnchorPane>
+                                                </content>
+                                              </Tab>
+                                              <Tab onSelectionChanged="#onPublicCardTab" text="Public Card">
+                                                <content>
+                                                    <AnchorPane minHeight="0.0" minWidth="0.0">
+                                                        <children>
+                                                            <StackPane fx:id="publicCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                                                <padding>
+                                                                    <Insets bottom="3.0" left="6.0" right="3.0" top="6.0" />
+                                                                </padding></StackPane>
+                                                        </children></AnchorPane>
+                                                </content>
+                                              </Tab>
+                                                <Tab onSelectionChanged="#onPrivateCardTab" text="Private Card">
+                                                   <content>
+                                                       <AnchorPane minHeight="0.0" minWidth="0.0">
+                                                           <children>
+                                                               <StackPane fx:id="privateCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                                                   <padding>
+                                                                       <Insets bottom="3.0" left="6.0" right="3.0" top="6.0" />
+                                                                   </padding></StackPane>
+                                                           </children></AnchorPane>
+                                                   </content>
+                                                </Tab>
+                                            </tabs>
+                                          </TabPane>
+                                          <Label minHeight="0.0" minWidth="0.0" prefHeight="150.0" text="此乃神卡也，不亦乐乎。使用此卡，即可立即胜利！我信你为人君子，是喜爱公平斗争之人。不可使用此卡危害他人。" textAlignment="JUSTIFY" wrapText="true" VBox.vgrow="SOMETIMES" />
                                                     </children>
                                                 </VBox>
                                             </children>

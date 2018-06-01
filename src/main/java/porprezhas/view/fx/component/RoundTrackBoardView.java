@@ -1,11 +1,10 @@
 package porprezhas.view.fx.component;
 
+import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Dragboard;
 import javafx.scene.layout.*;
-import porprezhas.model.Game;
 import porprezhas.model.dices.Dice;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import static porprezhas.model.Game.GameConstants.*;
 import static porprezhas.view.fx.GuiSettings.*;
 
 public class RoundTrackBoardView extends GenericBoardView {
-    private final double DICE_ZOOM = 0.96;      // NOTE: this value must be below 1.0!!!
     private VBox[] backGround;
 
     private Image backgroundImage;
@@ -23,7 +21,7 @@ public class RoundTrackBoardView extends GenericBoardView {
     // Create a new BoardView by ... for RoundTrack, can be used for different
     public RoundTrackBoardView(int COLUMN, int ROW) {
         super(COLUMN, ROW);
-        setDiceZoom(DICE_ZOOM);
+        setDiceZoom(TRACK_DICE_ZOOM);
         backGround = new VBox[getCOLUMN()];
         for (int i = 0; i < COLUMN; i++) {
             backGround[i] = new VBox();
@@ -82,6 +80,7 @@ public class RoundTrackBoardView extends GenericBoardView {
         if (row < getROW()) {
             DiceView diceView = super.addDice(dice, indexRound, row);
             getBoard().setRowSpan(backGround[indexRound], row +1);
+            GridPane.setHalignment(diceView, HPos.CENTER);
             return diceView;
         }
         return null;

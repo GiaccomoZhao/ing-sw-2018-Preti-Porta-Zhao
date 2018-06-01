@@ -1,5 +1,6 @@
 package porprezhas.view.fx.controller;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,13 +8,23 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import porprezhas.model.*;
+import porprezhas.model.cards.Card;
+import porprezhas.model.cards.PrivateObjectiveCard;
+import porprezhas.model.cards.PublicObjectiveCard;
+import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
 import porprezhas.view.fx.component.*;
 
@@ -27,12 +38,9 @@ import static porprezhas.view.fx.GuiSettings.*;
 
 public class GameViewController {
 
-    public final static int BOARD_COLUMN = 5;
-    public final static int BOARD_ROW = 4;
-
-
     //  ***** JavaFX attributes *****
     // these will be initialized by the FXMLLoader when the load() method is called
+    @FXML private AnchorPane gameScene;   // top parent layout
     @FXML private StackPane gamePane;   // fx:id="gamePane"
 
     @FXML private VBox enemyPanesParent;    // contain all enemies board
@@ -46,6 +54,11 @@ public class GameViewController {
     @FXML private VBox diceListReference;   // this is used because grid pane didn't cover all the space of parent grid pane
 
     @FXML private HBox draftPoolParent;
+
+    @FXML private TabPane tabPane;
+    @FXML private StackPane toolCardPane;
+    @FXML private StackPane privateCardPane;
+    @FXML private StackPane publicCardPane;
 
 
     //  ***** VIDEO Setting attributes *****
@@ -148,8 +161,9 @@ public class GameViewController {
         // attach RoundTrack dice table
         setupRoundTrack();
 
-        //
         setupDraftPool();
+
+        setupCards();
 
 
         // setup our game GUI with following methods
@@ -174,6 +188,93 @@ public class GameViewController {
     }
 
 
+    private void setupCards() {
+        System.out.println("Setup Cards");
+
+        List<String> cardsName = new ArrayList<>();
+        cardsName.add("martelletto");
+        cardsName.add("strip_cutter");
+        cardsName.add("lathekin");
+        setupCardPane(toolCardPane, pathToToolCard, cardsName);
+
+        List<String> privateObjectCards = new ArrayList<>();
+        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC1).getName());
+        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC14).getName());
+        setupCardPane(privateCardPane, pathToPrivateCard, privateObjectCards);
+
+        List<String> publicObjectCards = new ArrayList<>();
+        publicObjectCards.add(new PublicObjectiveCard(Card.Effect.PUC10).getName());
+
+        setupCardPane(publicCardPane, pathToPublicCard, publicObjectCards);
+    }
+
+    private void setupCardPane(Pane cardPane, String pathToCards, List<String> cardsName) {
+        if(bDebug) {
+            System.out.println("Printing setupCardPane() for " + pathToCards);
+        }
+        cardPane.setBorder(new Border(new BorderStroke( Color.rgb(200, 200, 200),
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+
+        Border cardBorder = new Border(new BorderImage(
+                new Image(pathToBorderFile),
+                new BorderWidths(BORDER_SIZE), Insets.EMPTY, // new Insets(10, 10, 10, 10),
+                new BorderWidths(BORDER_SIZE), true,
+                BorderRepeat.STRETCH, BorderRepeat.STRETCH
+        ));
+
+
+        List<Label> labels = new ArrayList<>();
+        for (int i = 0; i < cardsName.size(); i++) {
+            if(bDebug) {
+                System.out.println("loading: " + pathToCards + cardsName.get(i) + ".jpg"); }
+            ImageView imageView = new ImageView(new Image(pathToCards + cardsName.get(i) + ".jpg"));
+            imageView.fitWidthProperty().bind(cardPane.widthProperty().multiply(CARD_FIT_RATIO));
+            imageView.fitHeightProperty().bind(cardPane.heightProperty().multiply(CARD_FIT_RATIO));
+            imageView.setPreserveRatio(true);
+
+            labels.add(new Label());
+            labels.get(i).setGraphic(imageView);
+
+            if(cardsName.size() == 1) {
+                labels.get(i).translateXProperty().bind( cardPane.widthProperty().subtract(labels.get(i).widthProperty()).subtract(CARD_PANE_PADDING).multiply(0.5) );
+                labels.get(i).translateYProperty().bind( cardPane.heightProperty().subtract(labels.get(i).heightProperty()).subtract(CARD_PANE_PADDING).multiply(0.5) );
+            } else {
+                labels.get(i).translateXProperty().bind(cardPane.widthProperty().subtract(labels.get(i).widthProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cardsName.size() - 1)));
+                labels.get(i).translateYProperty().bind(cardPane.heightProperty().subtract(labels.get(i).heightProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cardsName.size() - 1)));
+            }
+            labels.get(i).setBorder(cardBorder);
+            labels.get(i).setOpacity(cardOpacity);
+
+            // add transition animation
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(CARD_FADE_IN), labels.get(i));
+            fadeIn.setFromValue(cardOpacity);
+            fadeIn.setToValue(1.0f);
+
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(CARD_FADE_OUT), labels.get(i));
+            fadeOut.setFromValue(1.0f);
+            fadeOut.setToValue(cardOpacity);
+
+            labels.get(i).setOnMouseEntered(event -> {
+                Label source = ((Label)event.getSource());
+                source.toFront();
+                fadeIn.play();
+            });
+
+            labels.get(i).setOnMouseExited(event -> {
+                Label source = ((Label)event.getSource());
+                source.setOpacity(cardOpacity);
+                fadeIn.stop();
+                fadeOut.play();
+            });
+        }
+
+        cardPane.getChildren().addAll(labels);
+
+        cardPane.setOnSwipeLeft(event -> {
+            // change tab to next one
+            System.out.println("Swipe to left");
+        });
+    }
 
 
     // return a round number from 1 to ROUND_NUM
@@ -456,7 +557,8 @@ public class GameViewController {
         cursorHandUp = new ImageCursor(
                 new Image(pathToCursor + "cursor_hand_up.png") );
 
-        gamePane.setCursor(cursorHand);
+        gameScene.setCursor(cursorHand);
+//        gamePane.setCursor(cursorHand);
     }
 
     private void setBackground() {
@@ -470,7 +572,7 @@ public class GameViewController {
     private void setResizeListener() {
         gamePane.heightProperty().addListener( (observable, oldValue, newValue) -> {
             updateEnemyPaneSize(newValue.doubleValue());
-//            updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());  // because we don't know the new value of height
+//            updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());  // commented because we don't know the new value of height
         });
 
         playerPane.heightProperty().addListener((observable, oldValue, newValue) -> {
@@ -615,6 +717,15 @@ public class GameViewController {
         draftPoolView.reroll(diceList);
     }
 
+    @FXML protected void onToolCardTab() {
+        System.out.println("Tool Cards");;
+    }
+    @FXML protected void onPrivateCardTab() {
+        System.out.println("Private Objectives");
+    }
+    @FXML protected void onPublicCardTab() {
+        System.out.println("Public Objectives");
+    }
 
 
 

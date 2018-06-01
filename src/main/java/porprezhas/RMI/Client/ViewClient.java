@@ -281,7 +281,6 @@ public class ViewClient {
                 break;
 
             case DICE_INSERTED:
-                
 
                     localPlayers= players;
                     player= players.get(game.getiCurrentPlayer());

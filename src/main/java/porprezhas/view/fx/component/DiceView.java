@@ -6,9 +6,9 @@ import porprezhas.model.dices.Dice;
 
 import java.util.Scanner;
 
-public class DiceView extends ImageView {
-    private static final String pathToDice = new String("dice/46x46/");
+import static porprezhas.view.fx.GuiSettings.*;
 
+public class DiceView extends ImageView {
 
     private int column;
     private int row;
