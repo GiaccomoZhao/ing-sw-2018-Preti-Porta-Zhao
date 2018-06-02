@@ -1,5 +1,6 @@
 package porprezhas.model.cards;
 
+import javafx.fxml.FXML;
 import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DiceBag;
@@ -62,6 +63,11 @@ Card implements Serializable {
 
     public Card(Effect effect){
         this.effect=effect;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
     public String getName() { return effect.name; }

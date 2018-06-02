@@ -12,7 +12,9 @@ import javafx.scene.layout.BorderRepeat;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.media.MediaPlayer;
 import porprezhas.model.dices.Board;
+import porprezhas.view.fx.component.BackgroundMusicPlayer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +32,6 @@ public class GuiSettings {
     public static final String pathToCursor = "cursor/";
     public static final String pathToMusic = "sound/music/";
 
-    public static final String pathToBorderFile = pathToBorder + "border.gif";
-
 
     // number
     public static final int BOARD_COLUMN = 5;
@@ -42,10 +42,15 @@ public class GuiSettings {
     public static final double TRACK_DICE_ZOOM = 0.8086;       // NOTE: this value must be below 1.0!!! 0.8~0.96 are good.
     public static final double CARD_FIT_RATIO = 0.86;       // this should be below 1.0 and as big as possible
     public static final double CARD_PANE_PADDING = 15;       // adjust this value based on .fxml settings
+    public enum CardTab{
+        TOOL_CARD,
+        PUBLIC_CARD,
+        PRIVATE_CARD
+    }
 
 
     // ***** Develop use attributes *****
-    public static final boolean bDebug = false;
+    public static final boolean bDebug = true;
     public static final boolean bShowGridLines = false;
     public static final boolean bShowFrames = false;
 
@@ -73,4 +78,36 @@ public class GuiSettings {
 
 
     // ***** initialization method *****
+
+
+    // ***** Global methods *****
+    // get the absolute path to the file with any extension. It is like */relativePath/fileName.*
+    public static String getPathToFile(String relativePath, String fileName) {
+        // get resource path
+        String resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();  // get absolute path to resource
+        resourcePath = resourcePath.substring(1, resourcePath.length());    // cut '/' at beginning of path
+        if(bDebug) {
+            System.out.println("searching \'" + fileName + "\' in resource path = " + resourcePath + relativePath );
+        }
+
+        // Open the directory
+        final File dir = new File(resourcePath + relativePath);
+        if (!dir.exists() && dir.isDirectory()) {
+            System.err.println("Cannot find source directory: " + dir);
+            return null;
+        }
+
+        // Filter
+        String[] filePath = dir.list((dir1, name) -> name.startsWith(fileName + "."));
+        if(filePath.length == 0) {
+            System.err.println("0 file found in : " + dir);
+            return null;
+        }
+
+        if(bDebug) {
+            System.out.println(filePath.length + " files found, returning: \t" + filePath[0]);
+        }
+
+        return "file:///" + dir + "\\" + filePath[0];
+    }
 }

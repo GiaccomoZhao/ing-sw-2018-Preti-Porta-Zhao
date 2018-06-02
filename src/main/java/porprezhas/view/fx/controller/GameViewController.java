@@ -8,17 +8,12 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.Light;
-import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import porprezhas.model.*;
 import porprezhas.model.cards.Card;
@@ -82,6 +77,9 @@ public class GameViewController {
 //    private List<DiceView>[] roundTrackDiceLists;   // make care about List<String> is not a Object. But our List<DiceView> is a Object.
     private DraftPoolView draftPoolView;
 
+    private CardPane[] cardPanes;
+
+
     private ImageCursor cursorHand;
     private ImageCursor cursorHandDown;
     private ImageCursor cursorHandUp;
@@ -142,6 +140,8 @@ public class GameViewController {
 
         draftPoolView = new DraftPoolView();
 
+        cardPanes = new CardPane[CardTab.values().length];
+
         if(bDebug)
             System.out.println("GameView Constructed");
     }
@@ -191,21 +191,24 @@ public class GameViewController {
     private void setupCards() {
         System.out.println("Setup Cards");
 
-        List<String> toolCards = new ArrayList<>();
-        toolCards.add(new ToolCard(Card.Effect.TC4).getName());
-        toolCards.add(new ToolCard(Card.Effect.TC2).getName());
-        toolCards.add(new ToolCard(Card.Effect.TC11).getName());
-        setupCardPane(toolCardPane, pathToToolCard, toolCards);
+        cardPanes[CardTab.TOOL_CARD.ordinal()] = new CardPane(toolCardPane, CardTab.TOOL_CARD, pathToToolCard);
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()] = new CardPane(privateCardPane, CardTab.PRIVATE_CARD, pathToPrivateCard);
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()] = new CardPane(publicCardPane, CardTab.PUBLIC_CARD, pathToPublicCard);
 
-        List<String> privateObjectCards = new ArrayList<>();
-        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC1).getName());
-        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC14).getName());
-        setupCardPane(privateCardPane, pathToPrivateCard, privateObjectCards);
+        List<Card> toolCards = new ArrayList<>();
+        toolCards.add(new ToolCard(Card.Effect.TC4));
+        toolCards.add(new ToolCard(Card.Effect.TC2));
+        toolCards.add(new ToolCard(Card.Effect.TC11));
+        cardPanes[CardTab.TOOL_CARD.ordinal()].setupCardPane(toolCards);
 
-        List<String> publicObjectCards = new ArrayList<>();
-        publicObjectCards.add(new PublicObjectiveCard(Card.Effect.PUC10).getName());
+        List<Card> privateObjectCards = new ArrayList<>();
+        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC1));
+        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC14));
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupCardPane(privateObjectCards);
 
-        setupCardPane(publicCardPane, pathToPublicCard, publicObjectCards);
+        List<Card> publicObjectCards = new ArrayList<>();
+        publicObjectCards.add(new PublicObjectiveCard(Card.Effect.PUC10));
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupCardPane(publicObjectCards);
     }
 
     private void setupCardPane(Pane cardPane, String pathToCards, List<String> cardsName) {
@@ -214,6 +217,7 @@ public class GameViewController {
         }
         cardPane.setBorder(new Border(new BorderStroke( Color.rgb(200, 200, 200),
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+/*
 
         Border cardBorder = new Border(new BorderImage(
                 new Image(pathToBorderFile),
@@ -221,6 +225,7 @@ public class GameViewController {
                 new BorderWidths(BORDER_SIZE), true,
                 BorderRepeat.STRETCH, BorderRepeat.STRETCH
         ));
+*/
 
 
         List<Label> labels = new ArrayList<>();
@@ -242,7 +247,7 @@ public class GameViewController {
                 labels.get(i).translateXProperty().bind(cardPane.widthProperty().subtract(labels.get(i).widthProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cardsName.size() - 1)));
                 labels.get(i).translateYProperty().bind(cardPane.heightProperty().subtract(labels.get(i).heightProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cardsName.size() - 1)));
             }
-            labels.get(i).setBorder(cardBorder);
+//            labels.get(i).setBorder(cardBorder);
             labels.get(i).setOpacity(cardOpacity);
 
             // add transition animation

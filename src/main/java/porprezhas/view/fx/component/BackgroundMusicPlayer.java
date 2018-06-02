@@ -41,12 +41,12 @@ public class BackgroundMusicPlayer {
         }
 
         if(bDebug) {
-            System.out.println(".MP3 Music list found:"); }
+            System.out.println("Music list found:"); }
 
         // Create MediaPlayers from all music contained in folder
         for (int i = 0; i < musicFiles.length; i++) {
             if(bDebug) {
-                System.out.println(i + ". " + musicFiles[i]); }
+                System.out.println((i+1) + ". " + musicFiles[i]); }
 
             // Convert the file url in correct format
             musicFiles[i] = "file:///" + (dir + "\\" + musicFiles[i]).replace("\\", "/").replaceAll(" ", "%20");
