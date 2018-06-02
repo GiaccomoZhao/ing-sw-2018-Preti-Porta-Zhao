@@ -84,8 +84,12 @@ public class GuiSettings {
     // get the absolute path to the file with any extension. It is like */relativePath/fileName.*
     public static String getPathToFile(String relativePath, String fileName) {
         // get resource path
-        String resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();  // get absolute path to resource
+        System.out.println(GuiSettings.class.getResource("/" ));
+        String resourcePath = GuiSettings.class.getResource("/" ).getPath();  // get absolute path to resource
         resourcePath = resourcePath.substring(1, resourcePath.length());    // cut '/' at beginning of path
+
+        // Convert the file url in file path format
+        resourcePath = resourcePath.replaceAll("%20", " ");
         if(bDebug) {
             System.out.println("searching \'" + fileName + "\' in resource path = " + resourcePath + relativePath );
         }
@@ -108,6 +112,7 @@ public class GuiSettings {
             System.out.println(filePath.length + " files found, returning: \t" + filePath[0]);
         }
 
-        return "file:///" + dir + "\\" + filePath[0];
+//        return "file:///" + dir + "\\" + filePath[0];
+        return relativePath + filePath[0];
     }
 }

@@ -22,6 +22,9 @@ public class BackgroundMusicPlayer {
         // get resource path
         String resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();
         resourcePath = resourcePath.substring(1, resourcePath.length());
+
+        // Convert the file url in file path format
+        resourcePath = resourcePath.replaceAll("%20", " ");
         if(bDebug) {
             System.out.println("music resource path = " + resourcePath + pathToMusic );
         }
