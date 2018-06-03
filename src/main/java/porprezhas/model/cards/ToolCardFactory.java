@@ -5,6 +5,8 @@ import porprezhas.model.Game;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static porprezhas.model.cards.Card.Effect.*;
+
 
 public class ToolCardFactory implements CardFactory {
 
@@ -12,13 +14,10 @@ public class ToolCardFactory implements CardFactory {
     ArrayList<Integer> numberList;
     private final int numberOfCard;
 
-    public static final int TOOL_CARD_NUMBER = 12;
-    public static final int LIST_LENGHT = 3;
-
 
     public ToolCardFactory(Game.SolitaireDifficulty difficulty) {
         numberList = new ArrayList<Integer>();
-        for(int i=0; i<TOOL_CARD_NUMBER; i++){
+        for(int i = 0; i<TOOL_CARD_NUMBER; i++){
             numberList.add(i);
         }
 
@@ -27,7 +26,7 @@ public class ToolCardFactory implements CardFactory {
 
     public ToolCardFactory(int numberOfPlayer) {
         numberList = new ArrayList<Integer>();
-        for(int i=0; i<TOOL_CARD_NUMBER; i++){
+        for(int i = 0; i<TOOL_CARD_NUMBER; i++){
             numberList.add(i);
         }
 
@@ -44,9 +43,9 @@ public class ToolCardFactory implements CardFactory {
         for(int i=0; i < numberOfCard; i++){
 
 
-            cardId = random.nextInt(numberList.size() - 1);
+            cardId = random.nextInt(numberList.size());
 
-            cards.add(new ToolCard(Card.Effect.values()[cardId+16]));
+            cards.add(new ToolCard( Card.Effect.values() [TC1.ordinal() + cardId] ));
 
             numberList.remove(cardId);
         }

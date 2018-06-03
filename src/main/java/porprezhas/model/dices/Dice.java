@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.Random;
 public class Dice implements Serializable {
 
+    private final int MAX_DICE_NUM = 6;
 
-    public void setNumber(int number) {
+    public Dice setNumber(int number) {
         this.number = number;
+        return this;
     }
 
     private int number;
@@ -46,7 +48,7 @@ public class Dice implements Serializable {
 
     public void roll(){
         Random random = new Random();
-        this.number=random.nextInt(6)+1;
+        this.number=random.nextInt(MAX_DICE_NUM)+1;
 
     }
 

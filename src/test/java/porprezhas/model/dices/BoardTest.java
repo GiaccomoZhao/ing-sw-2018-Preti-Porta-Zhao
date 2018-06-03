@@ -2,10 +2,6 @@ package porprezhas.model.dices;
 
 import org.junit.Before;
 import org.junit.Test;
-import porprezhas.model.dices.Board;
-import porprezhas.model.dices.Box;
-import porprezhas.model.dices.Dice;
-import porprezhas.model.dices.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +31,7 @@ public class BoardTest {
         when(pattern.getBox(0, 0)).thenReturn(box);
         when(pattern.getBox(1, 1)).thenReturn(box);
         when(pattern.getBox(0, 1)).thenReturn(box);
-        when(box.checkCostraint(die)).thenReturn(true);
+        when(box.checkConstraint(die)).thenReturn(true);
 
     }
 
@@ -80,8 +76,8 @@ public class BoardTest {
         assertEquals(board.getDiceQuantity(), 0);
         assertTrue(board.insertDice(die, 0, 0));
         assertEquals(board.getDiceQuantity(), 1);
-        assertTrue(board.validMoveWithoutColorRestrictions(die2, 0, 1));
-        assertTrue(board.insertDiceWithoutColorRestrictions(die2, 0, 1));
+        assertTrue(board.validMove(die2, 0, 1, Board.Restriction.WITHOUT_COLOR));
+        assertTrue(board.insertDice(die2, 0, 1, Board.Restriction.WITHOUT_COLOR));
 
     }
 
@@ -92,8 +88,8 @@ public class BoardTest {
         assertEquals(board.getDiceQuantity(), 0);
         assertTrue(board.insertDice(die2, 0, 0));
         assertEquals(board.getDiceQuantity(), 1);
-        assertTrue(board.validMoveWithoutNumberRestrictions(die1, 0, 1));
-        assertTrue(board.insertDiceWithoutNumberRestrictions(die1, 0, 1));
+        assertTrue(board.validMove(die1, 0, 1, Board.Restriction.WITHOUT_NUMBER));
+        assertTrue(board.insertDice(die1, 0, 1,Board.Restriction.WITHOUT_NUMBER));
 
     }
 
@@ -129,8 +125,8 @@ public class BoardTest {
         assertEquals(board.getDiceQuantity(),0);
         assertTrue(board.insertDice(die,0,0));
         assertEquals(board.getDiceQuantity(),1);
-        assertTrue(board.insertDiceWithoutColorRestrictions(die1,0,1));
-        assertFalse(board.insertDiceWithoutColorRestrictions(die,1,0));
+        assertTrue(board.insertDice(die1,0,1, Board.Restriction.WITHOUT_COLOR));
+        assertFalse(board.insertDice(die,1,0, Board.Restriction.WITHOUT_COLOR));
         assertEquals(board.getDiceQuantity(),2);
     }
 
@@ -139,8 +135,8 @@ public class BoardTest {
         assertEquals(board.getDiceQuantity(),0);
         assertTrue(board.insertDice(die2,0,0));
         assertEquals(board.getDiceQuantity(),1);
-        assertTrue(board.insertDiceWithoutNumberRestrictions(die1,0,1));
-        assertFalse(board.insertDiceWithoutNumberRestrictions(die,1,0));
+        assertTrue(board.insertDice(die1,0,1, Board.Restriction.WITHOUT_NUMBER));
+        assertTrue(board.insertDice(die1,1,0, Board.Restriction.WITHOUT_NUMBER));
         assertEquals(board.getDiceQuantity(),2);
     }
 
@@ -149,9 +145,9 @@ public class BoardTest {
         assertEquals(board.getDiceQuantity(),0);
         assertTrue(board.insertDice(die,0,0));
         assertEquals(board.getDiceQuantity(),1);
-        assertTrue(board.insertDiceWithoutAdjacentRestrictions(die1,3,3));
+        assertTrue(board.insertDice(die1,3,3, Board.Restriction.WITHOUT_ADJACENT));
         assertEquals(board.getDiceQuantity(),2);
-        assertFalse(board.insertDiceWithoutAdjacentRestrictions(die3,2,2));
+        assertFalse(board.insertDice(die3,2,2, Board.Restriction.WITHOUT_ADJACENT));
 
     }
 

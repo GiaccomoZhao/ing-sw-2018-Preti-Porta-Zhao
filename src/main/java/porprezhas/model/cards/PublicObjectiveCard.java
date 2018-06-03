@@ -7,6 +7,9 @@ import porprezhas.model.track.RoundTrack;
 
 import java.io.Serializable;
 
+import static porprezhas.model.dices.Board.ROW;
+import static porprezhas.model.dices.Board.COLUMN;
+
 public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
     public PublicObjectiveCard(Effect effect) {
@@ -14,12 +17,6 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
         super(effect);
     }
 
-
-
-    @Override
-    public void use(Board board, DraftPool draftPool, int xStart1, int yStart1, int xDestination1, int yDestination1, int xStart2, int yStart2, int xDestination2, int yDestination2, Dice dice1, int number, boolean operation, RoundTrack roundTrack, DiceBag diceBag) {
-        ;
-    }
 
     @Override
     public int apply(Board board) {
@@ -31,12 +28,12 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
         int[] num = new int[6];
 
 
-      switch(this.effect.ID-1){
+      switch(this.effect){
 
-          case 0:
+          case PUC1:
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
@@ -49,10 +46,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return this.getNumScore()*point;
 
 
-          case 1:
+          case PUC2:
 
-              for(j=0; j < 5; j++) {
-                  for (i = 0; i < 4; i++){
+              for(j=0; j <COLUMN; j++) {
+                  for (i = 0; i < ROW; i++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
@@ -65,10 +62,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return this.getNumScore()*point;
 
 
-          case 2:
+          case PUC3:
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
@@ -83,10 +80,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return this.getNumScore()*point;
 
 
-          case 3:
+          case PUC4:
 
-              for(j=0; j < 5; j++) {
-                  for (i = 0; i< 4; i++){
+              for(j=0; j <COLUMN; j++) {
+                  for (i = 0; i< ROW; i++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
@@ -103,10 +100,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return this.getNumScore()*point;
 
 
-          case 4:
+          case PUC5:
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
                       if(board.getDice(i,j).getDiceNumber()==1)
                           num[0]=num[0]+1;
 
@@ -125,10 +122,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
 
 
-          case 5:
+          case PUC6:
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
                       if(board.getDice(i,j).getDiceNumber()==3)
                           num[0]=num[0]+1;
 
@@ -146,10 +143,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return this.getNumScore()*point;
 
 
-          case 6:
+          case PUC7:
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
                      if(board.getDice(i,j).getDiceNumber()==5)
                           num[0]=num[0]+1;
 
@@ -167,10 +164,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return this.getNumScore()*point;
 
 
-          case 7:
+          case PUC8:
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
                       for(counter=0;counter<6;counter++) {
                           if (board.getDice(i, j).getDiceNumber() == counter + 1)
                               num[counter] = num[counter] + 1;
@@ -187,36 +184,36 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return this.getNumScore()*point;
 
 
-          case 8:
+          case PUC9:
 
-              boolean supportDiagonal[][]=new boolean[4][5];
+              boolean supportDiagonal[][]=new boolean[ROW][COLUMN];
               Dice.ColorDice colorSupport;
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
 
                       if(board.getDice(i,j).getColorDice()!= Dice.ColorDice.WHITE){
                           colorSupport=board.getDice(i, j).getColorDice();
 
-                          if(i>0&&j>0)
+                          if(i>0 && j>0)
                               if(board.getDice(i-1,j-1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i-1][j-1]=true;
                               }
 
-                          if(i>0&&j<4)
+                          if(i>0 && j<COLUMN-1)
                               if(board.getDice(i-1,j+1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i-1][j+1]=true;
                               }
 
-                          if(i<3&&j>0)
+                          if(i<ROW-1 && j>0)
                               if(board.getDice(i+1,j-1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i+1][j-1]=true;
                               }
 
-                          if(i<3&&j<4)
+                          if(i<ROW-1 && j<COLUMN-1)
                               if(board.getDice(i+1,j+1).getColorDice()==colorSupport){
                                   supportDiagonal[i][j]=true;
                                   supportDiagonal[i+1][j+1]=true;
@@ -227,8 +224,8 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
                   }
               }
 
-              for(i=0;i<4;i++){
-                  for(j=0;j<5;j++){
+              for(i=0;i<ROW;i++){
+                  for(j=0;j<COLUMN;j++){
 
                       if(supportDiagonal[i][j])
                           point++;
@@ -240,11 +237,11 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               return point;
 
 
-          case 9:
+          case PUC10:
 
-              for(i=0; i < 4; i++) {
-                  for (j = 0; j < 5; j++){
-                      for(counter=0;counter<6;counter++) {
+              for(i=0; i < ROW; i++) {
+                  for (j = 0; j <COLUMN; j++){
+                      for(counter=0; counter<num.length; counter++) {
                           if(board.getDice(i,j).getColorDice().ordinal()+1 == counter +1)
                               num[counter] = num[counter] + 1;
                       }
@@ -252,7 +249,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
               }
 
               point=num[0];
-              for(counter=1;counter<6;counter++){
+              for(counter=1;counter<num.length;counter++){
                   if(num[counter]<point)
                       point=num[counter];
               }

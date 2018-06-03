@@ -41,13 +41,13 @@ public class Box implements Serializable {
     }
 
 
-    public Object getCostraint(){
+    public Object getConstraint(){
         if(this.color!=Dice.ColorDice.WHITE)
             return this.color;
         else return number;
     }
 
-    public Boolean checkCostraint(Dice dice){
+    public Boolean checkConstraint(Dice dice){
         if(this.freeBox())
             return Boolean.TRUE;
         if(!this.white() && this.color.equals(dice.getColorDice()))

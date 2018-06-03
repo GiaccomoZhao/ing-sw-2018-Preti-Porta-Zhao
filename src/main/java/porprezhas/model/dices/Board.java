@@ -1,21 +1,58 @@
 package porprezhas.model.dices;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import porprezhas.model.dices.Board;
 
 public class Board implements Serializable {
+
+    public enum Restriction {
+        NONE    (0b000),
+        COLOR   (0b001),
+        NUMBER  (0b010),
+        DICE(0b011),
+        ADJACENT(0b100),
+        ALL     (0b111),
+        WITHOUT_COLOR   (0b110),    // same as ALL & ~COLOR
+        WITHOUT_NUMBER  (0b101),
+        WITHOUT_ADJACENT(0b011);
+
+        public int value;
+
+        Restriction(int i) {
+            value = i;
+        }
+
+        public boolean hasColorRestriction() {
+            if( 1 == (this.ordinal() & COLOR.ordinal()) ) {
+                return true;
+            } else
+                return false;
+        }
+
+        public boolean hasNumberRestriction() {
+            if( 1 == (this.ordinal() & NUMBER.ordinal()) ) {
+                return true;
+            } else
+                return false;
+        }
+
+        public boolean hasAdjacentRestriction() {
+            if( 1 == (this.ordinal() & ADJACENT.ordinal()) ) {
+                return true;
+            } else
+                return false;
+        }
+    }
 
     private final Pattern pattern;
     private Dice[][] board;
     private int diceQuantity;
-    private final int HEIGHT = 4;
-    private final int WIDTH = 5;
+    public static final int ROW = 4;
+    public static final int COLUMN = 5;
 
 
     public Board(Pattern.TypePattern typePattern) {
         this.pattern = new Pattern (typePattern);
-        this.board = new Dice[HEIGHT][WIDTH];
+        this.board = new Dice[ROW][COLUMN];
         this.diceQuantity=0;
     }
 
@@ -24,20 +61,19 @@ public class Board implements Serializable {
     }
 
     public int getHeight() {
-        return HEIGHT;
+        return ROW;
     }
 
     public int getWidth() {
-        return WIDTH;
+        return COLUMN;
     }
 
-    public Boolean occupiedBox(int x, int y){
+    public Boolean occupiedBox(int row, int col){
 
-        if (board[x][y]==null)
+        if (board[row][col]==null)
             return false;
         else
             return true;
-
     }
 
     //Return true if dice1 can be placed adjacent to dice2
@@ -49,7 +85,6 @@ public class Board implements Serializable {
             return false;
 
         return true;
-
     }
 
     //Return true if dice1 can be placed adjacent to dice2 ignoring color restrictions
@@ -59,7 +94,6 @@ public class Board implements Serializable {
             return false;
 
         return true;
-
     }
 
     //Return true if dice1 can be placed adjacent to dice2 ignoring number restrictions
@@ -72,31 +106,31 @@ public class Board implements Serializable {
 
     }
 
-    public Boolean adjacentDice(Dice dice, int x, int y){
+    public Boolean adjacentDice(Dice dice, int row, int col){
 
         int counter=0;
-        if(x>0 && occupiedBox(x-1, y) ){
-            if(!compatibleDice(dice, board[x-1][y]))
+        if(row>0 && occupiedBox(row-1, col) ){
+            if(!compatibleDice(dice, board[row-1][col]))
                 return false;
             else
                 counter++;
 
         }
-        if(x<3 && occupiedBox(x+1, y)){
-            if(!compatibleDice(dice, board[x+1][y]))
+        if(row<3 && occupiedBox(row+1, col)){
+            if(!compatibleDice(dice, board[row+1][col]))
                 return false;
             else
                 counter++;
 
         }
-        if(y>0 && occupiedBox(x, y-1)){
-            if(!compatibleDice(dice, board[x][y-1]))
+        if(col>0 && occupiedBox(row, col-1)){
+            if(!compatibleDice(dice, board[row][col-1]))
                 return false;
             else
                 counter++;
         }
-        if(y<4 && occupiedBox(x, y+1)){
-            if(!compatibleDice(dice, board[x][y+1]))
+        if(col<4 && occupiedBox(row, col+1)){
+            if(!compatibleDice(dice, board[row][col+1]))
                 return false;
             else
                 counter++;
@@ -105,65 +139,65 @@ public class Board implements Serializable {
         if(counter>0)
             return true;
 
-        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+        if(row>0 && col>0 && occupiedBox(row-1, col-1))
             return true;
-        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+        if(row<3 && col>0 && occupiedBox(row+1, col-1))
             return true;
-        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+        if(row>0 && col<4 && occupiedBox(row-1, col+1))
             return true;
-        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+        if(row<3 && col<4 && occupiedBox(row+1, col+1))
             return true;
 
         return false;
     }
 
-    public Boolean aloneDice(Dice dice, int x, int y){
+    public Boolean aloneDice(Dice dice, int row, int col){
 
-        if(x>0 && occupiedBox(x-1, y) )
+        if(row>0 && occupiedBox(row-1, col) )
             return false;
-        if(x<3 && occupiedBox(x+1, y))
+        if(row<3 && occupiedBox(row+1, col))
             return false;
-        if(y>0 && occupiedBox(x, y-1))
+        if(col>0 && occupiedBox(row, col-1))
             return false;
-        if(y<4 && occupiedBox(x, y+1))
+        if(col<4 && occupiedBox(row, col+1))
             return false;
-        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+        if(row>0 && col>0 && occupiedBox(row-1, col-1))
             return false;
-        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+        if(row<3 && col>0 && occupiedBox(row+1, col-1))
             return false;
-        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+        if(row>0 && col<4 && occupiedBox(row-1, col+1))
             return false;
-        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+        if(row<3 && col<4 && occupiedBox(row+1, col+1))
             return false;
 
         return true;
     }
 
-    public Boolean adjacentDiceWithoutColorRestrictions(Dice dice, int x, int y){
+    public Boolean adjacentDiceWithoutColorRestrictions(Dice dice, int row, int col){
 
         int counter=0;
-        if(x>0 && occupiedBox(x-1, y) ){
-            if(!compatibleDiceWithoutColorRestrictions(dice, board[x-1][y]))
+        if(row>0 && occupiedBox(row-1, col) ){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[row-1][col]))
                 return false;
             else
                 counter++;
 
         }
-        if(x<3 && occupiedBox(x+1, y)){
-            if(!compatibleDiceWithoutColorRestrictions(dice, board[x+1][y]))
+        if(row<3 && occupiedBox(row+1, col)){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[row+1][col]))
                 return false;
             else
                 counter++;
 
         }
-        if(y>0 && occupiedBox(x, y-1)){
-            if(!compatibleDiceWithoutColorRestrictions(dice, board[x][y-1]))
+        if(col>0 && occupiedBox(row, col-1)){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[row][col-1]))
                 return false;
             else
                 counter++;
         }
-        if(y<4 && occupiedBox(x, y+1)){
-            if(!compatibleDiceWithoutColorRestrictions(dice, board[x][y+1]))
+        if(col<4 && occupiedBox(row, col+1)){
+            if(!compatibleDiceWithoutColorRestrictions(dice, board[row][col+1]))
                 return false;
             else
                 counter++;
@@ -172,43 +206,43 @@ public class Board implements Serializable {
         if(counter>0)
             return true;
 
-        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+        if(row>0 && col>0 && occupiedBox(row-1, col-1))
             return true;
-        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+        if(row<3 && col>0 && occupiedBox(row+1, col-1))
             return true;
-        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+        if(row>0 && col<4 && occupiedBox(row-1, col+1))
             return true;
-        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+        if(row<3 && col<4 && occupiedBox(row+1, col+1))
             return true;
 
         return false;
     }
 
-    public Boolean adjacentDiceWithoutNumberRestrictions(Dice dice, int x, int y){
+    public Boolean adjacentDiceWithoutNumberRestrictions(Dice dice, int row, int col){
 
         int counter=0;
-        if(x>0 && occupiedBox(x-1, y) ){
-            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x-1][y]))
+        if(row>0 && occupiedBox(row-1, col) ){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[row-1][col]))
                 return false;
             else
                 counter++;
 
         }
-        if(x<3 && occupiedBox(x+1, y)){
-            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x+1][y]))
+        if(row<3 && occupiedBox(row+1, col)){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[row+1][col]))
                 return false;
             else
                 counter++;
 
         }
-        if(y>0 && occupiedBox(x, y-1)){
-            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x][y-1]))
+        if(col>0 && occupiedBox(row, col-1)){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[row][col-1]))
                 return false;
             else
                 counter++;
         }
-        if(y<4 && occupiedBox(x, y+1)){
-            if(!compatibleDiceWithoutNumberRestrictions(dice, board[x][y+1]))
+        if(col<4 && occupiedBox(row, col+1)){
+            if(!compatibleDiceWithoutNumberRestrictions(dice, board[row][col+1]))
                 return false;
             else
                 counter++;
@@ -217,23 +251,23 @@ public class Board implements Serializable {
         if(counter>0)
             return true;
 
-        if(x>0 && y>0 && occupiedBox(x-1, y-1))
+        if(row>0 && col>0 && occupiedBox(row-1, col-1))
             return true;
-        if(x<3 && y>0 && occupiedBox(x+1, y-1))
+        if(row<3 && col>0 && occupiedBox(row+1, col-1))
             return true;
-        if(x>0 && y<4 && occupiedBox(x-1, y+1))
+        if(row>0 && col<4 && occupiedBox(row-1, col+1))
             return true;
-        if(x<3 && y<4 && occupiedBox(x+1, y+1))
+        if(row<3 && col<4 && occupiedBox(row+1, col+1))
             return true;
 
         return false;
     }
 
 
-    public boolean insertDice(Dice dice, int x, int y) {
+    public boolean insertDice(Dice dice, int row, int col) {
 
-        if (validMove(dice, x, y)) {
-            board[x][y] = dice;
+        if (validMove(dice, row, col)) {
+            board[row][col] = dice;
             diceQuantity++;
             return true;
         }
@@ -242,10 +276,9 @@ public class Board implements Serializable {
     }
 
 
-    public boolean insertDiceWithoutColorRestrictions(Dice dice, int x, int y) {
-
-        if (validMoveWithoutColorRestrictions(dice, x, y)) {
-            board[x][y] = dice;
+    public boolean insertDice(Dice dice, int row, int col, Restriction restriction) {
+        if (validMove(dice, row, col, restriction)) {
+            board[row][col] = dice;
             diceQuantity++;
             return true;
         }
@@ -254,62 +287,40 @@ public class Board implements Serializable {
     }
 
 
-    public boolean insertDiceWithoutNumberRestrictions(Dice dice, int x, int y) {
 
-        if (validMoveWithoutNumberRestrictions(dice, x, y)) {
-            board[x][y] = dice;
-            diceQuantity++;
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public boolean insertDiceWithoutAdjacentRestrictions(Dice dice, int x, int y) {
-
-        if (validMoveWithoutAdjacentRestrictions(dice, x, y)) {
-            board[x][y] = dice;
-            diceQuantity++;
-            return true;
-        }
-        else
-            return false;
-    }
-
-
-    public Dice removeDice(int x, int y){
+    public Dice removeDice(int row, int col){
 
         Dice auxDice;
-        if(canBeRemoved(x,y)){
-            auxDice=getDice(x,y);
-            board[x][y]=null;
+        if(canBeRemoved(row,col)){
+            auxDice=getDice(row,col);
+            board[row][col]=null;
             return auxDice;
         }
         return null;
     }
 
 
-    public boolean validMove(Dice dice, int x, int y){
+    public boolean validMove(Dice dice, int row, int col){
 
         //Check if the pattern constraint is respected by dice
-       if(!pattern.getBox(x, y).checkCostraint(dice) )
+       if(!pattern.getBox(row, col).checkConstraint(dice) )
            return Boolean.FALSE ;
 
         // Check if dice is the first die of the player and if the position is an edge or corner space
         if(diceQuantity==0 ){
-            if(pattern.checkEdges(x, y))
+            if(pattern.checkEdges(row, col))
                 return Boolean.TRUE;
             else
                 return Boolean.FALSE;
         }
 
         //Check if the box is already occupied
-        if( this.occupiedBox(x, y))
+        if( this.occupiedBox(row, col))
             return Boolean.FALSE;
 
         //Check if the die is adjacent to a previously placed die
 
-        if(!this.adjacentDice(dice, x, y))
+        if(!this.adjacentDice(dice, row, col))
             return false;
 
         //valid Move
@@ -317,62 +328,39 @@ public class Board implements Serializable {
 
     }
 
-    public boolean validMoveWithoutColorRestrictions(Dice dice, int x, int y){
+    public boolean validMove(Dice dice, int row, int col, Restriction restriction) {
+        //Check if the box is already occupied
+        if (this.occupiedBox(row, col))
+            return false;
 
-            if ((this.getPattern().getBox(x,y).freeBox())||(this.getPattern().getBox(x, y).getNumber() == dice.getDiceNumber())||(this.getPattern().getBox(x, y).getNumber() == 0)) {
-                //Check if the box is already occupied
-                if (this.occupiedBox(x, y))
-                    return Boolean.FALSE;
-                //Check if the die is adjacent to a previously placed die
-                if (!this.adjacentDiceWithoutColorRestrictions(dice, x, y))
-                    return Boolean.FALSE;
-                //valid Move
-
+        // Check if dice is the first die of the player and if the position is an edge or corner space
+        if(diceQuantity==0 ){
+            if(pattern.checkEdges(row, col))
                 return Boolean.TRUE;
-            }
-        else
-            return Boolean.FALSE;
-    }
-
-
-    public boolean validMoveWithoutNumberRestrictions(Dice dice, int x, int y){
-
-        if ((this.getPattern().getBox(x,y).freeBox())||(!this.getPattern().getBox(x,y).white() && this.getPattern().getBox(x,y).getColor().equals(dice.getColorDice()))) {
-            //Check if the box is already occupied
-            if (this.occupiedBox(x, y))
+            else
                 return Boolean.FALSE;
-            //Check if the die is adjacent to a previously placed die
-            if (!this.adjacentDiceWithoutNumberRestrictions(dice, x, y))
-                return false;
-            //valid Move
-            return Boolean.TRUE;
         }
-        else
-            return Boolean.FALSE;
-    }
 
-    public boolean validMoveWithoutAdjacentRestrictions(Dice dice, int x, int y) {
+        //Check Constraints
+        if( restriction.hasColorRestriction() &&
+                !this.getPattern().getBox(row, col).getColor().equals(dice.getColorDice()) )
+            return false;
+        if(restriction.hasNumberRestriction() &&
+                !(this.getPattern().getBox(row, col).getNumber() == dice.getDiceNumber()) )
+            return false;
+        if (restriction.hasAdjacentRestriction() &&
+                !this.adjacentDiceWithoutNumberRestrictions(dice, row, col) )
+            return false;
 
-        if ((this.getPattern().getBox(x, y).freeBox()) || ((this.getPattern().getBox(x, y).getNumber()==0) && this.getPattern().getBox(x, y).getColor().equals(dice.getColorDice())) || ((this.getPattern().getBox(x, y).getColor() == Dice.ColorDice.WHITE) && this.getPattern().getBox(x, y).getNumber()==(dice.getDiceNumber()))) {
-            if (aloneDice(dice, x, y)) {
-                //Check if the box is already occupied
-                if (this.occupiedBox(x, y))
-                    return Boolean.FALSE;
-
-                //valid Move
-                return Boolean.TRUE;
-            }
-        }
-        return Boolean.FALSE;
+        //Valid Move
+        return true;
     }
 
 
 
-
-
-    public Dice getDice(int x, int y){
-        if(board[x][y]!=null)
-            return board[x][y];
+    public Dice getDice(int row, int col){
+        if(board[row][col]!=null)
+            return board[row][col];
         else
             return new Dice(Dice.ColorDice.WHITE, 0);
 
@@ -387,28 +375,28 @@ public class Board implements Serializable {
     }
 
 
-    Boolean[][] dummyBoard = new Boolean[4][5];
+    Boolean[][] dummyBoard = new Boolean[ROW][COLUMN];
 
 
     //given a certain dice coordinates, it returns true if the dice can be removed from the board, without breaking the rules
-    public boolean canBeRemoved(int x, int y){
+    public boolean canBeRemoved(int row, int col){
 
         boolean flag=false;
 
-        for(int i=0;i<4;i++){
-            for(int j=0;j<5;j++){
+        for(int i=0;i<ROW;i++){
+            for(int j=0;j<COLUMN;j++){
                 dummyBoard[i][j]=Boolean.FALSE;
             }
         }
 
 
-        for(int i=0; i<4; i++){
-            for(int j=0; j<5; j++){
+        for(int i=0; i<ROW; i++){
+            for(int j=0; j<COLUMN; j++){
                 if(!flag) {
-                    if (!((i == 1 && (0 < j && j < 4)) || (i == 2 && (0 < j && j < 4)))) {
-                        if (occupiedBox(i, j)&&!(i==x&&j==y)) {
+                    if (!((i == 1 && (0 < j && j < COLUMN-1)) || (i == 2 && (0 < j && j < COLUMN-1)))) {
+                        if (occupiedBox(i, j)&&!(i==row&&j==col)) {
                             dummyBoard[i][j] = true;
-                            markCell(i, j, x, y);
+                            markCell(i, j, row, col);
                             flag=true;
                         }
 
@@ -418,10 +406,10 @@ public class Board implements Serializable {
         }
 
 
-        for(int i=0;i<4;i++){
+        for(int i=0;i<ROW;i++){
 
-            for(int j=0;j<5;j++){
-                if(!((i==x)&&(j==y))) {
+            for(int j=0;j<COLUMN;j++){
+                if(!((i==row)&&(j==col))) {
                     if ((!dummyBoard[i][j])&&(occupiedBox(i, j))){
 
                         return false;
@@ -546,7 +534,7 @@ public class Board implements Serializable {
 
 
          // print all board and pattern LINEs
-         for (int y = 0; y < this.getHeight(); y++) {
+         for (int row = 0; row < this.getHeight(); row++) {
 
              // FIRST Line
              // print a part of LEFT border
@@ -554,9 +542,9 @@ public class Board implements Serializable {
 
              //       *****************
              // print **>>> BOARD <<<**
-             for (int x = 0; x < this.getWidth(); x++) {
+             for (int col = 0; col < this.getWidth(); col++) {
                  // print DICE
-                 Dice dice = this.getDice(y, x);
+                 Dice dice = this.getDice(row, col);
                  number = (char) ('0' + dice.getDiceNumber());
                  color = dice.getColorDice().name().charAt(0);
                  if(number == '0')
@@ -566,9 +554,9 @@ public class Board implements Serializable {
                  System.out.format(" %c%C ", number, color);
 
                  // print mid column separator
-                 if (x != this.getWidth() - 1) {
+                 if (col != this.getWidth() - 1) {
                      // switching between large and small separator to adapt the width size to 2 normal char + a space
-                     if (x % 2 == 0) {
+                     if (col % 2 == 0) {
                          System.out.print("|");
                      } else {
                          System.out.print("│");
@@ -585,7 +573,7 @@ public class Board implements Serializable {
              //       *******************
              for (int x = 0; x < pattern.getWidth(); x++) {
                  //
-                 Box box = pattern.getBox(y, x);
+                 Box box = pattern.getBox(row, x);
                  number = (char) ('0' + box.getNumber());
                  color = box.getColor().name().toLowerCase().charAt(0);
                  if(number == '0')
@@ -609,7 +597,7 @@ public class Board implements Serializable {
              System.out.println("║");
 
              // print horizontal separator + left and right border
-             if (y != this.getHeight() - 1) {
+             if (row != this.getHeight() - 1) {
                  System.out.print("╟──");
                  for (int x = 0; x < this.getWidth() - 1; x++) {
                      if(bFixedFont) {

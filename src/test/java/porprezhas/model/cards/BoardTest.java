@@ -35,7 +35,7 @@ public class BoardTest {
         when(pattern.getBox(0,0)).thenReturn(box);
         when(pattern.getBox(1,1)).thenReturn(box);
         when(pattern.getBox(0,1)).thenReturn(box);
-        when(box.checkCostraint(die)).thenReturn(true);
+        when(box.checkConstraint(die)).thenReturn(true);
 
     }
 

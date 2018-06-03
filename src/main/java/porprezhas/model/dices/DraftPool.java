@@ -25,14 +25,19 @@ public class DraftPool implements Serializable {
     }
     public Dice chooseDice(int dice){
 
-        Dice choosenDice;
+        Dice chosenDice;
 
         if(dice <= draftPool.size()){
-            choosenDice = draftPool.remove(dice);
+            chosenDice = draftPool.remove(dice);
 
-            return choosenDice;
+            return chosenDice;
         }
         return null;
+    }
+
+    // Only Server can do this operation
+    public void setDice(int indexDice, Dice dice) {
+        draftPool.set(indexDice, dice);
     }
 
     public ArrayList<Dice> diceList(){

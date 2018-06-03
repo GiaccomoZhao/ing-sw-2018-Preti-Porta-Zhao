@@ -203,7 +203,7 @@ public class GameViewController {
 
         List<Card> privateObjectCards = new ArrayList<>();
         privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC1));
-        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC14));
+        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC4));
         cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupCardPane(privateObjectCards);
 
         List<Card> publicObjectCards = new ArrayList<>();

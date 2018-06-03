@@ -28,7 +28,7 @@ public class RoundTrack {
         track[actualRound-1]=draftPool.diceList();
         actualRound++;
     }
-    public void addExternalDice(int round,Dice dice){
+    public void addDice(int round, Dice dice){
         if(track[round-1]==null){
             track[round-1] = new ArrayList<>();
         }

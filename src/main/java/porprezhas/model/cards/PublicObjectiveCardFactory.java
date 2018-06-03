@@ -9,13 +9,10 @@ public class PublicObjectiveCardFactory implements CardFactory {
     ArrayList<Integer> numberList;
     private final int numberOfCard;
 
-    public static final int PUBLIC_OBJECTIVE_CARD_NUMBER = 10;
-    public static final int LIST_LENGHT = 3;
-
     public PublicObjectiveCardFactory(int numberOfPlayer) {
         numberList = new ArrayList<Integer>();
 
-        for (int i = 0; i < PUBLIC_OBJECTIVE_CARD_NUMBER; i++) {
+        for (int i = 0; i < Card.Effect.PUBLIC_OBJECTIVE_CARD_NUMBER; i++) {
             numberList.add(i);
         }
 
@@ -35,9 +32,9 @@ public class PublicObjectiveCardFactory implements CardFactory {
             for(int i=0; i <numberOfCard ; i++){
 
 
-                cardId = random.nextInt(numberList.size() - 1);
+                cardId = random.nextInt(numberList.size());
 
-                cards.add(new PublicObjectiveCard(Card.Effect.values()[cardId+1]));
+                cards.add(new PublicObjectiveCard(Card.Effect.values()[Card.Effect.PUC1.ordinal() + cardId]));
 
                 numberList.remove(cardId);
             }

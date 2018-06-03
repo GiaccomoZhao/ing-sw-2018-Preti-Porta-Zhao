@@ -1,6 +1,5 @@
 package porprezhas.model.track;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import porprezhas.model.dices.*;
 import porprezhas.model.dices.DraftPool;
 
@@ -100,7 +99,7 @@ public class RoundTrackTest {
     @Test
     public void addExternalDice(){
         roundTrackTest.addDice(draftPoolTest);
-        roundTrackTest.addExternalDice(3,externalDice);
+        roundTrackTest.addDice(3,externalDice);
 
     }
 }
