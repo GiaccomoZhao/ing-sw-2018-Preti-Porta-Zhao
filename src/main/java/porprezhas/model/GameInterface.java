@@ -2,6 +2,7 @@ package porprezhas.model;
 
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
+import porprezhas.model.track.RoundTrack;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface GameInterface {
 
     DiceBag getDiceBag();
     DraftPool getDraftPool();
+    public RoundTrack getRoundTrack();
+    public Game.NotifyState getGameState();
 
     boolean InsertDice(int indexDice, int xPose, int yPose);
     boolean isSolitaire();

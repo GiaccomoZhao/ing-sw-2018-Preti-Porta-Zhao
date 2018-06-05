@@ -1,9 +1,11 @@
 package porprezhas.control;
 
+import porprezhas.Network.ProxyObserverRMI;
 import porprezhas.RMI.MainViewInterface;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
+import porprezhas.socket.GameSocket;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -13,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class ServerController extends UnicastRemoteObject implements ServerControllerInterface {
+public class ServerController extends UnicastRemoteObject implements ServerControllerInterface, ServerRMIInterface {
 
 	private List<GameControllerInterface> gameControllerList;
 
@@ -80,17 +82,13 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 createNewGame();
 
                 GameControllerInterface actualGameController = getGameControllerByPlayer(newPlayer);
-                int indexGameController = gameControllerList.indexOf(actualGameController);
-                String rmiGameControllerName = "GameController".concat(String.valueOf(indexGameController));
-                registry.rebind(rmiGameControllerName, actualGameController);
                 Game gamet= (Game) actualGameController.getGame();
-                registry.rebind("game".concat(String.valueOf(indexGameController)), gamet);
-                MainViewInterface view;
                 for (Player readyPlayer:
                         gamet.getPlayerList()) {
-                    view =(MainViewInterface)viewClient.get(readyPlayer.getName());
-                    view.addGameController(indexGameController);
+                        gamet.addObserver(readyPlayer.getName());
+
                 }
+
 
             }
         }
@@ -175,14 +173,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     @Override
     public Boolean joinGame(String username) throws RemoteException {
-        MainViewInterface mainView= null;
-        String clientView = username.concat("MainView");
-        try {
-            mainView= (MainViewInterface) registry.lookup(clientView);
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        }
-        viewClient.put(username, mainView);
+
         for (Player findPlayer:
                 loggedPlayer) {
             if(findPlayer.getName().equals(username)) {
@@ -232,6 +223,50 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         return -1;
     }*/
+    @Override
+    public Boolean insertedDice(int dicePosition, int xBoard, int yBoard, String username) throws RemoteException {
+        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
+            if(this.getGameControllerByUsername(username).getGame().InsertDice(dicePosition, xBoard, yBoard))
+                return true;
+        return false;
+        //TO_DO FIX
 
+    }
+
+    @Override
+    public Boolean chooseDPattern(String namePattern) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public Boolean passUser(String username) throws RemoteException {
+        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
+            this.getGameControllerByUsername(username).pass();
+        else
+            return false;
+        return true;
+    }
+
+    @Override
+    public Boolean usedToolCard() throws RemoteException {
+        return null;
+    }
+
+
+
+    private GameControllerInterface getGameControllerByUsername (String username) throws RemoteException {
+/*
+*/
+        for (GameControllerInterface gameController :
+                gameControllerList) {
+            List<Player> players = gameController.getGame().getPlayerList();
+            for (Player p : players) {
+                if(p.getName().equals(username)) {
+                    return  gameController;
+                }
+            }
+        }
+        return null;    // throw game not found ?
+    }
 
 }

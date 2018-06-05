@@ -156,6 +156,10 @@ public class Game extends ModelObservable implements GameInterface {
         return diceQuantity;
     }
 
+    public RoundTrack getRoundTrack() {
+        return roundTrack;
+    }
+
     public int getiCurrentPlayer() throws RemoteException{
         return iCurrentPlayer;
     }
@@ -171,6 +175,10 @@ public class Game extends ModelObservable implements GameInterface {
 
 
     public NotifyState getGameNotifyState() throws RemoteException {
+        return gameNotifyState;
+    }
+
+    public NotifyState getGameState()  {
         return gameNotifyState;
     }
 
@@ -252,7 +260,8 @@ public class Game extends ModelObservable implements GameInterface {
         }
         gameNotifyState = NotifyState.NEW_FIRST_PLAYER;
         setChanged();
-        notifyObservers(this);
+
+        notifyObservers(new SerializableGame(this));
 
 //        logger.info("It is turn of player n." + iCurrentPlayer);
         return currentPlayer;   // nextPlayer() method changes this attribute
@@ -384,7 +393,8 @@ public class Game extends ModelObservable implements GameInterface {
             // notify clients, now they should choose a pattern
             gameNotifyState = NotifyState.CHOOSE_PATTERN;
             setChanged();
-            notifyObservers(this);
+
+            notifyObservers(new SerializableGame(this));
             // the caller will wait player choose() for a certain time
         }
     }
@@ -414,14 +424,16 @@ public class Game extends ModelObservable implements GameInterface {
         // notify all players that the Game is ready to play
         gameNotifyState= NotifyState.GAME_STARTED;
         setChanged();
-        notifyObservers(this);
+
+        notifyObservers(new SerializableGame(this));
     }
 
     public void nextRound() {
         getDraftPool().setDraftPool(getDiceBag(), playerList.size());
         gameNotifyState = NotifyState.NEXT_ROUND;
         setChanged();
-        notifyObservers(this);
+
+        notifyObservers(new SerializableGame(this));
     }
 
     public int calcScore(Player player) {
@@ -470,7 +482,8 @@ public class Game extends ModelObservable implements GameInterface {
 
                 gameNotifyState= DICE_INSERTED;
                 setChanged();
-                notifyObservers(this);
+
+                notifyObservers(new SerializableGame(this));
                 return true;
             } else
                 return false;   // not valid
@@ -485,7 +498,8 @@ public class Game extends ModelObservable implements GameInterface {
             if(bChosen) {
                 gameNotifyState = BOARD_CREATED;
                 setChanged();
-                notifyObservers(this);
+
+                notifyObservers(new SerializableGame(this));
                 return bChosen;
             }
         }

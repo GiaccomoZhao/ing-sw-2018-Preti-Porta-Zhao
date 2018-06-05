@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class GameController extends UnicastRemoteObject implements GameControllerInterface, Runnable {
+public class GameController  implements GameControllerInterface, Runnable {
     static Logger logger = Logger.getLogger(GameController.class.getName());
 
 
@@ -191,7 +191,7 @@ public class GameController extends UnicastRemoteObject implements GameControlle
     // -------- Public Methods ---------
 
     public GameController(GameInterface game) throws RemoteException {
-        super();
+
         this.game = game;
         playTimeOut = new Object(); // Lock
         chooseTimeOut = new Object(); // Lock
@@ -302,32 +302,5 @@ public class GameController extends UnicastRemoteObject implements GameControlle
         return false;
     }
 
-    @Override
-    public Boolean insertedDice(int dicePosition, int xBoard, int yBoard, String username) throws RemoteException {
-        if(username.equals(this.getGame().getCurrentPlayer().getName()))
-            if(game.InsertDice(dicePosition, xBoard, yBoard))
-                return true;
-        return false;
-        //TO_DO FIX
 
-    }
-
-    @Override
-    public Boolean chooseDPattern(String namePattern) throws RemoteException {
-        return null;
-    }
-
-    @Override
-    public Boolean passUser(String username) throws RemoteException {
-        if(username.equals(this.getGame().getCurrentPlayer().getName()))
-            this.pass();
-        else
-            return false;
-        return true;
-    }
-
-    @Override
-    public Boolean usedToolCard() throws RemoteException {
-        return null;
-    }
 }
