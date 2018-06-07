@@ -16,7 +16,7 @@ enum Color{
     }
 }
 
-public class TEst {
+public class CLIColoredDice {
     // U+2680 to U+2685
     public static final String[] faces = {
             "\u2680",

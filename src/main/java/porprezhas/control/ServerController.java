@@ -5,7 +5,6 @@ import porprezhas.RMI.MainViewInterface;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
-import porprezhas.socket.GameSocket;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

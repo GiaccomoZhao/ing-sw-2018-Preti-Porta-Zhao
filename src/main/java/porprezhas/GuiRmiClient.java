@@ -27,7 +27,7 @@ import static porprezhas.view.fx.GuiSettings.*;
 import static porprezhas.view.fx.GuiSettings.FPS_PRINT_AT_MIN;
 
 public class GuiRmiClient extends Application implements RMIClientInterface {
-    static int mainPlayerPosition;
+    static int mainPlayerPosition;  // to identify which player am i?
 
     private Stage primaryStage;
     private AnchorPane rootLayout;
@@ -107,12 +107,38 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
             if(loader == null)
                 System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/GameView.fxml") + ")");
 
-            // Create a controller instance, passing the information about players
-            playersInfo = new ArrayList<>();
-            for (int i = 0; i < players.size(); i++) {
-                Player player = players.get(i);
-                playersInfo.add(new GameViewController.PlayerInfo(i, player.getName(), player.getIconId(), player.getBoard().getPattern().getTypePattern()));
+
+
+            // TODO: test-use, This should be initialized before this scene starts
+            Random random = new Random();
+            // add all players
+            players = new ArrayList<>();
+            players.add( new Player("P1"));
+            players.get(players.size()-1).setPosition(players.size()-1);
+            players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+            players.add( new Player("P2"));
+            players.get(players.size()-1).setPosition(players.size()-1);
+            players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+            players.add( new Player("me"));
+            players.get(players.size()-1).setPosition(players.size()-1);
+            players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+            players.add( new Player("P4"));
+            players.get(players.size()-1).setPosition(players.size()-1);
+            players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+
+            this.playersInfo = new ArrayList<>();
+            int i = 0;
+            for (Player player : players) {
+                playersInfo.add(new GameViewController.PlayerInfo(
+                        i++,
+                        player.getName(),
+                        player.getIconId(),
+                        Pattern.TypePattern.values()[1]));
             }
+
+
+
+            // Create a controller instance, passing the information about players
             gameViewController = new GameViewController(playersInfo, mainPlayerPosition);
 
             // Set it in the FXMLLoader
@@ -146,7 +172,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String input;
-        System.out.println("输入玩家位置，type player position:");
+        System.out.println("输入玩家位置，type player position (from 0 to MAX_PLAYER_QUANTITY-1):");
         input = scanner.next();
         mainPlayerPosition = Integer.parseInt(input);
 
