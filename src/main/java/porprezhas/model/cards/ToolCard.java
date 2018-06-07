@@ -1,4 +1,5 @@
 package porprezhas.model.cards;
+import com.sun.prism.image.Coords;
 import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DiceBag;
@@ -6,6 +7,7 @@ import porprezhas.model.dices.DraftPool;
 import porprezhas.model.track.RoundTrack;
 
 
+import java.awt.*;
 import java.io.Serializable;
 
 import static porprezhas.model.cards.Card.Effect.*;
@@ -63,9 +65,9 @@ public class ToolCard extends Card implements Serializable {
         if(!verify(TC1.ID))
             return false;
 
-        Dice diceChosen = draftPool.diceList().get(indexChosenDice);
-        int diceNumber = diceChosen.getDiceNumber();
-        Dice.ColorDice diceColor = diceChosen.getColorDice();
+        Dice chosenDice = draftPool.diceList().get(indexChosenDice);
+        int diceNumber = chosenDice.getDiceNumber();
+        Dice.ColorDice diceColor = chosenDice.getColorDice();
 
         if(diceNumber != 6  &&  bIncDec) {
             draftPool.setDice( indexChosenDice,
@@ -78,6 +80,7 @@ public class ToolCard extends Card implements Serializable {
             return false;
         return true;
     }
+
 
     // Effect of tool card N.2-3, used by card n.4 too
     public boolean use(Board board, int rowStart, int columnStart, int rowDestination, int columnDestination, Board.Restriction restriction) {
@@ -105,16 +108,18 @@ public class ToolCard extends Card implements Serializable {
         if(!verify(TC4.ID))
             return false;
 
-        Dice storeDice1 = board.getDice(rowStart1, columnStart1);
+        // we call 2 times use(tool card N.2-3) with a different restriction
+        Dice storeDice1 = board.getDice(rowStart1, columnStart1);   // save the dice for redo
         if( !use(board, rowStart1, columnStart1, rowDestination1, columnDestination1, Board.Restriction.DICE) ) {
             return false;
         }
         if( !use(board, rowStart2, columnStart2, rowDestination2, columnDestination2, Board.Restriction.DICE) ) {
-            // redo the insert done by first dice, in case of failure
+            // Redo the insert done by first dice, in case of Failure of the second use
             board.removeDice(rowStart1, columnStart1);
             board.insertDice(
                     storeDice1,
-                    rowStart1, columnStart1, Board.Restriction.NONE);
+                    rowStart1, columnStart1,
+                    Board.Restriction.NONE);    // no restriction because we are doing a REDO
             return false;
         }
         return true;
@@ -122,6 +127,9 @@ public class ToolCard extends Card implements Serializable {
 
     // Effect of tool card N.5
     public boolean use(DraftPool draftPool, int indexDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
+        if(!verify(TC5.ID))
+            return false;
+
         //remove the dice from the roundTrack
         roundTrack.removeDice(indexRound, diceRoundTrack);
         //add the dice removed from the roundTrack to the draftPool and replace the old dice in the roundTrack
@@ -136,6 +144,9 @@ public class ToolCard extends Card implements Serializable {
     // if it cannot be placed in the board, re-adds it to the draftPool
     // @Return mustBePlaced true means the Caller MUST insert this dice in board
     public boolean use (DraftPool draftPool, int indexDiceDraftPool, Board board) {
+        if(!verify(TC6.ID))
+            return false;
+
         Dice rolledDice;
         rolledDice = draftPool.chooseDice(indexDiceDraftPool);
         rolledDice.roll();
@@ -157,14 +168,18 @@ public class ToolCard extends Card implements Serializable {
     // Effect of tool card N.7
     // this card can be used only on the second turn before drafting
     // NOTE: This constraint is Caller job
-    public void use(DraftPool draftPool) { /* , int turn, boolean hasPicked) {
+    public boolean use(DraftPool draftPool) { /* , int turn, boolean hasPicked) {
         if(turn == 2 && !hasPicked) {
             draftPool.diceList().forEach(Dice::roll);
             return true;
         } else
             return false;
             */
+        if(!verify(TC7.ID))
+            return false;
+
         draftPool.diceList().forEach(Dice::roll);
+        return true;
     }
 
     // Effect of tool card N.8
@@ -189,10 +204,14 @@ public class ToolCard extends Card implements Serializable {
 
     // Effect of tool card N.10
     // rotate a dice in draft pool, face up the bottom side
-    public void use(DraftPool draftPool, int index) {
+    public boolean use(DraftPool draftPool, int index) {
+        if(!verify(TC10.ID))
+            return false;
+
         Dice dice = draftPool.diceList().get(index);
         dice.setNumber(7 - dice.getDiceNumber());
         draftPool.setDice(index, dice);
+        return true;
     }
 
     // Effect of tool card N.11
@@ -201,17 +220,27 @@ public class ToolCard extends Card implements Serializable {
     // choose it's value to
     // place in board   // NOTE: this is caller job and must be done
     public Dice use(DraftPool draftPool, int indexDiceDraftPool, DiceBag diceBag) {
+        if(!verify(TC11.ID))
+            return null;
+
         diceBag.addDice(
                 draftPool.chooseDice(indexDiceDraftPool));
         return diceBag.extractDice();
     }
 
 
+    // Effect of tool card N.12
+    // Move 2 dice in the board, respecting ALL constraints
+    // These dices must have the same color and this color's dice exists in the round track
     public boolean use(RoundTrack roundTrack, Board board, int rowStart1, int columnStart1, int rowDestination1, int columnDestination1, int rowStart2, int columnStart2, int rowDestination2, int columnDestination2) {
-        boolean bExistSameColor = false;
-        Dice.ColorDice colorDice = board.getDice(rowStart1, columnStart1).getColorDice();
-        if (colorDice.equals(board.getDice(rowStart2, columnDestination2).getColorDice())) {
+        if(!verify(TC12.ID))
+            return false;
 
+        boolean bExistSameColor = false;    // has RoundTrack this color
+        Dice.ColorDice colorDice = board.getDice(rowStart1, columnStart1).getColorDice();
+        if (colorDice.equals(board.getDice(rowStart2, columnStart2).getColorDice())) {  // have dices to move the same color
+
+            // search in round track
             for (int i = 1; i <= roundTrack.getActualRound() && !bExistSameColor; i++) {
                 for (Dice die : roundTrack.getRoundDice(i)) {
                     if (colorDice.equals(die.getColorDice())) {
@@ -226,8 +255,11 @@ public class ToolCard extends Card implements Serializable {
             Dice dice1 = board.getDice(rowStart1, columnStart1);
             Dice dice2 = board.getDice(rowStart2, columnStart2);
 
-            if (board.canBeRemoved(rowStart1, columnStart1) && board.canBeRemoved(rowStart2, columnStart2) &&
-                    board.validMove(dice1, rowDestination1, columnDestination1) && board.validMove(dice2, rowDestination2, columnDestination2)) {
+            // inside if we have read only methods
+            if (    board.canBeRemoved(rowStart1, columnStart1) &&
+                    board.canBeRemoved(rowStart2, columnStart2) &&
+                    board.validMove(dice1, rowDestination1, columnDestination1, Board.Restriction.ALL) &&
+                    board.validMove(dice2, rowDestination2, columnDestination2, Board.Restriction.ALL)) {
 
                 board.insertDice(board.removeDice(rowStart1, columnStart1), rowDestination1, columnDestination1);
                 board.insertDice(board.removeDice(rowStart2, columnStart2), rowDestination2, columnDestination2);

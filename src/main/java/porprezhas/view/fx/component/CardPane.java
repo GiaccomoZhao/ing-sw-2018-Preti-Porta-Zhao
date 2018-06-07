@@ -85,6 +85,12 @@ public class CardPane {
                 fadeIn.stop();
                 fadeOut.play();
             });
+
+            labels.get(i).setOnMouseClicked(event -> {
+                Card source = (Card) event.getSource();
+                System.out.println(source.toString());
+                System.out.println(source.effect);
+            });
         }
 
         cardPane.getChildren().addAll(labels);

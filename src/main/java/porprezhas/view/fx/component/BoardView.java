@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
+import porprezhas.control.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 
@@ -13,8 +14,8 @@ public class BoardView extends GenericBoardView {// extends GridPane {
 
 
     // create a BoardView by passing a configured(may in FXML) GridPane
-    public BoardView(GridPane board) {
-        super(board);
+    public BoardView(GridPane board, int playerPosition) {
+        super(board, DiceContainer.fromPlayer(playerPosition));
     }
 
 
@@ -38,21 +39,8 @@ public class BoardView extends GenericBoardView {// extends GridPane {
     //          row < 4 && row > 0
     @Override
     public DiceView addDice(Dice dice, int col, int row) { //int num, char color){
-        if(null == getDiceMatrix(col, row))
-            return super.addDice(dice, col, row);
-        else
-            return getDiceView(col, row);
+        return super.addDice(dice, col, row);
     }
 
-    @Override
-    public boolean deleteDice(DiceView diceView) {
-        int col = diceView.getColumn();
-        int row = diceView.getRow();
-//        if( diceView.getDice().equals( getDiceMatrix(col, row)) ) {
-            setDiceMatrix(null, col, row);
-            return getBoard().getChildren().remove(diceView);
-//        }
-//        return false;
-    }
 
 }

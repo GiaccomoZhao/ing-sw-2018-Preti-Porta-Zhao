@@ -21,17 +21,19 @@ import porprezhas.model.cards.PrivateObjectiveCard;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
+import porprezhas.view.fx.GuiSettings;
 import porprezhas.view.fx.component.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import static porprezhas.Useful.*;
 import static porprezhas.view.fx.GuiSettings.*;
 
-public class GameViewController {
+public class GameViewController implements GameViewUpdaterInterface {
 
     //  ***** JavaFX attributes *****
     // these will be initialized by the FXMLLoader when the load() method is called
@@ -89,14 +91,18 @@ public class GameViewController {
 
 
     //  ***** Player attributes *****
-    final int num_player;
-    final List<PlayerInfo> playersInfo;
-    public static class PlayerInfo {    // NOTE: should i create a new class?
-        public String name;
-        public int iconId;
-        public Pattern.TypePattern typePattern;
+    private final int playerPosition;       // this identify the client's player
+    private final int num_player;
+    private final List<PlayerInfo> playersInfo;
 
-        public PlayerInfo(String name, int iconId, Pattern.TypePattern typePattern) {
+    public static class PlayerInfo {    // NOTE: should i create a new class?
+        public final int position;
+        public final String name;
+        public final int iconId;
+        public final Pattern.TypePattern typePattern;
+
+        public PlayerInfo(int position, String name, int iconId, Pattern.TypePattern typePattern) {
+            this.position = position;
             this.name = name;
             this.iconId = iconId;
             this.typePattern = typePattern;
@@ -112,9 +118,10 @@ public class GameViewController {
     // @requires playersInfo.size >= 1
     // @Param playersInfo.get(0).typePattern == player.typePattern &&
     //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
-    public GameViewController(List<PlayerInfo> playersInfo) {   // NOTE: during the construction method the fxml variables haven't be set yet
+    public GameViewController(List<PlayerInfo> playersInfo, int playerPosition) {   // NOTE: during the construction method the fxml variables haven't be set yet
         if(bDebug)
             System.out.println("Constructing GameView");
+        this.playerPosition = playerPosition;
         this.playersInfo = playersInfo;
         this.num_player = playersInfo.size();
 //        if(this.num_player > 1)
@@ -383,22 +390,27 @@ public class GameViewController {
             });
             roundNumberImage.setOnDragDropped(event -> {
 //                System.out.print("Dropped. \t");
-                Dragboard db = event.getDragboard();
+                Dragboard dragboard = event.getDragboard();
                 boolean success = false;
-                if (db.hasString()) {
-                    // read Dice date
-                    DiceView diceView = new DiceView();
-                    diceView.fromString(db.getString());
-//                    System.out.println(db.getString());
+                if (dragboard.hasString()) {
+                    String draggedString = dragboard.getString();
+
+                    Scanner scanner = new Scanner(draggedString);
+                    scanner.findInLine("board=");
+                    int idBoardFrom = scanner.nextInt();
+                    if(GuiSettings.bDebug) System.out.print("id board=" + idBoardFrom);
+
+                    DiceView diceView = DiceView.fromString(draggedString);
 
                     // calculate place position
                     try {
                         int iRound = getRoundNumberFromEvent(event);
                         // place down
 //                        System.out.println("round number = " + iRound);
-                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
+                        // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), roundTrackBoard.getBoardId(), iRound, 666);
+//                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
                             success = true;
-                        }
+//                        }
                     }catch (Exception e){
                         System.err.println(roundNumberImage);
                         e.printStackTrace();
@@ -513,17 +525,20 @@ public class GameViewController {
         if(bDebug) {
             System.out.println("Setup board"); }
         boardList.clear();  // this must be redundant but i want keep safe
-        for (int i = 0; i < playersInfo.size(); i++) {
-            GridPane gridPane;
+
+        for (int i = 0, offset = 0; i < playersInfo.size(); i++) {
             PlayerInfo playerInfo = playersInfo.get(i);
-            if( i == 0) {
-                gridPane = this.playerBoard;
+            // assign the boards to a list, for simplify the use
+            if( i == getPlayerPosition()) {
+                boardList.add(new BoardView(playerBoard, i));
+                offset++;
             } else {
-                 gridPane = enemyViewControllers.get(i - 1).getBoard();
+//                 gridPane = enemyViewControllers.get(i + offset).getBoard();
+                boardList.add(new BoardView(
+                        enemyViewControllers.get(i - offset).getBoard(),
+                        i));
             }
-            if(gridPane == null)
-                System.err.println(this + " \tindex=" + i + "\tboard=" + gridPane);
-            boardList.add(new BoardView(gridPane));
+
             boardList.get(i).setPattern(playerInfo.typePattern);
             if(bDebug)
                 System.out.println(boardList.get(i).getBoard() + " \tpatter=" + playerInfo.typePattern);
@@ -556,7 +571,7 @@ public class GameViewController {
             EnemyViewController enemyViewController = loader.getController();
             enemyViewControllers.add(enemyViewController);
             // setup player info
-            enemyViewController.setPlayerInfo(playersInfo.get(i + 1));
+            enemyViewController.setPlayerInfo(playersInfo.get(i >= playerPosition ? i+1 : i));
         }
     }
 
@@ -716,6 +731,7 @@ public class GameViewController {
 
     @FXML protected void onPass(ActionEvent event) {
         System.out.println("PASS");
+        // TODO: ClientActionInterface.Pass();
 
         // for test
         Random random = new Random();
@@ -744,6 +760,11 @@ public class GameViewController {
     // ********************************************
     // ********** <<< Public Methods >>> **********
 
+
+    public int getPlayerPosition() {
+        return playerPosition;
+    }
+
     public void setDraftPool(List<Dice> newDiceList) {
         draftPoolView.reroll(newDiceList);
     }
@@ -756,6 +777,7 @@ public class GameViewController {
     }
 
     public DiceView addDice(int indexPlayer, Dice dice, int col, int row) {
+        System.out.println(boardList);
         return boardList.get(indexPlayer).addDice(dice, col, row);
     }
 
@@ -770,7 +792,6 @@ public class GameViewController {
     }
 
 
-    // on
 
     //@Param iRound The number of the round dice list to show, from 1 to ROUND_NUM
     //              if it's out of range, we show/hide all
@@ -816,4 +837,21 @@ public class GameViewController {
         }
         return bShow;
     }
+
+
+
+    // MVC interface methods
+
+    public void updateBoard(int idBoard, Dice[][] dices) {
+        boardList.get(idBoard).update(dices);
+    }
+
+    public void updateDraftPool(List<Dice> dices) {
+        draftPoolView.update(dices);
+    }
+
+    public void updateRoundTrack(List<Dice>[] dices) {
+        roundTrackBoard.update(dices);
+    }
+
 }

@@ -12,20 +12,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import porprezhas.model.dices.Dice;
+import porprezhas.view.fx.GuiSettings;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import static porprezhas.view.fx.GuiSettings.*;
 
 public class DraftPoolView {
     private StackPane stackPane;
-    private List<DiceView> diceList;
+//    private List<DiceView> diceList;
+
+    private int idBoard = 100;    // Unknonw
+    private int nDice;
 
     public DraftPoolView() {
         stackPane = new StackPane();
-        diceList = new LinkedList<>();
+        nDice = 0;
     }
 
     public void setup(Pane parent) {
@@ -38,33 +43,45 @@ public class DraftPoolView {
         }
     }
 
+
+    public void update(List<Dice> diceList) {
+        // TODO: if state == ...
+        reroll(diceList);                  // roll all dices
+//        refresh(diceList);               // reset all existing dices, and roll the not exist's
+//        refresh(iModify, modifiedDice);  // Exchange one dice in draft pool
+    }
+
+
+
     private void addDragListener () {
-        stackPane.setOnDragOver(event -> {
-            // redo collide detection
-            if (event.getGestureSource() != stackPane &&
-                    event.getDragboard().hasString()) {
-                // allow user translate drag
-                event.acceptTransferModes(TransferMode.MOVE);
-            }
-            event.consume();
-        });
         stackPane.setOnDragDropped(event -> {
             // remove and place a new dice there
             Dragboard dragboard = event.getDragboard();
             boolean bSuccess = false;
             if (dragboard.hasString()) {
                 // read Dice date
-                DiceView diceView = new DiceView();
-                diceView.fromString(dragboard.getString());
-//                System.out.println(dragboard.getString());
+                // read Dice date
+                String draggedString = dragboard.getString();
+
+                Scanner scanner = new Scanner(draggedString);
+                scanner.findInLine("board=");
+                int idBoardFrom = scanner.nextInt();
+                if(GuiSettings.bDebug) System.out.print("id board=" + idBoardFrom);
+
+                DiceView diceView = DiceView.fromString(draggedString);
+//                System.out.println(db.getString());
 
                 // calculate place position
                 int x = (int) (event.getX() - stackPane.getWidth()/2);
                 int y = (int) (event.getY() - stackPane.getHeight()/2);
 
-                if (null != addDice(diceView.getDice(), x, y)) {
-                    bSuccess = true;
+                if(idBoardFrom == this.idBoard) {
+                    ;
                 }
+//                if (null != addDice(diceView.getDice(), x, y)) {
+                // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard, row, col);
+                    bSuccess = true;
+//                }
                 if(bDebug) {
                     System.out.println("Draft pool: \"successful dragged in\" = " + bSuccess);
                 }
@@ -72,6 +89,15 @@ public class DraftPoolView {
             // let the source know whether the string was successfully transferred and used
             event.setDropCompleted(bSuccess);
 
+            event.consume();
+        });
+        stackPane.setOnDragOver(event -> {
+            // redo collide detection
+            if (event.getGestureSource() != stackPane &&
+                    event.getDragboard().hasString()) {
+                // allow user translate drag
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
             event.consume();
         });
     }
@@ -118,18 +144,14 @@ public class DraftPoolView {
         if(bDebug) {
             System.out.println("DraftPool: add dice to x = " + x + " \ty = " + y);
         }
-        DiceView diceView= new DiceView(dice, (int) x, (int) y); // Create a new Dice Image View
-        diceList.add(diceView);     // save the reference to the added dices
+        DiceView diceView= new DiceView(dice, (int) x, (int) y, nDice); // Create a new Dice Image View
         stackPane.getChildren().add(diceView);
 
         diceView.fitWidthProperty().bind(stackPane.widthProperty().divide(8).multiply(DRAFT_DICE_ZOOM));
         diceView.fitHeightProperty().bind(stackPane.heightProperty().divide(8).multiply(DRAFT_DICE_ZOOM));
         diceView.setPreserveRatio(true);
 
-        diceView.setTranslateX(x);
-        diceView.setTranslateY(y);
-
-        diceView.toFront();
+        translateDice(diceView, x, y);
 
         diceView.setOnDragDetected(event -> {
             Dragboard dragboard = diceView.startDragAndDrop(TransferMode.MOVE);
@@ -149,7 +171,9 @@ public class DraftPoolView {
             if (event.getTransferMode() == TransferMode.MOVE) {
                 int index = getIndexByDiceView(diceView);
                 if(index >= 0) {
-                    chooseDice(index); //clear()
+                    // TODO: call controller
+                    // controller.chooseDice(index)
+//                    chooseDice(index); //clear()
                     event.consume();
                 }
             }
@@ -157,13 +181,17 @@ public class DraftPoolView {
         return diceView;
     }
 
+    private void translateDice(DiceView diceView, int x, int y) {
+        diceView.setTranslateX(x);
+        diceView.setTranslateY(y);
+
+        diceView.toFront();
+    }
+
     public StackPane get() {
         return stackPane;
     }
 
-    public List<DiceView> getDiceList() {
-        return diceList;
-    }
 
     public int getIndexByDiceView(DiceView searchedDiceView) {
         boolean bFound = false;
@@ -182,34 +210,72 @@ public class DraftPoolView {
             return i;
         return -1;  // or throw exception
     }
-
+/*
     public Dice chooseDice(int indexDice) {
-        DiceView diceView = diceList.remove(indexDice);
         stackPane.getChildren().remove(indexDice);
         return diceView.getDice();
     }
+*/
 
-    public void reroll(List<Dice> newDiceList) {
-        stackPane.getChildren().clear();
+    // add extra dice during game
+    public void addDice(Dice dice) {
         Random random = new Random();
-        for (int i = 0; i < newDiceList.size(); i++) {
-            double cx = stackPane.getWidth() - 60;
-            double cy = stackPane.getHeight() - 60;
-            DiceView diceView = addDice(newDiceList.get(i),
-                    (3- Math.abs(random.nextGaussian())%3)/3 * cx,
-                    (3-Math.abs(random.nextGaussian())%3)/3 * cy,
-                    random.nextDouble()*2*Math.PI);
+        double cx = stackPane.getWidth() - 60;
+        double cy = stackPane.getHeight() - 60;
+        DiceView diceView = addDice( dice,
+                (3- Math.abs(random.nextGaussian())%3)/3 * cx,
+                (3-Math.abs(random.nextGaussian())%3)/3 * cy,
+                random.nextDouble()*2*Math.PI);
 /*
             DiceView diceView = addDice(newDiceList.get(i),
                     (int) ((random.nextGaussian() * stackPane.getWidth()) % (stackPane.getWidth()/(2 * Math.sqrt(2)))),
                     (int) ((random.nextGaussian() * stackPane.getHeight()) % (stackPane.getHeight()/(2 * Math.sqrt(2)))));
 */
-            // set their position
-            playAnimation(diceView, diceView.getColumn(), diceView.getRow());
+        // set their position
+        playAnimation(diceView, diceView.getColumn(), diceView.getRow());
+    }
+
+    // new round
+    public void reroll(List<Dice> newDiceList) {
+        stackPane.getChildren().clear();
+        for (int i = 0; i < newDiceList.size(); i++) {
+            addDice(newDiceList.get(i));
         }
     }
 
 
+    // refresh during game
+    public void refresh(List<Dice> newDiceList) {
+        int indexOfDice = 0;
+        int indexInStackPane = 0;
+        for (Node node : stackPane.getChildren()) {
+            if(node instanceof DiceView) {
+                Dice newDice = newDiceList.get(indexOfDice);
+                DiceView diceView = (DiceView) node;
+                DiceView newDiceView = new DiceView(newDice, diceView.getColumn(), diceView.getRow(), indexOfDice);
+
+                stackPane.getChildren().set(indexInStackPane, newDiceView);
+
+                indexOfDice++;
+                if(newDiceList.size() == indexOfDice)
+                    return;
+            }
+            indexInStackPane ++;
+        }
+    }
+    public void refresh(int indexDice, Dice newDice) {
+        for (int indexInStackPane = 0; indexInStackPane < stackPane.getChildren().size(); indexInStackPane++) {
+            Node node = stackPane.getChildren().get(indexInStackPane);
+            if(node instanceof DiceView) {
+                DiceView diceView = (DiceView) node;
+
+                if(indexDice == diceView.getIndexDice()) {
+                    stackPane.getChildren().set(indexDice, diceView);
+                }
+
+            }
+        }
+    }
 
 
     private void playAnimation (DiceView diceView, int toX, int toY) {

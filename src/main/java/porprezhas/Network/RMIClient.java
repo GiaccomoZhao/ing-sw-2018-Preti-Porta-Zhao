@@ -1,6 +1,5 @@
 package porprezhas.Network;
 
-import porprezhas.control.ServerControllerInterface;
 import porprezhas.control.ServerRMIInterface;
 
 import java.rmi.NotBoundException;
@@ -9,7 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
-public class RMIClient implements RMIClientInterface {
+public class RMIClient implements RMIClientInterface, Runnable {
 
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
     private String username;
@@ -45,16 +44,25 @@ public class RMIClient implements RMIClientInterface {
         System.out.println("\t" + USE_TOOL_CARD + ":\t\t use a tool card");
     }
 
-    public void run() throws RemoteException, NotBoundException {
+    public void run() {
+        try {
+            runSagrada();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+    }
+    public void runSagrada() throws RemoteException, NotBoundException {
         System.out.println("\t\tSAGRADA\t\t");
-        Boolean flag=false;
+        Boolean bLoggedIn=false;
 
 
-        while(!flag) {
+        while(!bLoggedIn) {
             System.out.println(">>> Login:");
             username = in.nextLine();
 
-            flag = server.login(username);
+            bLoggedIn = server.login(username);
 
         }
 

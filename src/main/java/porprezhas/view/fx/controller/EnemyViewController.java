@@ -10,6 +10,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
+import porprezhas.control.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.component.BoardView;
@@ -37,7 +38,7 @@ public class EnemyViewController {
             System.out.println("Initializing EnemyView");
 //            System.out.println(playerInfo);
         }
-        boardView = new BoardView(board);
+        boardView = new BoardView(board, -1);   // NOTE: -1 would create an error if you do not setPlayerInfo
 
         // should i set a default background ? uncomment this : eliminate this
 //        setPattern(board, defaultPattern);    // this will be called by GameViewController
@@ -45,17 +46,18 @@ public class EnemyViewController {
 
 
     public GridPane getBoard() {
-        return boardView.getBoard();
+        return board;
     }
 
     public void setPlayerInfo(GameViewController.PlayerInfo playerInfo) {
         this.playerInfo = playerInfo;
-        boardView.setPattern(playerInfo.typePattern);
+//        boardView.setPattern(playerInfo.typePattern);
         this.name.setText(playerInfo.name);
         this.icon.setImage(new Image(pathToHeadIcon + "head_" + playerInfo.iconId + ".png"));
-    }
 
-    // not static field is used for enemy pane
+//        boardView.setIdBoard(DiceContainer.fromPlayer(playerInfo.position));
+    }
+/*
     public void setPattern(Pattern.TypePattern patternType) {
         boardView.setPattern(patternType);
     }
@@ -63,9 +65,5 @@ public class EnemyViewController {
     public DiceView addDice(Dice dice, int col, int row) {
         return boardView.addDice(dice, col, row);
     }
-
-    public boolean deleteDice(DiceView diceView) {
-        return boardView.deleteDice(diceView);
-    }
-
+*/
 }
