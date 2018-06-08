@@ -4,10 +4,11 @@ import porprezhas.model.Game;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DraftPool;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class RoundTrack {
+public class RoundTrack implements Serializable {
 
     ArrayList<Dice>[] track;
     int actualRound;

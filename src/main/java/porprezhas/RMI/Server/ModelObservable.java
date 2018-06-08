@@ -2,11 +2,13 @@ package porprezhas.RMI.Server;
 
 
 
+import porprezhas.Network.ProxyObserverRMI;
 import porprezhas.RMI.RemoteObservable;
 import porprezhas.RMI.RemoteObserver;
 import porprezhas.model.Game;
 
 import java.io.Serializable;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Observable;
@@ -19,14 +21,19 @@ public abstract class ModelObservable extends Observable
     }
 
     @Override
-    public void addObserver(RemoteObserver ro) throws RemoteException {
-    ProxyObserver po = new ProxyObserver(ro);
+    public void addObserver(String username) throws RemoteException {
+        ProxyObserverRMI po = null;
+        try {
+            po = new ProxyObserverRMI(username);
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
         super.addObserver(po);
         System.out.println("Added observer");
     }
 
     @Override
-    public void deleteObserver(RemoteObserver ro) throws RemoteException {
+    public void deleteObserver(String username) throws RemoteException {
     ;
     }
     @Override
@@ -39,8 +46,5 @@ public abstract class ModelObservable extends Observable
         return null;
     }
 
-    public void test(){
-        setChanged();
-        notifyObservers();
-    }
+
 }

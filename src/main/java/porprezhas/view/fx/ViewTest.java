@@ -1,20 +1,12 @@
-package porprezhas.view.fx.controller;
+package porprezhas.view.fx;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
 
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import porprezhas.model.Game;
 import porprezhas.model.Player;
@@ -22,6 +14,7 @@ import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.component.BackgroundMusicPlayer;
 import porprezhas.view.fx.component.ConfirmBox;
+import porprezhas.view.fx.controller.GameViewController;
 
 import static porprezhas.view.fx.GuiSettings.*;
 
@@ -39,20 +32,39 @@ public class ViewTest extends Application {
 
 
 
+    int mainPlayerPosition;
     public ViewTest() {
+        Random random = new Random();
         // add all players
         players = new ArrayList<>();
-        players.add( new Player("me"));
+        players.add( new Player("P1"));
+        players.get(players.size()-1).setPosition(players.size()-1);
+        players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
         players.add( new Player("P2"));
-        players.add( new Player("P3"));
+        players.get(players.size()-1).setPosition(players.size()-1);
+        players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+        players.add( new Player("me"));
+        players.get(players.size()-1).setPosition(players.size()-1);
+        players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+        mainPlayerPosition = players.size() -1;
         players.add( new Player("P4"));
+        players.get(players.size()-1).setPosition(players.size()-1);
+        players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+/*
+        players.add( new Player("P1", 0, random.nextInt(ICON_QUANTITY) +1));
+        players.add( new Player("P2", 1, random.nextInt(ICON_QUANTITY) +1));
+        players.add( new Player("me", 2, random.nextInt(ICON_QUANTITY) +1));
+        mainPlayerPosition = players.size() -1;
+        players.add( new Player("P4", 3, random.nextInt(ICON_QUANTITY) +1));
+*/
 
         this.playersInfo = new ArrayList<>();
-        Random random = new Random();
+        int i = 0;
         for (Player player : players) {
             playersInfo.add(new GameViewController.PlayerInfo(
+                    i++,
                     player.getName(),
-                    random.nextInt(ICON_QUANTITY) +1,
+                    player.getIconId(),
                     Pattern.TypePattern.values()[1]));
         }
     }
@@ -95,12 +107,13 @@ public class ViewTest extends Application {
                 }
             }
         }
-        for (int i = 0; i < gameViewController.num_player; i++) {
+        for (int i = 0; i < players.size(); i++) {
             // insert a lot of dices to test
             for (int col = 0; col < BOARD_COLUMN; col++) {
                 for (int row = 0; row < BOARD_ROW; row++) {
                     if (random.nextInt(10) < 6) {
-                        gameViewController.addDice(i,
+                        gameViewController.addDice(
+                                i,
                                 new Dice(random.nextInt(6) + 1,
                                             Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
                                 col, row );
@@ -167,7 +180,7 @@ public class ViewTest extends Application {
                 System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/GameView.fxml") + ")");
 
             // Create a controller instance, passing the information about players
-            gameViewController = new GameViewController(playersInfo);
+            gameViewController = new GameViewController(playersInfo, mainPlayerPosition);
             // Set it in the FXMLLoader
             loader.setController(gameViewController);   // I haven't set the controller in fxml because i want the controller get setup at construction
 

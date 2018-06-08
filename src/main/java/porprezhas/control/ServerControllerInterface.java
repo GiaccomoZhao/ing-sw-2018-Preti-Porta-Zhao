@@ -7,15 +7,13 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface ServerControllerInterface extends Remote {
+public interface ServerControllerInterface  {
     void join(Player newPlayer) throws RemoteException;
     void leave(Player player) throws RemoteException;
     GameControllerInterface createNewGame() throws RemoteException;
     GameControllerInterface createNewGame(Player player, Game.SolitaireDifficulty difficulty) throws RemoteException;
     boolean isAlreadyInGame(Player player) throws RemoteException;
     GameControllerInterface getGameController(Player player) throws RemoteException;
-    Boolean joinGame(String username) throws RemoteException;
-    Boolean login(String username) throws  RemoteException;
-    Boolean logout(String username) throws RemoteException;
+
     //int getGameControllerIndex(String username) throws RemoteException;
 }

@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import porprezhas.control.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 
 import java.util.List;
@@ -18,12 +19,15 @@ public class RoundTrackBoardView extends GenericBoardView {
 
     private Image backgroundImage;
 
+    private final int ROUND_QUANTITY;
+
     // Create a new BoardView by ... for RoundTrack, can be used for different
     public RoundTrackBoardView(int COLUMN, int ROW) {
-        super(COLUMN, ROW);
+        super(DiceContainer.TRACK, ROW, COLUMN);
         setDiceZoom(TRACK_DICE_ZOOM);
-        backGround = new VBox[getCOLUMN()];
-        for (int i = 0; i < COLUMN; i++) {
+        ROUND_QUANTITY  =COLUMN;
+        backGround = new VBox[ROUND_QUANTITY];
+        for (int i = 0; i < ROUND_QUANTITY; i++) {
             backGround[i] = new VBox();
         }
         backgroundImage = new Image(pathToBackground + "track.jpeg");   // load image and save it, to avoid reading from disk during game
@@ -31,7 +35,7 @@ public class RoundTrackBoardView extends GenericBoardView {
 
     public void setup() {
         // add backgrounds and set background visibility
-        for (int iRound = 0; iRound < getCOLUMN(); iRound++) {
+        for (int iRound = 0; iRound < ROUND_QUANTITY; iRound++) {
             getBoard().add(backGround[iRound], iRound, 0 );
             backGround[iRound].setVisible(false);   // default value
         }
@@ -88,43 +92,19 @@ public class RoundTrackBoardView extends GenericBoardView {
 
     // @requires row > 0 // that means there is at least one dice to eliminate
     @Override
-    public boolean deleteDice(DiceView viewToDelete) {
-        int col = viewToDelete.getColumn();
-        int row = viewToDelete.getRow();
-        if (getDiceMatrix(col, row).equals(viewToDelete.getDice())) {
-            setDiceMatrix(null, col, row);  // eliminate selected cell
-            // translate all the following cells up
-            for (int i = row; i < getROW() - 1; i++) {
-                Dice value = getDiceMatrix(col, i + 1);
-                setDiceMatrix(value, col, i);
-            }
-            setDiceMatrix(null, col, getROW() - 1); // eliminate last row
-//            if( getBoard().getChildren().remove(viewToDelete) ) {
-
-            // correct the background size
-            if(row == 0) {
-                backGround[col].setVisible(false);
-            } else {
-                getBoard().setRowSpan(backGround[col], row);
-            }
-
-            // refresh GridPane elements using DiceViews of the matrix
-            update();
-            return true;
-//            }
-        }
-        return false;
+    public void update(Dice[][] diceMatrix) {
+        super.update(diceMatrix);
+        show(-1, true);         // Show all rounds
     }
 
-    @Override
-    public void update() {
-//        super.update();   // NOTE: we can reuse the super method if we make super.addDice abstract
+    public void update(List<Dice>[] dices) {
+        Dice[][] diceMatrix = new Dice[ROUND_QUANTITY][getROW()];
+
         getBoard().getChildren().clear();
-        setup();        // there make difference with the super()
-        for (int col = 0; col < getCOLUMN(); col++) {
+        for (int col = 0; col < ROUND_QUANTITY; col++) {
             for (int row = 0; row < getROW(); row++) {
-                if(null != getDiceMatrix(col, row)) {
-                    addDice(getDiceMatrix(col, row), col, row);     // there make a big difference with the super().
+                if(null != diceMatrix[col][row]) {
+                    super.addDice(diceMatrix[col][row], col, row);
                 }
             }
         }
@@ -133,18 +113,29 @@ public class RoundTrackBoardView extends GenericBoardView {
 
     @Override
     protected void addBoardDragListener() {
-        // Override with a void method to disable direct drag and place on round track
-        // we place dice in the track table dragging it on Round Track Number
+        // Override with a empty method to disable DIRECT drag and place on round track
+        // we place dice in the track table by DRAGGING it ON Round Track NUMBER!!!
     }
 
 
+    public boolean hasDiceInRound(int iRound0) {    // iRound0 is an index from 0
+        for (Node node : getBoard().getChildren()) {
+            if (node instanceof DiceView) {
+                DiceView diceView = (DiceView) node;
+                if( diceView.getColumn() == iRound0 ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     // when the specified round is in bound: show the specified round
     //                                 else: show all
     public void show(int iRound, boolean bShow) {
         GridPane gridPane = getBoard();
         if (isValueBetweenInclusive(iRound, 1, ROUND_NUM)) {
             // show backGround, if there is at least one dice
-            if(null != getDiceMatrix(iRound -1, 0))
+            if(hasDiceInRound(iRound-1))
                 backGround[iRound-1].setVisible(bShow);
             else
                 backGround[iRound-1].setVisible(false);
@@ -160,7 +151,7 @@ public class RoundTrackBoardView extends GenericBoardView {
         } else {    // show all
             // show/hide backGround
             for (int i = 0; i < ROUND_NUM; i++) {
-                if(null != getDiceMatrix(i, 0))
+                if(hasDiceInRound(i))
                     backGround[i].setVisible(bShow);
                 else
                     backGround[i].setVisible(false);

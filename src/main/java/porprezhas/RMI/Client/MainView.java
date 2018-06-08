@@ -11,10 +11,10 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
-public class MainView extends UnicastRemoteObject implements MainViewInterface {
+public abstract class MainView  implements MainViewInterface {
 
 
-    ServerControllerInterface serverController;
+/*    ServerControllerInterface serverController;
     GameControllerInterface gameController;
     ViewClient viewClient;
     private final Scanner in;
@@ -155,5 +155,5 @@ public class MainView extends UnicastRemoteObject implements MainViewInterface {
         String observerRmiName = "observer".concat(username);
         registry.rebind(observerRmiName, testObserver);
         return true;
-    }
+    }*/
 }

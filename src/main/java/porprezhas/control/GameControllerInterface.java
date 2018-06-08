@@ -52,8 +52,5 @@ public interface GameControllerInterface extends Remote {
             return this.getState().ordinal() >= StateMachine.FINISHED.ordinal();
         }
     }
-    Boolean insertedDice(int dicePosition, int xBoard, int yBoard, String username) throws RemoteException;
-    Boolean chooseDPattern(String namePattern) throws RemoteException;
-    Boolean passUser(String username) throws RemoteException;
-    Boolean usedToolCard() throws RemoteException;
+
 }

@@ -8,7 +8,7 @@ public class Board implements Serializable {
         NONE    (0b000),
         COLOR   (0b001),
         NUMBER  (0b010),
-        DICE(0b011),
+        DICE    (0b011),
         ADJACENT(0b100),
         ALL     (0b111),
         WITHOUT_COLOR   (0b110),    // same as ALL & ~COLOR
@@ -54,6 +54,10 @@ public class Board implements Serializable {
         this.pattern = new Pattern (typePattern);
         this.board = new Dice[ROW][COLUMN];
         this.diceQuantity=0;
+    }
+
+    public Dice[][] getBoard() {
+        return board;
     }
 
     public Pattern getPattern() {
@@ -151,7 +155,7 @@ public class Board implements Serializable {
         return false;
     }
 
-    public Boolean aloneDice(Dice dice, int row, int col){
+    public Boolean aloneDice(Dice dice, int row, int col) {
 
         if(row>0 && occupiedBox(row-1, col) )
             return false;

@@ -4,37 +4,43 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import porprezhas.control.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.GuiSettings;
 
+import java.util.Scanner;
+
 public abstract class GenericBoardView {
     private final int COLUMN;   // default value
-    private final int ROW;
-    private double DICE_ZOOM = GuiSettings.BOARD_DICE_ZOOM;    // 1.2 would be already too big
+    private final int ROW;      // we don't assign the value here because no generic board can have different value
+    private double DICE_ZOOM = GuiSettings.BOARD_DICE_ZOOM;
 
     private GridPane board; // since we can not import this in fxml file, we can not extend GridPane
-    private Dice[][] diceMatrix;
 
     private boolean bDragging = false;
 
+    private DiceContainer idBoard;
+    private int nDice;
+
 
     // create a BoardView by passing a configured(may in FXML) GridPane
-    public GenericBoardView(GridPane board) {
+    public GenericBoardView(GridPane board, DiceContainer idBoard) {
+        this.idBoard = idBoard;
         this.COLUMN = 5;
         this.ROW = 4;
         if(board == null)
             System.err.println(this + " \tboard=" + board);
         this.board = board;
-        this.diceMatrix = new Dice[COLUMN][ROW];
         this.addBoardDragListener();
+        this.nDice = 0;
     }
 
     // Create a new BoardView by ... for RoundTrack, can be used for different
-    public GenericBoardView(int COLUMN, int ROW) {
+    public GenericBoardView(DiceContainer idBoard, int ROW, int COLUMN) {
+        this.idBoard = idBoard;
         this.COLUMN = COLUMN;
         this.ROW = ROW;
         this.board = new GridPane();
-        this.diceMatrix = new Dice[COLUMN][ROW];
         this.addBoardDragListener();
 
         for (int i = 0; i < COLUMN; i++) {
@@ -47,11 +53,8 @@ public abstract class GenericBoardView {
             rowConstraints.setPercentHeight(100.0 / ROW);
             board.getRowConstraints().add(rowConstraints);
         }
+        this.nDice = 0;
     }
-
-
-    // **** Abstract methods ****
-    abstract boolean deleteDice(DiceView diceView);
 
 
     // **** Getter methods ****
@@ -66,10 +69,6 @@ public abstract class GenericBoardView {
         return bDragging;
     }
 
-    public Dice getDiceMatrix(int col, int row) {
-        return diceMatrix[col][row];
-    }
-
     public GridPane getBoard() {
         return board;
     }
@@ -78,13 +77,17 @@ public abstract class GenericBoardView {
         return DICE_ZOOM;
     }
 
+    public DiceContainer getBoardId() {
+        return idBoard;
+    }
+
     // **** Setter methods ****
     public void setDiceZoom(double DICE_ZOOM) {
         this.DICE_ZOOM = DICE_ZOOM;
     }
 
-    public void setDiceMatrix(Dice value, int col, int row) {
-        this.diceMatrix[col][row] = value;
+    public void setIdBoard(DiceContainer idBoard) {
+        this.idBoard = idBoard;
     }
 
     public DiceView getDiceView(int column, int row) {
@@ -100,13 +103,37 @@ public abstract class GenericBoardView {
         return diceView;
     }
 
+    private int increaseDice() {
+            return ++nDice;
+    }
+
+    // Refresh
+    // @ensure board.get(col, row).dice() == diceMatrix[col][row]
+    public void update(Dice[][] diceMatrix) {
+        board.getChildren().clear();
+/*        for (int i = 0; i < board.getChildren().size(); i++) {
+            Node node = board.getChildren().get(i);
+            if(node instanceof DiceView)
+                board.getChildren().remove(i);
+        }
+*/
+        // reInsert dices
+        for (int row = 0; row < ROW; row++) {
+            for (int col = 0; col < COLUMN; col++) {
+                if(null != diceMatrix[row][col]) {
+                    addDice(diceMatrix[row][col], row, col);
+                }
+            }
+        }
+    }
+
 
     // Add Dice to Board
     // return a reference to the added Dice
     // requires col < 5 && col > 0 &&
     //          row < 4 && row > 0
-    public DiceView addDice(Dice dice, int col, int row) { //int num, char color){
-        DiceView diceImage = new DiceView(dice, col, row);
+    public DiceView addDice(Dice dice, int row, int col) { //int num, char color){
+        DiceView diceImage = new DiceView(dice, row, col, nDice);
         diceImage.setSmooth(true);
         diceImage.setCache(true);
 //        diceImage.setFitHeight(32);
@@ -122,30 +149,9 @@ public abstract class GenericBoardView {
         // Action
         addDiceDragListener(diceImage);
 
-        getBoard().add(diceImage, col, row);
-        setDiceMatrix(dice, col, row);
+        getBoard().add(diceImage, row, col);
+        increaseDice();
         return diceImage;
-    }
-
-
-    // Refresh
-    // @ensure board.get(col, row).dice() == diceMatrix[col][row]
-    public void update() {
-         board.getChildren().clear();
-/*        for (int i = 0; i < board.getChildren().size(); i++) {
-            Node node = board.getChildren().get(i);
-            if(node instanceof DiceView)
-                board.getChildren().remove(i);
-        }
-*/
-        // reInsert dices
-        for (int col = 0; col < COLUMN; col++) {
-            for (int row = 0; row < ROW; row++) {
-                if(null != diceMatrix[col][row]) {
-                    addDice(diceMatrix[col][row], col, row);
-                }
-            }
-        }
     }
 
 
@@ -157,7 +163,7 @@ public abstract class GenericBoardView {
 
             /* Put the image information on a dragBoard */
             ClipboardContent content = new ClipboardContent();
-            content.putString(diceView.toString());
+            content.putString("board=" + this.idBoard + ": \t" + diceView.toString());
             dragboard.setContent(content);
 
             dragboard.setDragView(diceView.getImage(), diceView.getFitWidth()/2, diceView.getFitHeight()/2);
@@ -171,7 +177,7 @@ public abstract class GenericBoardView {
             /* the drag and drop gesture ended */
             /* if the data was successfully moved, clear it */
             if (event.getTransferMode() == TransferMode.MOVE) {
-                deleteDice(diceView);//clear();
+//                deleteDice(diceView);//clear();
 //                System.out.println(event.getTarget());    // these 2 are the same!!!
 //                System.out.println(event.getSource());
             }
@@ -184,13 +190,19 @@ public abstract class GenericBoardView {
         board.setOnDragDropped(event -> {
             // data dropped
             // if there is a string data on dragBoard, read it and use it
-            Dragboard db = event.getDragboard();
+            Dragboard dragboard = event.getDragboard();
             boolean success = false;
-            if (db.hasString()) {
+            if (dragboard.hasString()) {
                 // read Dice date
-                DiceView diceView = new DiceView();
-                diceView.fromString(db.getString());
-//                System.out.println(db.getString());
+                String draggedString = dragboard.getString();
+
+                Scanner scanner = new Scanner(draggedString);
+                scanner.findInLine("board=");
+                int idBoardFrom = scanner.nextInt();
+                if(GuiSettings.bDebug) System.out.print("id board=" + idBoardFrom);
+
+                DiceView diceView = DiceView.fromString(draggedString);
+//                System.out.println(dragboard.getString());
 
                 // calculate place position
                 int nCol = board.getColumnConstraints().size();
@@ -203,11 +215,10 @@ public abstract class GenericBoardView {
                     row = nRow - 1;
 
                 // place down
-                if (null != addDice(diceView.getDice(), col, row)) {
+//                if (null != addDice(diceView.getDice(), col, row)) {
+                // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard, row, col);
                     success = true;
-                }
-//                System.out.println(((GridPane)event.getSource()).getLayoutY() + " \t" + ((GridPane)event.getTarget()).getLayoutY());
-//                System.out.println("Dropped to " + col + "\t" + row);
+//                }
             }
             /* let the source know whether the string was successfully
              * transferred and used */

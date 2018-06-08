@@ -16,6 +16,7 @@ public class Player implements Serializable {
     private Long playerID;
     private String name;
     private int position;
+    private int iconId;
 
     // Game play attribute
     private List<Pattern.TypePattern> patternsToChoose;
@@ -61,12 +62,20 @@ public class Player implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public int getPosition() {
         return position;
+    }
+
+    public int getIconId() {
+        return iconId;
+    }
+
+    public void setIcon(int iconId) {
+        this.iconId = iconId;
     }
 
     public void setPosition(int position) {

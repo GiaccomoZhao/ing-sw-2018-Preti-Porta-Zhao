@@ -1,38 +1,27 @@
-package porprezhas.RMI.Client;
+package porprezhas.Network;
 
 
-import porprezhas.RMI.RemoteObservable;
+import porprezhas.Network.ViewUpdateHandlerInterface;
 import porprezhas.model.Game;
-import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
+import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.dices.Box;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Observable;
+import java.util.List;
 
-public class ViewClient {
+public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
-    private Player player;
-    private Player currentPlayer;
-    private Boolean first;
-    private Boolean firstPlayer;
-    private final int numberPlayer;
-    private Player nextPlayer;
-    private ArrayList<Player> localPlayers;
-    private ArrayList<Player> players;
+
+    private String username;
     private final int HEIGHT = 4;
     private final int WIDTH = 5;
-    private String username;
-    private Boolean gameStarted= false;
-    public ViewClient(int numberPlayer, String username) {
+    private Boolean gameStarted;
 
-        first = false;
-        firstPlayer= false;
-        this.numberPlayer= numberPlayer;
-        this.username=username;
+    public CLIViewUpdateHandler(String username) {
+        this.username = username;
+        gameStarted= false;
     }
 
 
@@ -43,8 +32,9 @@ public class ViewClient {
     public int getWIDTH() {
         return WIDTH;
     }
-    
-    public boolean printAll(boolean bFixedFont, int numberOfPlayer) {
+
+
+    public boolean printAll(boolean bFixedFont, int numberOfPlayer, List<Player> players, Player currentPlayer) {
 
         Pattern pattern;
         char color;
@@ -53,7 +43,7 @@ public class ViewClient {
 
         for (Player player :
                 players) {
-            if(player.getName().equals(this.currentPlayer.getName()))
+            if(player.getName().equals(currentPlayer.getName()))
                 System.out.printf("▶ ");
             else System.out.printf("  ");
             System.out.printf("%-25s\t\t",player.getName() );
@@ -218,54 +208,54 @@ public class ViewClient {
         return true; // printed successfully
     }
 
-        public void updateClient(Observable game) throws RemoteException {
-          /*  game= (RemoteObservable) game;
-         Game.NotifyState state = game.getGameNotifyState();
-         players = game.getPlayers();
-         this.currentPlayer= game.getActualPlayer();
-         if(gameStarted) {
-             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-             if (game.getActualPlayer().getName().equals(this.username))
-                 System.out.println("Questo è il tuo turno!");
-             else
-                 System.out.println("Ora sta giocando: " + game.getActualPlayer().getName());
+    public void update(SerializableGameInterface game){
 
-             System.out.println(" ");
+        List<Player> players = game.getPlayerList();
+        Game.NotifyState state = game.getGameNotifyState();
 
-             System.out.println("Riserva:");
-             for(int i=0; i< game.getDraftpoolRmi().diceList().size(); i++){
-                 System.out.printf("    (%d)      ", i+1);
+        if(gameStarted) {
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+            if (game.getCurrentPlayer().getName().equals(this.username))
+                System.out.println("Questo è il tuo turno!");
+            else
+                System.out.println("Ora sta giocando: " + game.getCurrentPlayer().getName());
 
-             }
-             System.out.println(" ");
-             for (Dice dice :
-                     game.getDraftpoolRmi().diceList()) {
-                 String colorForm=  dice.getColorDice().toString();
-                 colorForm=colorForm.concat("]");
-                 System.out.printf(" [%d %-6s   ", dice.getDiceNumber(), colorForm);
-             }
+            System.out.println(" ");
 
-             System.out.println("\n");
-             printAll(false, 4);
+            System.out.println("Riserva:");
+            for(int i=0; i< game.getDraftPool().diceList().size(); i++){
+                System.out.printf("    (%d)      ", i+1);
 
-         }
+            }
+            System.out.println(" ");
+            for (Dice dice :
+                    game.getDraftPool().diceList()) {
+                String colorForm=  dice.getColorDice().toString();
+                colorForm=colorForm.concat("]");
+                System.out.printf(" [%d %-6s   ", dice.getDiceNumber(), colorForm);
+            }
+
+            System.out.println("\n");
+            printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
+
+        }
 //①②③④⑤⑥⑦⑧⑨⑩
         switch(state){
 
             case NEW_FIRST_PLAYER:
-                if(!firstPlayer || !nextPlayer.getName().equals(game.getFirstPlayer().getName()) ) {
-                    nextPlayer=game.getFirstPlayer();
-
-                    System.out.println("Now the first player is: " + game.getFirstPlayer().getName());
-                    firstPlayer=true;
-                }
+               // if(!firstPlayer || !nextPlayer.getName().equals(game.getFirstPlayer().getName()) ) {
+                 //   nextPlayer=game.getFirstPlayer();
+//
+  //                  System.out.println("Now the first player is: " + game.getFirstPlayer().getName());
+    //                firstPlayer=true;
+      //          }
                 break;
 
             case CHOOSE_PATTERN:
 
                 System.out.println("You have to choose your pattern");
-                Pattern.TypePattern pattern1 = game.getPlayers().get(numberPlayer).getPatternsToChoose().get(0);
-                Pattern.TypePattern pattern2 = game.getPlayers().get(numberPlayer).getPatternsToChoose().get(1);
+                Pattern.TypePattern pattern1 = game.getUsernamePlayer(username).getPatternsToChoose().get(0);
+                Pattern.TypePattern pattern2 = game.getUsernamePlayer(username).getPatternsToChoose().get(1);
                 System.out.println(pattern1.name() + "    o    " + pattern2.name());
                 break;
 
@@ -273,7 +263,7 @@ public class ViewClient {
 
                 System.out.println("Game started!");
                 this.gameStarted=true;
-                this.printAll(false, 4);
+                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
                 break;
 
             case NEXT_ROUND:
@@ -283,27 +273,19 @@ public class ViewClient {
 
             case DICE_INSERTED:
 
-                    localPlayers= players;
-                    player= players.get(game.getiCurrentPlayer());
-                   // System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
-                    System.out.println(player.getName() + " inserted a dice:");
-                    //this.printAll(false, 4);
-                    first=true;
+
+                System.out.println(game.getCurrentPlayer().getName() + " inserted a dice:");
+
+
 
                 break;
 
             case BOARD_CREATED:
                 System.out.println("Pattern inserted in the board");
                 break;
+
         }
 
 
-*/
-
-    }
-
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
     }
 }
