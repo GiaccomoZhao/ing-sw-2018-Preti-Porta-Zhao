@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
+import porprezhas.Network.ClientActionSingleton;
 import porprezhas.model.*;
 import porprezhas.model.cards.Card;
 import porprezhas.model.cards.PrivateObjectiveCard;
@@ -726,7 +727,7 @@ public class GameViewController implements GameViewUpdaterInterface {
         // TODO: ClientActionInterface.Pass();
 
         // for test
-        Random random = new Random();
+       /* Random random = new Random();
         List<Dice> diceList = new ArrayList<>();
         for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
             diceList.add(
@@ -734,7 +735,8 @@ public class GameViewController implements GameViewUpdaterInterface {
                             Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
             );
         }
-        draftPoolView.reroll(diceList);
+        draftPoolView.reroll(diceList);*/
+        ClientActionSingleton.getClientAction().pass();
     }
 
     @FXML protected void onToolCardTab() {

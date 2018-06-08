@@ -12,7 +12,7 @@ import porprezhas.model.dices.Pattern;
 import java.util.List;
 
 public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
-    boolean bFixedFont = true;
+    boolean bFixedFont = false;
 
     private String username;
     private final int HEIGHT = 4;
