@@ -1,5 +1,7 @@
 package porprezhas.Network;
 
+import javafx.application.Application;
+import javafx.application.Platform;
 import porprezhas.Network.ViewUpdateHandlerInterface;
 import porprezhas.model.Game;
 import porprezhas.model.Player;
@@ -85,11 +87,21 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
 
                 System.out.println(game.getCurrentPlayer().getName() + " inserted a dice:");
-                gameViewController.updateBoard(
-                        game.getCurrentPlayer().getPosition(),
-                        game.getCurrentPlayer().getBoard().getBoard());
 
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        System.out.println("AAAAAAAAA");
+                        for (Player player:
+                                game.getPlayerList()) {
+                            gameViewController.updateBoard(
 
+                                    player.getPosition(),
+                                    player.getBoard().getBoard());
+
+                        }
+
+                    }
+                });
 
                 break;
 

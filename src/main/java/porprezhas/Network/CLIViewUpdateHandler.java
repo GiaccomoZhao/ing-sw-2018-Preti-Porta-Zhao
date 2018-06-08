@@ -209,7 +209,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     }
 
     public void update(SerializableGameInterface game){
-        System.out.println("AAAAAAAAAAAAAAAaa");
+
         List<Player> players = game.getPlayerList();
         Game.NotifyState state = game.getGameNotifyState();
 

@@ -40,12 +40,13 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
 
     public static void startRMI() throws RemoteException, NotBoundException {
-        final RMIClient rmiClient = new RMIClient();
+        RmiClientGUI rmiClient = new RmiClientGUI();
 
         Registry registry= LocateRegistry.getRegistry();
 
 
         new Thread(rmiClient).start();
+       // ClientActionSingleton.setClientActionInstance(new RMIClientAction());
     }
 
 
@@ -140,6 +141,8 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
             // Create a controller instance, passing the information about players
             gameViewController = new GameViewController(playersInfo, mainPlayerPosition);
+
+
 
             // Set it in the FXMLLoader
             loader.setController(gameViewController);   // I haven't set the controller in fxml because i want the controller get setup at construction

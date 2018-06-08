@@ -1,22 +1,28 @@
 package porprezhas.control;
 
-import porprezhas.Network.ProxyObserverRMI;
-import porprezhas.RMI.MainViewInterface;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
+import porprezhas.Network.SocketServerClientHandler;
 
-import java.rmi.NotBoundException;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class ServerController extends UnicastRemoteObject implements ServerControllerInterface, ServerRMIInterface {
+public class ServerController extends UnicastRemoteObject implements ServerControllerInterface, ServerRMIInterface, Runnable {
 
-	private List<GameControllerInterface> gameControllerList;
+    private final int port;
+
+    private ServerSocket serverSocket;
+
+    private List<GameControllerInterface> gameControllerList;
 
 	private DatabaseInterface databaseInterface;
 
@@ -31,12 +37,15 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     private  Registry registry;
 
     public ServerController(int port) throws RemoteException {
-		super(port);
-		playerBuffer = new LinkedList<>();
+        super(port);
+		this.port=port;
+        playerBuffer = new LinkedList<>();
 		gameControllerList = new LinkedList<>();
 		loggedPlayer = new ArrayList<>();
 		viewClient = new HashMap();
         registry= LocateRegistry.getRegistry();
+
+
 	}
 
 
@@ -266,6 +275,29 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             }
         }
         return null;    // throw game not found ?
+    }
+
+    @Override
+    public void run() {
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        try {
+            serverSocket = new ServerSocket(port+1);
+        } catch (IOException e) {
+            System.err.println(e.getMessage()); // The port is not available
+            return;
+        }
+        System.out.println("Server socket ready");
+        while (true) {
+            try {
+                Socket socket = serverSocket.accept();
+                executor.submit(new
+                        SocketServerClientHandler(socket, this));
+            } catch(IOException e) {
+                break; // entrerei qui se serverSocket venisse chiuso
+            }
+        }
+        executor.shutdown();
     }
 
 }

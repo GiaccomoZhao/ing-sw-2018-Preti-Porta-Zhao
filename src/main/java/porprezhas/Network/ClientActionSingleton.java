@@ -9,7 +9,7 @@ public class ClientActionSingleton {
         if (clientActionInstance == null) {     // double check for thread safe
             synchronized (ClientActionSingleton.class) {
                 if (clientActionInstance == null) {
-                    clientActionInstance = new RMIClientAction();    // default value
+                  //  clientActionInstance = new RMIClientAction();    // default value
                 }
             }
         }
@@ -19,4 +19,6 @@ public class ClientActionSingleton {
     public static void setClientActionInstance(ClientActionInterface clientActionInstance) {
         ClientActionSingleton.clientActionInstance = clientActionInstance;
     }
+
+
 }

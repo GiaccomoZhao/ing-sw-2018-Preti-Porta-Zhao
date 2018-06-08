@@ -71,6 +71,7 @@ public class RMIClient implements RMIClientInterface, Runnable {
         System.out.println();
         viewUpdateHandlerInterface = new CLIViewUpdateHandler(username);
         clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+        //ClientActionSingleton.setClientActionInstance(new RMIClientAction(server, "Matteo"));
         server.joinGame(username);
 
 

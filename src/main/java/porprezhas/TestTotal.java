@@ -27,9 +27,12 @@ public class TestTotal {
         final int NUM_PLAYER = 4;
 
 
-            server = new ServerController(0);
+            server = new ServerController(1456);
+
         Registry registry= LocateRegistry.getRegistry();
         registry.rebind("serverController", server);
+        Thread myThread = new Thread(server);
+        myThread.start();
         players = new ArrayList<>();
 
         for (int i = 0; i < 0; i++) {

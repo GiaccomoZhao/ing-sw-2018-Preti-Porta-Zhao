@@ -15,6 +15,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
+import porprezhas.Network.ClientActionInterface;
+import porprezhas.Network.ClientActionSingleton;
+import porprezhas.Network.RMIClientAction;
 import porprezhas.model.*;
 import porprezhas.model.cards.Card;
 import porprezhas.model.cards.PrivateObjectiveCard;
@@ -733,6 +736,9 @@ public class GameViewController implements GameViewUpdaterInterface {
         System.out.println("PASS");
         // TODO: ClientActionInterface.Pass();
 
+
+
+        ClientActionSingleton.getClientAction().pass();
         // for test
         Random random = new Random();
         List<Dice> diceList = new ArrayList<>();
