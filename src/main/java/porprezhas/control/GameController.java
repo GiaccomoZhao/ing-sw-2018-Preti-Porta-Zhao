@@ -297,7 +297,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         return game.InsertDice(indexDice, xPose, yPose);
     }
 
-    public boolean useToolCard(){
+    public boolean useToolCard(int cardId){
 //       game.useToolCard();
         return false;
     }

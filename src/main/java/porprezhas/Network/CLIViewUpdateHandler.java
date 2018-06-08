@@ -12,7 +12,7 @@ import porprezhas.model.dices.Pattern;
 import java.util.List;
 
 public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
-
+    boolean bFixedFont = true;
 
     private String username;
     private final int HEIGHT = 4;
@@ -236,7 +236,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             }
 
             System.out.println("\n");
-            printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
+            printAll(bFixedFont, 4, game.getPlayerList(), game.getCurrentPlayer());
 
         }
 //①②③④⑤⑥⑦⑧⑨⑩
@@ -263,7 +263,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                 System.out.println("Game started!");
                 this.gameStarted=true;
-                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
+                this.printAll(bFixedFont, 4, game.getPlayerList(), game.getCurrentPlayer());
                 break;
 
             case NEXT_ROUND:

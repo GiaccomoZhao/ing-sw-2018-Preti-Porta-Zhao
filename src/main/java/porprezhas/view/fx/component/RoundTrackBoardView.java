@@ -5,7 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import porprezhas.control.state.DiceContainer;
+import porprezhas.view.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 
 import java.util.List;

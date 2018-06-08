@@ -61,6 +61,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 //                  System.out.println("Now the first player is: " + game.getFirstPlayer().getName());
                 //                firstPlayer=true;
                 //          }
+                System.out.println();
                 break;
 
             case CHOOSE_PATTERN:
@@ -76,10 +77,13 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println("Game started!");
                 this.gameStarted=true;
 //                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
+                System.out.println(gameViewController);
+                gameViewController.updatePlayerInfo(players);
                 break;
 
             case NEXT_ROUND:
 
+                gameViewController.updateDraftPool(game.getDraftPool().diceList());
                 System.out.println("Next Round");
                 break;
 
@@ -90,13 +94,12 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        System.out.println("AAAAAAAAA");
                         for (Player player:
                                 game.getPlayerList()) {
                             gameViewController.updateBoard(
-
                                     player.getPosition(),
                                     player.getBoard().getBoard());
+                            gameViewController.updateDraftPool(game.getDraftPool().diceList());
 
                         }
 

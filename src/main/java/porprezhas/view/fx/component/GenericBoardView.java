@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import porprezhas.control.state.DiceContainer;
+import porprezhas.view.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.GuiSettings;
 

@@ -24,7 +24,6 @@ import java.rmi.registry.Registry;
 import java.util.*;
 
 import static porprezhas.view.fx.GuiSettings.*;
-import static porprezhas.view.fx.GuiSettings.FPS_PRINT_AT_MIN;
 
 public class GuiRmiClient extends Application implements RMIClientInterface {
     static int mainPlayerPosition;  // to identify which player am i?
@@ -40,7 +39,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
 
     public static void startRMI() throws RemoteException, NotBoundException {
-        RmiClientGUI rmiClient = new RmiClientGUI();
+        RMIClient rmiClient = new RMIClient();
 
         Registry registry= LocateRegistry.getRegistry();
 
@@ -140,7 +139,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
 
             // Create a controller instance, passing the information about players
-            gameViewController = new GameViewController(playersInfo, mainPlayerPosition);
+            gameViewController = new GameViewController(playersInfo, mainPlayerPosition, "PlayerZX");
 
 
 

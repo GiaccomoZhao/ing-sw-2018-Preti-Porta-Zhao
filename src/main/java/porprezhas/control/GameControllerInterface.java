@@ -14,7 +14,7 @@ public interface GameControllerInterface extends Remote {
 
    boolean choosePattern(Player player, int indexPatternType) throws RemoteException;
     boolean insertDice(Integer indexDice, Integer xPose, Integer yPose) throws RemoteException;
-    boolean useToolCard() throws RemoteException;  // TODO:
+    boolean useToolCard(int cardId) throws RemoteException;  // TODO:
 
 
     // do i put this in concrete class or in interface? depends by getState method

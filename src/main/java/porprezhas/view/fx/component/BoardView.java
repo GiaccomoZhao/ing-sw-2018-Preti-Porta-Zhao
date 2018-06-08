@@ -4,7 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
-import porprezhas.control.state.DiceContainer;
+import porprezhas.view.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 

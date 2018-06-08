@@ -1,5 +1,6 @@
 package porprezhas.Network;
 
+import com.github.javafaker.Faker;
 import porprezhas.control.ServerRMIInterface;
 
 import java.rmi.NotBoundException;
@@ -60,7 +61,12 @@ public class RMIClient implements RMIClientInterface, Runnable {
 
         while(!bLoggedIn) {
             System.out.println(">>> Login:");
-            username = in.nextLine();
+//            username = in.nextLine();
+
+            Faker faker = new Faker();
+            String firstName = faker.name().firstName();
+            String playerName = firstName; //"P" + i;
+            username = playerName;
 
             bLoggedIn = server.login(username);
 
@@ -105,7 +111,7 @@ public class RMIClient implements RMIClientInterface, Runnable {
                         String numberDice = command.substring(space+1 , space2 );
                         String xBoardValue= command.substring(space2+1, space3);
                         String yBoardValue= command.substring(space3+1, command.length());
-                        if(server.insertedDice(Integer.parseInt(numberDice),Integer.parseInt(xBoardValue) , Integer.parseInt(yBoardValue), username )) {
+                        if(server.insertedDice(Integer.parseInt(numberDice) -1 ,Integer.parseInt(xBoardValue)-1 , Integer.parseInt(yBoardValue)-1, username )) {
                             System.out.println("Mossa ok");
                             //TO-DO fix
                             this.server.passUser(username);

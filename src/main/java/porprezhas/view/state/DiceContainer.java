@@ -1,4 +1,4 @@
-package porprezhas.control.state;
+package porprezhas.view.state;
 
 public enum DiceContainer {
         DRAFT,

@@ -23,6 +23,14 @@ import static porprezhas.view.fx.GuiSettings.FPS_PRINT_AT_MIN;
 import static porprezhas.view.fx.GuiSettings.ICON_QUANTITY;
 import static porprezhas.view.fx.GuiSettings.SOLITAIRE_WIDTH;
 
+/*
+start rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
+
+far partire nanohttp
+
+Far partire test total(prima bisogna aggiungere in edit congigurations la stringa
+ 	-Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.codebase=http://localhost:80/
+ */
 public class GUIRMI2 extends Application implements RMIClientInterface {
         static int mainPlayerPosition;  // to identify which player am i?
 
@@ -141,16 +149,22 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
                 }
 
 
-
-                // Create a controller instance, passing the information about players
-                gameViewController = new GameViewController(playersInfo, mainPlayerPosition);
                 try {
                     this.loginPhase();
-                    this.joinPhase();
                 } catch (NotBoundException e) {
                     e.printStackTrace();
                 }
 
+                // Create a controller instance, passing the information about players
+                System.out.println("\n\nUserName ::");
+                System.out.println(username);
+                gameViewController = new GameViewController(playersInfo, mainPlayerPosition, username);
+
+                try {
+                    this.joinPhase();
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
 
                 // Set it in the FXMLLoader
                 loader.setController(gameViewController);   // I haven't set the controller in fxml because i want the controller get setup at construction

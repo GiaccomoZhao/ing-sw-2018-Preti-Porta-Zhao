@@ -1,5 +1,7 @@
 package porprezhas.model.dices;
 
+import porprezhas.Useful;
+
 import java.io.Serializable;
 
 public class Board implements Serializable {
@@ -306,58 +308,68 @@ public class Board implements Serializable {
 
     public boolean validMove(Dice dice, int row, int col){
 
-        //Check if the pattern constraint is respected by dice
-       if(!pattern.getBox(row, col).checkConstraint(dice) )
-           return Boolean.FALSE ;
+        if(Useful.isValueBetweenInclusive(row, 0, ROW-1) &&
+                Useful.isValueBetweenInclusive(col, 0, COLUMN-1)) {
 
-        // Check if dice is the first die of the player and if the position is an edge or corner space
-        if(diceQuantity==0 ){
-            if(pattern.checkEdges(row, col))
-                return Boolean.TRUE;
-            else
+            //Check if the pattern constraint is respected by dice
+            if (!pattern.getBox(row, col).checkConstraint(dice))
                 return Boolean.FALSE;
+
+            // Check if dice is the first die of the player and if the position is an edge or corner space
+            if (diceQuantity == 0) {
+                if (pattern.checkEdges(row, col))
+                    return Boolean.TRUE;
+                else
+                    return Boolean.FALSE;
+            }
+
+            //Check if the box is already occupied
+            if (this.occupiedBox(row, col))
+                return Boolean.FALSE;
+
+            //Check if the die is adjacent to a previously placed die
+
+            if (!this.adjacentDice(dice, row, col))
+                return false;
+
+            //valid Move
+            return Boolean.TRUE;
         }
-
-        //Check if the box is already occupied
-        if( this.occupiedBox(row, col))
-            return Boolean.FALSE;
-
-        //Check if the die is adjacent to a previously placed die
-
-        if(!this.adjacentDice(dice, row, col))
+        else
             return false;
-
-        //valid Move
-        return Boolean.TRUE;
-
     }
 
     public boolean validMove(Dice dice, int row, int col, Restriction restriction) {
-        //Check if the box is already occupied
-        if (this.occupiedBox(row, col))
-            return false;
+        if(Useful.isValueBetweenInclusive(row, 0, ROW-1) &&
+                Useful.isValueBetweenInclusive(col, 0, COLUMN-1)) {
 
-        // Check if dice is the first die of the player and if the position is an edge or corner space
-        if(diceQuantity==0 ){
-            if(pattern.checkEdges(row, col))
-                return Boolean.TRUE;
-            else
-                return Boolean.FALSE;
-        }
+            //Check if the box is already occupied
+            if (this.occupiedBox(row, col))
+                return false;
 
-        //Check Constraints
-        if( restriction.hasColorRestriction() &&
-                !this.getPattern().getBox(row, col).getColor().equals(dice.getColorDice()) )
-            return false;
-        if(restriction.hasNumberRestriction() &&
-                !(this.getPattern().getBox(row, col).getNumber() == dice.getDiceNumber()) )
-            return false;
-        if (restriction.hasAdjacentRestriction() &&
-                !this.adjacentDiceWithoutNumberRestrictions(dice, row, col) )
-            return false;
+            // Check if dice is the first die of the player and if the position is an edge or corner space
+            if (diceQuantity == 0) {
+                if (pattern.checkEdges(row, col))
+                    return Boolean.TRUE;
+                else
+                    return Boolean.FALSE;
+            }
 
-        //Valid Move
-        return true;
+            //Check Constraints
+            if (restriction.hasColorRestriction() &&
+                    !this.getPattern().getBox(row, col).getColor().equals(dice.getColorDice()))
+                return false;
+            if (restriction.hasNumberRestriction() &&
+                    !(this.getPattern().getBox(row, col).getNumber() == dice.getDiceNumber()))
+                return false;
+            if (restriction.hasAdjacentRestriction() &&
+                    !this.adjacentDiceWithoutNumberRestrictions(dice, row, col))
+                return false;
+
+            //Valid Move
+            return true;
+        } else
+            return false;
     }
 
 

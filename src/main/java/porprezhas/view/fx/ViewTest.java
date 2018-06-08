@@ -180,7 +180,7 @@ public class ViewTest extends Application {
                 System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/GameView.fxml") + ")");
 
             // Create a controller instance, passing the information about players
-            gameViewController = new GameViewController(playersInfo, mainPlayerPosition);
+            gameViewController = new GameViewController(playersInfo, mainPlayerPosition, "PlayerZX");
             // Set it in the FXMLLoader
             loader.setController(gameViewController);   // I haven't set the controller in fxml because i want the controller get setup at construction
 

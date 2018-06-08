@@ -45,7 +45,8 @@ public class ToolCardFactory implements CardFactory {
 
             cardId = random.nextInt(numberList.size());
 
-            cards.add(new ToolCard( Card.Effect.values() [TC1.ordinal() + cardId] ));
+            Card newCard = new ToolCard( Card.Effect.values() [TC1.ordinal() + cardId] );
+            cards.add(newCard);
 
             numberList.remove(cardId);
         }

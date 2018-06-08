@@ -1,6 +1,7 @@
 package porprezhas.view.fx.controller;
 
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,9 +16,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
-import porprezhas.Network.ClientActionInterface;
-import porprezhas.Network.ClientActionSingleton;
-import porprezhas.Network.RMIClientAction;
 import porprezhas.model.*;
 import porprezhas.model.cards.Card;
 import porprezhas.model.cards.PrivateObjectiveCard;
@@ -94,7 +92,6 @@ public class GameViewController implements GameViewUpdaterInterface {
 
 
     //  ***** Player attributes *****
-    private final int playerPosition;       // this identify the client's player
     private final int num_player;
     private final List<PlayerInfo> playersInfo;
 
@@ -112,6 +109,9 @@ public class GameViewController implements GameViewUpdaterInterface {
         }
     }
 
+    private int playerPosition;       // this identify the client's player
+    private String userName;    // TODO: network use, change this in a token
+
 
 
     // *************************************
@@ -121,9 +121,10 @@ public class GameViewController implements GameViewUpdaterInterface {
     // @requires playersInfo.size >= 1
     // @Param playersInfo.get(0).typePattern == player.typePattern &&
     //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
-    public GameViewController(List<PlayerInfo> playersInfo, int playerPosition) {   // NOTE: during the construction method the fxml variables haven't be set yet
+    public GameViewController(List<PlayerInfo> playersInfo, int playerPosition, String userName) {   // NOTE: during the construction method the fxml variables haven't be set yet
         if(bDebug)
             System.out.println("Constructing GameView");
+        this.userName = userName;
         this.playerPosition = playerPosition;
         this.playersInfo = playersInfo;
         this.num_player = playersInfo.size();
@@ -161,20 +162,6 @@ public class GameViewController implements GameViewUpdaterInterface {
     public void initialize() {
         if(bDebug)
             System.out.println("Initializing GameView");
-
-        // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
-        setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
-
-        // create BoardList and set pattern image to all player
-        setupBoard();
-
-        // attach RoundTrack dice table
-        setupRoundTrack();
-
-        setupDraftPool();
-
-        setupCards();
-
 
         // setup our game GUI with following methods
         // Images
@@ -606,10 +593,10 @@ public class GameViewController implements GameViewUpdaterInterface {
         });
 
         playerPane.heightProperty().addListener((observable, oldValue, newValue) -> {
-            updatePlayerPaneSize(playerPane.getWidth(), newValue.doubleValue());
+                updatePlayerPaneSize(playerPane.getWidth(), newValue.doubleValue());
         });
         playerPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-            updatePlayerPaneSize(newValue.doubleValue(), playerPane.getHeight());
+                updatePlayerPaneSize(newValue.doubleValue(), playerPane.getHeight());
         });
 
         ((Pane) roundTrack.getParent()).widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -655,12 +642,14 @@ public class GameViewController implements GameViewUpdaterInterface {
                                                                         // +1 for spacing top and bottom too,
                                                                         // -1 if you just want increase the gap
         for ( Pane pane: enemyPanes) {
-            pane.setPrefWidth(paneWidth);
-            pane.setPrefHeight(paneHeight);
+            if(null != pane) {
+                pane.setPrefWidth(paneWidth);
+                pane.setPrefHeight(paneHeight);
 /*                if(enemyPanes.length == 1) {
                     enemyPanesParent.setPadding(new Insets((newValue.doubleValue() - enemyPanes[0].getHeight())/10, 0, 0, 0));
                 }
 */
+            }
         }
     }
 
@@ -736,9 +725,6 @@ public class GameViewController implements GameViewUpdaterInterface {
         System.out.println("PASS");
         // TODO: ClientActionInterface.Pass();
 
-
-
-        ClientActionSingleton.getClientAction().pass();
         // for test
         Random random = new Random();
         List<Dice> diceList = new ArrayList<>();
@@ -769,6 +755,10 @@ public class GameViewController implements GameViewUpdaterInterface {
 
     public int getPlayerPosition() {
         return playerPosition;
+    }
+
+    public void setPlayerPosition(int playerPosition) {
+        this.playerPosition = playerPosition;
     }
 
     public void setDraftPool(List<Dice> newDiceList) {
@@ -847,6 +837,39 @@ public class GameViewController implements GameViewUpdaterInterface {
 
 
     // MVC interface methods
+
+    public void updatePlayerInfo(List<Player> players) {
+        List<PlayerInfo> playerInfoList = new ArrayList<>();
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            playerInfoList.add( new PlayerInfo(
+                    i,
+                    player.getName(),
+                    player.getIconId(),
+                    player.getBoard().getPattern().getTypePattern()));
+            if(userName.equals( player.getName() )) {
+                playerPosition = i;
+            }
+        }
+
+
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
+                setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
+
+                // create BoardList and set pattern image to all player
+                setupBoard();
+
+                // attach RoundTrack dice table
+                setupRoundTrack();
+
+                setupDraftPool();
+
+                setupCards();
+            }
+        });
+    }
 
     public void updateBoard(int idBoard, Dice[][] dices) {
         boardList.get(idBoard).update(dices);

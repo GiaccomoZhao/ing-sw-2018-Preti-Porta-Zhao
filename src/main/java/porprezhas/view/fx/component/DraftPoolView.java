@@ -237,6 +237,8 @@ public class DraftPoolView {
 
     // new round
     public void reroll(List<Dice> newDiceList) {
+        if(bDebug)
+            System.out.println("reroll");
         stackPane.getChildren().clear();
         for (int i = 0; i < newDiceList.size(); i++) {
             addDice(newDiceList.get(i));

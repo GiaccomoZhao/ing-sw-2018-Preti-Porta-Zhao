@@ -23,8 +23,9 @@ public class DiceView extends ImageView {
         this.indexDice = indexDice;
     }
 
-    public DiceView(Dice dice, int column, int row, int indexDice) {
+    public  DiceView(Dice dice, int column, int row, int indexDice) {
         super();    // for the convention, we always call the parent constructor
+        setImage(dice);
         System.out.println(pathToDice + dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png");
         this.column = column;
         this.row = row;

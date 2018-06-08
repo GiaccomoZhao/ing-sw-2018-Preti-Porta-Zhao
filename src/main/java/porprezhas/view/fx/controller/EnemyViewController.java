@@ -1,20 +1,11 @@
 package porprezhas.view.fx.controller;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.ImagePattern;
-import porprezhas.control.state.DiceContainer;
-import porprezhas.model.dices.Dice;
-import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.component.BoardView;
-import porprezhas.view.fx.component.DiceView;
 
 import static porprezhas.view.fx.GuiSettings.*;
 
