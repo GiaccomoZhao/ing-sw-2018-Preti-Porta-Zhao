@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.media.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="800.0" fitWidth="576.0" layoutX="7.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@background/Sagrada%20Familia.png" />
+         </image>
+         <effect>
+            <SepiaTone level="0.47">
+               <input>
+                  <GaussianBlur radius="5.25" />
+               </input>
+            </SepiaTone>
+         </effect>
+      </ImageView>
+      <Label layoutX="244.0" layoutY="70.0" opacity="0.32" text="Results">
+         <font>
+            <Font name="Castellar" size="62.0" />
+         </font>
+         <effect>
+            <GaussianBlur radius="4.87" />
+         </effect>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="236.0" layoutY="76.0" text="Results" textFill="#512703">
+         <font>
+            <Font name="Castellar" size="62.0" />
+         </font>
+         <effect>
+            <MotionBlur radius="2.0" />
+         </effect>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="77.0" layoutY="192.0" text="1" textFill="#c6c302">
+         <font>
+            <Font name="Castellar" size="36.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="99.0" layoutY="198.0" text="Player 1">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="72.0" layoutY="235.0" text="punteggio 1">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="206.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@head/64x64x64/head_1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="449.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@head/64x64x64/head_5.png" />
+         </image>
+      </ImageView>
+      <Label blendMode="SRC_ATOP" layoutX="316.0" layoutY="345.0" text="punteggio 2">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="353.0" layoutY="308.0" text="Player 2">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="320.0" layoutY="298.0" text="2" textFill="#757373">
+         <font>
+            <Font name="Castellar" size="36.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="73.0" layoutY="400.0" text="3" textFill="#8c4300">
+         <font>
+            <Font name="Castellar" size="36.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="112.0" layoutY="438.0" text="Player 3">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="78.0" layoutY="477.0" text="punteggio 3">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="208.0" layoutY="434.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@head/64x64x64/head_8.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="449.0" layoutY="538.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@head/64x64x64/head_11.png" />
+         </image>
+      </ImageView>
+      <Label blendMode="SRC_ATOP" layoutX="320.0" layoutY="577.0" text="punteggio 4">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="358.0" layoutY="540.0" text="Player 4">
+         <font>
+            <Font name="Bookshelf Symbol 7" size="24.0" />
+         </font>
+      </Label>
+      <Label blendMode="SRC_ATOP" layoutX="325.0" layoutY="530.0" text="4" textFill="#0a0500">
+         <font>
+            <Font name="Castellar" size="36.0" />
+         </font>
+      </Label>
+      <MediaView blendMode="EXCLUSION" fitHeight="800.0" fitWidth="576.0" layoutX="137.0" layoutY="198.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>
