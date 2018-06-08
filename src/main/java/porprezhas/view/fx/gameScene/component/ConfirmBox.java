@@ -1,4 +1,4 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

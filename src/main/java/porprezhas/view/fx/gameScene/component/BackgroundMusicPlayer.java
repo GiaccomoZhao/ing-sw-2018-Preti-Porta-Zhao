@@ -1,15 +1,14 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class BackgroundMusicPlayer {
     private static List<MediaPlayer> backgroundMusicPlayers = new ArrayList<>();

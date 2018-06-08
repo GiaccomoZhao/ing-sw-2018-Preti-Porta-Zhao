@@ -1,6 +1,7 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -11,21 +12,23 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
+import porprezhas.Network.ClientActionSingleton;
 import porprezhas.model.dices.Dice;
-import porprezhas.view.fx.GuiSettings;
+import porprezhas.view.fx.gameScene.GuiSettings;
+import porprezhas.view.state.DiceContainer;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.component.GenericBoardView.getDragDiceString;
 
 public class DraftPoolView {
     private StackPane stackPane;
 //    private List<DiceView> diceList;
 
-    private int idBoard = 100;    // Unknonw
+    private DiceContainer idBoard = DiceContainer.DRAFT;    // Unknonw
     private int nDice;
 
     public DraftPoolView() {
@@ -45,10 +48,17 @@ public class DraftPoolView {
 
 
     public void update(List<Dice> diceList) {
-        // TODO: if state == ...
-        reroll(diceList);                  // roll all dices
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                // TODO: if state == ...
+                reroll(diceList);                  // roll all dicess
 //        refresh(diceList);               // reset all existing dices, and roll the not exist's
 //        refresh(iModify, modifiedDice);  // Exchange one dice in draft pool
+
+            }
+        });
     }
 
 
@@ -60,30 +70,49 @@ public class DraftPoolView {
             boolean bSuccess = false;
             if (dragboard.hasString()) {
                 // read Dice date
-                // read Dice date
-                String draggedString = dragboard.getString();
 
-                Scanner scanner = new Scanner(draggedString);
-                scanner.findInLine("board=");
-                int idBoardFrom = scanner.nextInt();
-                if(GuiSettings.bDebug) System.out.print("id board=" + idBoardFrom);
+                if (dragboard.hasString()) {
+                    String draggedString = dragboard.getString();
 
-                DiceView diceView = DiceView.fromString(draggedString);
+                    Scanner scanner = new Scanner(draggedString);
+                    scanner.useDelimiter(":|\\s");
+
+                    scanner.findInLine("board=");
+                    if (scanner.hasNextInt()) {
+                        int idBoardFrom = scanner.nextInt();    // NOTE: watch out. We need have a space after the number.
+                        if (bDebug) System.out.print("id board=" + idBoardFrom + ": \t");
+
+
+                        DiceView draggedDiceView = DiceView.fromString(scanner.nextLine());
 //                System.out.println(db.getString());
 
-                // calculate place position
-                int x = (int) (event.getX() - stackPane.getWidth()/2);
-                int y = (int) (event.getY() - stackPane.getHeight()/2);
+                        // calculate place position
+                        int x = (int) (event.getX() - stackPane.getWidth() / 2);
+                        int y = (int) (event.getY() - stackPane.getHeight() / 2);
 
-                if(idBoardFrom == this.idBoard) {
-                    ;
-                }
+                        if (idBoardFrom == this.idBoard.toInt()) {
+                            for (int i = 0, indexDiceView = 0; i < stackPane.getChildren().size(); i++) {
+                                Node node = stackPane.getChildren().get(i);
+                                if (node instanceof DiceView) {
+                                    DiceView guiDiceView = (DiceView) node;
+                                    if (draggedDiceView.getIndexDice() == draggedDiceView.getIndexDice() &&
+                                            guiDiceView.getColumn() == draggedDiceView.getColumn() &&
+                                            guiDiceView.getRow() == draggedDiceView.getRow()) {
+                                        stackPane.getChildren().get(i).setTranslateX(x);
+                                        stackPane.getChildren().get(i).setTranslateY(y);
+                                        break;
+                                    }
+                                    indexDiceView++;
+                                }
+                            }
+                        }
 //                if (null != addDice(diceView.getDice(), x, y)) {
-                // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard, row, col);
-                    bSuccess = true;
+                        // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard, row, col);
+//                bSuccess = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard.toInt(), 0, 0);
+
+//                    bSuccess = true;
 //                }
-                if(bDebug) {
-                    System.out.println("Draft pool: \"successful dragged in\" = " + bSuccess);
+                    }
                 }
             }
             // let the source know whether the string was successfully transferred and used
@@ -158,7 +187,7 @@ public class DraftPoolView {
 
             // Put the Dice information on a dragBoard
             ClipboardContent content = new ClipboardContent();
-            content.putString(diceView.toString());
+            content.putString(getDragDiceString(this.idBoard.toInt(), diceView.toString()));
             dragboard.setContent(content);
 
             dragboard.setDragView(diceView.getImage(), diceView.getFitWidth()/2, diceView.getFitHeight()/2);

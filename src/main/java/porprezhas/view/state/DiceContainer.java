@@ -13,12 +13,12 @@ public enum DiceContainer {
         return values()[BOARD1.ordinal() + position];
     }
 
-/*
+
     public int toInt() {
         return this.ordinal();
     }
     public static DiceContainer fromInt(int val) {
         return values()[val];
     }
-*/
+
 }

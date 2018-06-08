@@ -1,4 +1,4 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -8,7 +8,7 @@ import porprezhas.view.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class BoardView extends GenericBoardView {// extends GridPane {
 

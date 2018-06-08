@@ -1,4 +1,4 @@
-package porprezhas.view.fx.controller;
+package porprezhas.view.fx.gameScene.controller;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -23,8 +23,8 @@ import porprezhas.model.cards.PrivateObjectiveCard;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
-import porprezhas.view.fx.GuiSettings;
-import porprezhas.view.fx.component.*;
+import porprezhas.view.fx.gameScene.GuiSettings;
+import porprezhas.view.fx.gameScene.component.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import static porprezhas.Useful.*;
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class GameViewController implements GameViewUpdaterInterface {
 
@@ -148,7 +148,7 @@ public class GameViewController implements GameViewUpdaterInterface {
         }
 */
         bShowRoundTrackList = new boolean[Game.GameConstants.ROUND_NUM];
-        bShowRoundTrackDices = true;
+        bShowRoundTrackDices = false;   // show round track at start? no!
 
         draftPoolView = new DraftPoolView();
 
@@ -383,31 +383,38 @@ public class GameViewController implements GameViewUpdaterInterface {
 //                System.out.print("Dropped. \t");
                 Dragboard dragboard = event.getDragboard();
                 boolean success = false;
+
                 if (dragboard.hasString()) {
                     String draggedString = dragboard.getString();
 
                     Scanner scanner = new Scanner(draggedString);
+                    scanner.useDelimiter(":|\\s");
+
                     scanner.findInLine("board=");
-                    int idBoardFrom = scanner.nextInt();
-                    if(GuiSettings.bDebug) System.out.print("id board=" + idBoardFrom);
+                    if (scanner.hasNextInt()) {
+                        int idBoardFrom = scanner.nextInt();    // NOTE: watch out. We need have a space after the number.
+                        if (bDebug) System.out.print("id board=" + idBoardFrom + ": \t");
 
-                    DiceView diceView = DiceView.fromString(draggedString);
 
-                    // calculate place position
-                    try {
-                        int iRound = getRoundNumberFromEvent(event);
-                        // place down
+                        DiceView diceView = DiceView.fromString(scanner.nextLine());
+
+                        // calculate place position
+                        try {
+                            int iRound = getRoundNumberFromEvent(event);
+                            // place down
 //                        System.out.println("round number = " + iRound);
-                        // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), roundTrackBoard.getBoardId(), iRound, 666);
+                            // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), roundTrackBoard.getBoardId(), iRound, 666);
+                            success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), roundTrackBoard.getBoardId().toInt(), iRound, 666);
 //                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
-                            success = true;
+//                            success = true;
 //                        }
-                    }catch (Exception e){
-                        System.err.println(roundNumberImage);
-                        e.printStackTrace();
-                    }
+                        } catch (Exception e) {
+                            System.err.println(roundNumberImage);
+                            e.printStackTrace();
+                        }
 //                System.out.println(((GridPane)event.getSource()).getLayoutY() + " \t" + ((GridPane)event.getTarget()).getLayoutY());
 //                System.out.println("Dropped to " + col + "\t" + row);
+                    }
                 }
                 /* let the source know whether the string was successfully
                  * transferred and used */
@@ -724,7 +731,6 @@ public class GameViewController implements GameViewUpdaterInterface {
 
     @FXML protected void onPass(ActionEvent event) {
         System.out.println("PASS");
-        // TODO: ClientActionInterface.Pass();
 
         // for test
        /* Random random = new Random();

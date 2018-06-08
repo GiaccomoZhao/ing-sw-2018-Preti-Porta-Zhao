@@ -1,4 +1,4 @@
-package porprezhas.view.fx.controller;
+package porprezhas.view.fx.gameScene.controller;
 
 import porprezhas.model.dices.Dice;
 
@@ -8,4 +8,5 @@ public interface GameViewUpdaterInterface {
     void updateBoard(int idBoard, Dice[][] dices);
     void updateDraftPool(List<Dice> dices);
     void updateRoundTrack(List<Dice>[] dices);
+
 }

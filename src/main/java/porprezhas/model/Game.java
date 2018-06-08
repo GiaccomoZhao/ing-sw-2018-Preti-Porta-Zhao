@@ -478,18 +478,18 @@ public class Game extends ModelObservable implements GameInterface {
             if (currentPlayer.getBoard().validMove(dice, xPose, yPose)) {
 
                 dice = draftPool.chooseDice(indexDice);
-                currentPlayer.placeDice(dice, xPose, yPose);
+                if(null != dice) {
+                    currentPlayer.placeDice(dice, xPose, yPose);
 
-                gameNotifyState= DICE_INSERTED;
-                setChanged();
+                    gameNotifyState = DICE_INSERTED;
+                    setChanged();
 
-                notifyObservers(new SerializableGame(this));
-                return true;
-            } else
-                return false;   // not valid
-        } else {
-            return false;   // not valid
+                    notifyObservers(new SerializableGame(this));
+                    return true;
+                }
+            }
         }
+        return false;   // not valid
     }
 
     public boolean setPattern(Player p, int indexPatternType) {

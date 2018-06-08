@@ -1,4 +1,4 @@
-package porprezhas.view.fx;
+package porprezhas.view.fx.gameScene;
 
 import java.io.IOException;
 import java.util.*;
@@ -12,11 +12,11 @@ import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.component.BackgroundMusicPlayer;
-import porprezhas.view.fx.component.ConfirmBox;
-import porprezhas.view.fx.controller.GameViewController;
+import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
+import porprezhas.view.fx.gameScene.component.ConfirmBox;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 
 public class ViewTest extends Application {
@@ -213,8 +213,3 @@ public class ViewTest extends Application {
         launch(args);
     }
 }
-
-
-// TODO: every DICE fall around the center of draft poll
-//       every dice move away from the colliding dices, in the rival direction
-//       this should be done in 3 seconds, so make this move a bit away from center to speed up

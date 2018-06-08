@@ -1,5 +1,7 @@
 package porprezhas.model.dices;
 
+import porprezhas.Useful;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +25,12 @@ public class DraftPool implements Serializable {
     public void setDraftPool(DiceBag diceBag, int numberOfPlayers) {
         this.draftPool = diceBag.GetRandomDices(numberOfPlayers);
     }
-    public Dice chooseDice(int dice){
+    public Dice chooseDice(int indexDice){
 
         Dice chosenDice;
 
-        if(dice <= draftPool.size()){
-            chosenDice = draftPool.remove(dice);
+        if(Useful.isValueBetweenInclusive(indexDice, 1 , draftPool.size())){
+            chosenDice = draftPool.remove(indexDice);
 
             return chosenDice;
         }

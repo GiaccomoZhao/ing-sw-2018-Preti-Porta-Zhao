@@ -1,4 +1,4 @@
-package porprezhas.view;
+package porprezhas.view.terminal;
 
 enum Color{
     ANSI_RED("\u001B[31m"),

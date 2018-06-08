@@ -1,13 +1,13 @@
-package porprezhas.view.fx.controller;
+package porprezhas.view.fx.gameScene.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import porprezhas.view.fx.component.BoardView;
+import porprezhas.view.fx.gameScene.component.BoardView;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class EnemyViewController {
 

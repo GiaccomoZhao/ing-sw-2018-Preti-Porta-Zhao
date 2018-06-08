@@ -1,14 +1,17 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import porprezhas.Network.ClientActionSingleton;
 import porprezhas.view.state.DiceContainer;
 import porprezhas.model.dices.Dice;
-import porprezhas.view.fx.GuiSettings;
+import porprezhas.view.fx.gameScene.GuiSettings;
 
 import java.util.Scanner;
+
+import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
 
 public abstract class GenericBoardView {
     private final int COLUMN;   // default value
@@ -154,7 +157,6 @@ public abstract class GenericBoardView {
         return diceImage;
     }
 
-
     // **** Drag Listeners ****
     // we have dice drag listener here instead of DiceView because it need to call method of this class
     private void addDiceDragListener(DiceView diceView) {
@@ -163,7 +165,7 @@ public abstract class GenericBoardView {
 
             /* Put the image information on a dragBoard */
             ClipboardContent content = new ClipboardContent();
-            content.putString("board=" + this.idBoard + ": \t" + diceView.toString());
+            content.putString(getDragDiceString(this.idBoard.toInt(), diceView.toString()));
             dragboard.setContent(content);
 
             dragboard.setDragView(diceView.getImage(), diceView.getFitWidth()/2, diceView.getFitHeight()/2);
@@ -197,29 +199,39 @@ public abstract class GenericBoardView {
                 String draggedString = dragboard.getString();
 
                 Scanner scanner = new Scanner(draggedString);
+                scanner.useDelimiter(":|\\s");
+
                 scanner.findInLine("board=");
-                int idBoardFrom = scanner.nextInt();
-                if(GuiSettings.bDebug) System.out.print("id board=" + idBoardFrom);
 
-                DiceView diceView = DiceView.fromString(draggedString);
-//                System.out.println(dragboard.getString());
+                if(scanner.hasNextInt()) {
+                    int idBoardFrom = scanner.nextInt();    // NOTE: watch out. We need have a space after the number.
+                    if (bDebug) System.out.print("id board=" + idBoardFrom + ": \tDiceView{ ");
 
-                // calculate place position
-                int nCol = board.getColumnConstraints().size();
-                int nRow = board.getRowConstraints().size();
-                int col = (int) (event.getX() / (board.getWidth() / nCol));
-                int row = (int) (event.getY() / (board.getHeight() / nRow));
-                if(col >= nCol)
-                    col = nCol - 1;
-                if(row >= nRow)
-                    row = nRow - 1;
+                    DiceView diceView = DiceView.fromString(scanner.nextLine());
 
-                // place down
+                    // calculate place position
+                    int nCol = board.getColumnConstraints().size();
+                    int nRow = board.getRowConstraints().size();
+                    int col = (int) (event.getX() / (board.getWidth() / nCol));
+                    int row = (int) (event.getY() / (board.getHeight() / nRow));
+                    if (col >= nCol)
+                        col = nCol - 1;
+                    if (row >= nRow)
+                        row = nRow - 1;
+
+                    // place down
 //                if (null != addDice(diceView.getDice(), col, row)) {
-                // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard, row, col);
-                    success = true;
+                    // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard, row, col);
+                    if (bDebug) {
+                        System.out.println("InsertDice: \tfrom " + idBoardFrom + "\tindex=" + diceView.getIndexDice()
+                                + "\tto " + this.getBoardId().toInt() + "row=" + row + "col=" + col);
+                    }
+                    success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), this.getBoardId().toInt(), row, col);
+//                    success = true;
 //                }
+                }
             }
+
             /* let the source know whether the string was successfully
              * transferred and used */
             event.setDropCompleted(success);
@@ -274,6 +286,10 @@ public abstract class GenericBoardView {
 
             event.consume();
         });
+    }
+
+    public static String getDragDiceString(int boardId, String diceString) {
+        return new String("board=" + boardId + ": \t" + diceString);
     }
 
 }

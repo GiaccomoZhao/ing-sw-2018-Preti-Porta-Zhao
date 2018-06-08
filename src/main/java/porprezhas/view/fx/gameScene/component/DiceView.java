@@ -1,13 +1,12 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import porprezhas.model.dices.Dice;
-import porprezhas.view.fx.GuiSettings;
 
 import java.util.Scanner;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class DiceView extends ImageView {
 
@@ -52,7 +51,7 @@ public class DiceView extends ImageView {
                 "column=" + column +
                 ", row=" + row +
                 ", index=" + indexDice +
-                " }";
+                ", }";
     }
 
     // this method is used for Dragging: Clip Board
@@ -62,7 +61,7 @@ public class DiceView extends ImageView {
         Scanner scanner = new Scanner(string);
 
         // I know this block of code can be simplified by one REGEX, but the following code should be more clearer
-        scanner.useDelimiter(",");
+        scanner.useDelimiter(",|\\s");
 
         scanner.findInLine("column=");
         column = scanner.nextInt();
@@ -74,7 +73,7 @@ public class DiceView extends ImageView {
 
         scanner.findInLine("index=");
         indexDice = scanner.nextInt();
-        if(bDebug) System.out.print("\tindex=" + indexDice);
+        if(bDebug) System.out.println("\tindex=" + indexDice);
 
 /*        scanner.findInLine("color=(\\w+)");
         String szColor = scanner.match().group(1);

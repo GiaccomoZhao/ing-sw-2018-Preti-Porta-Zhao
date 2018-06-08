@@ -1,4 +1,4 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.geometry.HPos;
 import javafx.scene.Node;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static porprezhas.Useful.isValueBetweenInclusive;
 import static porprezhas.model.Game.GameConstants.*;
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class RoundTrackBoardView extends GenericBoardView {
     private VBox[] backGround;

@@ -1,14 +1,11 @@
 package porprezhas.Network;
 
-import javafx.application.Application;
 import javafx.application.Platform;
-import porprezhas.Network.ViewUpdateHandlerInterface;
 import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.dices.Dice;
-import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.controller.GameViewController;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
 
 import java.util.List;
 

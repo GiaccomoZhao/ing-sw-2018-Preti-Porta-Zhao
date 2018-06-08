@@ -8,9 +8,9 @@ import javafx.stage.Stage;
 import porprezhas.control.ServerRMIInterface;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.component.BackgroundMusicPlayer;
-import porprezhas.view.fx.component.ConfirmBox;
-import porprezhas.view.fx.controller.GameViewController;
+import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
+import porprezhas.view.fx.gameScene.component.ConfirmBox;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -19,9 +19,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-import static porprezhas.view.fx.GuiSettings.FPS_PRINT_AT_MIN;
-import static porprezhas.view.fx.GuiSettings.ICON_QUANTITY;
-import static porprezhas.view.fx.GuiSettings.SOLITAIRE_WIDTH;
+import static porprezhas.view.fx.gameScene.GuiSettings.FPS_PRINT_AT_MIN;
+import static porprezhas.view.fx.gameScene.GuiSettings.ICON_QUANTITY;
+import static porprezhas.view.fx.gameScene.GuiSettings.SOLITAIRE_WIDTH;
 
 /*
 start rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
@@ -32,8 +32,6 @@ Far partire test total(prima bisogna aggiungere in edit congigurations la string
  	-Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.codebase=http://localhost:80/
  */
 public class GUIRMI2 extends Application implements RMIClientInterface {
-        static int mainPlayerPosition;  // to identify which player am i?
-
         private Stage primaryStage;
         private AnchorPane rootLayout;
 
@@ -156,9 +154,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
                 }
 
                 // Create a controller instance, passing the information about players
-                System.out.println("\n\nUserName ::");
-                System.out.println(username);
-                gameViewController = new GameViewController(playersInfo, mainPlayerPosition, username);
+                gameViewController = new GameViewController(playersInfo, 0, username);
 
                 try {
                     this.joinPhase();
@@ -222,11 +218,6 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
         }
 
         public static void main(String[] args) throws RemoteException, NotBoundException {
-            Scanner scanner = new Scanner(System.in);
-            String input;
-            System.out.println("type player position (from 0 to MAX_PLAYER_QUANTITY-1):");
-            input = scanner.next();
-            mainPlayerPosition = Integer.parseInt(input);
             GUIRMI2 guirmi2 = new GUIRMI2();
            // guirmi2.loginPhase();
             launch(args);

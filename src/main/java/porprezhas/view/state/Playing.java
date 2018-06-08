@@ -2,7 +2,7 @@ package porprezhas.view.state;
 
 import porprezhas.model.GameInterface;
 import porprezhas.model.dices.Dice;
-import porprezhas.view.fx.GameViewInterface;
+import porprezhas.view.fx.gameScene.GameViewInterface;
 
 import java.rmi.RemoteException;
 

@@ -1,22 +1,11 @@
-package porprezhas.view.fx;
+package porprezhas.view.fx.gameScene;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Insets;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderImage;
-import javafx.scene.layout.BorderRepeat;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.media.MediaPlayer;
-import porprezhas.model.dices.Board;
-import porprezhas.view.fx.component.BackgroundMusicPlayer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GuiSettings {
     // ***** Game GUI attributes *****
@@ -66,7 +55,7 @@ public class GuiSettings {
 
     // Sound
     public static BooleanProperty bMuteMusic = new SimpleBooleanProperty(false);
-    public static DoubleProperty musicVolume = new SimpleDoubleProperty(1.0);
+    public static DoubleProperty musicVolume = new SimpleDoubleProperty(0.3);
 
 
 

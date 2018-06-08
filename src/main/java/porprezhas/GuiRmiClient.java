@@ -6,24 +6,20 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import porprezhas.Network.*;
-import porprezhas.control.ServerRMIInterface;
-import porprezhas.model.Game;
 import porprezhas.model.Player;
-import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.component.BackgroundMusicPlayer;
-import porprezhas.view.fx.component.ConfirmBox;
-import porprezhas.view.fx.controller.GameViewController;
+import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
+import porprezhas.view.fx.gameScene.component.ConfirmBox;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
 
 import java.io.IOException;
-import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class GuiRmiClient extends Application implements RMIClientInterface {
     static int mainPlayerPosition;  // to identify which player am i?

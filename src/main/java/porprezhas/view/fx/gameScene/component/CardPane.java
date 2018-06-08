@@ -1,4 +1,4 @@
-package porprezhas.view.fx.component;
+package porprezhas.view.fx.gameScene.component;
 
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
@@ -13,7 +13,7 @@ import porprezhas.model.cards.Card;
 import java.util.ArrayList;
 import java.util.List;
 
-import static porprezhas.view.fx.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class CardPane {
     private final Pane cardPane;
