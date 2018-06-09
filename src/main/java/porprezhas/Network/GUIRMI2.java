@@ -19,9 +19,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-import static porprezhas.view.fx.gameScene.GuiSettings.FPS_PRINT_AT_MIN;
-import static porprezhas.view.fx.gameScene.GuiSettings.ICON_QUANTITY;
-import static porprezhas.view.fx.gameScene.GuiSettings.SOLITAIRE_WIDTH;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 /*
 start rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
@@ -62,7 +60,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
         public void start(Stage primaryStage) {
 
         this.primaryStage = primaryStage;
-            this.primaryStage.setTitle("tester");
+            this.primaryStage.setTitle(GAME_TITLE);
 
             // initialize the layout from fxml and
             // setup the game GUI in base the player info!!!
@@ -100,7 +98,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
         }
 
         private void quitGame() {
-            Boolean bQuit = new ConfirmBox().display("Title", "Are you sure to quit during a Game?");
+            Boolean bQuit = new ConfirmBox().display(GAME_TITLE, "Are you sure to quit during a Game?");
             if(bQuit) {
                 primaryStage.close();
             }

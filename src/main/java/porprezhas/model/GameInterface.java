@@ -1,5 +1,6 @@
 package porprezhas.model;
 
+import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.track.RoundTrack;
@@ -19,7 +20,9 @@ public interface GameInterface {
     public RoundTrack getRoundTrack();
     public Game.NotifyState getGameState();
 
-    boolean insertDice(int indexDice, int xPose, int yPose);
+    boolean insertDice(int indexDice, int xPose, int yPose)
+            throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
+            BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException;
     boolean isSolitaire();
     long getRoundTimeOut();
     boolean setPattern(Player player, int indexPatternType);

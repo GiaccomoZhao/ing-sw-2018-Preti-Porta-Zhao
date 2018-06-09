@@ -1,4 +1,5 @@
 package porprezhas.model.cards;
+import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DiceBag;
@@ -7,6 +8,9 @@ import porprezhas.model.track.RoundTrack;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
 
 import static porprezhas.model.cards.Card.Effect.*;
 import static porprezhas.model.dices.Board.COLUMN;
@@ -21,7 +25,7 @@ public class ToolCard extends Card implements Serializable {
 
     private int tokensQuantity;
 
-    private  Dice.ColorDice cardColor;
+    private Dice.ColorDice cardColor;
 
     Dice.ColorDice[] cardColors={PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE};
 
@@ -34,44 +38,7 @@ public class ToolCard extends Card implements Serializable {
     }
 
     private void setStrategy() {
-        switch (effect) {
-            case TC1:
-                strategy = new ToolCard1();
-                break;
-            case TC2:
-                strategy = new ToolCard2();
-                break;
-            case TC3:
-                strategy = new ToolCard3();
-                break;
-            case TC4:
-                strategy = new ToolCard4();
-                break;
-            case TC5:
-                strategy = new ToolCard5();
-                break;
-            case TC6:
-                strategy = new ToolCard6();
-                break;
-            case TC7:
-                strategy = new ToolCard7();
-                break;
-            case TC8:
-                strategy = new ToolCard8();
-                break;
-            case TC9:
-                strategy = new ToolCard9();
-                break;
-            case TC10:
-                strategy = new ToolCard10();
-                break;
-            case TC11:
-                strategy = new ToolCard11();
-                break;
-            case TC12:
-                strategy = new ToolCard12();
-                break;
-        }
+        strategy = ToolCardStrategy.list[effect.ID -1];
     }
 
 
@@ -133,11 +100,17 @@ public class ToolCard extends Card implements Serializable {
                 // remove and save the dice
                 Dice removedDice = board.removeDice(fromRow, fromColumn);
 
-                // if the insertion is not a valid move
-                if(false == board.insertDice(removedDice, toRow, toColumn, restriction)) {
-                    // then we undo the remove
-                    board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
-                    return false;
+                try {
+                    board.insertDice(removedDice, toRow, toColumn, restriction);
+                } catch (Exception e) {
+                    // if the insertion is not a valid move then we undo the remove
+                    try {
+                        board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
+                    } catch (Exception e1) {
+                        System.err.println("Can not use tool card " + this + "");
+                    } finally {
+                        return false;
+                    }
                 }
             }
         }
@@ -158,11 +131,17 @@ public class ToolCard extends Card implements Serializable {
         if( !use(board, fromRow2, fromColumn2, toRow2, toColumn2, Board.Restriction.DICE) ) {
             // Undo the insert done by first dice, in case of Failure of the second use
             board.removeDice(fromRow1, fromColumn1);
-            board.insertDice(
-                    storeDice1,
-                    fromRow1, fromColumn1,
-                    Board.Restriction.NONE);    // no restriction because we are doing a UNDO
-            return false;
+            try {
+                board.insertDice(
+                        storeDice1,
+                        fromRow1, fromColumn1,
+                        Board.Restriction.NONE);    // no restriction because we are doing a UNDO
+            } catch (Exception e) {
+                System.err.println("Insert with Restriction.NONE shouldn't give exception!!!");
+                e.printStackTrace();
+            } finally {
+                return false;
+            }
         }
         return true;
     }
@@ -234,14 +213,18 @@ public class ToolCard extends Card implements Serializable {
             (verify(TC9.ID) &&  restriction == Board.Restriction.WITHOUT_ADJACENT))
             return false;
 
-        if(board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction)) {
-            board.insertDice(
-                        draftPool.chooseDice(indexDiceDraftPool),
-                        row, col,
-                    restriction);   // note: insertDice does not need check valid move
-            return true;
-        } else
+        try {
+            board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction);
+        } catch (Exception e) {
             return false;
+        }
+
+        // we not need catch this, because we already checked with validMove()
+        board.insertDice(
+                draftPool.chooseDice(indexDiceDraftPool),
+                row, col,
+                restriction);   // note: insertDice does not need check valid move
+        return true;
     }
 
     // Effect of tool card N.10
@@ -315,11 +298,42 @@ public class ToolCard extends Card implements Serializable {
 
 
 
-// ************************************
-// ******* TOOL CARD STRATEGY *********
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// *********************************************
+// ********  << TOOL CARD STRATEGY >>  *********
+// *********************************************
 
 
 interface ToolCardStrategy {
+    ToolCardStrategy[] list = {
+            new ToolCard1(),
+            new ToolCard2(),
+            new ToolCard3(),
+            new ToolCard4(),
+            new ToolCard5(),
+            new ToolCard6(),
+            new ToolCard7(),
+            new ToolCard8(),
+            new ToolCard9(),
+            new ToolCard10(),
+            new ToolCard11(),
+            new ToolCard12()
+    };
+
     boolean use();
 }
 
@@ -415,11 +429,17 @@ class ToolCard2_4 implements ToolCardStrategy {
             // remove and save the dice
             Dice removedDice = board.removeDice(fromRow, fromColumn);
 
-            // if the insertion is not a valid move
-            if(false == board.insertDice(removedDice, toRow, toColumn, restriction)) {
-                // then we undo the remove
-                board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
-                return false;
+            try {
+                board.insertDice(removedDice, toRow, toColumn, restriction);
+            } catch (Exception e) {
+                // if the insertion is not a valid move then we undo the remove
+                try {
+                    board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
+                } catch (Exception e1) {
+                    System.err.println("Can not use tool card " + this + "");
+                } finally {
+                    return false;
+                }
             }
         }
         return false;
@@ -485,11 +505,17 @@ class ToolCard4 extends ToolCard2_4 {
         if( !super.use() ) {
             // Undo the insert done by first dice, in case of Failure of the second use
             board.removeDice(fromRow1, fromColumn1);
-            board.insertDice(
-                    storeDice1,
-                    fromRow1, fromColumn1,
-                    Board.Restriction.NONE);    // no restriction because we are doing a UNDO
-            return false;
+            try {
+                board.insertDice(
+                        storeDice1,
+                        fromRow1, fromColumn1,
+                        Board.Restriction.NONE);    // no restriction because we are doing a UNDO
+            } catch (Exception e) {
+                System.err.println("Insert with Restriction.NONE shouldn't give exception!!!");
+                e.printStackTrace();
+            } finally {
+                return false;
+            }
         }
         return true;
     }
@@ -656,14 +682,21 @@ class ToolCard8_9 implements ToolCardStrategy {
     // place dice from draft pool to board anywhere
     private boolean use(DraftPool draftPool, int indexDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
 
-        if(board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction)) {
-            board.insertDice(
-                    draftPool.chooseDice(indexDiceDraftPool),
-                    row, col,
-                    restriction);   // note: insertDice does not need check valid move
-            return true;
-        } else
-            return false;
+        try {
+            if (board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction)) {
+
+                board.insertDice(
+                        draftPool.chooseDice(indexDiceDraftPool),
+                        row, col,
+                        restriction);   // note: insertDice does not need check valid move
+                return true;
+
+            } else
+                return false;   // when validMove() returns false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;   // when validMove() returns invalid move exception
+        }
     }
 
 }
@@ -813,15 +846,20 @@ class ToolCard12 implements ToolCardStrategy {
             Dice dice1 = board.getDice(fromRow1, fromColumn1);
             Dice dice2 = board.getDice(fromRow2, fromColumn2);
 
-            // inside if we have read only methods
-            if (    board.canBeRemoved(fromRow1, fromColumn1) &&
-                    board.canBeRemoved(fromRow2, fromColumn2) &&
-                    board.validMove(dice1, toRow1, toColumn1, Board.Restriction.ALL) &&
-                    board.validMove(dice2, toRow2, toColumn2, Board.Restriction.ALL)) {
+            try {
+                // inside if we have read only methods
+                if (    board.canBeRemoved(fromRow1, fromColumn1) &&
+                        board.canBeRemoved(fromRow2, fromColumn2) &&
+                        board.validMove(dice1, toRow1, toColumn1, Board.Restriction.ALL) &&
+                        board.validMove(dice2, toRow2, toColumn2, Board.Restriction.ALL)) {
 
-                board.insertDice(board.removeDice(fromRow1, fromColumn1), toRow1, toColumn1);
-                board.insertDice(board.removeDice(fromRow2, fromColumn2), toRow2, toColumn2);
-                return true;
+                    board.insertDice(board.removeDice(fromRow1, fromColumn1), toRow1, toColumn1);
+                    board.insertDice(board.removeDice(fromRow2, fromColumn2), toRow2, toColumn2);
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
         }
 

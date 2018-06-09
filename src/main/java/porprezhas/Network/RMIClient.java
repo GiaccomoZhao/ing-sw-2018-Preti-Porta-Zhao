@@ -111,13 +111,21 @@ public class RMIClient implements RMIClientInterface, Runnable {
                         String numberDice = command.substring(space+1 , space2 );
                         String xBoardValue= command.substring(space2+1, space3);
                         String yBoardValue= command.substring(space3+1, command.length());
-                        if(server.insertedDice(Integer.parseInt(numberDice) -1 ,Integer.parseInt(xBoardValue)-1 , Integer.parseInt(yBoardValue)-1, username )) {
-                            System.out.println("Mossa ok");
-                            //TO-DO fix
-                            this.server.passUser(username);
+                        try {
+                            if(server.insertedDice(Integer.parseInt(numberDice) -1 ,Integer.parseInt(xBoardValue)-1 , Integer.parseInt(yBoardValue)-1, username )) {
+                                System.out.println("Dice inserted!");
+                                //TO-DO fix
+                                this.server.passUser(username);
+                            } else {
+                                System.out.println("Not valid move");
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());     // print Invalid Move Message
+//                            if(bDebug)
+//                                e.printStackTrace();
                         }
-                        else
-                            System.out.println("Mossa non valida");
                         break;
                     case CHOOSE_PATTERN:
 

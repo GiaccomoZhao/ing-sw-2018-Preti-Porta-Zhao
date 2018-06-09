@@ -19,10 +19,10 @@ public class Player implements Serializable {
     private int iconId;
 
     // Game play attribute
-    private List<Pattern.TypePattern> patternsToChoose;
     private Board board;
+    private List<Pattern.TypePattern> patternsToChoose;
     private List<Card> privateObjectiveCardList;
-//    private ScoreMark scoreMark;    // thinking to move this to
+    private List<Card.Effect> toolCardEffect;   // what effect is active on the player
     private int nFavorToken;
 
     // Game control attribute
@@ -35,8 +35,9 @@ public class Player implements Serializable {
         playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
         this.name = name;
         nFavorToken = 0;
-        privateObjectiveCardList = new ArrayList<>();
         patternsToChoose = new ArrayList<>();
+        privateObjectiveCardList = new ArrayList<>();
+        toolCardEffect = new ArrayList<>();
 
         bUsedToolCard = false;
         pickableDice = 1;

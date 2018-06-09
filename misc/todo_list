@@ -1,0 +1,21 @@
+...
+
+MODEL: ToolCard
+GUI: pattern scene
+GUI: single player scene
+Network: Socket
+GUI: ToolCard
+GUI: multiple Scene management
+Network: Reconnecting
+
+...
+
+fix score calculate
+fix single player
+UML
+
+
+User Action list
+Animation
+
+1

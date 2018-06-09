@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 public class Dice implements Serializable {
 
-    private final int MAX_DICE_NUM = 6;
+    static public final int MAX_DICE_NUM = 6;
 
     public Dice setNumber(int number) {
         this.number = number;
@@ -44,6 +44,14 @@ public class Dice implements Serializable {
     public Dice(ColorDice colorDice, int number) {
         this.colorDice = colorDice;
         this.number=number;
+    }
+
+    @Override
+    public String toString() {
+        return "Dice{" +
+                "number=" + number +
+                ", colorDice=" + colorDice +
+                '}';
     }
 
     public void roll(){
