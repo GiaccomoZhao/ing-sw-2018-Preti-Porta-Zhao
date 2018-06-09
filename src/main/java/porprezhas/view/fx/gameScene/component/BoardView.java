@@ -42,21 +42,30 @@ public class BoardView extends GenericBoardView {// extends GridPane {
 
     // static field used for player pane
     public void setPattern(Pattern.TypePattern patternType) {
-        Background patternImage = new Background(
-                new BackgroundFill(new ImagePattern(
-                        new Image(pathToPattern + patternType.name().toLowerCase() + ".png")),
-                        CornerRadii.EMPTY, Insets.EMPTY));
+
+        Image patterImage = null;
+        try {
+            patterImage = new Image(pathToPattern + patternType.name().toLowerCase() + ".png");
+        } catch (Exception e) {
+            System.err.println("Can not load image from: " + pathToPattern + patternType.name().toLowerCase() + ".png");
+//            e.printStackTrace();
+        }
+        if (null != patterImage) {
+
+            Background patternImage = new Background(
+                    new BackgroundFill(new ImagePattern(patterImage),
+                            CornerRadii.EMPTY, Insets.EMPTY));
 /*                    new BackgroundImage(
                             new Image(pathToPattern + Pattern.TypePattern.values()[1].name().toLowerCase() + ".png"),
                             BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                             BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 */
-        if(getBoard().getParent() instanceof GridPane)
-            ((GridPane) (getBoard().getParent())).setBackground(patternImage);
-        else {
-            getBoard().setBackground(patternImage);
-            if (bDebug)
-                System.err.println("I couldn't set background on parent: " + getBoard().getParent());
+            if (getBoard().getParent() instanceof GridPane)
+                ((GridPane) (getBoard().getParent())).setBackground(patternImage);
+            else {
+                getBoard().setBackground(patternImage);
+                System.err.println("Couldn't set background on parent: '" + getBoard().getParent() + "' that is not a GridPane.");
+            }
         }
     }
 

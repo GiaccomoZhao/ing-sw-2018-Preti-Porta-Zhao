@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import java.io.File;
 
 public class GuiSettings {
-    public static boolean bFixedFont = false;
+    public static boolean bFixedFont = true;
 
     // ***** Game GUI attributes *****
     // path

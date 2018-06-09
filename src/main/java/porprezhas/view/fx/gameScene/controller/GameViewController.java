@@ -543,6 +543,7 @@ public class GameViewController implements GameViewUpdaterInterface {
                                 enemyViewControllers.get(i - offset).getTokens(),
                                 enemyViewControllers.get(i - offset).getTimer()) );
 //                fx_enemyPanesParent.getChildren().add(boardList.get(i).getBoard());
+//                enemyViewControllers.get(i - offset).setPlayerInfo(playerInfo);
             }
 
             boardList.get(i).setPattern(playerInfo.typePattern);
@@ -855,10 +856,10 @@ public class GameViewController implements GameViewUpdaterInterface {
     // MVC interface methods
 
     public void updatePlayerInfo(List<Player> players) {
-        List<PlayerInfo> playerInfoList = new ArrayList<>();
+        playersInfo.clear();
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
-            playerInfoList.add( new PlayerInfo(
+            playersInfo.add( new PlayerInfo(
                     i,
                     player.getName(),
                     player.getIconId(),
@@ -872,6 +873,7 @@ public class GameViewController implements GameViewUpdaterInterface {
         Platform.runLater(new Runnable() {
             @Override public void run() {
                 System.out.println("\n\n\nUpdate Game View!!!\n");
+
                 // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
                 setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
 

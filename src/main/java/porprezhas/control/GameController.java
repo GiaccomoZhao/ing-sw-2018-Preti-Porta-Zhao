@@ -147,9 +147,18 @@ public class GameController  implements GameControllerInterface, Runnable {
                 try {
                     synchronized(playTimeOut) {
                         if(game.getCurrentPlayer().getName().toUpperCase().contains("ZX"))      // NOTE: test use, remove this
-                            playTimeOut.wait( game.getRoundTimeOut() *10);
-                        else
                             playTimeOut.wait( game.getRoundTimeOut() );
+                        else  {
+                            for (Player p : playerList) {
+                                if(p.getName().toUpperCase().contains("ZX")) {
+                                    playTimeOut.wait(game.getRoundTimeOut()/100);
+                                    player.passes(true);
+                                    break;
+                                }
+                            }
+                            if (!player.hasPassed())
+                                playTimeOut.wait(game.getRoundTimeOut());
+                        }
 
                         pass();
                         player.passes(true);
