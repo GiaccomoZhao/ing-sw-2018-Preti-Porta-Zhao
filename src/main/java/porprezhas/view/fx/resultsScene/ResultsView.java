@@ -1,10 +1,14 @@
 package porprezhas.view.fx.resultsScene;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
@@ -23,6 +27,17 @@ public class ResultsView extends Application {
     private double yOffset = 0;
     public static final String pathToMusicDirectory = "sound/music/resultsMusic/";
     public static final String pathToVideoDirectory = "video/";
+
+    @FXML
+    private Button resultsViewCloseButton;
+
+
+    @FXML
+    public void handleCloseButtonAction(ActionEvent event) {
+    Stage stage = (Stage)resultsViewCloseButton.getScene().getWindow();
+        Platform.exit();
+        System.exit(0);
+    }
 
 
 
@@ -74,22 +89,8 @@ public class ResultsView extends Application {
                 }
             });
 
-         /*   String resourcePathVideo = BackgroundMusicPlayer.class.getResource("/" ).getPath();
-            resourcePathVideo = resourcePathVideo.substring(1, resourcePathVideo.length());
-            resourcePathVideo = resourcePathVideo.replaceAll("%20", " ");
-            final File directory = new File(resourcePathVideo + pathToVideoDirectory);
-            String[] videoFiles = directory.list((dir1, name) -> name.endsWith(".mp4"));
 
-            videoFiles[0] = "file:///" + (directory + "\\" + videoFiles[0]).replace("\\", "/").replaceAll(" ", "%20");
 
-            Media mediaVideo = new Media(videoFiles[0]);
-            javafx.scene.media.MediaPlayer playerVideo = new   javafx.scene.media.MediaPlayer(mediaVideo);
-            MediaView viewerVideo = new MediaView(playerVideo);
-
-            StackPane root = new StackPane();
-            root.getChildren().add(viewerVideo);
-            root.setBlendMode(BlendMode.EXCLUSION);
-            Scene scenes = new Scene(root,576, 800, Color.TRANSPARENT); */
 
             primaryStage.show();
 

@@ -14,7 +14,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="ResultsView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="800.0" fitWidth="576.0" layoutX="7.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
@@ -89,41 +89,48 @@
             <Font name="Castellar" size="36.0" />
          </font>
       </Label>
-      <Label blendMode="SRC_ATOP" layoutX="112.0" layoutY="438.0" text="Player 3">
+      <Label blendMode="SRC_ATOP" layoutX="99.0" layoutY="410.0" text="Player 3">
          <font>
             <Font name="Bookshelf Symbol 7" size="24.0" />
          </font>
       </Label>
-      <Label blendMode="SRC_ATOP" layoutX="78.0" layoutY="477.0" text="punteggio 3">
+      <Label blendMode="SRC_ATOP" layoutX="72.0" layoutY="446.0" text="punteggio 3">
          <font>
             <Font name="Bookshelf Symbol 7" size="24.0" />
          </font>
       </Label>
-      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="208.0" layoutY="434.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="206.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@head/64x64x64/head_8.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="449.0" layoutY="538.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="449.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@head/64x64x64/head_11.png" />
          </image>
       </ImageView>
-      <Label blendMode="SRC_ATOP" layoutX="320.0" layoutY="577.0" text="punteggio 4">
+      <Label blendMode="SRC_ATOP" layoutX="313.0" layoutY="538.0" text="punteggio 4">
          <font>
             <Font name="Bookshelf Symbol 7" size="24.0" />
          </font>
       </Label>
-      <Label blendMode="SRC_ATOP" layoutX="358.0" layoutY="540.0" text="Player 4">
+      <Label blendMode="SRC_ATOP" layoutX="346.0" layoutY="503.0" text="Player 4">
          <font>
             <Font name="Bookshelf Symbol 7" size="24.0" />
          </font>
       </Label>
-      <Label blendMode="SRC_ATOP" layoutX="325.0" layoutY="530.0" text="4" textFill="#0a0500">
+      <Label blendMode="SRC_ATOP" layoutX="321.0" layoutY="494.0" text="4" textFill="#0a0500">
          <font>
             <Font name="Castellar" size="36.0" />
          </font>
       </Label>
-      <MediaView blendMode="EXCLUSION" fitHeight="800.0" fitWidth="576.0" layoutX="137.0" layoutY="198.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Button fx:id="resultsViewCloseButton" layoutX="262.0" layoutY="662.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" style="-fx-background-color: #DFD984;" text="Close" textFill="#4f2c06">
+         <font>
+            <Font name="Book Antiqua" size="18.0" />
+         </font>
+         <effect>
+            <DropShadow color="#462403" />
+         </effect>
+      </Button>
    </children>
 </AnchorPane>
