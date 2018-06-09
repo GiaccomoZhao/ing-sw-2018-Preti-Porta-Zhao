@@ -4,12 +4,9 @@ import porprezhas.model.Game;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 import porprezhas.model.database.DatabaseInterface;
+import porprezhas.model.dices.Pattern;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -149,7 +146,11 @@ public class GameController  implements GameControllerInterface, Runnable {
             while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
                 try {
                     synchronized(playTimeOut) {
-                        playTimeOut.wait( game.getRoundTimeOut() );
+                        if(game.getCurrentPlayer().getName().toUpperCase().contains("ZX"))      // NOTE: test use, remove this
+                            playTimeOut.wait( game.getRoundTimeOut() *10);
+                        else
+                            playTimeOut.wait( game.getRoundTimeOut() );
+
                         pass();
                         player.passes(true);
                     }
@@ -277,7 +278,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         boolean bSet = false;
         boolean bAllSet = true;
 	    if(state.equals(StateMachine.PLAYER_PREPARING)) {
-            bSet = game.setPattern(player, indexPatternType);
+	        bSet = game.setPattern(player, indexPatternType);
         }
         // unlock timeout when all player has chosen
         for (Player p : game.getPlayerList()) {
@@ -293,8 +294,8 @@ public class GameController  implements GameControllerInterface, Runnable {
         return bSet;
     }
 
-    public boolean insertDice(Integer indexDice, Integer xPose, Integer yPose) {
-        return game.InsertDice(indexDice, xPose, yPose);
+    public boolean insertDice(Integer indexDice, Integer row, Integer column) {
+        return game.insertDice(indexDice, row, column);
     }
 
     public boolean useToolCard(int cardId){

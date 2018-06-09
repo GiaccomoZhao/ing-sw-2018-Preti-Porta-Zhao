@@ -334,9 +334,9 @@ public class Board implements Serializable {
 
             //valid Move
             return Boolean.TRUE;
+        } else {
+            throw new IndexOutOfBoundsException("row: 0 <= " +  row + " <= " + (ROW-1) + " \tcol:  0 <= " + col + "<= " + (COLUMN-1));
         }
-        else
-            return false;
     }
 
     public boolean validMove(Dice dice, int row, int col, Restriction restriction) {

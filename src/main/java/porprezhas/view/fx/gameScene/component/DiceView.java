@@ -15,14 +15,14 @@ public class DiceView extends ImageView {
 
     private final int indexDice;
 
-    public DiceView(int column, int row, int indexDice) {
+    public DiceView(int row, int column, int indexDice) {
         super();    // for the convention, we always call the parent constructor
         this.column = column;
         this.row = row;
         this.indexDice = indexDice;
     }
 
-    public  DiceView(Dice dice, int column, int row, int indexDice) {
+    public  DiceView(Dice dice, int row, int column, int indexDice) {
         super();    // for the convention, we always call the parent constructor
         setImage(dice);
         System.out.println(pathToDice + dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png");
@@ -31,14 +31,14 @@ public class DiceView extends ImageView {
         this.indexDice = indexDice;
     }
 
-    public DiceView(Image image, int column, int row, int indexDice) {
+    public DiceView(Image image, int row, int column, int indexDice) {
         super(image);
         this.column = column;
         this.row = row;
         this.indexDice = indexDice;
     }
 
-    public DiceView(String url, int column, int row, int indexDice) {
+    public DiceView(String url, int row, int column, int indexDice) {
         super(url);
         this.column = column;
         this.row = row;
@@ -51,7 +51,7 @@ public class DiceView extends ImageView {
                 "column=" + column +
                 ", row=" + row +
                 ", index=" + indexDice +
-                ", }";
+                " }";
     }
 
     // this method is used for Dragging: Clip Board
@@ -65,7 +65,7 @@ public class DiceView extends ImageView {
 
         scanner.findInLine("column=");
         column = scanner.nextInt();
-        if(bDebug) System.out.print("col=" + column);   // I have to print one by one because scanner would throw a exception when a value is not correct
+        if(bDebug) System.out.print("\tcol=" + column);   // I have to print one by one because scanner would throw a exception when a value is not correct
 
         scanner.findInLine("row=");
         row = scanner.nextInt();

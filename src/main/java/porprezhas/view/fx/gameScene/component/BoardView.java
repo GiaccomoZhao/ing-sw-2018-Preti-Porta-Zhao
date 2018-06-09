@@ -2,6 +2,7 @@ package porprezhas.view.fx.gameScene.component;
 
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import porprezhas.view.state.DiceContainer;
@@ -11,13 +12,33 @@ import porprezhas.model.dices.Pattern;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class BoardView extends GenericBoardView {// extends GridPane {
-
+    private ImageView bag;
+    private FlowPane tokens;
+    private ImageView timer;
 
     // create a BoardView by passing a configured(may in FXML) GridPane
-    public BoardView(GridPane board, int playerPosition) {
+    public BoardView(int playerPosition, GridPane board, ImageView bag, FlowPane tokens, ImageView timer) {
         super(board, DiceContainer.fromPlayer(playerPosition));
+        this.bag = bag;
+        this.tokens = tokens;
+        this.timer = timer;
     }
 
+    public FlowPane getTokens() {
+        return tokens;
+    }
+
+    public void showBag(boolean bShow) {
+        bag.setVisible(bShow);
+    }
+
+    public void showTokens(boolean bShow) {
+        tokens.setVisible(bShow);
+    }
+
+    public void showTimer(boolean bShow) {
+        timer.setVisible(bShow);
+    }
 
     // static field used for player pane
     public void setPattern(Pattern.TypePattern patternType) {
@@ -30,7 +51,13 @@ public class BoardView extends GenericBoardView {// extends GridPane {
                             BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                             BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 */
-        ((GridPane) (getBoard().getParent())).setBackground(patternImage);
+        if(getBoard().getParent() instanceof GridPane)
+            ((GridPane) (getBoard().getParent())).setBackground(patternImage);
+        else {
+            getBoard().setBackground(patternImage);
+            if (bDebug)
+                System.err.println("I couldn't set background on parent: " + getBoard().getParent());
+        }
     }
 
     // Add Dice to Board, if it is free
@@ -38,8 +65,8 @@ public class BoardView extends GenericBoardView {// extends GridPane {
     // requires col < 5 && col > 0 &&
     //          row < 4 && row > 0
     @Override
-    public DiceView addDice(Dice dice, int col, int row) { //int num, char color){
-        return super.addDice(dice, col, row);
+    public DiceView addDice(Dice dice, int row, int col) { //int num, char color){
+        return super.addDice(dice, row, col);
     }
 
 

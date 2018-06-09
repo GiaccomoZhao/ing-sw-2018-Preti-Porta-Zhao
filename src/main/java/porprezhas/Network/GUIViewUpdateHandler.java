@@ -52,6 +52,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         switch(state){
 
             case NEW_FIRST_PLAYER:
+                // TODO: this is not first player... but the current player.
                 // if(!firstPlayer || !nextPlayer.getName().equals(game.getFirstPlayer().getName()) ) {
                 //   nextPlayer=game.getFirstPlayer();
 //
@@ -59,6 +60,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 //                firstPlayer=true;
                 //          }
                 System.out.println();
+                gameViewController.updateFirstPlayer(game.getCurrentPlayer());
                 break;
 
             case CHOOSE_PATTERN:
@@ -97,7 +99,6 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                                     player.getPosition(),
                                     player.getBoard().getBoard());
                             gameViewController.updateDraftPool(game.getDraftPool().diceList());
-
                         }
 
                     }

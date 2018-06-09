@@ -17,7 +17,7 @@ public class RMIClientAction implements ClientActionInterface{
     @Override
     public boolean moveDice(int fromIdContainer, int index, int toIdContainer, int row, int col) {
         try {
-            if( server.insertedDice(index-1, row, col, username)){
+            if( server.insertedDice(index, row, col, username)){
                 System.out.println("Valid move");
                 return true;
             }

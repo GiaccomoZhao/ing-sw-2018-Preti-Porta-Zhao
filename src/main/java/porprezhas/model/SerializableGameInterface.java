@@ -16,4 +16,6 @@ public interface SerializableGameInterface extends Serializable {
     public Player getCurrentPlayer();
     public Player getUsernamePlayer(String username);
 
+//    public Player getFirstPlayer();
+
 }

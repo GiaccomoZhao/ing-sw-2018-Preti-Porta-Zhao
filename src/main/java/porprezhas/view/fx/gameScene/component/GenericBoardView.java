@@ -93,11 +93,11 @@ public abstract class GenericBoardView {
         this.idBoard = idBoard;
     }
 
-    public DiceView getDiceView(int column, int row) {
+    public DiceView getDiceView(int row, int column) {
         DiceView diceView = null;
-        ObservableList<Node> childrens = board.getChildren();
+        ObservableList<Node> children = board.getChildren();
 
-        for (Node node : childrens) {
+        for (Node node : children) {
             if(board.getRowIndex(node) == row && board.getColumnIndex(node) == column) {
                 diceView = (DiceView) node;
                 break;
@@ -111,7 +111,7 @@ public abstract class GenericBoardView {
     }
 
     // Refresh
-    // @ensure board.get(col, row).dice() == diceMatrix[col][row]
+    // @ensure board.get(row, col).dice() == diceMatrix[row][col]
     public void update(Dice[][] diceMatrix) {
         board.getChildren().clear();
 /*        for (int i = 0; i < board.getChildren().size(); i++) {
@@ -152,7 +152,7 @@ public abstract class GenericBoardView {
         // Action
         addDiceDragListener(diceImage);
 
-        getBoard().add(diceImage, row, col);
+        getBoard().add(diceImage, col, row);    // add(Node, column, row)
         increaseDice();
         return diceImage;
     }
@@ -220,11 +220,10 @@ public abstract class GenericBoardView {
                         row = nRow - 1;
 
                     // place down
-//                if (null != addDice(diceView.getDice(), col, row)) {
-                    // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), this.idBoard, row, col);
+//                if (null != addDice(diceView.getDice(), row, col)) {
                     if (bDebug) {
-                        System.out.println("InsertDice: \tfrom " + idBoardFrom + "\tindex=" + diceView.getIndexDice()
-                                + "\tto " + this.getBoardId().toInt() + "row=" + row + "col=" + col);
+                        System.out.println("insertDice: \tfrom " + idBoardFrom + "\tindex=" + diceView.getIndexDice()
+                                + "\tto " + this.getBoardId().toInt() + "\trow=" + row + "\tcol=" + col);
                     }
                     success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), this.getBoardId().toInt(), row, col);
 //                    success = true;

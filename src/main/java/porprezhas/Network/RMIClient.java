@@ -39,7 +39,7 @@ public class RMIClient implements RMIClientInterface, Runnable {
         System.out.println(">>> Available commands:");
         System.out.println("\t" + LOGOUT_COMMAND + ":\t\t logout");
         System.out.println("\t" + JOIN_COMMAND + ":\t\t join a new Game");
-        System.out.println("\t" + INSERT_DICE_COMMAND + ":\t\t insert a new Dice");
+        System.out.println("\t" + INSERT_DICE_COMMAND + "[index] [row] [column]: \t insert a new Dice");
         System.out.println("\t" + CHOOSE_PATTERN + ":\t\t choose a pattern");
         System.out.println("\t" + PASS + ":\t\t end your turn");
         System.out.println("\t" + USE_TOOL_CARD + ":\t\t use a tool card");

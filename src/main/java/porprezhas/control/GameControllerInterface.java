@@ -13,7 +13,7 @@ public interface GameControllerInterface extends Remote {
     GameInterface getGame() throws RemoteException;
 
    boolean choosePattern(Player player, int indexPatternType) throws RemoteException;
-    boolean insertDice(Integer indexDice, Integer xPose, Integer yPose) throws RemoteException;
+    boolean insertDice(Integer indexDice, Integer row, Integer column) throws RemoteException;
     boolean useToolCard(int cardId) throws RemoteException;  // TODO:
 
 

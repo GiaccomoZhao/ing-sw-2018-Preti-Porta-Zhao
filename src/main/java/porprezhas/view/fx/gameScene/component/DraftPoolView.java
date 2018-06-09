@@ -29,11 +29,9 @@ public class DraftPoolView {
 //    private List<DiceView> diceList;
 
     private DiceContainer idBoard = DiceContainer.DRAFT;    // Unknonw
-    private int nDice;
 
     public DraftPoolView() {
         stackPane = new StackPane();
-        nDice = 0;
     }
 
     public void setup(Pane parent) {
@@ -95,11 +93,11 @@ public class DraftPoolView {
                                 Node node = stackPane.getChildren().get(i);
                                 if (node instanceof DiceView) {
                                     DiceView guiDiceView = (DiceView) node;
-                                    if (draggedDiceView.getIndexDice() == draggedDiceView.getIndexDice() &&
-                                            guiDiceView.getColumn() == draggedDiceView.getColumn() &&
-                                            guiDiceView.getRow() == draggedDiceView.getRow()) {
-                                        stackPane.getChildren().get(i).setTranslateX(x);
-                                        stackPane.getChildren().get(i).setTranslateY(y);
+//                                    if (draggedDiceView.getIndexDice() == draggedDiceView.getIndexDice() &&
+//                                            guiDiceView.getColumn() == draggedDiceView.getColumn() &&
+                                    if(guiDiceView.getRow() == draggedDiceView.getRow()) {
+                                        System.out.println("Translate DiceView " + guiDiceView + " to x = " + x + " \ty = " + y);
+                                        translateDice(guiDiceView, x, y);
                                         break;
                                     }
                                     indexDiceView++;
@@ -148,14 +146,14 @@ public class DraftPoolView {
     }
 
 
-    private DiceView addDice(Dice dice, double width, double height, double radiant) {
+    private DiceView addDice(Dice dice, int indexDraft, double width, double height, double radiant) {
         int x, y;
         double cx = 0;  // center of eclipse
         double cy = 0;
         x = (int) (cx + width/2 * Math.cos(radiant));     // equation of eclipse in polar representation
         y = (int) (cy + height/2 * Math.sin(radiant));
 
-        return addDice(dice, x, y);
+        return addDice(dice, x, y, indexDraft);
     }
 /*
     private DiceView addDice(Dice dice, double ρ, double θ) {
@@ -169,11 +167,11 @@ public class DraftPoolView {
 
     // @Param x,y are the position of dice relative at center of draftPool
     //            can be negative or positive, but should be abs(x) < draftPool.width() && abs(y) < draftPool.height()
-    private DiceView addDice(Dice dice, int x, int y) {
+    private DiceView addDice(Dice dice, int x, int y, int indexDraft) {
         if(bDebug) {
             System.out.println("DraftPool: add dice to x = " + x + " \ty = " + y);
         }
-        DiceView diceView= new DiceView(dice, (int) x, (int) y, nDice); // Create a new Dice Image View
+        DiceView diceView= new DiceView(dice, (int) x, (int) y, indexDraft); // Create a new Dice Image View
         stackPane.getChildren().add(diceView);
 
         diceView.fitWidthProperty().bind(stackPane.widthProperty().divide(8).multiply(DRAFT_DICE_ZOOM));
@@ -200,7 +198,6 @@ public class DraftPoolView {
             if (event.getTransferMode() == TransferMode.MOVE) {
                 int index = getIndexByDiceView(diceView);
                 if(index >= 0) {
-                    // TODO: call controller
                     // controller.chooseDice(index)
 //                    chooseDice(index); //clear()
                     event.consume();
@@ -247,11 +244,12 @@ public class DraftPoolView {
 */
 
     // add extra dice during game
-    public void addDice(Dice dice) {
+    public void addDice(Dice dice, int indexDraft) {
         Random random = new Random();
         double cx = stackPane.getWidth() - 60;
         double cy = stackPane.getHeight() - 60;
         DiceView diceView = addDice( dice,
+                indexDraft,
                 (3- Math.abs(random.nextGaussian())%3)/3 * cx,
                 (3-Math.abs(random.nextGaussian())%3)/3 * cy,
                 random.nextDouble()*2*Math.PI);
@@ -261,7 +259,7 @@ public class DraftPoolView {
                     (int) ((random.nextGaussian() * stackPane.getHeight()) % (stackPane.getHeight()/(2 * Math.sqrt(2)))));
 */
         // set their position
-        playAnimation(diceView, diceView.getColumn(), diceView.getRow());
+        playAnimation(diceView, diceView.getRow(), diceView.getColumn());
     }
 
     // new round
@@ -270,7 +268,7 @@ public class DraftPoolView {
             System.out.println("reroll");
         stackPane.getChildren().clear();
         for (int i = 0; i < newDiceList.size(); i++) {
-            addDice(newDiceList.get(i));
+            addDice(newDiceList.get(i), i);
         }
     }
 
@@ -283,7 +281,7 @@ public class DraftPoolView {
             if(node instanceof DiceView) {
                 Dice newDice = newDiceList.get(indexOfDice);
                 DiceView diceView = (DiceView) node;
-                DiceView newDiceView = new DiceView(newDice, diceView.getColumn(), diceView.getRow(), indexOfDice);
+                DiceView newDiceView = new DiceView(newDice, diceView.getRow(), diceView.getColumn(), indexOfDice);
 
                 stackPane.getChildren().set(indexInStackPane, newDiceView);
 

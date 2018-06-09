@@ -22,10 +22,10 @@ public class RoundTrackBoardView extends GenericBoardView {
     private final int ROUND_QUANTITY;
 
     // Create a new BoardView by ... for RoundTrack, can be used for different
-    public RoundTrackBoardView(int COLUMN, int ROW) {
+    public RoundTrackBoardView(int ROW, int COLUMN) {
         super(DiceContainer.TRACK, ROW, COLUMN);
         setDiceZoom(TRACK_DICE_ZOOM);
-        ROUND_QUANTITY  =COLUMN;
+        ROUND_QUANTITY  = COLUMN;
         backGround = new VBox[ROUND_QUANTITY];
         for (int i = 0; i < ROUND_QUANTITY; i++) {
             backGround[i] = new VBox();
@@ -63,14 +63,14 @@ public class RoundTrackBoardView extends GenericBoardView {
             }
         }
         for (Dice dice : diceList) {
-            DiceView diceView = super.addDice(dice, indexRound, row);   // add dice in 0th row
+            DiceView diceView = super.addDice(dice, row, indexRound);   // add dice in 0th row
             getBoard().setRowSpan(backGround[indexRound], ++row);       // row span -> 1
         }
     }
 
     // Add Dice to Round Track
     @Override
-    public DiceView addDice(Dice dice, int indexRound, int nothing) {
+    public DiceView addDice(Dice dice, int nothing, int indexRound) {
         final int iRound = indexRound;    // conversion of variable number to better understand its meaning
         int row = 0;    // we just ignore row parameter
         for (Node node : getBoard().getChildren()) {
@@ -98,13 +98,13 @@ public class RoundTrackBoardView extends GenericBoardView {
     }
 
     public void update(List<Dice>[] dices) {
-        Dice[][] diceMatrix = new Dice[ROUND_QUANTITY][getROW()];
+        Dice[][] diceMatrix = new Dice[getROW()][ROUND_QUANTITY];
 
         getBoard().getChildren().clear();
         for (int col = 0; col < ROUND_QUANTITY; col++) {
             for (int row = 0; row < getROW(); row++) {
-                if(null != diceMatrix[col][row]) {
-                    super.addDice(diceMatrix[col][row], col, row);
+                if(null != diceMatrix[row][col]) {
+                    super.addDice(diceMatrix[row][col], row, col);
                 }
             }
         }

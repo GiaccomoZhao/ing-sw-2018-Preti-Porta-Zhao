@@ -206,8 +206,8 @@ public class Game extends ModelObservable implements GameInterface {
         return new ArrayList<Player>(playerList);
     }
 
-    public Player getIndexFirstPlayer() {
-        return playerList.get(iFirstPlayer);
+    public int getIndexFirstPlayer() {
+        return iFirstPlayer;
     }
 
     public Player getCurrentPlayer() {
@@ -471,15 +471,15 @@ public class Game extends ModelObservable implements GameInterface {
 //    public int calcScore(Player player) {
 
 
-    public synchronized boolean InsertDice(int indexDice, int xPose, int yPose) {
+    public synchronized boolean insertDice(int indexDice, int row, int col) throws IndexOutOfBoundsException {
         Dice dice = draftPool.diceList().get(indexDice);
 
         if (currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
-            if (currentPlayer.getBoard().validMove(dice, xPose, yPose)) {
+            if (currentPlayer.getBoard().validMove(dice, row, col)) {
 
                 dice = draftPool.chooseDice(indexDice);
                 if(null != dice) {
-                    currentPlayer.placeDice(dice, xPose, yPose);
+                    currentPlayer.placeDice(dice, row, col);
 
                     gameNotifyState = DICE_INSERTED;
                     setChanged();

@@ -8,6 +8,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import java.io.File;
 
 public class GuiSettings {
+    public static boolean bFixedFont = false;
+
     // ***** Game GUI attributes *****
     // path
     public static final String pathToBackground = "background/";

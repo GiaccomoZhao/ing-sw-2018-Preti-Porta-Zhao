@@ -29,12 +29,12 @@ public class DraftPool implements Serializable {
 
         Dice chosenDice;
 
-        if(Useful.isValueBetweenInclusive(indexDice, 1 , draftPool.size())){
+        if(Useful.isValueBetweenInclusive(indexDice, 0 , draftPool.size()-1)){
             chosenDice = draftPool.remove(indexDice);
 
             return chosenDice;
-        }
-        return null;
+        } else
+            throw new IndexOutOfBoundsException("index in draft pool: 0 <= " +  indexDice + " <= " + (draftPool.size()-1));
     }
 
     // Only Server can do this operation

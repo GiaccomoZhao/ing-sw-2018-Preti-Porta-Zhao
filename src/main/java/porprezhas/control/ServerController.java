@@ -232,9 +232,9 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return -1;
     }*/
     @Override
-    public Boolean insertedDice(int dicePosition, int xBoard, int yBoard, String username) throws RemoteException {
+    public Boolean insertedDice(int dicePosition, int rowBoard, int columnBoard, String username) throws RemoteException {
         if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
-            if(this.getGameControllerByUsername(username).getGame().InsertDice(dicePosition, xBoard, yBoard))
+            if(this.getGameControllerByUsername(username).getGame().insertDice(dicePosition, rowBoard, columnBoard))
                 return true;
         return false;
         //TO_DO FIX

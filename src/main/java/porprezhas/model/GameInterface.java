@@ -19,7 +19,7 @@ public interface GameInterface {
     public RoundTrack getRoundTrack();
     public Game.NotifyState getGameState();
 
-    boolean InsertDice(int indexDice, int xPose, int yPose);
+    boolean insertDice(int indexDice, int xPose, int yPose);
     boolean isSolitaire();
     long getRoundTimeOut();
     boolean setPattern(Player player, int indexPatternType);

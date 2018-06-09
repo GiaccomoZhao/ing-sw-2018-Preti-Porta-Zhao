@@ -146,15 +146,19 @@ public class Player implements Serializable {
 
     public boolean choosePatternCard (int indexPatternType) {
         if(indexPatternType < patternsToChoose.size()) {
-            this.board = new Board(
-                    patternsToChoose.get(indexPatternType));
+            if(indexPatternType == -666)        // NOTE: for test use... do not forget to remove it on release! (not TO-DO)
+                this.board = new Board(Pattern.TypePattern.VOID);
+            else {
+                this.board = new Board(
+                        patternsToChoose.get(indexPatternType));
+            }
             return true;
         }
         return false;
     }
 
-    public void placeDice(Dice dice, int x, int y) {
-        board.insertDice(dice, x, y);
+    public void placeDice(Dice dice, int row, int col) {
+        board.insertDice(dice, row, col);
         pickableDice--;
         }
 

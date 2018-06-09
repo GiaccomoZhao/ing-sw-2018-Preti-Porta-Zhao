@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="pane" prefHeight="160.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="porprezhas.view.fx.gameScene.controller.EnemyViewController">
+<HBox fx:id="fx_pane" prefHeight="160.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="porprezhas.view.fx.gameScene.controller.EnemyViewController">
     <children>
         <Label prefHeight="57.0" prefWidth="57.0" HBox.hgrow="NEVER">
             <graphic>
-                <ImageView fx:id="icon" fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="fx_icon" fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="head/64x64x64/head_62.png" />
                     </image>
@@ -28,7 +28,7 @@
         </Label>
         <VBox prefHeight="200.0" prefWidth="160.0" HBox.hgrow="SOMETIMES">
             <children>
-                <Label fx:id="name" minWidth="160.0" prefHeight="20.0" prefWidth="160.0" text="贝姐">
+                <Label fx:id="fx_name" minWidth="160.0" prefHeight="20.0" prefWidth="160.0" text="贝姐">
                     <padding>
                         <Insets left="12.0" top="4.0" />
                     </padding>
@@ -45,7 +45,7 @@
                         <RowConstraints vgrow="SOMETIMES" minHeight="0.0" percentHeight="10.0" prefHeight="48.0" />
                     </rowConstraints>
                     <children>
-                        <GridPane fx:id="board" gridLinesVisible="true" minHeight="128.0" minWidth="160.0" prefHeight="128.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <GridPane fx:id="fx_board" gridLinesVisible="true" minHeight="128.0" minWidth="160.0" prefHeight="128.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 
                             <columnConstraints>
                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
@@ -67,12 +67,12 @@
         </VBox>
         <AnchorPane minWidth="42.0" prefHeight="200.0" prefWidth="32.0">
             <children>
-                <ImageView fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="32.0">
+                <ImageView fx:id="fx_bag" fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="32.0">
                     <image>
                         <Image url="other/bag.png" />
                     </image>
                 </ImageView>
-                <FlowPane alignment="TOP_CENTER" prefHeight="32.0" prefWidth="32.0" rowValignment="TOP" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
+                <FlowPane fx:id="fx_tokens" alignment="TOP_CENTER" prefHeight="32.0" prefWidth="32.0" rowValignment="TOP" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
                     <children>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -107,7 +107,7 @@
                         </ImageView>
                     </children>
                 </FlowPane>
-                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
+                <ImageView fx:id="fx_timeout" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
                     <image>
                         <Image url="other/timeout.png" />
                     </image>

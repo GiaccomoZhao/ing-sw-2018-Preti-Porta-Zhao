@@ -8,11 +8,12 @@ import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.dices.Box;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
+import porprezhas.view.fx.gameScene.GuiSettings;
 
 import java.util.List;
 
 public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
-    boolean bFixedFont = false;
+    boolean bFixedFont = GuiSettings.bFixedFont;
 
     private String username;
     private final int HEIGHT = 4;

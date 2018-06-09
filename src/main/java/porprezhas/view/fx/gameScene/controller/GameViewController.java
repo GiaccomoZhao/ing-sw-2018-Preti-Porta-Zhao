@@ -23,13 +23,11 @@ import porprezhas.model.cards.PrivateObjectiveCard;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
-import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.component.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import static porprezhas.Useful.*;
@@ -39,33 +37,37 @@ public class GameViewController implements GameViewUpdaterInterface {
 
     //  ***** JavaFX attributes *****
     // these will be initialized by the FXMLLoader when the load() method is called
-    @FXML private AnchorPane gameScene;   // top parent layout
-    @FXML private StackPane gamePane;   // fx:id="gamePane"
+    @FXML private AnchorPane fx_gameScene;   // top parent layout
+    @FXML private StackPane fx_gamePane;   // fx:id="fx_gamePane"
 
-    @FXML private VBox enemyPanesParent;    // contain all enemies board
+    @FXML private VBox fx_enemyPanesParent;    // contain all enemies board
 
-    @FXML private HBox playerPane;     // parent of playerBoard, used to resize playerBoard
-    @FXML private GridPane playerBoard;
-    @FXML private Button buttonPass;
+    @FXML private HBox fx_playerPane;     // parent of fx_playerBoard, used to resize fx_playerBoard
+    @FXML private GridPane fx_playerBoard;
+    @FXML private ImageView fx_bag;
+    @FXML private FlowPane fx_tokens;
+    @FXML private ImageView fx_timeout;
+
+    @FXML private Button fx_buttonPass;
 
 //    @FXML private GridPane roundTrackDiceTable;
-    @FXML private HBox roundTrack;
-    @FXML private VBox diceListReference;   // this is used because grid pane didn't cover all the space of parent grid pane
+    @FXML private HBox fx_roundTrack;
+    @FXML private VBox fx_diceListReference;   // this is used because grid pane didn't cover all the space of parent grid pane
 
-    @FXML private HBox draftPoolParent;
+    @FXML private HBox fx_draftPoolParent;
 
-    @FXML private TabPane tabPane;
-    @FXML private StackPane toolCardPane;
-    @FXML private StackPane privateCardPane;
-    @FXML private StackPane publicCardPane;
+    @FXML private TabPane fx_tabPane;
+    @FXML private StackPane fx_toolCardPane;
+    @FXML private StackPane fx_privateCardPane;
+    @FXML private StackPane fx_publicCardPane;
 
 
     //  ***** VIDEO Setting attributes *****
     // TODO: this can be imported in the VIDEO settings
     private final double enemyPaneSpacingRatio = 0.3 ;  // should be in range [0, 1]
 
-    private final double buttonSpacingRatio = 0.4;      // sum of 2 button ratio should be in range [0,1.4], otherwise the playerBoard's size would decrease
-    private final double buttonIncreaseRatio = 1.0;     // if the sum == 1.4 then the playerBoard size would keep width/height ratio
+    private final double buttonSpacingRatio = 0.4;      // sum of 2 button ratio should be in range [0,1.4], otherwise the fx_playerBoard's size would decrease
+    private final double buttonIncreaseRatio = 1.0;     // if the sum == 1.4 then the fx_playerBoard size would keep width/height ratio
                                                         // NB. this value of 1.4 may depends by monitor
     private final double defaultPassButtonMinSize = 60;          // this should be bigger than 60, for big resolution monitor would need a bigger value
 
@@ -137,7 +139,7 @@ public class GameViewController implements GameViewUpdaterInterface {
 
         enemyViewControllers = new ArrayList<>();
 
-        roundTrackBoard = new RoundTrackBoardView(Game.GameConstants.ROUND_NUM, Game.GameConstants.MAX_DICE_PER_ROUND);
+        roundTrackBoard = new RoundTrackBoardView(Game.GameConstants.MAX_DICE_PER_ROUND, Game.GameConstants.ROUND_NUM);
 /*        for (int i = 0; i < num_player; i++) {
             boardList.add(new GridPane());
         }*/
@@ -189,9 +191,9 @@ public class GameViewController implements GameViewUpdaterInterface {
     private void setupCards() {
         System.out.println("Setup Cards");
 
-        cardPanes[CardTab.TOOL_CARD.ordinal()] = new CardPane(toolCardPane, CardTab.TOOL_CARD, pathToToolCard);
-        cardPanes[CardTab.PRIVATE_CARD.ordinal()] = new CardPane(privateCardPane, CardTab.PRIVATE_CARD, pathToPrivateCard);
-        cardPanes[CardTab.PUBLIC_CARD.ordinal()] = new CardPane(publicCardPane, CardTab.PUBLIC_CARD, pathToPublicCard);
+        cardPanes[CardTab.TOOL_CARD.ordinal()] = new CardPane(fx_toolCardPane, CardTab.TOOL_CARD, pathToToolCard);
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()] = new CardPane(fx_privateCardPane, CardTab.PRIVATE_CARD, pathToPrivateCard);
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()] = new CardPane(fx_publicCardPane, CardTab.PUBLIC_CARD, pathToPublicCard);
 
         List<Card> toolCards = new ArrayList<>();
         toolCards.add(new ToolCard(Card.Effect.TC4));
@@ -342,14 +344,14 @@ public class GameViewController implements GameViewUpdaterInterface {
     }
 
     private void setupDraftPool() {
-        draftPoolView.setup(draftPoolParent);
+        draftPoolView.setup(fx_draftPoolParent);
     }
 
 
 
     private void setupRoundTrackListener() {
         // set show/hide round dice list listener on every round number image view
-        for (Node node : roundTrack.getChildren()) {
+        for (Node node : fx_roundTrack.getChildren()) {
             ImageView roundNumberImage = (ImageView) node;
 
             // drop down the list of dice
@@ -488,15 +490,15 @@ public class GameViewController implements GameViewUpdaterInterface {
                 System.err.println("" + event);
             }
         });
-/*        roundTrack.setOnMouseMoved(event -> {
+/*        fx_roundTrack.setOnMouseMoved(event -> {
             onMovingInRoundTrack(event);
         });
 */    }
 
 
     private void setupRoundTrack() {
-        if( roundTrack.getParent() instanceof GridPane) {
-            GridPane parentGridPane = (GridPane) roundTrack.getParent();
+        if( fx_roundTrack.getParent() instanceof GridPane) {
+            GridPane parentGridPane = (GridPane) fx_roundTrack.getParent();
 
 //            roundTrackBoard.getBoard().prefWidthProperty().bind( parentGridPane.widthProperty() );
 //            roundTrackBoard.getBoard().prefHeightProperty().bind( parentGridPane.heightProperty());
@@ -523,18 +525,24 @@ public class GameViewController implements GameViewUpdaterInterface {
         if(bDebug) {
             System.out.println("Setup board"); }
         boardList.clear();  // this must be redundant but i want keep safe
+//        fx_enemyPanesParent.getChildren().clear();
 
         for (int i = 0, offset = 0; i < playersInfo.size(); i++) {
             PlayerInfo playerInfo = playersInfo.get(i);
             // assign the boards to a list, for simplify the use
             if( i == getPlayerPosition()) {
-                boardList.add(new BoardView(playerBoard, i));
+                boardList.add(i,
+                        new BoardView(i, fx_playerBoard, fx_bag, fx_tokens, fx_timeout));
                 offset++;
             } else {
 //                 gridPane = enemyViewControllers.get(i + offset).getBoard();
-                boardList.add(new BoardView(
-                        enemyViewControllers.get(i - offset).getBoard(),
-                        i));
+                boardList.add(i,        // this 'i' is index of cycle
+                        new BoardView(i,    // this 'i' is server.game.player.position
+                                enemyViewControllers.get(i - offset).getBoard(),
+                                enemyViewControllers.get(i - offset).getBag(),
+                                enemyViewControllers.get(i - offset).getTokens(),
+                                enemyViewControllers.get(i - offset).getTimer()) );
+//                fx_enemyPanesParent.getChildren().add(boardList.get(i).getBoard());
             }
 
             boardList.get(i).setPattern(playerInfo.typePattern);
@@ -546,7 +554,7 @@ public class GameViewController implements GameViewUpdaterInterface {
     private void setEnemyPanes() {
         if(bDebug) {
             System.out.println("Loading Enemy Pane"); }
-        enemyPanesParent.getChildren().clear();
+        fx_enemyPanesParent.getChildren().clear();
         for (int i = 0; i < enemyPanes.length; i++) {
             // Load the panel from .fxml
             FXMLLoader loader = new FXMLLoader();   //NOTE: We must create more time loader to get multiple pane; Otherwise only one pane would be displayed
@@ -563,7 +571,7 @@ public class GameViewController implements GameViewUpdaterInterface {
                 System.out.println("Enemy Pane View Loaded successfully"); }
 
             // add the enemy panel on the game view
-            enemyPanesParent.getChildren().add(enemyPanes[i]);
+            fx_enemyPanesParent.getChildren().add(enemyPanes[i]);
 
             // get controller
             EnemyViewController enemyViewController = loader.getController();
@@ -582,8 +590,8 @@ public class GameViewController implements GameViewUpdaterInterface {
         cursorHandUp = new ImageCursor(
                 new Image(pathToCursor + "cursor_hand_up.png") );
 
-        gameScene.setCursor(cursorHand);
-//        gamePane.setCursor(cursorHand);
+        fx_gameScene.setCursor(cursorHand);
+//        fx_gamePane.setCursor(cursorHand);
     }
 
     private void setBackground() {
@@ -591,27 +599,27 @@ public class GameViewController implements GameViewUpdaterInterface {
                     new BackgroundFill(new ImagePattern(
                             new Image(pathToBackground + "game.jpeg")),
                             CornerRadii.EMPTY, Insets.EMPTY));
-            gamePane.setBackground(background);
+            fx_gamePane.setBackground(background);
     }
 
     private void setResizeListener() {
-        gamePane.heightProperty().addListener( (observable, oldValue, newValue) -> {
+        fx_gamePane.heightProperty().addListener( (observable, oldValue, newValue) -> {
             updateEnemyPaneSize(newValue.doubleValue());
-//            updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());  // commented because we don't know the new value of height
+//            updatePlayerPaneSize(fx_playerPane.getWidth(), fx_playerPane.getHeight());  // commented because we don't know the new value of height
         });
 
-        playerPane.heightProperty().addListener((observable, oldValue, newValue) -> {
-                updatePlayerPaneSize(playerPane.getWidth(), newValue.doubleValue());
+        fx_playerPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+                updatePlayerPaneSize(fx_playerPane.getWidth(), newValue.doubleValue());
         });
-        playerPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-                updatePlayerPaneSize(newValue.doubleValue(), playerPane.getHeight());
+        fx_playerPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+                updatePlayerPaneSize(newValue.doubleValue(), fx_playerPane.getHeight());
         });
 
-        ((Pane) roundTrack.getParent()).widthProperty().addListener((observable, oldValue, newValue) -> {
-            updateRoundTrackSize(newValue.doubleValue(), ((Pane) roundTrack.getParent()).getHeight());
+        ((Pane) fx_roundTrack.getParent()).widthProperty().addListener((observable, oldValue, newValue) -> {
+            updateRoundTrackSize(newValue.doubleValue(), ((Pane) fx_roundTrack.getParent()).getHeight());
         });
-        ((Pane) roundTrack.getParent()).heightProperty().addListener((observable, oldValue, newValue) -> {
-            updateRoundTrackSize(((Pane) roundTrack.getParent()).getWidth(), newValue.doubleValue());
+        ((Pane) fx_roundTrack.getParent()).heightProperty().addListener((observable, oldValue, newValue) -> {
+            updateRoundTrackSize(((Pane) fx_roundTrack.getParent()).getWidth(), newValue.doubleValue());
         });
     }
 
@@ -622,7 +630,7 @@ public class GameViewController implements GameViewUpdaterInterface {
         final int designedEnemyNumber = 3;
         final double desiredEnemyPaneWidth = 260.0;
         final double desiredEnemyPaneHeight = 160.0;
-        final double referenceEnemyPaneHeight = 500.0;   // this is the reference min height of the gamePane with 3 enemies
+        final double referenceEnemyPaneHeight = 500.0;   // this is the reference min height of the fx_gamePane with 3 enemies
         final double enemyPaneWidthFactor = desiredEnemyPaneWidth / desiredEnemyPaneHeight;    // this is the ratio between width and height of a single enemy pane
         final double enemyPaneHeightFactor = desiredEnemyPaneHeight / referenceEnemyPaneHeight;    // this is the ratio of enemy panel's height on entire game's height
 
@@ -646,7 +654,7 @@ public class GameViewController implements GameViewUpdaterInterface {
         double paneWidth = paneHeight * enemyPaneWidthFactor;
 
         // if the height isn't narrow increase size and gap between enemy panels
-        enemyPanesParent.setSpacing(totalSpacing / (num_player-1 +1));  // num_player -1 == enemy_num;
+        fx_enemyPanesParent.setSpacing(totalSpacing / (num_player-1 +1));  // num_player -1 == enemy_num;
                                                                         // +1 for spacing top and bottom too,
                                                                         // -1 if you just want increase the gap
         for ( Pane pane: enemyPanes) {
@@ -654,7 +662,7 @@ public class GameViewController implements GameViewUpdaterInterface {
                 pane.setPrefWidth(paneWidth);
                 pane.setPrefHeight(paneHeight);
 /*                if(enemyPanes.length == 1) {
-                    enemyPanesParent.setPadding(new Insets((newValue.doubleValue() - enemyPanes[0].getHeight())/10, 0, 0, 0));
+                    fx_enemyPanesParent.setPadding(new Insets((newValue.doubleValue() - enemyPanes[0].getHeight())/10, 0, 0, 0));
                 }
 */
             }
@@ -664,7 +672,7 @@ public class GameViewController implements GameViewUpdaterInterface {
     // adjust Player panel size, working on button size and layout padding
     private void updatePlayerPaneSize(double playerPaneWidth, double playerPaneHeight) {
         if(bDebug)
-            System.out.println("playerPane: w=" + playerPaneWidth + "\th=" + playerPaneHeight);
+            System.out.println("fx_playerPane: w=" + playerPaneWidth + "\th=" + playerPaneHeight);
 
         // dimension configured for player panel
         final double playerPaneDesiredWidth = 340.0;
@@ -676,12 +684,12 @@ public class GameViewController implements GameViewUpdaterInterface {
             double inc = (w - playerPaneHeight / playerPaneDesiredRatio);
             double spacing = inc * buttonSpacingRatio;
             double buttonSize = defaultPassButtonMinSize + inc * buttonIncreaseRatio;
-            buttonPass.setPrefWidth(buttonSize);
-            ((Pane) buttonPass.getParent()).setPadding(new Insets(
+            fx_buttonPass.setPrefWidth(buttonSize);
+            ((Pane) fx_buttonPass.getParent()).setPadding(new Insets(
                     spacing / 2, spacing / 2, spacing / 2, spacing / 2));
         } else {
-            buttonPass.setPrefWidth(defaultPassButtonMinSize);
-            ((Pane) buttonPass.getParent()).setPadding(new Insets(0, 0, 0, 0));
+            fx_buttonPass.setPrefWidth(defaultPassButtonMinSize);
+            ((Pane) fx_buttonPass.getParent()).setPadding(new Insets(0, 0, 0, 0));
         }
    }
 
@@ -690,14 +698,14 @@ public class GameViewController implements GameViewUpdaterInterface {
        if (bDebug)
            System.out.println("update round track: w=" + roundTrackParentWidth + "\th=" + roundTrackHeight);
        final double referenceButtonSize = 24;  // estimated button size, not necessary to have an accurate measure of this
-       double height = roundTrackHeight;   // roundTrack number icon height
-       double width = (roundTrackParentWidth - referenceButtonSize) / 10;  // roundTrack number icon width, 10 numbers
+       double height = roundTrackHeight;   // fx_roundTrack number icon height
+       double width = (roundTrackParentWidth - referenceButtonSize) / 10;  // fx_roundTrack number icon width, 10 numbers
        if (width >= height) {
            width = height;     // adapt to height
        } else {
            height = width;     // adapt to width, cut height
        }
-       for (Node node : roundTrack.getChildren()) {
+       for (Node node : fx_roundTrack.getChildren()) {
            ImageView imageView = (ImageView) node;
            imageView.setFitHeight(width);  // height == width
            imageView.setFitWidth(width);
@@ -774,24 +782,24 @@ public class GameViewController implements GameViewUpdaterInterface {
     }
 
    public void updateSize() {
-        updateEnemyPaneSize(gamePane.getHeight());
-        updatePlayerPaneSize(playerPane.getWidth(), playerPane.getHeight());
-        updateRoundTrackSize( ((Pane) roundTrack.getParent()).getWidth(),
-                              ((Pane) roundTrack.getParent()).getHeight());
+        updateEnemyPaneSize(fx_gamePane.getHeight());
+        updatePlayerPaneSize(fx_playerPane.getWidth(), fx_playerPane.getHeight());
+        updateRoundTrackSize( ((Pane) fx_roundTrack.getParent()).getWidth(),
+                              ((Pane) fx_roundTrack.getParent()).getHeight());
     }
 
-    public DiceView addDice(int indexPlayer, Dice dice, int col, int row) {
+    public DiceView addDice(int indexPlayer, Dice dice, int row, int col) {
         System.out.println(boardList);
-        return boardList.get(indexPlayer).addDice(dice, col, row);
+        return boardList.get(indexPlayer).addDice(dice, row, col);
     }
 
     public DiceView addDiceToRoundTrack(Dice dice, int round0_9){
-        DiceView diceImage = roundTrackBoard.addDice(dice, round0_9, 0);
+        DiceView diceImage = roundTrackBoard.addDice(dice, 0, round0_9);
 //        if(null != diceImage)
 //        diceImage.setPreserveRatio(false);
 
-//        diceImage.fitWidthProperty().bind( diceListReference.widthProperty() );
-//        diceImage.fitHeightProperty().bind( diceListReference.heightProperty().divide(Game.GameConstants.MAX_DICE_PER_ROUND));
+//        diceImage.fitWidthProperty().bind( fx_diceListReference.widthProperty() );
+//        diceImage.fitHeightProperty().bind( fx_diceListReference.heightProperty().divide(Game.GameConstants.MAX_DICE_PER_ROUND));
         return diceImage;
     }
 
@@ -863,6 +871,7 @@ public class GameViewController implements GameViewUpdaterInterface {
 
         Platform.runLater(new Runnable() {
             @Override public void run() {
+                System.out.println("\n\n\nUpdate Game View!!!\n");
                 // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
                 setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
 
@@ -891,4 +900,29 @@ public class GameViewController implements GameViewUpdaterInterface {
         roundTrackBoard.update(dices);
     }
 
+    public void updateFirstPlayer(Player player) {
+        for (int i = 0; i < boardList.size(); i++) {
+            BoardView boardView = boardList.get(i);
+            if(i == player.getPosition()) {
+                boardView.showBag(true);
+            } else {
+                boardView.showBag(false);
+            }
+        }
+    }
+
+    public void updateTokens(List<Player> players) {
+        ;
+    }
+
+    public void updateTimer(Player player) {
+        for (int i = 0; i < boardList.size(); i++) {
+            BoardView boardView = boardList.get(i);
+            if(i == player.getPosition()) {
+                boardView.showTimer(true);
+            } else {
+                boardView.showTimer(false);
+            }
+        }
+    }
 }

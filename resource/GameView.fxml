@@ -20,11 +20,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="gameScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="fx_gameScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <SplitPane dividerPositions="0.8125" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
-                <StackPane fx:id="gamePane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="650.0" stylesheets="@GameView.css">
+                <StackPane fx:id="fx_gamePane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="650.0" stylesheets="@GameView.css">
                     <children>
                           <HBox prefHeight="598.0" prefWidth="600.0">
                               <children>
@@ -32,7 +32,7 @@
                            <children>
                                           <HBox alignment="CENTER" prefHeight="598.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                               <children>
-                                                  <VBox fx:id="enemyPanesParent" alignment="CENTER" fillWidth="false" prefHeight="598.0" prefWidth="300.0" spacing="2.0" HBox.hgrow="SOMETIMES">
+                                                  <VBox fx:id="fx_enemyPanesParent" alignment="CENTER" fillWidth="false" prefHeight="598.0" prefWidth="300.0" spacing="2.0" HBox.hgrow="SOMETIMES">
 
                                                   </VBox>
                                               </children>
@@ -55,7 +55,7 @@
                                               <children>
                                                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                                       <children>
-                                                          <GridPane fx:id="roundTrackDiceTable" alignment="TOP_CENTER" minHeight="60.0" minWidth="320.0" prefHeight="120.0" prefWidth="320.0" HBox.hgrow="SOMETIMES">
+                                                          <GridPane fx:id="fx_roundTrackDiceTable" alignment="TOP_CENTER" minHeight="60.0" minWidth="320.0" prefHeight="120.0" prefWidth="320.0" HBox.hgrow="SOMETIMES">
                                                               <columnConstraints>
                                                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -81,7 +81,7 @@
                                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                                                               </rowConstraints>
                                                               <children>
-                                                                  <HBox fx:id="roundTrack" alignment="BOTTOM_CENTER" onMouseMoved="#onMovingInRoundTrack" prefHeight="32.0" prefWidth="320.0" spacing="2.0" GridPane.columnSpan="10" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                                                                  <HBox fx:id="fx_roundTrack" alignment="BOTTOM_CENTER" onMouseMoved="#onMovingInRoundTrack" prefHeight="32.0" prefWidth="320.0" spacing="2.0" GridPane.columnSpan="10" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                                                                       <children>
                                                                           <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                                                               <image>
@@ -135,7 +135,7 @@
                                                                           </ImageView>
                                                                       </children>
                                                                   </HBox>
-                                                                  <VBox fx:id="diceListReference" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1" GridPane.rowSpan="9" />
+                                                                  <VBox fx:id="fx_diceListReference" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1" GridPane.rowSpan="9" />
                                                               </children>
                                                           </GridPane>
                                                           <VBox minHeight="16.0" minWidth="16.0" prefHeight="32.0" prefWidth="32.0" HBox.hgrow="SOMETIMES">
@@ -152,7 +152,7 @@
                                                           </VBox>
                                                       </children>
                                                   </HBox>
-                                                  <HBox fx:id="draftPoolParent" alignment="CENTER" minHeight="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.vgrow="SOMETIMES">
+                                                  <HBox fx:id="fx_draftPoolParent" alignment="CENTER" minHeight="200.0" minWidth="200.0" prefHeight="200.0" prefWidth="200.0" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.vgrow="SOMETIMES">
                                        <GridPane.margin>
                                           <Insets right="50.0" />
                                        </GridPane.margin>
@@ -176,7 +176,7 @@
                                                 </ButtonBar>
                                              </children>
                                                           </HBox>
-                                                          <HBox fx:id="playerPane" minHeight="200.0" minWidth="240.0" prefHeight="200.0" prefWidth="340.0" VBox.vgrow="SOMETIMES">
+                                                          <HBox fx:id="fx_playerPane" minHeight="200.0" minWidth="240.0" prefHeight="200.0" prefWidth="340.0" VBox.vgrow="SOMETIMES">
                                                               <children>
                                                                   <VBox prefHeight="192.0" prefWidth="240.0" HBox.hgrow="SOMETIMES">
                                                                       <children>
@@ -192,7 +192,7 @@
                                                                                   <RowConstraints minHeight="0.0" percentHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
                                                                               </rowConstraints>
                                                                               <children>
-                                                                                  <GridPane fx:id="playerBoard" gridLinesVisible="true" minHeight="128.0" minWidth="160.0" prefHeight="128.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                  <GridPane fx:id="fx_playerBoard" gridLinesVisible="true" minHeight="128.0" minWidth="160.0" prefHeight="128.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 
                                                                                       <columnConstraints>
                                                                                           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="32.0" prefWidth="32.0" />
@@ -214,7 +214,7 @@
                                                                   </VBox>
                                                                   <VBox prefHeight="200.0" prefWidth="42.0">
                                                                       <children>
-                                                                          <ImageView fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                          <ImageView fx:id="fx_bag" fitHeight="100.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                                                               <image>
                                                                                   <Image url="other/bag.png" />
                                                                               </image>
@@ -222,7 +222,7 @@
                                                                                   <Insets bottom="16.0" left="10.0" top="16.0" />
                                                                               </VBox.margin>
                                                                           </ImageView>
-                                                                          <FlowPane alignment="TOP_CENTER" prefHeight="200.0" prefWidth="32.0" rowValignment="TOP">
+                                                                          <FlowPane fx:id="fx_tokens" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="32.0" rowValignment="TOP">
                                                                               <children>
                                                                                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                                                                       <image>
@@ -250,7 +250,7 @@
                                                                                   <Insets left="10.0" />
                                                                               </VBox.margin>
                                                                           </FlowPane>
-                                                                          <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                                          <ImageView fx:id="fx_timeout" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                                                               <image>
                                                                                   <Image url="other/timeout.png" />
                                                                               </image>
@@ -265,7 +265,7 @@
                                                                   </VBox>
                                                                   <AnchorPane>
                                                                       <children>
-                                                                          <Button fx:id="buttonPass" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onPass" prefHeight="120.0" prefWidth="68.0" text="Pass" textAlignment="CENTER" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="2.0" />
+                                                                          <Button fx:id="fx_buttonPass" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onPass" prefHeight="120.0" prefWidth="68.0" text="Pass" textAlignment="CENTER" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="2.0" />
                                                                       </children>
                                                                       <padding>
                                                                           <Insets bottom="20.0" />
@@ -311,13 +311,13 @@
                                             <children>
                                                 <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <children>
-                                          <TabPane fx:id="tabPane" minHeight="300.0" prefHeight="500.0" prefWidth="150.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES">
+                                          <TabPane fx:id="fx_tabPane" minHeight="300.0" prefHeight="500.0" prefWidth="150.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES">
                                             <tabs>
                                               <Tab onSelectionChanged="#onToolCardTab" text="Tool Card">
                                                 <content>
                                                   <AnchorPane minHeight="0.0" minWidth="0.0">
                                                          <children>
-                                                            <StackPane fx:id="toolCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                                            <StackPane fx:id="fx_toolCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
                                                                <padding>
                                                                   <Insets bottom="3.0" left="6.0" right="3.0" top="6.0" />
                                                                </padding></StackPane>
@@ -328,7 +328,7 @@
                                                 <content>
                                                     <AnchorPane minHeight="0.0" minWidth="0.0">
                                                         <children>
-                                                            <StackPane fx:id="publicCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                                            <StackPane fx:id="fx_publicCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
                                                                 <padding>
                                                                     <Insets bottom="3.0" left="6.0" right="3.0" top="6.0" />
                                                                 </padding></StackPane>
@@ -339,7 +339,7 @@
                                                    <content>
                                                        <AnchorPane minHeight="0.0" minWidth="0.0">
                                                            <children>
-                                                               <StackPane fx:id="privateCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                                               <StackPane fx:id="fx_privateCardPane" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
                                                                    <padding>
                                                                        <Insets bottom="3.0" left="6.0" right="3.0" top="6.0" />
                                                                    </padding></StackPane>
