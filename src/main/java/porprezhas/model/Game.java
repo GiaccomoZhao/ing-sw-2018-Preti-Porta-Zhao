@@ -476,7 +476,7 @@ public class Game extends ModelObservable implements GameInterface {
 
 
     public synchronized boolean insertDice(int indexDice, int row, int col)
-            throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
+            throws IndexOutOfBoundsException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException
     {
         if (!Useful.isValueBetweenInclusive(indexDice, 0, draftPool.diceList().size() -1))
@@ -484,7 +484,12 @@ public class Game extends ModelObservable implements GameInterface {
 
         Dice dice = draftPool.diceList().get(indexDice);
 
-        if (currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
+        if (!currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
+            throw new AlreadyPickedException(
+                    "You have already Placed a Dice!\n" +
+                    "Use Tool Card or Pass your turn please!"
+            );
+        } else {
             if (currentPlayer.getBoard().validMove(dice, row, col)) {
 
                 dice = draftPool.chooseDice(indexDice);

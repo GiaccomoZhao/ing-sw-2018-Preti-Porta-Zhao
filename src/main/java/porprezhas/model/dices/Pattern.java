@@ -2,7 +2,6 @@ package porprezhas.model.dices;
 
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
 
 public class Pattern implements Serializable {
     // 24 types + 1
@@ -34,15 +33,15 @@ public class Pattern implements Serializable {
         FULGOR_DEL_CIELO
     }
 
-    private final int HEIGHT = 4;
-    private final int WIDTH = 5;
+    private final int ROW = Board.ROW;
+    private final int COLUMN = Board.COLUMN;
     private final String namePattern;
     private final TypePattern typePattern;
     private final int difficulty;
     private Box[][] pattern;
 
     public Pattern(TypePattern typePattern) {
-       pattern = new Box[HEIGHT][WIDTH];
+       pattern = new Box[ROW][COLUMN];
         this. typePattern = typePattern;
 
        switch(typePattern){
@@ -538,8 +537,8 @@ public class Pattern implements Serializable {
 
 
        }
-        for(int i=0; i<HEIGHT; i++){
-            for(int j=0; j<WIDTH; j++)
+        for(int i = 0; i< ROW; i++){
+            for(int j = 0; j< COLUMN; j++)
             {
                 if(pattern[i][j]==null)
                     pattern[i][j]=new Box();
@@ -549,11 +548,11 @@ public class Pattern implements Serializable {
 
 
     public int getHeight() {
-        return HEIGHT;
+        return ROW;
     }
 
     public int getWidth() {
-        return WIDTH;
+        return COLUMN;
     }
 
     public Box getBox(int x, int y){
@@ -575,9 +574,9 @@ public class Pattern implements Serializable {
         return namePattern;
     }
 
-    public Boolean checkEdges(int i, int j){
+    public Boolean checkEdges(int row, int col){
 
-        if(i==0 || i==WIDTH-1 || j==0 || j==HEIGHT-1 )
+        if(col == 0  ||  col == COLUMN -1  ||  row == 0  ||  row == ROW -1 )
             return Boolean.TRUE;
         else
             return Boolean.FALSE;
