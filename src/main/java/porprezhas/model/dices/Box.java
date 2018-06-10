@@ -72,7 +72,7 @@ public class Box implements Serializable {
         }
 
         if (restriction.hasNumberRestriction() &&
-                0 != this.number &&
+                !noNumber() &&
                 this.number != dice.getDiceNumber() ) {
             return Boolean.FALSE;
         }

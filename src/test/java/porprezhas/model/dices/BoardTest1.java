@@ -1,7 +1,8 @@
-package porprezhas.model.cards;
+package porprezhas.model.dices;
 
 import org.junit.Before;
 import org.junit.Test;
+import porprezhas.exceptions.diceMove.BoardCellOccupiedException;
 import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Box;
 import porprezhas.model.dices.Dice;
@@ -12,7 +13,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
-public class BoardTest {
+public class BoardTest1 {
 
     Pattern pattern;
     Dice die, die1, die0;
@@ -61,19 +62,27 @@ public class BoardTest {
 
     }
 
-    @Test
+    @Test (expected = BoardCellOccupiedException.class)
     public void insertDiceTest() {
 
         assertEquals(board.getDiceQuantity(), 0);
         assertTrue( board.insertDice(die, 0,0));
         assertEquals(board.getDiceQuantity(), 1);
-        assertFalse( board.insertDice(die, 0,0));
+
+        BoardCellOccupiedException exception = null;
+        try {
+            assertFalse( board.insertDice(die, 0,0));
+        } catch (BoardCellOccupiedException e) {
+            exception = e;
+        }
+
         assertEquals(board.getDiceQuantity(), 1);
-        assertFalse(board.occupiedBox(0,1));
+        assertFalse(board.isBoxOccupied(0,1));
         assertTrue(board.insertDice(die, 1,1));
         assertEquals(board.getDiceQuantity(), 2);
 
 
+        throw exception;
     }
 
 

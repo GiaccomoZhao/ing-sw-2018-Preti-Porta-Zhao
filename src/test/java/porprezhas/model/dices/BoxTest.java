@@ -37,8 +37,8 @@ public class BoxTest {
         }
     }
 
-    @Test
     // n square test
+    @Test
     public void fullTest() {
         int checked = 0;
         int total = 0;
@@ -58,7 +58,7 @@ public class BoxTest {
                     }
                 } else {    // colored
                     if(!dice.getColorDice().equals(box.getColor()) ) {
-//                        System.out.println("box = " + box + " \tdice = " + dice);
+//                        System.out.println("box = " + box + " \tdice = " + dice);     // uncomment to understand where is error when test fails
                         assertEquals(false, box.checkConstraint(dice));
                     }
                     if( 0 != box.getNumber() &&
