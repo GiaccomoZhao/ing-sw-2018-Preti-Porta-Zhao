@@ -1,7 +1,9 @@
 package porprezhas.model;
 
 import porprezhas.RMI.Server.ModelObservable;
+import porprezhas.Useful;
 import porprezhas.control.GameController;
+import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.dices.*;
 import porprezhas.model.track.RoundTrack;
 
@@ -62,7 +64,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_FIRST_PLAYER, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED}
+    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -258,7 +260,7 @@ public class Game extends ModelObservable implements GameInterface {
                 nextPlayer();
             }
         }
-        gameNotifyState = NotifyState.NEW_FIRST_PLAYER;
+        gameNotifyState = NotifyState.NEW_TURN;
         setChanged();
 
         notifyObservers(new SerializableGame(this));
@@ -381,7 +383,8 @@ public class Game extends ModelObservable implements GameInterface {
             }
 
             // give 2 random PatternCard to choose one from 4 faces
-            List<Pattern.TypePattern> patternTypes = Arrays.asList(Pattern.TypePattern.values());
+            List<Pattern.TypePattern> patternTypes = Arrays.asList(Pattern.TypePattern.values())
+                    .subList(1, Pattern.TypePattern.values().length);   // skip test-use void pattern
             Collections.shuffle(patternTypes);
             ArrayList<Pattern.TypePattern> list;
             for (int i = 0; i < playerList.size(); i++) {
@@ -430,6 +433,7 @@ public class Game extends ModelObservable implements GameInterface {
 
     public void nextRound() {
         getDraftPool().setDraftPool(getDiceBag(), playerList.size());
+
         gameNotifyState = NotifyState.NEXT_ROUND;
         setChanged();
 
@@ -471,10 +475,21 @@ public class Game extends ModelObservable implements GameInterface {
 //    public int calcScore(Player player) {
 
 
-    public synchronized boolean insertDice(int indexDice, int row, int col) throws IndexOutOfBoundsException {
+    public synchronized boolean insertDice(int indexDice, int row, int col)
+            throws IndexOutOfBoundsException, AlreadyPickedException,
+            BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException
+    {
+        if (!Useful.isValueBetweenInclusive(indexDice, 0, draftPool.diceList().size() -1))
+            throw new IndexOutOfBoundsException("\nIndex in draft pool should be: 0 <= " + indexDice + " <= " + (draftPool.diceList().size() -1));
+
         Dice dice = draftPool.diceList().get(indexDice);
 
-        if (currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
+        if (!currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
+            throw new AlreadyPickedException(
+                    "You have already Placed a Dice!\n" +
+                    "Use Tool Card or Pass your turn please!"
+            );
+        } else {
             if (currentPlayer.getBoard().validMove(dice, row, col)) {
 
                 dice = draftPool.chooseDice(indexDice);

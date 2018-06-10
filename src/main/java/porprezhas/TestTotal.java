@@ -69,8 +69,8 @@ public class TestTotal {
         // simulate all player choose a pattern, We'll see Game skip ChooseTimeOut
         for (Player player : game.getPlayerList()) {
             int choose = 3;
-            if(player.getName().toUpperCase().contains("ZX"))   // test use
-                choose = -666;
+//            if(player.getName().toUpperCase().contains("ZX"))   // test use
+//                choose = -666;
             if( newGameController.choosePattern(player, choose) ) {
                 System.out.printf("Player: %-12s\tpattern = %s\n", player.getName(), player.getBoard().getPattern().getNamePattern());
             } else {

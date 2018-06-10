@@ -252,7 +252,7 @@ public class ViewClient {
 //①②③④⑤⑥⑦⑧⑨⑩
         switch(state){
 
-            case NEW_FIRST_PLAYER:
+            case NEW_TURN:
                 if(!firstPlayer || !nextPlayer.getName().equals(game.getFirstPlayer().getName()) ) {
                     nextPlayer=game.getFirstPlayer();
 

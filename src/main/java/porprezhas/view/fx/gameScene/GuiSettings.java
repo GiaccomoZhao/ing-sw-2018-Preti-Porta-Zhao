@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import java.io.File;
 
 public class GuiSettings {
-    public static boolean bFixedFont = false;
+    public static boolean bFixedFont = true;
 
     // ***** Game GUI attributes *****
     // path
@@ -23,6 +23,9 @@ public class GuiSettings {
     public static final String pathToCursor = "cursor/";
     public static final String pathToMusic = "sound/music/";
 
+
+    // string
+    public static final String GAME_TITLE = "SAGRADA";
 
     // number
     public static final int BOARD_COLUMN = 5;

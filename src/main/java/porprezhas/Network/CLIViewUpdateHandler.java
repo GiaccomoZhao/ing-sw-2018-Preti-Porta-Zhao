@@ -1,7 +1,6 @@
 package porprezhas.Network;
 
 
-import porprezhas.Network.ViewUpdateHandlerInterface;
 import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.SerializableGameInterface;
@@ -243,7 +242,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 //①②③④⑤⑥⑦⑧⑨⑩
         switch(state){
 
-            case NEW_FIRST_PLAYER:
+            case NEW_TURN:
                // if(!firstPlayer || !nextPlayer.getName().equals(game.getFirstPlayer().getName()) ) {
                  //   nextPlayer=game.getFirstPlayer();
 //

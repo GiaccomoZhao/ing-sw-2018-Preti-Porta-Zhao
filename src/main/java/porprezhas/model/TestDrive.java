@@ -46,10 +46,10 @@ public class TestDrive {
 
         //System.out.println(board.insertDice(dice1, 0,1));
 
-        board.insertDice(dice0, 0, 0);
+        board.insertDice(dice0, 0, 0, Board.Restriction.ALL);
 
-        board.insertDice(dice1, 0,1);
-        board.insertDice(dice2, 1, 1);
+        board.insertDice(dice1, 0,1, Board.Restriction.ALL);
+        board.insertDice(dice2, 1, 1, Board.Restriction.ALL);
         System.out.println("Board");
         for (int i = 0; i <4 ; i++) {
             for (int j = 0; j<5 ; j++) {

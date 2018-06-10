@@ -1,5 +1,6 @@
 package porprezhas.control;
 
+import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
@@ -232,13 +233,24 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return -1;
     }*/
     @Override
-    public Boolean insertedDice(int dicePosition, int rowBoard, int columnBoard, String username) throws RemoteException {
-        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
-            if(this.getGameControllerByUsername(username).getGame().insertDice(dicePosition, rowBoard, columnBoard))
+    public Boolean insertedDice(int dicePosition, int rowBoard, int columnBoard, String username)
+            throws RemoteException,
+            IndexOutOfBoundsException, NotYourTurnException, AlreadyPickedException,
+            BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException
+    {
+        String currentPlayerName = this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName();
+        if(!username.equals(currentPlayerName)) {
+            throw new NotYourTurnException(
+                    "\n" +
+                    "This is not your turn!\n" +
+                    "Current player is: " + currentPlayerName);
+        } else {
+            if (this.getGameControllerByUsername(username).getGame().
+                    insertDice(dicePosition, rowBoard, columnBoard))
                 return true;
-        return false;
-        //TO_DO FIX
-
+            else
+                return false;
+        }
     }
 
     @Override

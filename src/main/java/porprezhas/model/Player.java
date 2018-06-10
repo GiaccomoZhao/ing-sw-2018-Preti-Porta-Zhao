@@ -19,10 +19,10 @@ public class Player implements Serializable {
     private int iconId;
 
     // Game play attribute
-    private List<Pattern.TypePattern> patternsToChoose;
     private Board board;
+    private List<Pattern.TypePattern> patternsToChoose;
     private List<Card> privateObjectiveCardList;
-//    private ScoreMark scoreMark;    // thinking to move this to
+    private List<Card.Effect> toolCardEffect;   // what effect is active on the player
     private int nFavorToken;
 
     // Game control attribute
@@ -35,8 +35,9 @@ public class Player implements Serializable {
         playerID = new Random().nextLong();     // TODO: this should be player's unique (String)username or (Long)ID
         this.name = name;
         nFavorToken = 0;
-        privateObjectiveCardList = new ArrayList<>();
         patternsToChoose = new ArrayList<>();
+        privateObjectiveCardList = new ArrayList<>();
+        toolCardEffect = new ArrayList<>();
 
         bUsedToolCard = false;
         pickableDice = 1;
@@ -140,10 +141,10 @@ public class Player implements Serializable {
         pickableDice = Game.GameConstants.DICE_PICK_PER_TURN;
     }
 
-    public void addPickableDice() {
+/*    public void addPickableDice() {
         pickableDice ++;
     }
-
+*/
     public boolean choosePatternCard (int indexPatternType) {
         if(indexPatternType < patternsToChoose.size()) {
             if(indexPatternType == -666)        // NOTE: for test use... do not forget to remove it on release! (not TO-DO)
@@ -159,6 +160,8 @@ public class Player implements Serializable {
 
     public void placeDice(Dice dice, int row, int col) {
         board.insertDice(dice, row, col);
+        if(this.getName().toUpperCase().contains("ZX"))
+            return;           // test-use player zx can place infinity time dices
         pickableDice--;
         }
 

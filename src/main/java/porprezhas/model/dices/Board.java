@@ -1,6 +1,7 @@
 package porprezhas.model.dices;
 
 import porprezhas.Useful;
+import porprezhas.exceptions.diceMove.*;
 
 import java.io.Serializable;
 
@@ -24,21 +25,21 @@ public class Board implements Serializable {
         }
 
         public boolean hasColorRestriction() {
-            if( 1 == (this.ordinal() & COLOR.ordinal()) ) {
+            if( 0 != (this.value & COLOR.value) ) {
                 return true;
             } else
                 return false;
         }
 
         public boolean hasNumberRestriction() {
-            if( 1 == (this.ordinal() & NUMBER.ordinal()) ) {
+            if( 0 != (this.value & NUMBER.value) ) {
                 return true;
             } else
                 return false;
         }
 
         public boolean hasAdjacentRestriction() {
-            if( 1 == (this.ordinal() & ADJACENT.ordinal()) ) {
+            if( 0 != (this.value & ADJACENT.value) ) {
                 return true;
             } else
                 return false;
@@ -66,6 +67,13 @@ public class Board implements Serializable {
         return pattern;
     }
 
+    public int getRow() {
+        return ROW;
+    }
+
+    public int getColumn() {
+        return COLUMN;
+    }
     public int getHeight() {
         return ROW;
     }
@@ -270,6 +278,7 @@ public class Board implements Serializable {
     }
 
 
+/*
     public boolean insertDice(Dice dice, int row, int col) {
 
         if (validMove(dice, row, col)) {
@@ -280,7 +289,11 @@ public class Board implements Serializable {
         else
             return false;
     }
+*/
 
+    public boolean insertDice(Dice dice, int row, int col) {
+        return insertDice(dice, row, col, Restriction.ALL);
+    }
 
     public boolean insertDice(Dice dice, int row, int col, Restriction restriction) {
         if (validMove(dice, row, col, restriction)) {
@@ -289,7 +302,7 @@ public class Board implements Serializable {
             return true;
         }
         else
-            return false;
+            return false;   // NOTE: invalid move always return exception, at moment
     }
 
 
@@ -306,6 +319,7 @@ public class Board implements Serializable {
     }
 
 
+/*
     public boolean validMove(Dice dice, int row, int col){
 
         if(Useful.isValueBetweenInclusive(row, 0, ROW-1) &&
@@ -338,38 +352,85 @@ public class Board implements Serializable {
             throw new IndexOutOfBoundsException("row: 0 <= " +  row + " <= " + (ROW-1) + " \tcol:  0 <= " + col + "<= " + (COLUMN-1));
         }
     }
+*/
+    public boolean validMove(Dice dice, int row, int col) {
+        return validMove(dice, row, col, Restriction.ALL);
+    }
 
-    public boolean validMove(Dice dice, int row, int col, Restriction restriction) {
-        if(Useful.isValueBetweenInclusive(row, 0, ROW-1) &&
-                Useful.isValueBetweenInclusive(col, 0, COLUMN-1)) {
 
-            //Check if the box is already occupied
-            if (this.occupiedBox(row, col))
-                return false;
+    public boolean validMove(Dice dice, int row, int col, Restriction restriction)
+            throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
+            BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException
+    {
+        // Check index bound
+        if (!Useful.isValueBetweenInclusive(row, 0, ROW - 1) ||
+                !Useful.isValueBetweenInclusive(col, 0, COLUMN - 1))
+            throw new IndexOutOfBoundsException(
+                    "\n" +
+                    (row < 0 ? "   Row value is too low!\t" : row > (ROW - 1)  ? "   Row value is too high!\t" : "") +
+                            "\trow: \t0 <= " + row + " <= " + (ROW-1) + "\n" +
+                    (col < 0 ? "Column value is too low!\t" : col > (COLUMN-1) ? "Column value is too high!\t" : "") +
+                            "\tcolumn: \t0 <= " + col + " <= " + (COLUMN-1) + "\n"
+            );
 
-            // Check if dice is the first die of the player and if the position is an edge or corner space
-            if (diceQuantity == 0) {
-                if (pattern.checkEdges(row, col))
-                    return Boolean.TRUE;
-                else
-                    return Boolean.FALSE;
+        //Check if the box is already occupied
+        if (this.occupiedBox(row, col))
+            throw new BoardCellOccupiedException(
+                    "The cell (" + row + "," + col + ") of board " +    // board +
+                            "has already been occupied by " + board[row][col] + "!"
+            );
+
+        //Check if the pattern constraint is respected by dice
+        if (!pattern.getBox(row, col).checkConstraint(dice, Restriction.COLOR)) {
+            throw new ColorRestrictionException(
+                    "You must respect the Color constraint!\n" +
+                            "You placed the " + dice + " " +
+                            "in cell (" + row + "," + col + ")\n" +
+                            "Pattern's cell constrain is Color: " +
+                            (this.getPattern().getBox(row, col).getColor())
+            );
+        }
+
+        if (!pattern.getBox(row, col).checkConstraint(dice, Restriction.NUMBER)) {
+            throw new NumberRestrictionException(
+                    "You must respect the Numeric constraint!\n" +
+                            "You placed the " + dice + " " +
+                            "in cell (" + row + "," + col + ")\n" +
+                            "Pattern's cell constrain is Number: " +
+                            (this.getPattern().getBox(row, col).getNumber())
+            );
+        }
+
+        // Check if dice is the first die of the player and if the position is an edge or corner space
+        if (diceQuantity == 0) {
+
+            if (pattern.checkEdges(row, col)) {
+                return true;
             }
+            else {
+                System.err.println("dice quantity = "  + diceQuantity);
+                throw new EdgeRestrictionException(
+                        "First place should be in the edge's cell!\n" +
+                        "You placed " + dice + " " +
+                                "in cell (" + row + "," + col + ")"
+                );
+            }
+        } else {
 
-            //Check Constraints
-            if (restriction.hasColorRestriction() &&
-                    !this.getPattern().getBox(row, col).getColor().equals(dice.getColorDice()))
-                return false;
-            if (restriction.hasNumberRestriction() &&
-                    !(this.getPattern().getBox(row, col).getNumber() == dice.getDiceNumber()))
-                return false;
+            // first insert has not Adjacent constriction
             if (restriction.hasAdjacentRestriction() &&
-                    !this.adjacentDiceWithoutNumberRestrictions(dice, row, col))
-                return false;
+                    !this.adjacentDiceWithoutNumberRestrictions(dice, row, col)) {
+                throw new AdjacentRestrictionException(
+                        "You must respect the Adjacent constraint!\n" +
+                        "You placed the " + dice + " " +
+                                "in cell (" + row + "," + col + ") that is isolate\n"
+                );
+            }
+        }
 
-            //Valid Move
-            return true;
-        } else
-            return false;
+        //Valid Move
+//        System.out.println("Mossa Valido!!!");
+        return true;
     }
 
 

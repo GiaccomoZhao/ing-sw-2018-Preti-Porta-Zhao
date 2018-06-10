@@ -151,7 +151,7 @@ public class GameController  implements GameControllerInterface, Runnable {
                         else  {
                             for (Player p : playerList) {
                                 if(p.getName().toUpperCase().contains("ZX")) {
-                                    playTimeOut.wait(game.getRoundTimeOut()/100);
+                                    playTimeOut.wait(game.getRoundTimeOut()/20);
                                     player.passes(true);
                                     break;
                                 }
@@ -243,7 +243,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
 //            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
             System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
-            game.nextRound(); //Prepare for next round: create a new draftPool
+            game.nextRound(); //Prepare for next round: Create a new DraftPool
             playRound();
             System.out.println("}");
         }

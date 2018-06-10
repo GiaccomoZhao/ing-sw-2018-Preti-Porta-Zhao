@@ -4,6 +4,8 @@ import porprezhas.control.ServerRMIInterface;
 
 import java.rmi.RemoteException;
 
+import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
+
 public class RMIClientAction implements ClientActionInterface{
 
     ServerRMIInterface server;
@@ -16,9 +18,10 @@ public class RMIClientAction implements ClientActionInterface{
 
     @Override
     public boolean moveDice(int fromIdContainer, int index, int toIdContainer, int row, int col) {
+
         try {
             if( server.insertedDice(index, row, col, username)){
-                System.out.println("Valid move");
+                System.out.println("Dice inserted");
                 return true;
             }
             else{
@@ -27,7 +30,13 @@ public class RMIClientAction implements ClientActionInterface{
             }
         } catch (RemoteException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+
+            System.err.println(e.getMessage());     // print Invalid Move Message
+//            if(bDebug)
+//                e.printStackTrace();
         }
+
         return false;
     }
 
