@@ -1,11 +1,12 @@
-package porprezhas.view.fx.gameScene.component;
+package porprezhas.view.fx.gameScene.controller.component;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import porprezhas.Network.ClientActionSingleton;
-import porprezhas.view.state.DiceContainer;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
@@ -13,7 +14,7 @@ import java.util.Scanner;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
 
-public abstract class GenericBoardView {
+public abstract class GenericBoardView implements SubController{
     private final int COLUMN;   // default value
     private final int ROW;      // we don't assign the value here because no generic board can have different value
     private double DICE_ZOOM = GuiSettings.BOARD_DICE_ZOOM;
@@ -24,6 +25,17 @@ public abstract class GenericBoardView {
 
     private DiceContainer idBoard;
     private int nDice;
+
+
+    private GameViewController parentController;
+
+    @Override
+    public void setupSubController(GameViewController parentController) {
+        this.parentController = parentController;
+    }
+    public GameViewController getParentController() {
+        return parentController;
+    }
 
 
     // create a BoardView by passing a configured(may in FXML) GridPane
@@ -61,6 +73,7 @@ public abstract class GenericBoardView {
 
 
     // **** Getter methods ****
+
     public int getCOLUMN() {
         return COLUMN;
     }
@@ -222,8 +235,8 @@ public abstract class GenericBoardView {
                     // place down
 //                if (null != addDice(diceView.getDice(), row, col)) {
                     if (bDebug) {
-                        System.out.println("insertDice: \tfrom " + idBoardFrom + "\tindex=" + diceView.getIndexDice()
-                                + "\tto " + this.getBoardId().toInt() + "\trow=" + row + "\tcol=" + col);
+                        System.out.println("insertDice: \tfrom " + idBoardFrom + " \tindex=" + diceView.getIndexDice()
+                                + " \tto " + this.getBoardId().toInt() + " \trow=" + row + " \tcol=" + col);
                     }
                     success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), this.getBoardId().toInt(), row, col);
 //                    success = true;

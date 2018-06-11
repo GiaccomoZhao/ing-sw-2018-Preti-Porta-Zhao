@@ -5,7 +5,7 @@ import porprezhas.Useful;
 import porprezhas.control.GameController;
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.dices.*;
-import porprezhas.model.track.RoundTrack;
+import porprezhas.model.dices.RoundTrack;
 
 import porprezhas.model.cards.*;
 
@@ -222,9 +222,9 @@ public class Game extends ModelObservable implements GameInterface {
         this.currentPlayer = playerList.get(iCurrentPlayer);
     }
 
-    private void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
+//    private void setCurrentPlayer(Player currentPlayer) {
+//        this.currentPlayer = currentPlayer;
+//    }
 
     /* requires (playerList.size() > 0) &&
      * requires (0 <= iFirstPlayer < playerList.size) &&

@@ -8,9 +8,10 @@ import javafx.stage.Stage;
 import porprezhas.Network.*;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
-import porprezhas.view.fx.gameScene.component.ConfirmBox;
+import porprezhas.view.fx.BackgroundMusicPlayer;
+import porprezhas.view.fx.gameScene.ConfirmBox;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -29,7 +30,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
 
     private List<Player> players;
-    private List<GameViewController.PlayerInfo> playersInfo;
+    private List<PlayerInfo> playersInfo;
 
     private GameViewController gameViewController;
 
@@ -64,7 +65,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
             public void run() {
                 System.out.println("FPS " + com.sun.javafx.perf.PerformanceTracker.getSceneTracker(primaryStage.getScene()).getInstantFPS());
             }
-        }, 0, (long) (60*1000.0 / FPS_PRINT_AT_MIN));
+        }, 0, minuteFrequencyToMillis(FPS_PRINT_AT_MIN));
 
         // play background music
         BackgroundMusicPlayer.playMusic();
@@ -106,6 +107,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
 
             // TODO: test-use, This should be initialized before this scene starts
+            // build fake players
             Random random = new Random();
             // add all players
             players = new ArrayList<>();
@@ -115,27 +117,17 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
             players.add( new Player("P2"));
             players.get(players.size()-1).setPosition(players.size()-1);
             players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
-            players.add( new Player("me"));
+            players.add( new Player("PlayerZX"));
             players.get(players.size()-1).setPosition(players.size()-1);
             players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
             players.add( new Player("P4"));
             players.get(players.size()-1).setPosition(players.size()-1);
             players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
 
-            this.playersInfo = new ArrayList<>();
-            int i = 0;
-            for (Player player : players) {
-                playersInfo.add(new GameViewController.PlayerInfo(
-                        i++,
-                        player.getName(),
-                        player.getIconId(),
-                        Pattern.TypePattern.values()[1]));
-            }
-
-
 
             // Create a controller instance, passing the information about players
-            gameViewController = new GameViewController(playersInfo, mainPlayerPosition, "PlayerZX");
+//            gameViewController = new GameViewController(players, "PlayerZX");
+            gameViewController = new GameViewController("PlayerZX");
 
 
 

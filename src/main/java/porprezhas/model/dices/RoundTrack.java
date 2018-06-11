@@ -1,4 +1,4 @@
-package porprezhas.model.track;
+package porprezhas.model.dices;
 
 import porprezhas.model.Game;
 import porprezhas.model.dices.Dice;
@@ -6,12 +6,13 @@ import porprezhas.model.dices.DraftPool;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class RoundTrack implements Serializable {
 
-    ArrayList<Dice>[] track;
     int actualRound;
+    ArrayList<Dice>[] track;
 
     public RoundTrack() {
         track= new ArrayList[10];
@@ -19,6 +20,10 @@ public class RoundTrack implements Serializable {
     }
     public int getActualRound() {
         return actualRound;
+    }
+
+    public ArrayList<Dice>[] getTrack() {
+        return track;
     }
 
     public ArrayList<Dice> getRoundDice(int round){
@@ -41,4 +46,19 @@ public class RoundTrack implements Serializable {
     }
 
 
+    @Override
+    public String toString() {
+        StringBuilder sbRoundTrack = new StringBuilder(
+                "RoundTrack{ " +
+                "actualRound=" + actualRound +
+                ", track: " );
+        for (int i = 1; i <= actualRound; i++) {
+            sbRoundTrack.append('\n');
+            sbRoundTrack.append(i);
+            sbRoundTrack.append(" → ");
+            sbRoundTrack.append(Arrays.asList(track[i-1]));
+        }
+        sbRoundTrack.append(" }");
+        return sbRoundTrack.toString();
+    }
 }

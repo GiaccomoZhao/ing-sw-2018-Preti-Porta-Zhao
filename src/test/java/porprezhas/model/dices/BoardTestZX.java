@@ -312,10 +312,15 @@ public class BoardTestZX {
         assertEquals(ROW * Board.COLUMN, voidBoard.getDiceQuantity());
         assertEquals(20, voidBoard.getDiceQuantity());
 
+
         System.out.println("\n\nNow, Print 3 boards: \n");
-        System.out.println( voidBoard.toString(dieGeneric, ROW/2, COLUMN/2) );
-        System.out.println( voidBoard.toString() );
+
         voidBoard.print(GuiSettings.bFixedFont);
+        System.out.println( voidBoard.toString() );
+        System.out.println( voidBoard.toString(dieGeneric, 0, 0) );
+
+        voidBoard.removeDice(ROW/2, COLUMN/2);
+        System.out.println( voidBoard.toString(dieGeneric, ROW/2, COLUMN/2) );
     }
 
 

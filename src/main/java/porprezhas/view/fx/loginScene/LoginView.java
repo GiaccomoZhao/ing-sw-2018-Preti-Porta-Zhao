@@ -2,33 +2,18 @@ package porprezhas.view.fx.loginScene;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
+import porprezhas.view.fx.BackgroundMusicPlayer;
 
 import java.io.File;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import static porprezhas.view.fx.gameScene.GuiSettings.bMuteMusic;
-import static porprezhas.view.fx.gameScene.GuiSettings.musicVolume;
 
 
 public class LoginView extends Application{

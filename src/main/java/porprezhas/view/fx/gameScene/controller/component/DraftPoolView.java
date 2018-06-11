@@ -1,4 +1,4 @@
-package porprezhas.view.fx.gameScene.component;
+package porprezhas.view.fx.gameScene.controller.component;
 
 import javafx.animation.*;
 import javafx.application.Platform;
@@ -12,19 +12,18 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
-import porprezhas.Network.ClientActionSingleton;
 import porprezhas.model.dices.Dice;
-import porprezhas.view.fx.gameScene.GuiSettings;
-import porprezhas.view.state.DiceContainer;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.gameScene.state.DiceContainer;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
-import static porprezhas.view.fx.gameScene.component.GenericBoardView.getDragDiceString;
+import static porprezhas.view.fx.gameScene.controller.component.GenericBoardView.getDragDiceString;
 
-public class DraftPoolView {
+public class DraftPoolView implements SubController{
     private StackPane stackPane;
 //    private List<DiceView> diceList;
 
@@ -34,7 +33,17 @@ public class DraftPoolView {
         stackPane = new StackPane();
     }
 
+
+    protected GameViewController parentController;
+
+    @Override
+    public void setupSubController(GameViewController parentController) {
+        this.parentController = parentController;
+    }
+
     public void setup(Pane parent) {
+        parent.getChildren().add( this.get() ); // add this.stackPane to parent.pane
+
         addBackground(parent);
         addDragListener();
 
@@ -130,7 +139,6 @@ public class DraftPoolView {
     }
 
     private void addBackground(Pane parent) {
-        parent.getChildren().add( this.get() );
         stackPane.prefWidthProperty().bind(parent.widthProperty());
         stackPane.prefHeightProperty().bind(parent.heightProperty());
         Background background = new Background(

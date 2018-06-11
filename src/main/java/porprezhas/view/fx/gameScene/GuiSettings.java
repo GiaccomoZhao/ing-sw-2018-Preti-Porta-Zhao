@@ -75,6 +75,12 @@ public class GuiSettings {
 
 
     // ***** Global methods *****
+
+    //
+    public static long minuteFrequencyToMillis(double frequencyInMinute) {
+        return (long) (60*1000.0 / frequencyInMinute);
+    }
+
     // get the absolute path to the file with any extension. It is like */relativePath/fileName.*
     public static String getPathToFile(String relativePath, String fileName) {
         // get resource path

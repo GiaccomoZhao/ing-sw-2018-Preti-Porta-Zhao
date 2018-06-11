@@ -1,16 +1,12 @@
 package porprezhas.model.cards;
-import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
-import porprezhas.model.track.RoundTrack;
+import porprezhas.model.dices.RoundTrack;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
 
 import static porprezhas.model.cards.Card.Effect.*;
 import static porprezhas.model.dices.Board.COLUMN;

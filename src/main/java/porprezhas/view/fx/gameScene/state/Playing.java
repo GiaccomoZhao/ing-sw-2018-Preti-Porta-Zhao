@@ -1,4 +1,4 @@
-package porprezhas.view.state;
+package porprezhas.view.fx.gameScene.state;
 
 import porprezhas.model.GameInterface;
 import porprezhas.model.dices.Dice;
@@ -7,10 +7,11 @@ import porprezhas.view.fx.gameScene.GameViewInterface;
 import java.rmi.RemoteException;
 
 public class Playing implements GameViewState {
-    private GameViewInterface gameView;
-    public Playing(GameViewInterface gameView) {
-        this.gameView = gameView;
-    }
+//    private GameViewInterface gameView;
+//    public Playing(GameViewInterface gameView) {
+//        this.gameView = gameView;
+//    }
+
 
 
     @Override

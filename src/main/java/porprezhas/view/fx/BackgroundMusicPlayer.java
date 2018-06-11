@@ -1,4 +1,4 @@
-package porprezhas.view.fx.gameScene.component;
+package porprezhas.view.fx;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;

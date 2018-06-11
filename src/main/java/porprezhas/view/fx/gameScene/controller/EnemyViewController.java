@@ -5,7 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import porprezhas.view.fx.gameScene.component.BoardView;
+import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
@@ -21,7 +21,7 @@ public class EnemyViewController {
 
 //    BoardView boardView;    // this contain board
 
-    GameViewController.PlayerInfo playerInfo;
+    PlayerInfo playerInfo;
 
 /*    public EnemyViewController(GameViewController.PlayerInfo playerInfo) {
         this.playerInfo = playerInfo;
@@ -58,7 +58,7 @@ public class EnemyViewController {
         return fx_timeout;
     }
 
-    public void setPlayerInfo(GameViewController.PlayerInfo playerInfo) {
+    public void setPlayerInfo(PlayerInfo playerInfo) {
         this.playerInfo = playerInfo;
 //        boardView.setPattern(playerInfo.typePattern);
         this.fx_name.setText(playerInfo.name);

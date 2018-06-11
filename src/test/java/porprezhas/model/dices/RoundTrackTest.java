@@ -1,4 +1,4 @@
-package porprezhas.model.track;
+package porprezhas.model.dices;
 
 import porprezhas.model.dices.*;
 import porprezhas.model.dices.DraftPool;
@@ -81,25 +81,54 @@ public class RoundTrackTest {
 
     @Test
     public void getActualRoundTest() {
+        System.out.println("\n\nBefore getActualRoundTest");
+        printTest();
 
         assertEquals(roundTrackTest.getActualRound(), 4);
+
         roundTrackTest.addDice(draftPoolTest);
+
         assertEquals(roundTrackTest.getActualRound(), 5);
+
+        System.out.println("\nAfter the test");
+        printTest();
     }
 
     @Test
     public void removeDiceTest(){
+        System.out.println("\n\nBefore removeDiceTest");
+        printTest();
+
         roundTrackTest.addDice(draftPoolTest);
         assertEquals(roundTrackTest.getActualRound(), 5);
+
+        System.out.println("\nIn half");
+        printTest();
+
         roundTrackTest.removeDice(4,draftPoolDice9);
         assertEquals(roundTrackTest.getRoundDice(4).size(),8);
 
+        System.out.println("\nAfter the test");
+        printTest();
     }
 
     @Test
     public void addExternalDice(){
+        System.out.println("\n\nBefore addExternalDice");
+        printTest();
+
         roundTrackTest.addDice(draftPoolTest);
+
+        System.out.println("\nIn half");
+        printTest();
+
         roundTrackTest.addDice(3,externalDice);
 
+        System.out.println("\nAfter the test");
+        printTest();
+    }
+
+    public void printTest() {
+        System.out.println( roundTrackTest.toString() );
     }
 }

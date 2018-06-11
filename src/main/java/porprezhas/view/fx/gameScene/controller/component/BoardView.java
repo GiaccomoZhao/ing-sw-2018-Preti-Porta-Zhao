@@ -1,11 +1,11 @@
-package porprezhas.view.fx.gameScene.component;
+package porprezhas.view.fx.gameScene.controller.component;
 
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
-import porprezhas.view.state.DiceContainer;
+import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 

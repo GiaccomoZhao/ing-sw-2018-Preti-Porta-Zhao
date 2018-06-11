@@ -2,9 +2,8 @@ package porprezhas.model.cards;
 
 
 import org.junit.Before;
-import org.junit.Test;
 import porprezhas.model.dices.*;
-import porprezhas.model.track.RoundTrack;
+import porprezhas.model.dices.RoundTrack;
 import porprezhas.model.dices.Board;
 
 import java.util.ArrayList;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.*;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.scene.layout.*;
@@ -12,9 +13,9 @@ import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
-import porprezhas.view.fx.gameScene.component.ConfirmBox;
+import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
@@ -25,7 +26,6 @@ public class ViewTest extends Application {
 
 
     private List<Player> players;
-    private List<GameViewController.PlayerInfo> playersInfo;
 
     private GameViewController gameViewController;
 
@@ -36,20 +36,34 @@ public class ViewTest extends Application {
     public ViewTest() {
         Random random = new Random();
         // add all players
+        List<Pattern.TypePattern> patternList = new ArrayList<>();
+        patternList.add( Pattern.TypePattern.KALEIDOSCOPIC_DREAM );
         players = new ArrayList<>();
         players.add( new Player("P1"));
         players.get(players.size()-1).setPosition(players.size()-1);
         players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+        players.get(players.size()-1).setPatternsToChoose(patternList);
+        players.get(players.size()-1).choosePatternCard(0);
+
         players.add( new Player("P2"));
         players.get(players.size()-1).setPosition(players.size()-1);
         players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
-        players.add( new Player("me"));
+        players.get(players.size()-1).setPatternsToChoose(patternList);
+        players.get(players.size()-1).choosePatternCard(0);
+
+        players.add( new Player("PlayerZX"));
         players.get(players.size()-1).setPosition(players.size()-1);
         players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
         mainPlayerPosition = players.size() -1;
+        players.get(players.size()-1).setPatternsToChoose(patternList);
+        players.get(players.size()-1).choosePatternCard(0);
+
         players.add( new Player("P4"));
         players.get(players.size()-1).setPosition(players.size()-1);
         players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
+        players.get(players.size()-1).setPatternsToChoose(patternList);
+        players.get(players.size()-1).choosePatternCard(0);
+
 /*
         players.add( new Player("P1", 0, random.nextInt(ICON_QUANTITY) +1));
         players.add( new Player("P2", 1, random.nextInt(ICON_QUANTITY) +1));
@@ -58,15 +72,6 @@ public class ViewTest extends Application {
         players.add( new Player("P4", 3, random.nextInt(ICON_QUANTITY) +1));
 */
 
-        this.playersInfo = new ArrayList<>();
-        int i = 0;
-        for (Player player : players) {
-            playersInfo.add(new GameViewController.PlayerInfo(
-                    i++,
-                    player.getName(),
-                    player.getIconId(),
-                    Pattern.TypePattern.values()[1]));
-        }
     }
 
     @Override
@@ -82,65 +87,72 @@ public class ViewTest extends Application {
         initMainLogic();
 
 
-        Random random = new Random();
-        for (int col = 0; col < Game.GameConstants.ROUND_NUM; col++) {
-            if (random.nextInt(10) < 2) {
-                for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
-                    gameViewController.addDiceToRoundTrack(
-                            new Dice(random.nextInt(6) + 1,
-                                    Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
-                            col );
-                }
-            } else {
-                gameViewController.addDiceToRoundTrack(
-                        new Dice(random.nextInt(6) + 1,
-                                Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
-                        col );
-                for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
-                    if (random.nextInt(10) < 3) {
+        gameViewController.setupView(players);  // calls runLater, so we cannot use it immediately
+
+        // insert dice must be after setup view done
+        Platform.runLater(() -> {
+
+            Random random = new Random();
+            for (int col = 0; col < Game.GameConstants.ROUND_NUM; col++) {
+                if (random.nextInt(10) < 0) {
+                    for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
                         gameViewController.addDiceToRoundTrack(
                                 new Dice(random.nextInt(6) + 1,
                                         Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
                                 col );
-
                     }
-                }
-            }
-        }
-        for (int i = 0; i < players.size(); i++) {
-            // insert a lot of dices to test
-            for (int col = 0; col < BOARD_COLUMN; col++) {
-                for (int row = 0; row < BOARD_ROW; row++) {
-                    if (random.nextInt(10) < 6) {
-                        gameViewController.addDice(
-                                i,
-                                new Dice(random.nextInt(6) + 1,
+                } else {
+                    gameViewController.addDiceToRoundTrack(
+                            new Dice(random.nextInt(6) + 1,
+                                    Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                            col );
+                    for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
+                        if (random.nextInt(10) < 3) {
+                            gameViewController.addDiceToRoundTrack(
+                                    new Dice(random.nextInt(6) + 1,
                                             Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
-                                col, row );
+                                    col );
+
+                        }
                     }
                 }
             }
-        }
+            for (int i = 0; i < players.size(); i++) {
+                // insert a lot of dices to test
+                for (int col = 0; col < BOARD_COLUMN; col++) {
+                    for (int row = 0; row < BOARD_ROW; row++) {
+                        if (random.nextInt(10) < 6) {
+                            gameViewController.addDice(
+                                    i,
+                                    new Dice(random.nextInt(6) + 1,
+                                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                                    row, col );
+                        }
+                    }
+                }
+            }
 
-        List<Dice> diceList = new ArrayList<>();
-        for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
-            diceList.add(
-                    new Dice(random.nextInt(6) + 1,
-                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
-                    );
-        }
-        gameViewController.setDraftPool(diceList);
+            List<Dice> diceList = new ArrayList<>();
+            for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
+                diceList.add(
+                        new Dice(random.nextInt(6) + 1,
+                                Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
+                );
+            }
+            gameViewController.setDraftPool(diceList);
 
-        ;
+        });
+
+
+
 //        showElementOverview();
         // output FPS
         new Timer().schedule(new TimerTask() {
-
             @Override
             public void run() {
                 System.out.println("FPS " + com.sun.javafx.perf.PerformanceTracker.getSceneTracker(primaryStage.getScene()).getInstantFPS());
             }
-        }, 0, (long) (60*1000.0 / FPS_PRINT_AT_MIN));
+        }, 0, minuteFrequencyToMillis(FPS_PRINT_AT_MIN));
 
         // play background music
         BackgroundMusicPlayer.playMusic();
@@ -180,7 +192,8 @@ public class ViewTest extends Application {
                 System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/GameView.fxml") + ")");
 
             // Create a controller instance, passing the information about players
-            gameViewController = new GameViewController(playersInfo, mainPlayerPosition, "PlayerZX");
+            gameViewController = new GameViewController("PlayerZX");
+
             // Set it in the FXMLLoader
             loader.setController(gameViewController);   // I haven't set the controller in fxml because i want the controller get setup at construction
 
@@ -188,7 +201,7 @@ public class ViewTest extends Application {
             rootLayout = loader.load();     // NOTE: If you get ONLY one ERROR in this line, it may because you haven't mark the folder 'resource' as resources root
                                             //       look for folder resource on the project root path, there is a folder resource, right click and choose in the end of list: 'Mark directory as'
             // Solitaire has smaller window size
-            if(playersInfo.size() == 1) {
+            if(players.size() == 1) {
                 primaryStage.setWidth(SOLITAIRE_WIDTH);
             }
 

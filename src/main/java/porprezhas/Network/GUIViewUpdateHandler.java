@@ -65,7 +65,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 this.gameStarted=true;
 //                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
                 System.out.println(gameViewController);
-                gameViewController.updatePlayerInfo(players);
+                gameViewController.setupView(players);
                 break;
 
             case NEXT_ROUND:
@@ -74,6 +74,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                 gameViewController.updateFirstPlayer(game.getCurrentPlayer());
                 gameViewController.updateDraftPool(game.getDraftPool().diceList());
+                gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
 
                 // after next_round, update current player too
 

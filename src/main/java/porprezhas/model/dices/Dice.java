@@ -46,11 +46,20 @@ public class Dice implements Serializable {
         this.number=number;
     }
 
+/*
     @Override
     public String toString() {
         return "Dice{" +
                 "number=" + number +
                 ", colorDice=" + colorDice +
+                '}';
+    }
+*/
+    @Override
+    public String toString() {
+        return "Dice{" +
+                + number +
+                "" + colorDice.toString().substring(0,1) +
                 '}';
     }
 

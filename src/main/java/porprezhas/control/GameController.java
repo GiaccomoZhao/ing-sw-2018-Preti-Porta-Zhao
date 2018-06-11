@@ -133,13 +133,6 @@ public class GameController  implements GameControllerInterface, Runnable {
             // let player play
             player.play();  // WARNING: this statement must be in the same synchronized block of wait()
 
-            /* TODO: should i create a thread to receive actions?
-             *
-             * 3 optional actions:
-             *   1. pick and place a Dice from Draft Pool to Board
-             *   2. buy and use a Tool Card when player wants
-             *   3. pass/finish
-             */
 
             //wait everybody for a timeout then pass or player pass
             //possible other solution: Timer or while sleep nanoTime
@@ -192,7 +185,6 @@ public class GameController  implements GameControllerInterface, Runnable {
                     player.getName(), calcScore(player));
         }
 
-        // TODO: save all in databases
     }
 
 

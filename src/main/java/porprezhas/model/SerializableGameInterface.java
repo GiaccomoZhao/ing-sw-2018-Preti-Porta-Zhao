@@ -1,8 +1,7 @@
 package porprezhas.model;
 
-import porprezhas.model.cards.Card;
 import porprezhas.model.dices.DraftPool;
-import porprezhas.model.track.RoundTrack;
+import porprezhas.model.dices.RoundTrack;
 
 import java.io.Serializable;
 import java.util.List;

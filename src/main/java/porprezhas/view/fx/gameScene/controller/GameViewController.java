@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -23,14 +22,14 @@ import porprezhas.model.cards.PrivateObjectiveCard;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
-import porprezhas.view.fx.gameScene.component.*;
+import porprezhas.view.fx.gameScene.controller.component.*;
+import porprezhas.view.fx.gameScene.state.GameViewState;
+import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-import static porprezhas.Useful.*;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class GameViewController implements GameViewUpdaterInterface {
@@ -73,7 +72,8 @@ public class GameViewController implements GameViewUpdaterInterface {
 
 
 
-    //  ***** Game ViewController attributes *****
+    //  ***** Game View attributes *****
+    // Sub Controllers
     private List<EnemyViewController> enemyViewControllers;
     private Pane[] enemyPanes;      // panel of 0-3 enemies, contain board, name, icon
     //private List<VBox> roundTrackLists;
@@ -90,27 +90,14 @@ public class GameViewController implements GameViewUpdaterInterface {
     private ImageCursor cursorHandDown;
     private ImageCursor cursorHandUp;
 
-    private boolean[] bShowRoundTrackList;  // save which list are shown
-    private boolean bShowRoundTrackDices;   // has clicked show_all button
+
+    //  ***** Game View Controller attributes *****
+    private GameViewState state;
 
 
     //  ***** Player attributes *****
-    private final int num_player;
-    private final List<PlayerInfo> playersInfo;
-
-    public static class PlayerInfo {    // NOTE: should i create a new class?
-        public final int position;
-        public final String name;
-        public final int iconId;
-        public final Pattern.TypePattern typePattern;
-
-        public PlayerInfo(int position, String name, int iconId, Pattern.TypePattern typePattern) {
-            this.position = position;
-            this.name = name;
-            this.iconId = iconId;
-            this.typePattern = typePattern;
-        }
-    }
+    private int num_player;
+    private List<PlayerInfo> playersInfo;
 
     private int playerPosition;       // this identify the client's player
     private String userName;    // TODO: network use, change this in a token
@@ -124,13 +111,14 @@ public class GameViewController implements GameViewUpdaterInterface {
     // @requires playersInfo.size >= 1
     // @Param playersInfo.get(0).typePattern == player.typePattern &&
     //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
-    public GameViewController(List<PlayerInfo> playersInfo, int playerPosition, String userName) {   // NOTE: during the construction method the fxml variables haven't be set yet
+    public GameViewController( String ourUserIdentifier) {   // NOTE: during the construction method the fxml variables haven't be set yet
+//    public GameViewController(List<Player> player, String ourUserIdentifier) {   // NOTE: during the construction method the fxml variables haven't be set yet
         if(bDebug)
             System.out.println("Constructing GameView");
-        this.userName = userName;
-        this.playerPosition = playerPosition;
-        this.playersInfo = playersInfo;
-        this.num_player = playersInfo.size();
+        this.userName = ourUserIdentifier;  // NOTE: Currently, We use UNIQUE User Name to bind the client with the player
+
+        num_player = 4; // TODO: Remove this Fake
+//        updatePlayerInfo(player);
 //        if(this.num_player > 1)
             enemyPanes = new Pane[this.num_player-1];
 //        else
@@ -149,8 +137,6 @@ public class GameViewController implements GameViewUpdaterInterface {
             roundTrackDiceLists[i] = new ArrayList<>();
         }
 */
-        bShowRoundTrackList = new boolean[Game.GameConstants.ROUND_NUM];
-        bShowRoundTrackDices = false;   // show round track at start? no!
 
         draftPoolView = new DraftPoolView();
 
@@ -173,7 +159,7 @@ public class GameViewController implements GameViewUpdaterInterface {
 
         // Listeners
         setResizeListener();        // add Resize Listener for GamePane(including all players panel, round track, etc)
-        setupRoundTrackListener();  // add action listener for round track's dice list dropping
+//        setupRoundTrackListener();  // add action listener for round track's dice list dropping
 
 /*
         for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
@@ -187,9 +173,13 @@ public class GameViewController implements GameViewUpdaterInterface {
 */
     }
 
+    public List<BoardView> getBoardList() {
+        return boardList;
+    }
+
 
     private void setupCards() {
-        System.out.println("Setup Cards");
+        System.out.println("\nSetup Cards");
 
         cardPanes[CardTab.TOOL_CARD.ordinal()] = new CardPane(fx_toolCardPane, CardTab.TOOL_CARD, pathToToolCard);
         cardPanes[CardTab.PRIVATE_CARD.ordinal()] = new CardPane(fx_privateCardPane, CardTab.PRIVATE_CARD, pathToPrivateCard);
@@ -200,15 +190,18 @@ public class GameViewController implements GameViewUpdaterInterface {
         toolCards.add(new ToolCard(Card.Effect.TC2));
         toolCards.add(new ToolCard(Card.Effect.TC11));
         cardPanes[CardTab.TOOL_CARD.ordinal()].setupCardPane(toolCards);
+        cardPanes[CardTab.TOOL_CARD.ordinal()].setupSubController(this);
 
         List<Card> privateObjectCards = new ArrayList<>();
         privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC1));
         privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC4));
         cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupCardPane(privateObjectCards);
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupSubController(this);
 
         List<Card> publicObjectCards = new ArrayList<>();
         publicObjectCards.add(new PublicObjectiveCard(Card.Effect.PUC10));
         cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupCardPane(publicObjectCards);
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupSubController(this);
     }
 
     private void setupCardPane(Pane cardPane, String pathToCards, List<String> cardsName) {
@@ -281,249 +274,19 @@ public class GameViewController implements GameViewUpdaterInterface {
         });
     }
 
-
-    // return a round number from 1 to ROUND_NUM
-    private int getRoundNumberFromEvent(InputEvent event) throws Exception {
-        Object eventSource;
-        double eventX;
-        double eventSceneX;
-        if(event instanceof MouseEvent) {
-            MouseEvent mouseEvent = (MouseEvent) event;
-            eventSource = mouseEvent.getSource();
-            eventX = mouseEvent.getX();
-            eventSceneX = mouseEvent.getSceneX();
-        } else if(event instanceof  DragEvent) {
-            DragEvent dragEvent = (DragEvent) event;
-            eventSource = dragEvent.getSource();
-            eventX = dragEvent.getX();
-            eventSceneX = dragEvent.getSceneX();
-        } else
-            throw new Exception();
-
-        // if we have placed round number in a HBox
-        if(eventSource instanceof HBox) {
-            int iRound = (int) (eventX / ((HBox) eventSource).getWidth() * Game.GameConstants.ROUND_NUM);
-            if (iRound > Game.GameConstants.ROUND_NUM)
-                return Game.GameConstants.ROUND_NUM ;
-            return iRound +1;
-        }
-
-        // if we are moving on a DiceView, We can simply return it's attribute
-        else if (eventSource instanceof DiceView) {
-            return ((DiceView) eventSource).getColumn();
-        }
-
-        // if we have a normal ImageView, We have to calculate his position in Parent
-        else if (eventSource instanceof ImageView) {    // NOTE: 2018-5-25 we are using this currently
-            ImageView imageView = ((ImageView) eventSource);
-            if(imageView.getParent() instanceof  HBox) {
-                HBox parent = (HBox) imageView.getParent();
-                int iRound = (int) (imageView.getLayoutX() / parent.getWidth() * Game.GameConstants.ROUND_NUM);
-//                System.out.println("Calculated round = " + iRound);
-                if( iRound > Game.GameConstants.ROUND_NUM)
-                    return Game.GameConstants.ROUND_NUM ;
-                return iRound +1;
-            }
-        }
-
-        // if we are moving on the Round Track
-        else if (eventSource instanceof GridPane) {
-            GridPane gridPane = ((GridPane) eventSource);
-            Bounds bounds = gridPane.localToScene(gridPane.getBoundsInLocal());
-            double x = eventSceneX;
-            double width = bounds.getWidth();
-            int iRound = (int) ((x - bounds.getMinX()) / width * Game.GameConstants.ROUND_NUM);
-            if( iRound > Game.GameConstants.ROUND_NUM)
-                return Game.GameConstants.ROUND_NUM ;
-            return iRound +1;
-        }
-
-        // not in those case
-        System.err.println(eventSource);
-        throw new Exception();
+    private void setupRoundTrack() {
+        roundTrackBoard.setup(fx_roundTrack);
+        roundTrackBoard.setupSubController(this);
     }
-
     private void setupDraftPool() {
         draftPoolView.setup(fx_draftPoolParent);
+        roundTrackBoard.setupSubController(this);
     }
 
 
-
-    private void setupRoundTrackListener() {
-        // set show/hide round dice list listener on every round number image view
-        for (Node node : fx_roundTrack.getChildren()) {
-            ImageView roundNumberImage = (ImageView) node;
-
-            // drop down the list of dice
-            roundNumberImage.setOnMouseEntered(event -> {
-                try {
-                    int iRound = getRoundNumberFromEvent(event);
-                    showRoundTrackDices(iRound, true);
-                } catch (Exception e) {
-                    System.err.println(roundNumberImage);
-                    e.printStackTrace();
-                }
-            });
-            roundNumberImage.setOnDragEntered(event -> {
-//                System.out.println("entered");
-                try {
-                    int iRound = getRoundNumberFromEvent(event);
-                    showRoundTrackDices(iRound, true);
-                } catch (Exception e) {
-                    System.err.println(roundNumberImage);
-                    e.printStackTrace();
-                }
-            });
-
-
-            // NOTE: OnDragOver{acceptTransferModes(TransferMode.ANY)} is need for OnDragDropped
-            roundNumberImage.setOnDragOver(event -> {
-                event.acceptTransferModes(TransferMode.ANY);
-                event.consume();
-            });
-            roundNumberImage.setOnDragDropped(event -> {
-//                System.out.print("Dropped. \t");
-                Dragboard dragboard = event.getDragboard();
-                boolean success = false;
-
-                if (dragboard.hasString()) {
-                    String draggedString = dragboard.getString();
-
-                    Scanner scanner = new Scanner(draggedString);
-                    scanner.useDelimiter(":|\\s");
-
-                    scanner.findInLine("board=");
-                    if (scanner.hasNextInt()) {
-                        int idBoardFrom = scanner.nextInt();    // NOTE: watch out. We need have a space after the number.
-                        if (bDebug) System.out.print("id board=" + idBoardFrom + ": \t");
-
-
-                        DiceView diceView = DiceView.fromString(scanner.nextLine());
-
-                        // calculate place position
-                        try {
-                            int iRound = getRoundNumberFromEvent(event);
-                            // place down
-//                        System.out.println("round number = " + iRound);
-                            // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), roundTrackBoard.getBoardId(), iRound, 666);
-                            success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), roundTrackBoard.getBoardId().toInt(), iRound, 666);
-//                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
-//                            success = true;
-//                        }
-                        } catch (Exception e) {
-                            System.err.println(roundNumberImage);
-                            e.printStackTrace();
-                        }
-//                System.out.println(((GridPane)event.getSource()).getLayoutY() + " \t" + ((GridPane)event.getTarget()).getLayoutY());
-//                System.out.println("Dropped to " + col + "\t" + row);
-                    }
-                }
-                /* let the source know whether the string was successfully
-                 * transferred and used */
-                event.setDropCompleted(success);
-
-                event.consume();
-            });
-
-            // close drop down list
-            roundNumberImage.setOnMouseExited(event -> {
-                Bounds bounds = roundNumberImage.localToScene(roundNumberImage.getBoundsInLocal());
-                double x = event.getSceneX();
-                double y = event.getSceneY();
-                double leftBound = bounds.getMinX();
-                double rightBound = bounds.getMaxX();
-                double topBound = bounds.getMinY();
-//                    System.out.println("x=" + x + "\ty=" + y + "\tleft=" + leftBound + " \tright=" + rightBound + " \ttop=" + topBound);
-                // when the cursor went out of left or right or top bound, or on the bound limits
-                if (!isValueBetween(x, leftBound, rightBound) ||
-                        y <= topBound) {
-//                        System.out.println("Exited");
-                    try {
-                        int iRound = getRoundNumberFromEvent(event);
-                        showRoundTrackDices(iRound, false);
-                    } catch (Exception e) {
-                        System.err.println("" + roundNumberImage);
-                    }
-                }
-            });
-        }
-
-        // BOARD's listener
-
-        // close all round track lists
-        roundTrackBoard.getBoard().setOnMouseExited(event -> {
-            if(bDebug)
-                System.out.println("Exit from round track board");
-            showRoundTrackDices(-1, false);
-        });
-
-        // close the list when move out from the dice list, when we don't want show all
-        roundTrackBoard.getBoard().setOnMouseMoved(event -> {
-//            if(bDebug)
-//                System.out.println("Move in round track board. \tbShow=" + bShowRoundTrackDices);
-
-            // do close any list when player pressed show_all button
-            if(bShowRoundTrackDices) {
-                return;
-            } else {    // or when some dice has been dragging
-                boolean bDragging = false;
-                for (BoardView boardView : boardList) {
-                    if(boardView.isbDragging()) {
-                        bDragging = true;
-                        break;
-                    }
-                }
-                if(bDragging == true)
-                    return;
-            }
-
-            // hide all the list that is not current one, we show one list at time without button press
-            try {
-                int iRound = getRoundNumberFromEvent(event);
-//                System.out.println("round = " + iRound);
-                for (int i = 1; i <= Game.GameConstants.ROUND_NUM; i++) {
-                    if(i != iRound && bShowRoundTrackList[i-1]) {
-                        showRoundTrackDices(i, false);
-                    }
-                }
-            } catch (Exception e) {
-                System.err.println("" + event);
-            }
-        });
-/*        fx_roundTrack.setOnMouseMoved(event -> {
-            onMovingInRoundTrack(event);
-        });
-*/    }
-
-
-    private void setupRoundTrack() {
-        if( fx_roundTrack.getParent() instanceof GridPane) {
-            GridPane parentGridPane = (GridPane) fx_roundTrack.getParent();
-
-//            roundTrackBoard.getBoard().prefWidthProperty().bind( parentGridPane.widthProperty() );
-//            roundTrackBoard.getBoard().prefHeightProperty().bind( parentGridPane.heightProperty());
-
-            if(bShowGridLines) {
-                parentGridPane.setGridLinesVisible(true);
-            }
-
-            parentGridPane.add(roundTrackBoard.getBoard(), 0, 1, parentGridPane.getColumnConstraints().size(), parentGridPane.getRowConstraints().size()-1);
-            roundTrackBoard.getBoard().toBack();
-        }
-        if(bShowFrames) {
-            roundTrackBoard.getBoard().setBorder(new Border(new BorderStroke(Color.AQUA,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        }
-        if(bShowGridLines) {
-            roundTrackBoard.getBoard().setGridLinesVisible(true);
-        }
-        showRoundTrackDices(-1, bShowRoundTrackDices);  // use bShowRoundTrackDices that is initialized in constructor as the default value
-        roundTrackBoard.setup();
-    }
-
-    private void setupBoard() {
+    private void setupBoards() {
         if(bDebug) {
-            System.out.println("Setup board"); }
+            System.out.println("\nSetup board"); }
         boardList.clear();  // this must be redundant but i want keep safe
 //        fx_enemyPanesParent.getChildren().clear();
 
@@ -546,9 +309,14 @@ public class GameViewController implements GameViewUpdaterInterface {
 //                enemyViewControllers.get(i - offset).setPlayerInfo(playerInfo);
             }
 
+            boardList.get(i).setupSubController(this);
             boardList.get(i).setPattern(playerInfo.typePattern);
+
             if(bDebug)
-                System.out.println(boardList.get(i).getBoard() + " \tpatter=" + playerInfo.typePattern);
+                System.out.println(playerInfo);
+            if(null == boardList.get(i).getBoard()) {
+                System.err.println("\nsetupBoard failed!!!\n");
+            }
         }
     }
 
@@ -721,7 +489,7 @@ public class GameViewController implements GameViewUpdaterInterface {
     // ********** <<< FXML Methods >>> **********
 
     @FXML protected  void onShowRoundTrackDices(ActionEvent event) {
-        showRoundTrackDices(-1, !bShowRoundTrackDices);
+        roundTrackBoard.showRoundTrackDices(-1);
     }
 
     @FXML protected void onMovingInRoundTrack(MouseEvent event) {
@@ -790,7 +558,8 @@ public class GameViewController implements GameViewUpdaterInterface {
     }
 
     public DiceView addDice(int indexPlayer, Dice dice, int row, int col) {
-        System.out.println(boardList);
+        if(null == boardList)
+            System.err.println("\nWarning BoardList is empty!!!\n");
         return boardList.get(indexPlayer).addDice(dice, row, col);
     }
 
@@ -806,88 +575,59 @@ public class GameViewController implements GameViewUpdaterInterface {
 
 
 
-    //@Param iRound The number of the round dice list to show, from 1 to ROUND_NUM
-    //              if it's out of range, we show/hide all
-    public boolean showRoundTrackDices(int iRound, boolean bShow) {
-//            System.out.println("round = " + iRound);
-        GridPane gridPane = roundTrackBoard.getBoard();
-        if(bShowGridLines)
-            roundTrackBoard.getBoard().setGridLinesVisible(true);
-
-        try {
-            // show the specified round's dices
-            if (isValueBetweenInclusive(iRound, 1, Game.GameConstants.ROUND_NUM) ){
-
-                // set bShowRoundTrackDices false when all list are hidden
-                bShowRoundTrackList[iRound -1] = bShow; // iRound is a index that starts from 1
-                if(!bShow && bShowRoundTrackDices == true) {
-                    int i;
-                    for (i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
-                        if(bShowRoundTrackList[i] == true) {
-                            break;
-                        }
-                    }
-                    if(i == Game.GameConstants.ROUND_NUM) {
-                        bShowRoundTrackDices = false;
-                    }
-                }
-
-                // show-hide a list of dices
-                roundTrackBoard.show(iRound, bShow);
-            } else  {
-
-                // set all booleans = bShow
-                bShowRoundTrackDices = bShow;
-                for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
-                    bShowRoundTrackList[i] = bShow;
-                }
-
-                // show-hide all round track dices
-                roundTrackBoard.show(iRound, bShow);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bShow;
-    }
-
 
 
     // MVC interface methods
 
     public void updatePlayerInfo(List<Player> players) {
-        playersInfo.clear();
-        for (int i = 0; i < players.size(); i++) {
+        playersInfo = new ArrayList<>();
+
+        this.num_player = players.size();
+        for (int i = 0; i < num_player; i++) {
             Player player = players.get(i);
-            playersInfo.add( new PlayerInfo(
+
+            playersInfo.add(new PlayerInfo(
                     i,
                     player.getName(),
                     player.getIconId(),
                     player.getBoard().getPattern().getTypePattern()));
-            if(userName.equals( player.getName() )) {
+
+            if (userName.equals(player.getName())) {
                 playerPosition = i;
             }
         }
+    }
+
+    public void setupView(List<Player> players) {
+
+        updatePlayerInfo(players);
+
+        Platform.runLater(() ->
+                SetupView()
+        );
+    }
 
 
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
-                System.out.println("\n\n\nUpdate Game View!!!\n");
+    private void SetupView() {
 
-                // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
-                setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
+        System.out.println("\n\n\nUpdate Game View!!!\n");
 
-                // create BoardList and set pattern image to all player
-                setupBoard();
+        // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
+        setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
 
-                // attach RoundTrack dice table
-                setupRoundTrack();
+        // create BoardList and set pattern image to all player
+        setupBoards();
 
-                setupDraftPool();
+        // attach RoundTrack dice table
+        setupRoundTrack();
 
-                setupCards();
-            }
-        });
+        setupDraftPool();
+
+        setupCards();
+
+        if(bDebug) {
+            System.out.println("\nSetup Done!\n\n");
+        }
     }
 
     public void updateBoard(int idBoard, Dice[][] dices) {

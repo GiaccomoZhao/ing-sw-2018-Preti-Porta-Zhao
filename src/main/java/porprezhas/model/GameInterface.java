@@ -3,7 +3,7 @@ package porprezhas.model;
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
-import porprezhas.model.track.RoundTrack;
+import porprezhas.model.dices.RoundTrack;
 
 import java.util.List;
 

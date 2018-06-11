@@ -8,9 +8,10 @@ import javafx.stage.Stage;
 import porprezhas.control.ServerRMIInterface;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Pattern;
-import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
-import porprezhas.view.fx.gameScene.component.ConfirmBox;
+import porprezhas.view.fx.BackgroundMusicPlayer;
+import porprezhas.view.fx.gameScene.ConfirmBox;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -26,7 +27,7 @@ start rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
 
 far partire nanohttp
 
-Far partire test total(prima bisogna aggiungere in edit congigurations la stringa
+Far partire test total(prima bisogna aggiungere in edit configurations la stringa nel VM options
  	-Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.codebase=http://localhost:80/
  */
 public class GUIRMI2 extends Application implements RMIClientInterface {
@@ -35,7 +36,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
 
 
         private List<Player> players;
-        private List<GameViewController.PlayerInfo> playersInfo;
+        private List<PlayerInfo> playersInfo;
 
         private GameViewController gameViewController;
         private Registry registry;
@@ -76,7 +77,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
                 public void run() {
                     System.out.println("FPS " + com.sun.javafx.perf.PerformanceTracker.getSceneTracker(primaryStage.getScene()).getInstantFPS());
                 }
-            }, 0, (long) (60*1000.0 / FPS_PRINT_AT_MIN));
+            }, 0, minuteFrequencyToMillis(FPS_PRINT_AT_MIN));
 
             // play background music
             BackgroundMusicPlayer.playMusic();
@@ -127,7 +128,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
                 players.add( new Player("P2"));
                 players.get(players.size()-1).setPosition(players.size()-1);
                 players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
-                players.add( new Player("me"));
+                players.add( new Player(username));
                 players.get(players.size()-1).setPosition(players.size()-1);
                 players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
                 players.add( new Player("P4"));
@@ -137,7 +138,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
                 this.playersInfo = new ArrayList<>();
                 int i = 0;
                 for (Player player : players) {
-                    playersInfo.add(new GameViewController.PlayerInfo(
+                    playersInfo.add(new PlayerInfo(
                             i++,
                             player.getName(),
                             player.getIconId(),
@@ -152,7 +153,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
                 }
 
                 // Create a controller instance, passing the information about players
-                gameViewController = new GameViewController(playersInfo, 0, username);
+                gameViewController = new GameViewController(username);
 
                 try {
                     this.joinPhase();

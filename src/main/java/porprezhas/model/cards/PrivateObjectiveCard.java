@@ -3,11 +3,10 @@ import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
-import porprezhas.model.track.RoundTrack;
+import porprezhas.model.dices.RoundTrack;
 
 import java.io.Serializable;
 
-import static porprezhas.model.cards.Card.Effect.*;
 import static porprezhas.model.dices.Board.COLUMN;
 import static porprezhas.model.dices.Board.ROW;
 

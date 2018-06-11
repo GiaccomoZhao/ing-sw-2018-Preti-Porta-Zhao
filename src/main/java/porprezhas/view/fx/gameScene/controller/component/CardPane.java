@@ -1,4 +1,4 @@
-package porprezhas.view.fx.gameScene.component;
+package porprezhas.view.fx.gameScene.controller.component;
 
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
@@ -9,13 +9,14 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import porprezhas.model.cards.Card;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
-public class CardPane {
+public class CardPane implements SubController{
     private final Pane cardPane;
     private final Border cardBorder;
     private final String pathToCards;
@@ -87,9 +88,9 @@ public class CardPane {
             });
 
             labels.get(i).setOnMouseClicked(event -> {
-                Card source = (Card) event.getSource();
+                Label source = (Label) event.getSource();
                 System.out.println(source.toString());
-                System.out.println(source.effect);
+//                System.out.println(source.effect);
             });
         }
 
@@ -102,4 +103,11 @@ public class CardPane {
     }
 
 
+
+    private GameViewController parentController;
+
+    @Override
+    public void setupSubController(GameViewController parentController) {
+        this.parentController = parentController;
+    }
 }

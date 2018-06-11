@@ -15,7 +15,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import porprezhas.view.fx.gameScene.component.BackgroundMusicPlayer;
+import porprezhas.view.fx.BackgroundMusicPlayer;
 
 import java.io.File;
 

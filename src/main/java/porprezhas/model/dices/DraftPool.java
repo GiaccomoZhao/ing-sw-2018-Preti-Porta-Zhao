@@ -70,4 +70,10 @@ public class DraftPool implements Serializable {
         this.draftPool.add(dice);
     }
 
+    @Override
+    public String toString() {
+        return "DraftPool" +
+                "{" + draftPool +
+                '}';
+    }
 }

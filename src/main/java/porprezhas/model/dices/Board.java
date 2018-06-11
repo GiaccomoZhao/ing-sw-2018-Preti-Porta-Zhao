@@ -1,5 +1,6 @@
 package porprezhas.model.dices;
 
+import porprezhas.Useful;
 import porprezhas.exceptions.diceMove.*;
 
 import java.io.Serializable;
@@ -590,11 +591,45 @@ public class Board implements Serializable {
     }
 
 
+
+
+//      ********************************************
+//      ***************  >> PRINTS << **************
+//      ********************************************
+
+
+    /* @requires position > 0  &&  size > 0  &&
+     *           lowerBound > 0 && higherBound > 0  &&
+     *           lowerBound < higherBound  &&  lowerBound > 0  &&  higherBound > 0
+     * @ensure dimension <= size  &&
+     *         isValueBetweenInclusive(position + dimension, lowerBound, higherBound)
+     */
+    private int calculateDimension(int position, int size, int lowerBound, int higherBound) {
+        int dimensionRow    =   size;
+        if(higherBound - position < size) {    // row dimension is over the higher bound
+            dimensionRow = higherBound - position;
+        }
+        if(lowerBound - position > 0) {      // row is below lower bound
+            dimensionRow -= lowerBound - position;
+        }
+        return dimensionRow;
+    }
+
+    private StringBuilder appendSpaces(StringBuilder sb, int nSpace) {
+        for (int i = 0; i < nSpace; i++) {
+            sb.append(' ');
+        }
+        return sb;
+    }
+
     // Build a board-only message
     @Override
     public String toString() {
+        int dimensionRow    =   ROW;
+        int dimensionColumn =   COLUMN;
+
         String exampleString = new Dice(1, Dice.ColorDice.GREEN).toString();
-        StringBuffer sbBoard = new StringBuffer();
+        StringBuilder  sbBoard = new StringBuilder("Board[" + dimensionRow + "x" + dimensionColumn + "]: \n" );
 
         for (int r = 0; r < ROW; r++) {
             for (int c = 0; c < COLUMN; c++) {
@@ -621,20 +656,27 @@ public class Board implements Serializable {
         return sbBoard.toString();
     }
 
+
     // Build a board-only message
     // around the dice at position (row,col)
     public String toString(Dice dice, int row, int col) {
+        int dimensionRow    =   calculateDimension(row-1, 3, 0, ROW);
+        int dimensionColumn =   calculateDimension(col-1, 3, 0, COLUMN);
 
-        StringBuffer sbBoard = new StringBuffer();
+//        String exampleDiceString = new Dice(1, Dice.ColorDice.PURPLE).toString();   // take the longest dice string, at moment are all the same
+        String exampleDiceString = "  Dice{empty}  ";   // take the longest dice string
+        String strDice;
+        StringBuilder  sbBoard = new StringBuilder("Board[" + dimensionRow + "x" + dimensionColumn + "] from (row:col)=(" + row + ":" + col + "): \n" );
+
         for (int r = row - 1; r <= row + 1; r++) {
             for (int c = col - 1; c <= col + 1; c++) {
 
                 // evidence the dice at position
                 if (r == row && c == col) {
                     if (isBoxOccupied(r, c)) {
-                        sbBoard.append(" < " + board[r][c] + " > \t");
+                        strDice = " <" + board[r][c] + "> ";
                     } else
-                        sbBoard.append(" > " + dice + " < \t");
+                        strDice = ">>" + dice + "<<";
 
                 } else {
 
@@ -642,18 +684,21 @@ public class Board implements Serializable {
                             isValueBetweenInclusive(c, 0, COLUMN - 1)) {
 
                         if (isBoxOccupied(r, c)) {
-                            sbBoard.append("   " + board[r][c] + "   \t");
+                            strDice = "  " + board[r][c].toString() + "  ";
                         } else {
-                            sbBoard.append("   ");
-                            String szEmpty = "Dice{empty}";
-                            sbBoard.append(szEmpty);
-                            for (int nSpace = 0; nSpace < dice.toString().length() - szEmpty.length(); nSpace++) {
-                                sbBoard.append(' ');
-                            }
-                            sbBoard.append("   \t");
+                            strDice = "  Dice{empty}  ";
                         }
+                    } else {
+//                        strDice = "";   // print nothing on outbound spaces
+                        strDice = "Out of Bound ";
                     }
                 }
+
+//                sbBoard.append(" ");
+                sbBoard.append(strDice);
+                sbBoard = appendSpaces(sbBoard, exampleDiceString.length() - strDice.length());
+//                sbBoard.append(" ");
+
             }
             sbBoard.append("\n");
         }

@@ -1,4 +1,4 @@
-package porprezhas.view.fx.gameScene.component;
+package porprezhas.view.fx.gameScene.controller.component;
 
 import javafx.scene.control.Label;
 
