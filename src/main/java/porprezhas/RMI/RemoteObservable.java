@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface RemoteObservable extends Remote {
-    void addObserver(String username) throws RemoteException;
-    void deleteObserver(String username) throws RemoteException;
+    void addObserver(String username)throws RemoteException ;
+
     void printBoard() throws RemoteException;
 
     Game GetThisGame() throws RemoteException;

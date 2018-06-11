@@ -1,6 +1,10 @@
 package porprezhas.Network;
 
 
+import porprezhas.Network.Command.UpdateAnswer;
+import porprezhas.model.SerializableGame;
+import porprezhas.model.SerializableGameInterface;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
@@ -11,20 +15,25 @@ import java.util.Observer;
 
 public class ProxyObserverSocket implements Observer {
 
-    private Socket socket;
     private ObjectOutputStream out ;
 
 
-    public ProxyObserverSocket(Socket socket) throws IOException {
-        this.socket=socket;
-        this.out= (ObjectOutputStream) socket.getOutputStream();
-    }
+    public ProxyObserverSocket(ObjectOutputStream objectOutputStream) {
+        this.out=objectOutputStream;
 
+    }
+int i=0;
     public void update(Observable modelObs, Object arg)
     {
+
         try
         {
-            out.writeObject(arg);
+            SerializableGameInterface serializableGameInterface= (SerializableGame) arg;
+
+            UpdateAnswer updateAnswer= new UpdateAnswer(serializableGameInterface);
+            out.reset();
+            out.writeObject(updateAnswer);
+
             out.flush();
 
         }

@@ -6,14 +6,14 @@ import porprezhas.model.Player;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface GameControllerInterface extends Remote {
-    void pass() throws RemoteException;        // unblock thread
-    int calcScore(Player player) throws RemoteException;
-    StateMachine getState() throws RemoteException;    // when server want to know what is game doing -- running or waiting player exit
-    GameInterface getGame() throws RemoteException;
+public interface GameControllerInterface  {
+    void pass() ;      // unblock thread
+    int calcScore(Player player);
+    StateMachine getState() ;    // when server want to know what is game doing -- running or waiting player exit
+    GameInterface getGame();
 
-   boolean choosePattern(Player player, int indexPatternType) throws RemoteException;
-    boolean insertDice(Integer indexDice, Integer row, Integer column) throws RemoteException;
+   boolean choosePattern(Player player, int indexPatternType) ;
+    boolean insertDice(Integer indexDice, Integer row, Integer column) ;
     boolean useToolCard(int cardId) throws RemoteException;  // TODO:
 
 

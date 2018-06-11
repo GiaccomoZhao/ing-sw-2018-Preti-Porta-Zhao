@@ -99,7 +99,8 @@ public class Game extends ModelObservable implements GameInterface {
     // *********************************
     // ------ Basic Class Methods ------
 
-    public Game(Player player, SolitaireDifficulty difficulty) throws RemoteException {
+    public Game(Player player, SolitaireDifficulty difficulty)  throws RemoteException {
+
         gameID = new Random().nextLong();   // transfer this to super()
         bSolitaire = true;
         solitaireDifficulty = difficulty;
@@ -111,7 +112,8 @@ public class Game extends ModelObservable implements GameInterface {
         reset();
     }
 
-    public Game(List<Player> playerList) throws RemoteException {
+    public Game(List<Player> playerList) throws RemoteException  {
+
         gameID = new Random().nextLong();   // create a unique string or number
         bSolitaire = false;
         this.playerList = new ArrayList<>(playerList);

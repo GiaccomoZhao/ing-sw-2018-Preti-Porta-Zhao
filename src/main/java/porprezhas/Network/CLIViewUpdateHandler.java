@@ -12,7 +12,7 @@ import porprezhas.view.fx.gameScene.GuiSettings;
 import java.util.List;
 
 public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
-    boolean bFixedFont = GuiSettings.bFixedFont;
+    boolean bFixedFont = false;
 
     private String username;
     private final int HEIGHT = 4;
@@ -53,7 +53,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 players) {
 
 
-            pattern = player.getBoard().getPattern();
+           // pattern = player.getBoard().getPattern();
 
 
             // start printing
@@ -216,13 +216,13 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
         if(gameStarted) {
             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             if (game.getCurrentPlayer().getName().equals(this.username))
-                System.out.println("Questo è il tuo turno!");
+                System.out.println("This is your turn!");
             else
-                System.out.println("Ora sta giocando: " + game.getCurrentPlayer().getName());
+                System.out.println("Now is playing: " + game.getCurrentPlayer().getName());
 
             System.out.println(" ");
 
-            System.out.println("Riserva:");
+            System.out.println("Draftpool:");
             for(int i=0; i< game.getDraftPool().diceList().size(); i++){
                 System.out.printf("    (%d)      ", i+1);
 

@@ -1,12 +1,15 @@
 package porprezhas.control;
 
 import porprezhas.exceptions.diceMove.*;
+import porprezhas.Network.Command.*;
 import porprezhas.model.Game;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
 import porprezhas.Network.SocketServerClientHandler;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -17,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ServerController extends UnicastRemoteObject implements ServerControllerInterface, ServerRMIInterface, Runnable {
+public class ServerController extends UnicastRemoteObject implements ServerControllerInterface, ServerRMIInterface, Runnable, ActionHandler {
 
     private final int port;
 
@@ -33,7 +36,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 	private List<Player> loggedPlayer;
 
-    private HashMap viewClient;
+    public HashMap getSocketUsers() {
+        return socketUsers;
+    }
+
+    private HashMap socketUsers;
 
     private  Registry registry;
 
@@ -43,14 +50,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         playerBuffer = new LinkedList<>();
 		gameControllerList = new LinkedList<>();
 		loggedPlayer = new ArrayList<>();
-		viewClient = new HashMap();
+		socketUsers = new HashMap();
         registry= LocateRegistry.getRegistry();
 
 
 	}
 
 
-    private GameControllerInterface getGameControllerByPlayer (Player player) throws RemoteException {
+    private GameControllerInterface getGameControllerByPlayer (Player player)  {
 /*        for (Player p :
              playerBuffer) {
             if(p.equals(player))
@@ -75,7 +82,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 
 	@Override
-	public synchronized void join(Player newPlayer) throws RemoteException {
+	public synchronized void join(Player newPlayer) {
         System.out.println("A new player has joined.  ID = " + newPlayer.getPlayerID() + "\t Name = " + newPlayer.getName());
         GameControllerInterface gameController = getGameControllerByPlayer(newPlayer);
         if(null != gameController) {
@@ -88,13 +95,27 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             playerBuffer.add(newPlayer);
 
             if (playerBuffer.size() == Game.GameConstants.MAX_PLAYER_QUANTITY) {
-                createNewGame();
+                try {
+                    createNewGame();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
 
                 GameControllerInterface actualGameController = getGameControllerByPlayer(newPlayer);
                 Game gamet= (Game) actualGameController.getGame();
                 for (Player readyPlayer:
                         gamet.getPlayerList()) {
+                    if(socketUsers.containsKey(readyPlayer.getName())){
+
+                        gamet.addObserver((ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
+
+                    }
+                    else
+                    try {
                         gamet.addObserver(readyPlayer.getName());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -142,9 +163,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         System.out.println("Creating a new game of " + playerQuantity + " players");
 
         // cut and past the Players to factory
-        gameController =
-                new GameController(
-                        new Game(subBuffer));
+            gameController =
+                    new GameController(
+                            new Game(subBuffer));
+
 /*                gameControllerFactory.create(
                         subBuffer,
                         Game.SolitaireDifficulty.NORMAL);
@@ -274,7 +296,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 
 
-    private GameControllerInterface getGameControllerByUsername (String username) throws RemoteException {
+    private GameControllerInterface getGameControllerByUsername (String username)  {
 /*
 */
         for (GameControllerInterface gameController :
@@ -312,4 +334,60 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         executor.shutdown();
     }
 
+    @Override
+    public synchronized Answer handle(LoginAction loginAction) {
+        String username= loginAction.username;
+        for (Player findPlayer:
+                loggedPlayer) {
+            if(findPlayer.getName().equals(username))
+                return new LoginActionAnswer(false, username);
+        }
+        loggedPlayer.add(new Player(username));
+        this.socketUsers.put(username, loginAction.getObjectOutputStream());
+        return  new LoginActionAnswer(true, username);
+    }
+
+    @Override
+    public synchronized Answer handle(JoinAction joinAction) {
+
+        String username= joinAction.username;
+        for (Player findPlayer:
+                loggedPlayer) {
+            if(findPlayer.getName().equals(username)) {
+                this.join(findPlayer);
+                return new LoginActionAnswer(true, username);
+
+            }
+        }
+        return new LoginActionAnswer(false, username);
+    }
+
+    @Override
+    public synchronized Answer handle(InsertDiceAction insertDiceAction) {
+       String username= insertDiceAction.username;
+        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
+            if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceAction.diceIndex, insertDiceAction.row, insertDiceAction.row))
+                return new LoginActionAnswer(true, username);
+        return new LoginActionAnswer(false, username);
+    }
+
+    @Override
+    public synchronized Answer handle(ChoosePatternAction choosePatternAction) {
+        return null;
+    }
+
+    @Override
+    public synchronized Answer handle(UseToolCardAction useToolCardAction) {
+        return null;
+    }
+
+    @Override
+    public synchronized Answer handle(PassAction passAction) {
+        String username= passAction.username;
+        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
+            this.getGameControllerByUsername(username).pass();
+        else
+            return new PassActionAnswer(false) ;
+        return new PassActionAnswer(true);
+    }
 }

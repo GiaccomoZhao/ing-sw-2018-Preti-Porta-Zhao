@@ -6,7 +6,7 @@ import porprezhas.model.Player;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.dices.Pattern;
 
-import java.rmi.RemoteException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -192,7 +192,7 @@ public class GameController  implements GameControllerInterface, Runnable {
     // *********************************
     // -------- Public Methods ---------
 
-    public GameController(GameInterface game) throws RemoteException {
+    public GameController(GameInterface game)  {
 
         this.game = game;
         playTimeOut = new Object(); // Lock
