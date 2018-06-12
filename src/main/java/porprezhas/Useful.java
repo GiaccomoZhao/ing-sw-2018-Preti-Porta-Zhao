@@ -41,4 +41,15 @@ public class Useful {
     public static boolean isValueOutOfBounds(double x, double lowBound, double highBound) {
         return !isValueBetweenInclusive(x, lowBound, highBound);
     }
+
+
+
+
+
+    public static StringBuilder appendSpaces(StringBuilder sb, int nSpace) {
+        for (int i = 0; i < nSpace; i++) {
+            sb.append(' ');
+        }
+        return sb;
+    }
 }

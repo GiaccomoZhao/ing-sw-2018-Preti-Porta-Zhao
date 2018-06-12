@@ -6,9 +6,11 @@ import porprezhas.model.Player;
 import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.dices.Box;
 import porprezhas.model.dices.Dice;
+import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
@@ -18,10 +20,12 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     private final int HEIGHT = 4;
     private final int WIDTH = 5;
     private Boolean gameStarted;
+    private List<Long> idList;
 
     public CLIViewUpdateHandler(String username) {
         this.username = username;
         gameStarted= false;
+        idList = new ArrayList<>();
     }
 
 
@@ -274,6 +278,8 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             case NEXT_ROUND:
 
                 System.out.println("Next Round");
+
+                saveDiceID(game.getDraftPool().diceList());
                 break;
 
             case DICE_INSERTED:
@@ -281,7 +287,8 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                 System.out.println(game.getCurrentPlayer().getName() + " inserted a dice:");
 
-
+                // refresh dices
+                saveDiceID(game.getDraftPool().diceList());
 
                 break;
 
@@ -290,7 +297,18 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 break;
 
         }
+    }
 
 
+    public long getID(int index) {
+        return idList.get(index);
+    }
+
+
+    public void saveDiceID(List<Dice>  diceList) {
+        idList.clear();
+        for (int i = 0; i < diceList.size(); i++) {
+            idList.add(diceList.get(i).getId());
+        }
     }
 }

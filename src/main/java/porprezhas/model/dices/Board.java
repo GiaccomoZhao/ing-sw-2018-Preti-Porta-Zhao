@@ -5,6 +5,7 @@ import porprezhas.exceptions.diceMove.*;
 
 import java.io.Serializable;
 
+import static porprezhas.Useful.appendSpaces;
 import static porprezhas.Useful.isValueBetweenInclusive;
 
 public class Board implements Serializable {
@@ -661,6 +662,13 @@ public class Board implements Serializable {
 //      ********************************************
 
 
+    // **
+    // @Param  position    segment start position
+    // @Param  size        segment length
+    // @Param  lowerBound  lower limit
+    // @Param  higherBound high limit
+    // @Return dimension   of the segment allowed in the bound at given position
+    //
     /* @requires position > 0  &&  size > 0  &&
      *           lowerBound > 0 && higherBound > 0  &&
      *           lowerBound < higherBound  &&  lowerBound > 0  &&  higherBound > 0
@@ -668,22 +676,16 @@ public class Board implements Serializable {
      *         isValueBetweenInclusive(position + dimension, lowerBound, higherBound)
      */
     private int calculateDimension(int position, int size, int lowerBound, int higherBound) {
-        int dimensionRow    =   size;
+        int dimension   =   size;
         if(higherBound - position < size) {    // row dimension is over the higher bound
-            dimensionRow = higherBound - position;
+            dimension = higherBound - position;
         }
         if(lowerBound - position > 0) {      // row is below lower bound
-            dimensionRow -= lowerBound - position;
+            dimension -= lowerBound - position;
         }
-        return dimensionRow;
+        return dimension;
     }
 
-    private StringBuilder appendSpaces(StringBuilder sb, int nSpace) {
-        for (int i = 0; i < nSpace; i++) {
-            sb.append(' ');
-        }
-        return sb;
-    }
 
     // Build a board-only message
     @Override

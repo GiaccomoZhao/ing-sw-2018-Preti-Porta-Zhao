@@ -9,7 +9,7 @@ import porprezhas.model.dices.Dice;
 import java.io.File;
 
 public class GuiSettings {
-    public static boolean bFixedFont = false;
+    public static boolean bFixedFont = true;
 
     // ***** Game GUI attributes *****
     // path
@@ -27,6 +27,17 @@ public class GuiSettings {
 
     // string
     public static final String GAME_TITLE = "SAGRADA";
+
+    // scene names
+    public static String loginID = "login";
+    public static String loginFile = "LoginView.fxml";
+    public static String patternID = "pattern";
+    public static String patternFile = "ChoosePatternView.fxml";
+    public static String gameID = "game";
+    public static String gameFile = "GameView.fxml";
+    public static String resultsID = "results";
+    public static String resultsFile = "Results.fxml";
+
 
     // number
     public static final int BOARD_COLUMN = 5;
@@ -108,7 +119,9 @@ public class GuiSettings {
         }
 
         // Filter
-        String[] filePath = dir.list((dir1, name) -> name.startsWith(fileName + "."));
+        String[] filePath = dir.list((dir1, name) ->
+                name.startsWith(fileName + ".")
+        );
         if(filePath.length == 0) {
             System.err.println("0 file found in : " + dir);
             return null;
