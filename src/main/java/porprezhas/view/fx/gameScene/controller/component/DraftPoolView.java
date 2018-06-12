@@ -114,7 +114,7 @@ public class DraftPoolView implements SubController{
 
         // Add missed dices in View
         for (Dice dice : draftPoolDices) {
-            addDice(dice);
+            addDice(dice);  // this does animations
         }
     }
 

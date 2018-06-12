@@ -220,14 +220,19 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             else
                 System.out.println("Now is playing: " + game.getCurrentPlayer().getName());
 
-            System.out.println(" ");
 
-            System.out.println("Draftpool:");
+            System.out.println();
+//            System.out.println("Round Track: ");
+            System.out.println(game.getRoundTrack());
+
+
+            System.out.println();
+            System.out.println("Draft Pool: ");
             for(int i=0; i< game.getDraftPool().diceList().size(); i++){
                 System.out.printf("    (%d)      ", i+1);
 
             }
-            System.out.println(" ");
+            System.out.println();
             for (Dice dice :
                     game.getDraftPool().diceList()) {
                 String colorForm=  dice.getColorDice().toString();

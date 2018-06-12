@@ -18,6 +18,7 @@ public class RoundTrackTest {
     RoundTrack roundTrackTest;
     DiceBag diceBagTest = new DiceBag();
     DraftPool draftPoolTest = new DraftPool(diceBagTest,4);
+    DraftPool voidDraftPool = new DraftPool(new ArrayList<>());
     ArrayList<Dice> diceListTest;
 
     Dice draftPoolDice1;
@@ -35,29 +36,30 @@ public class RoundTrackTest {
 
     @Before
     public void setUp() {
+        long idCounter = 0;
 
-        Dice diceNull = new Dice(Dice.ColorDice.WHITE, 0);
-        Dice boardDice1 = new Dice(Dice.ColorDice.YELLOW,3);
-        Dice boardDice2 = new Dice(Dice.ColorDice.BLUE,6);
-        Dice boardDice3 = new Dice(Dice.ColorDice.GREEN,2);
-        Dice boardDice4 = new Dice(Dice.ColorDice.YELLOW,1);
-        Dice boardDice5 = new Dice(Dice.ColorDice.PURPLE,5);
-        Dice boardDice6 = new Dice(Dice.ColorDice.GREEN,3);
-        Dice boardDice7 = new Dice(Dice.ColorDice.RED,3);
-        Dice boardDice8 = new Dice(Dice.ColorDice.RED,4);
-        Dice boardDice9 = new Dice(Dice.ColorDice.PURPLE,2);
+        Dice diceNull = new Dice(Dice.ColorDice.WHITE, 0, idCounter++);
+        Dice boardDice1 = new Dice(Dice.ColorDice.YELLOW,3, idCounter++);
+        Dice boardDice2 = new Dice(Dice.ColorDice.BLUE,6, idCounter++);
+        Dice boardDice3 = new Dice(Dice.ColorDice.GREEN,2, idCounter++);
+        Dice boardDice4 = new Dice(Dice.ColorDice.YELLOW,1, idCounter++);
+        Dice boardDice5 = new Dice(Dice.ColorDice.PURPLE,5, idCounter++);
+        Dice boardDice6 = new Dice(Dice.ColorDice.GREEN,3, idCounter++);
+        Dice boardDice7 = new Dice(Dice.ColorDice.RED,3, idCounter++);
+        Dice boardDice8 = new Dice(Dice.ColorDice.RED,4, idCounter++);
+        Dice boardDice9 = new Dice(Dice.ColorDice.PURPLE,2, idCounter++);
 
-         draftPoolDice1 = new Dice(Dice.ColorDice.BLUE, 1);
-         draftPoolDice2 = new Dice(Dice.ColorDice.YELLOW, 2);
-         draftPoolDice3 = new Dice(Dice.ColorDice.RED, 3);
-         draftPoolDice4 = new Dice(Dice.ColorDice.GREEN, 4);
-         draftPoolDice5 = new Dice(Dice.ColorDice.PURPLE, 5);
-         draftPoolDice6 = new Dice(Dice.ColorDice.BLUE, 6);
-         draftPoolDice7 = new Dice(Dice.ColorDice.YELLOW, 1);
-         draftPoolDice8 = new Dice(Dice.ColorDice.RED, 2);
-         draftPoolDice9 = new Dice(Dice.ColorDice.BLUE, 3);
+         draftPoolDice1 = new Dice(Dice.ColorDice.BLUE, 1, idCounter++);
+         draftPoolDice2 = new Dice(Dice.ColorDice.YELLOW, 2, idCounter++);
+         draftPoolDice3 = new Dice(Dice.ColorDice.RED, 3, idCounter++);
+         draftPoolDice4 = new Dice(Dice.ColorDice.GREEN, 4, idCounter++);
+         draftPoolDice5 = new Dice(Dice.ColorDice.PURPLE, 5, idCounter++);
+         draftPoolDice6 = new Dice(Dice.ColorDice.BLUE, 6, idCounter++);
+         draftPoolDice7 = new Dice(Dice.ColorDice.YELLOW, 1, idCounter++);
+         draftPoolDice8 = new Dice(Dice.ColorDice.RED, 2, idCounter++);
+         draftPoolDice9 = new Dice(Dice.ColorDice.BLUE, 3, idCounter++);
 
-         externalDice = new Dice(Dice.ColorDice.RED,4);
+         externalDice = new Dice(Dice.ColorDice.RED,4, idCounter++);
 
         diceListTest= new ArrayList<>(9);
 
@@ -75,8 +77,12 @@ public class RoundTrackTest {
         when(draftPoolTest.diceList()).thenReturn(diceListTest);
         roundTrackTest = new RoundTrack();
 
+        // the round counter start from 0, and can not be used
         int actual=4;
-        roundTrackTest.actualRound=actual;
+        for (int i = 0; i < actual; i++) {
+            roundTrackTest.addDice(voidDraftPool);
+        }
+//        roundTrackTest.actualRound=actual;
     }
 
     @Test

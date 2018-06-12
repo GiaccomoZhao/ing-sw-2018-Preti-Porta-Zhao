@@ -12,6 +12,7 @@ import porprezhas.model.dices.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -22,7 +23,12 @@ public class PatternTest {
     @Test
     public void test() {
         Box mock = Mockito.mock(Box.class);
-        assertTrue(24==patternList.size());
+        patternList = new ArrayList<>();
+        for (Pattern.TypePattern type : Pattern.TypePattern.values()) {
+            if(!type.equals( Pattern.TypePattern.VOID ))
+                patternList.add( new Pattern(type) );
+        }
+        assertEquals(24, patternList.size());
 //        Mockito.when(mock.getNumber()).thenReturn(0);
 //        Mockito.verify(mock).getColor();    // check mock has called getColor
         for (Pattern pattern: patternList) {

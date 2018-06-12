@@ -100,24 +100,29 @@ public class BoardTestZX {
         // a random normal dice
         dieGeneric = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                random.nextInt(MAX_DICE_NUMBER) +1);
+                random.nextInt(MAX_DICE_NUMBER) +1,
+                idCounter++);
 
         dieSmall = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                1
+                1,
+                idCounter++
         );
         dieBig = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                MAX_DICE_NUMBER
+                MAX_DICE_NUMBER,
+                idCounter++
         );
 
         dieTooSmall = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                0
+                0,
+                idCounter++
         );
         dieTooBig = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                MAX_DICE_NUMBER +1
+                MAX_DICE_NUMBER +1,
+                idCounter++
         );
 
 

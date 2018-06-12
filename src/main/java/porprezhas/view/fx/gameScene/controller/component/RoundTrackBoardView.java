@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import porprezhas.Network.ClientActionSingleton;
 import porprezhas.model.Game;
+import porprezhas.model.GameConstants;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 
@@ -18,7 +19,8 @@ import java.util.Scanner;
 
 import static porprezhas.Useful.isValueBetween;
 import static porprezhas.Useful.isValueBetweenInclusive;
-import static porprezhas.model.Game.GameConstants.*;
+import static porprezhas.model.GameConstants.*;
+import static porprezhas.model.GameConstants.ROUND_NUM;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class RoundTrackBoardView extends GenericBoardView implements SubController {
@@ -86,18 +88,18 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 
         try {
             // show the specified round's dices
-            if (isValueBetweenInclusive(iRound, 1, Game.GameConstants.ROUND_NUM) ){
+            if (isValueBetweenInclusive(iRound, 1, GameConstants.ROUND_NUM) ){
 
                 // set bShowRoundTrackDices false when all list are hidden
                 bShowRoundTrackList[iRound -1] = bShow; // iRound is a index that starts from 1
                 if(!bShow && bShowRoundTrackDices == true) {
                     int i;
-                    for (i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+                    for (i = 0; i < GameConstants.ROUND_NUM; i++) {
                         if(bShowRoundTrackList[i] == true) {
                             break;
                         }
                     }
-                    if(i == Game.GameConstants.ROUND_NUM) {
+                    if(i == GameConstants.ROUND_NUM) {
                         bShowRoundTrackDices = false;
                     }
                 }
@@ -108,7 +110,7 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 
                 // set all booleans = bShow
                 bShowRoundTrackDices = bShow;
-                for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+                for (int i = 0; i < GameConstants.ROUND_NUM; i++) {
                     bShowRoundTrackList[i] = bShow;
                 }
 
@@ -142,9 +144,9 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 
         // if we have placed round number in a HBox
         if(eventSource instanceof HBox) {
-            int iRound = (int) (eventX / ((HBox) eventSource).getWidth() * Game.GameConstants.ROUND_NUM);
-            if (iRound > Game.GameConstants.ROUND_NUM)
-                return Game.GameConstants.ROUND_NUM ;
+            int iRound = (int) (eventX / ((HBox) eventSource).getWidth() * GameConstants.ROUND_NUM);
+            if (iRound > GameConstants.ROUND_NUM)
+                return GameConstants.ROUND_NUM ;
             return iRound +1;
         }
 
@@ -158,10 +160,10 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
             ImageView imageView = ((ImageView) eventSource);
             if(imageView.getParent() instanceof  HBox) {
                 HBox parent = (HBox) imageView.getParent();
-                int iRound = (int) (imageView.getLayoutX() / parent.getWidth() * Game.GameConstants.ROUND_NUM);
+                int iRound = (int) (imageView.getLayoutX() / parent.getWidth() * GameConstants.ROUND_NUM);
 //                System.out.println("Calculated round = " + iRound);
-                if( iRound > Game.GameConstants.ROUND_NUM)
-                    return Game.GameConstants.ROUND_NUM ;
+                if( iRound > GameConstants.ROUND_NUM)
+                    return GameConstants.ROUND_NUM ;
                 return iRound +1;
             }
         }
@@ -172,9 +174,9 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
             Bounds bounds = gridPane.localToScene(gridPane.getBoundsInLocal());
             double x = eventSceneX;
             double width = bounds.getWidth();
-            int iRound = (int) ((x - bounds.getMinX()) / width * Game.GameConstants.ROUND_NUM);
-            if( iRound > Game.GameConstants.ROUND_NUM)
-                return Game.GameConstants.ROUND_NUM ;
+            int iRound = (int) ((x - bounds.getMinX()) / width * GameConstants.ROUND_NUM);
+            if( iRound > GameConstants.ROUND_NUM)
+                return GameConstants.ROUND_NUM ;
             return iRound +1;
         }
 
@@ -316,7 +318,7 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
             try {
                 int iRound = getRoundNumberFromEvent(event);
 //                System.out.println("round = " + iRound);
-                for (int i = 1; i <= Game.GameConstants.ROUND_NUM; i++) {
+                for (int i = 1; i <= GameConstants.ROUND_NUM; i++) {
                     if(i != iRound && bShowRoundTrackList[i-1]) {
                         showRoundTrackDices(i, false);
                     }
@@ -364,8 +366,8 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 
 
 
-
-
+/*
+    // add more dices in a column
     public void addDice(List<Dice> diceList, int indexRound) {
         final int iRound = indexRound;
         int row = 0;
@@ -381,8 +383,9 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
             getBoard().setRowSpan(backGround[indexRound], ++row);       // row span -> 1
         }
     }
+*/
 
-    // Add Dice to Round Track
+    // Add a Dice to Round Track
     @Override
     public DiceView addDice(Dice dice, int nothing, int indexRound) {
         final int iRound = indexRound;    // conversion of variable number to better understand its meaning
@@ -420,10 +423,10 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
                 for (int row = 0; row < MAX_DICE_PER_ROUND && row < dices[round].size(); row++) {
                     Dice dice = dices[round].get(row);
                     if (null != dice) {
+
                         super.addDice(dice, row, round);
-                    }
-                }
-            }
+
+                    } } }
         }
         show(-1, true);
     }

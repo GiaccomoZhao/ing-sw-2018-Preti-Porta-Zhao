@@ -23,9 +23,10 @@ public class BoardTest1 {
     @Before
     public void setUp()  {
         pattern = mock(Pattern.class);
-        die = new Dice(Dice.ColorDice.YELLOW,1);
-        die1 = new Dice (Dice.ColorDice.BLUE,2);
-        die0 = new Dice (Dice.ColorDice.WHITE,0);
+        long idCounter = 0;
+        die = new Dice(Dice.ColorDice.YELLOW,1, idCounter++);
+        die1 = new Dice (Dice.ColorDice.BLUE,2, idCounter++);
+        die0 = new Dice (Dice.ColorDice.WHITE,0, idCounter++);
         board = new Board(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
         box = mock(Box.class);
 

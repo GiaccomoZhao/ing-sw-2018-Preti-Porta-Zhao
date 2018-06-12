@@ -1,6 +1,7 @@
 package porprezhas.control;
 
 import porprezhas.model.Game;
+import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 import porprezhas.model.database.DatabaseInterface;
@@ -220,8 +221,8 @@ public class GameController  implements GameControllerInterface, Runnable {
         while(!bChosen) {
             try {
                 synchronized(chooseTimeOut) {
-                    chooseTimeOut.wait( Game.GameConstants.secondsToMillis(
-                            Game.GameConstants.TIMEOUT_PREPARING_SEC));
+                    chooseTimeOut.wait( GameConstants.secondsToMillis(
+                            GameConstants.TIMEOUT_PREPARING_SEC));
                     chooseTimeOut.notifyAll();
                     setup();
                     bChosen = true;
@@ -232,7 +233,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         }
 
         // ROUND phase
-        for (int iRound = 0; iRound < Game.GameConstants.ROUND_NUM; iRound++) {
+        for (int iRound = 0; iRound < GameConstants.ROUND_NUM; iRound++) {
 //            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
             System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
             game.nextRound(); //Prepare for next round: Create a new DraftPool

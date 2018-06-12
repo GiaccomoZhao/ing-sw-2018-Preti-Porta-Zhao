@@ -27,24 +27,6 @@ public class Game extends ModelObservable implements GameInterface {
         return draftPool;
     }
 
-    public static class GameConstants {
-        private GameConstants() {
-        }
-
-        public static final int DICE_QUANTITY = 90;
-        public static final int MAX_PLAYER_QUANTITY = 4;
-        public static final int MAX_DICE_PER_ROUND = 2*MAX_PLAYER_QUANTITY +1;
-        public static final int DICE_PICK_PER_TURN = 1;
-        public static final int ROUND_NUM = 10;
-//        public static final int FAVOR_TOKEN_QUANTITY = 3;
-        public static final double TIMEOUT_PREPARING_SEC = 5;   //60;
-        public static final double TIMEOUT_ROUND_SEC = 60;     //33;             // this game should spends at max 45 min: 45*60 == 33(sec)*4(players)*2*10(round) + 60
-        public static final double TIMEOUT_ROUND_SOLITAIRE_SEC = 5;// 90;   // solitaire should spend 30 min: 90sec * 2*10round == 30min
-
-        public static long secondsToMillis(double seconds) {
-            return (long) seconds * 1000;
-        }
-    }
 
     public enum SolitaireDifficulty {
         BEGINNER, EASY, NORMAL, HARD, EXTREME;              // we can use .toString() method to get the text
@@ -128,7 +110,7 @@ public class Game extends ModelObservable implements GameInterface {
         diceBag = new DiceBag();
 //        draftPool = new DraftPool(diceBag, playerList.size());    // this shouldn't extract dice from the bag here
         draftPool = new DraftPool();    // this will be created by controller before every round
-        diceQuantity = Game.GameConstants.DICE_QUANTITY;
+        diceQuantity = GameConstants.DICE_QUANTITY;
 
         resetPlayerIndexes();
         setCurrentPlayerByIndex();    // can be commented because gameController always calls Game.OrderPlayers() that calls this method
@@ -196,10 +178,10 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public long getRoundTimeOut() {
-        return Game.GameConstants.secondsToMillis(
+        return GameConstants.secondsToMillis(
                 isSolitaire() ?
                         GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC :
-                        Game.GameConstants.TIMEOUT_ROUND_SEC);
+                        GameConstants.TIMEOUT_ROUND_SEC);
     }
 
     // *********************************
@@ -312,7 +294,7 @@ public class Game extends ModelObservable implements GameInterface {
        @ *//*
 
     public void addPlayer(Player newPlayer) throws GamePlayerFullException, InvalidPlayerException, PlayerAlreadyPresentException {
-        if (playerList.size() >= Game.GameConstants.MAX_PLAYER_QUANTITY)
+        if (playerList.size() >= GameConstants.MAX_PLAYER_QUANTITY)
             throw new GamePlayerFullException();
         for (Player p : playerList) {
             if (newPlayer.getPlayerID().equals(p.getPlayerID()))

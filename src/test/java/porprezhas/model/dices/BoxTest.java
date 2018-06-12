@@ -27,10 +27,11 @@ public class BoxTest {
         boxList = new ArrayList<>();
         diceList = new ArrayList<>();
 
+        long idCounter = 0;
         for (int diceNum = 0; diceNum <= MAX_DICE_NUMBER; diceNum++) {
             for (Dice.ColorDice diceColor : Dice.ColorDice.values()) {
                 if(!diceColor.equals(Dice.ColorDice.WHITE)  &&  0 != diceNum)
-                    diceList.add( new Dice(diceColor, diceNum) );
+                    diceList.add( new Dice(diceColor, diceNum, idCounter++) );
                 boxList. add(  new Box(diceColor, diceNum) );
             }
         }

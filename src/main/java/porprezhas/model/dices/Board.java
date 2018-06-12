@@ -520,7 +520,8 @@ public class Board implements Serializable {
         if (board[row][col] != null)
             return board[row][col];
         else
-            return new Dice(Dice.ColorDice.WHITE, 0);
+            return null;
+//            return new Dice(Dice.ColorDice.WHITE, 0, -1);
 
     }
 
@@ -765,8 +766,12 @@ public class Board implements Serializable {
                 }
 
 //                sbBoard.append(" ");
+                int lowHalf = (exampleDiceString.length() - strDice.length()) /2;
+                int highHalf = exampleDiceString.length() - strDice.length() - lowHalf;
+
+                sbBoard = appendSpaces(sbBoard, lowHalf);
                 sbBoard.append(strDice);
-                sbBoard = appendSpaces(sbBoard, exampleDiceString.length() - strDice.length());
+                sbBoard = appendSpaces(sbBoard, highHalf);
 //                sbBoard.append(" ");
 
             }

@@ -127,7 +127,7 @@ public class GameViewController implements GameViewUpdaterInterface {
 
         enemyViewControllers = new ArrayList<>();
 
-        roundTrackBoard = new RoundTrackBoardView(Game.GameConstants.MAX_DICE_PER_ROUND, Game.GameConstants.ROUND_NUM);
+        roundTrackBoard = new RoundTrackBoardView(GameConstants.MAX_DICE_PER_ROUND, GameConstants.ROUND_NUM);
 /*        for (int i = 0; i < num_player; i++) {
             boardList.add(new GridPane());
         }*/
