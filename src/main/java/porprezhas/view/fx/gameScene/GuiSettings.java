@@ -99,7 +99,7 @@ public class GuiSettings {
     }
 
     // get the absolute path to the file with any extension. It is like */relativePath/fileName.*
-    public static String getPathToFile(String relativePath, String fileName) {
+    public static String getPathToFileIgnoreExt(String relativePath, String fileName) {
         // get resource path
         System.out.println(GuiSettings.class.getResource("/" ));
         String resourcePath = GuiSettings.class.getResource("/" ).getPath();  // get absolute path to resource

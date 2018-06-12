@@ -24,7 +24,7 @@ public class CardPane implements SubController{
     public CardPane(Pane cardPane, CardTab tab, String pathToCards) {
         this.cardPane = cardPane;
         this.pathToCards = pathToCards;
-        String filePath = getPathToFile(pathToBorder, tab.name());
+        String filePath = getPathToFileIgnoreExt(pathToBorder, tab.name());
         if(filePath != null) {
             cardBorder = new Border(new BorderImage(
                     new Image(filePath),

@@ -4,10 +4,8 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,8 +16,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import porprezhas.model.dices.Pattern;
 
-import java.io.FileInputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,16 +114,17 @@ public class ChoosePatternView extends Application {
 
         int i=0;
         for (Pattern.TypePattern patternType: typePatternList) {
-            String filePath = getPathToFile(pathToPattern , patternType.name().toLowerCase() + ".png");
-            if(null != filePath) {
-                imageViewpatternList.get(i).setImage(new Image(filePath));
-            }
+            System.out.println(pathToPattern + patternType.name().toLowerCase() + ".png");
+            System.out.println(new Image(pathToPattern + patternType.name().toLowerCase() + ".png"));
+                imageViewpatternList.get(i).setImage(new Image(
+                        pathToPattern + patternType.name().toLowerCase() + ".png"
+                ));
             i++;
         }
 
 
 
-/*       String filePath = getPathToFile(pathToBorder, "pattern");
+/*       String filePath = getPathToFileIgnoreExt(pathToBorder, "pattern");
         if(filePath != null) {
             cardBorder = new Border(new BorderImage(
                     new Image(filePath),
@@ -143,7 +140,8 @@ public class ChoosePatternView extends Application {
     @FXML
     private void onMouseEnteredPattern(MouseEvent event){
 
-       // String borderpath = getPathToFile(pathToBorder ,"PRIVATE_CARD" + ".gif");
+       // String borderpath = getPathToFileIgnoreExt(pathToBorder ,"PRIVATE_CARD" + ".gif");
+        System.out.println(labelList);
         for (Label label:labelList) {
             if(label.equals(event.getSource())){
                 label.setBorder(new Border(new BorderStroke( Color.rgb(200, 0, 0),
