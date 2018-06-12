@@ -520,8 +520,7 @@ public class Board implements Serializable {
         if (board[row][col] != null)
             return board[row][col];
         else
-            return null;
-//            return new Dice(Dice.ColorDice.WHITE, 0, -1);
+            return new Dice(Dice.ColorDice.WHITE, 0, -1);
 
     }
 
