@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="ChoosePatternView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="600.0" stylesheets="@ChoosePatternView.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="508.0" fitWidth="600.0" layoutX="-14.0" layoutY="-73.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@background/a4fc82eeac314de4e4503b843ea66c13.jpg" />
+         </image>
+         <effect>
+            <SepiaTone level="0.44">
+               <input>
+                  <ColorAdjust brightness="-0.18" contrast="0.07" hue="0.28" saturation="0.63">
+                     <input>
+                        <GaussianBlur radius="6.34" />
+                     </input>
+                  </ColorAdjust>
+               </input>
+            </SepiaTone>
+         </effect>
+      </ImageView>
+      <Text fill="#220d00" layoutX="173.0" layoutY="49.0" opacity="0.8" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose your pattern">
+         <font>
+            <Font name="Book Antiqua" size="33.0" />
+         </font>
+         <effect>
+            <GaussianBlur radius="4.87" />
+         </effect>
+      </Text>
+      <Text fill="#401a02" layoutX="169.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose your pattern" AnchorPane.leftAnchor="169.0" AnchorPane.topAnchor="13.52978515625">
+         <font>
+            <Font name="Book Antiqua" size="33.0" />
+         </font>
+         <effect>
+            <DropShadow color="#e4a682" />
+         </effect>
+      </Text>
+      <StackPane layoutX="70.0" layoutY="72.0" prefHeight="195.0" prefWidth="223.0" styleClass="pattern" stylesheets="@ChoosePatternView.css">
+         <children>
+            <Label fx:id="choosePatternViewPatternLabel1" onMouseEntered="#onMouseEnteredPattern" prefHeight="195.0" prefWidth="228.0" />
+            <ImageView fx:id="choosePatternViewPattern1" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" onMouseEntered="#onMouseEnteredPattern" pickOnBounds="true" preserveRatio="true" styleClass="pattern">
+               <image>
+                  <Image url="@pattern/aurora_sagradis.png" />
+               </image>
+            </ImageView>
+         </children></StackPane>
+      <StackPane layoutX="319.0" layoutY="72.0" prefHeight="195.0" prefWidth="223.0" stylesheets="@ChoosePatternView.css">
+         <children>
+            <Label fx:id="choosePatternViewPatternLabel2" onMouseEntered="#onMouseEnteredPattern" />
+            <ImageView fx:id="choosePatternViewPattern2" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pattern/aurora_sagradis.png" />
+               </image>
+            </ImageView>
+         </children></StackPane>
+      <StackPane layoutX="70.0" layoutY="291.0" prefHeight="195.0" prefWidth="223.0" stylesheets="@ChoosePatternView.css">
+         <children>
+            <Label fx:id="choosePatternViewPatternLabel3" onMouseEntered="#onMouseEnteredPattern" />
+            <ImageView fx:id="choosePatternViewPattern3" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pattern/aurora_sagradis.png" />
+               </image>
+            </ImageView>
+         </children></StackPane>
+      <StackPane layoutX="319.0" layoutY="291.0" prefHeight="195.0" prefWidth="223.0" stylesheets="@ChoosePatternView.css">
+         <children>
+            <Label fx:id="choosePatternViewPatternLabel4" onMouseEntered="#onMouseEnteredPattern">
+               <graphic>
+                  <ImageView fx:id="choosePatternViewPattern4" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pattern/aurora_sagradis.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children></StackPane>
+   </children>
+</AnchorPane>

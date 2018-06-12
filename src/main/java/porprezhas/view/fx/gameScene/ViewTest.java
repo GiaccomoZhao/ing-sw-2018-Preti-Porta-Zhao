@@ -10,6 +10,7 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import porprezhas.model.Game;
+import porprezhas.model.GameConstants;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
@@ -94,9 +95,9 @@ public class ViewTest extends Application {
 
             long idCounter = 0;
             Random random = new Random();
-            for (int col = 0; col < Game.GameConstants.ROUND_NUM; col++) {
+            for (int col = 0; col < GameConstants.ROUND_NUM; col++) {
                 if (random.nextInt(10) < 0) {
-                    for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
+                    for (int row = 0; row < GameConstants.MAX_DICE_PER_ROUND; row++) {
                         gameViewController.addDiceToRoundTrack(
                                 new Dice(random.nextInt(6) + 1,
                                         Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],
@@ -109,7 +110,7 @@ public class ViewTest extends Application {
                                     Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],
                                     idCounter++ ),
                             col );
-                    for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
+                    for (int row = 0; row < GameConstants.MAX_DICE_PER_ROUND; row++) {
                         if (random.nextInt(10) < 3) {
                             gameViewController.addDiceToRoundTrack(
                                     new Dice(random.nextInt(6) + 1,
@@ -138,7 +139,7 @@ public class ViewTest extends Application {
             }
 
             List<Dice> diceList = new ArrayList<>();
-            for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
+            for (int i = 0; i < GameConstants.MAX_DICE_PER_ROUND; i++) {
                 diceList.add(
                         new Dice(random.nextInt(6) + 1,
                                 Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],

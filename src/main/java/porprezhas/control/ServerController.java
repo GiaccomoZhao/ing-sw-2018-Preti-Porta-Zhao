@@ -3,6 +3,7 @@ package porprezhas.control;
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.Network.Command.*;
 import porprezhas.model.Game;
+import porprezhas.model.GameConstants;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
 import porprezhas.Network.SocketServerClientHandler;
@@ -94,7 +95,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         } else {
             playerBuffer.add(newPlayer);
 
-            if (playerBuffer.size() == Game.GameConstants.MAX_PLAYER_QUANTITY) {
+            if (playerBuffer.size() == GameConstants.MAX_PLAYER_QUANTITY) {
                 try {
                     createNewGame();
                 } catch (RemoteException e) {
@@ -155,8 +156,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 	    GameControllerInterface gameController; // to save return value
 	    // before start: check all player on line
         // create a new game with 1-4 players
-        int playerQuantity = (playerBuffer.size() >= Game.GameConstants.MAX_PLAYER_QUANTITY) ?
-                Game.GameConstants.MAX_PLAYER_QUANTITY :
+        int playerQuantity = (playerBuffer.size() >= GameConstants.MAX_PLAYER_QUANTITY) ?
+                GameConstants.MAX_PLAYER_QUANTITY :
                 playerBuffer.size();
         List<Player> subBuffer = new ArrayList<>(playerBuffer.subList(0, playerQuantity));
 

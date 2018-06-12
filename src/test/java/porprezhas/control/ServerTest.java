@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import porprezhas.model.Game;
+import porprezhas.model.GameConstants;
 import porprezhas.model.Player;
 
 import java.rmi.RemoteException;
@@ -40,7 +41,7 @@ public class ServerTest {
             players.add(new Player(playerName));
             server.join(players.get(i));
         }
-        if(NUM_PLAYER < Game.GameConstants.MAX_PLAYER_QUANTITY) {
+        if(NUM_PLAYER < GameConstants.MAX_PLAYER_QUANTITY) {
             newGame = (GameController) server.createNewGame();
         } else {
             newGame = server.getGameController(players.get(0));
