@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
 
+import static porprezhas.Network.SocketServerClientHandler.lock;
+
 
 public class ProxyObserverSocket implements Observer {
 
@@ -31,10 +33,11 @@ int i=0;
             SerializableGameInterface serializableGameInterface= (SerializableGame) arg;
 
             UpdateAnswer updateAnswer= new UpdateAnswer(serializableGameInterface);
-            out.reset();
-            out.writeObject(updateAnswer);
-
-            out.flush();
+            synchronized (lock){
+                out.reset();
+                out.writeObject(updateAnswer);
+                out.flush();
+            }
 
         }
         catch(Exception re)

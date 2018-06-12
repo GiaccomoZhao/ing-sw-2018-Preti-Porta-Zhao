@@ -16,7 +16,8 @@ public class SocketServerClientHandler extends Observable implements Runnable {
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
     private Boolean first=true;
-
+    public static Object lock;
+    private Boolean test=true;
     public int getState() {
         return state;
     }
@@ -26,11 +27,12 @@ public class SocketServerClientHandler extends Observable implements Runnable {
         this.serverController= serverController;
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
+        lock= new Object();
     }
 
 
     public void run() {
-        while(true) {
+        while(test) {
             try {
                 Action action = ((Action) in.readObject());
                 if (first)
@@ -39,8 +41,11 @@ public class SocketServerClientHandler extends Observable implements Runnable {
                 if (first)
                     if (((LoginActionAnswer) answer).answer.equals(true))
                         first = false;
+                synchronized (lock){
+                out.reset();
                 out.writeObject(answer);
                 out.flush();
+                }
 
 
             } catch (IOException e) {

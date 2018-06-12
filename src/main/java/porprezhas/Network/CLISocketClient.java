@@ -1,7 +1,6 @@
 package porprezhas.Network;
 
 import porprezhas.Network.Command.*;
-import porprezhas.model.SerializableGameInterface;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,9 +13,10 @@ public class CLISocketClient implements AnswerHandler {
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
     private String username;
     private int port;
-
+    private Thread thread;
     private final Scanner in;
     private ClientObserver clientObserver;
+
     Boolean flag=false;
     Socket socket ;
    ObjectInputStream socketIn;
@@ -58,12 +58,25 @@ public class CLISocketClient implements AnswerHandler {
         this.join();
         Boolean run=true;
         String command=null;
+        CLISocketClient cliSocketClient = this;
+        thread = new Thread(){
+            public void run() {
+                Boolean bool=true;
+                while(bool){
+                try {
+                    ((Answer) socketIn.readObject()).handle(cliSocketClient);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }}
+        };
+        thread.start();
         while (run){
             try {
-               if(command==null) ((Answer) socketIn.readObject()).handle(this);
-
-            //                command =  in.nextLine();
-
+                command =  in.nextLine();
+                            this.action(command);
 
             } catch (IOException e) {
                 System.err.println("Exception on network: " + e.getMessage());
@@ -108,6 +121,11 @@ public class CLISocketClient implements AnswerHandler {
             System.out.println("It's not your turn!");
     }
 
+    @Override
+    public Boolean handle(DiceInsertedAnswer diceInsertedAnswer) {
+return false;
+    }
+
     public void login(){
 
         System.out.println("\t\tSAGRADA\t\t");
@@ -143,7 +161,6 @@ public class CLISocketClient implements AnswerHandler {
                 socketOut.flush();
                 ((Answer) socketIn.readObject()).handle(this);
 
-                System.out.println("tento il join");
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -154,7 +171,7 @@ public class CLISocketClient implements AnswerHandler {
     }
 
     public void action(String command) throws IOException, ClassNotFoundException {
-        do {
+
 
 
             if (!command.equals(LOGOUT_COMMAND) ) {
@@ -177,16 +194,17 @@ public class CLISocketClient implements AnswerHandler {
                         String numberDice = command.substring(space+1 , space2 );
                         String xBoardValue= command.substring(space2+1, space3);
                         String yBoardValue= command.substring(space3+1, command.length());
-                        socketOut.writeObject(new InsertDiceAction(username, Integer.parseInt(numberDice) -1,Integer.parseInt(xBoardValue)-1,Integer.parseInt(yBoardValue)-1 ));
+                        int index = Integer.parseInt(numberDice) -1;
+                        long diceID = ((CLIViewUpdateHandler) viewUpdateHandlerInterface).getID(index);
+                        socketOut.writeObject(new InsertDiceGuiAction(username, diceID,Integer.parseInt(xBoardValue)-1,Integer.parseInt(yBoardValue)-1 ));
                         socketOut.flush();
 
                         break;
 
                     case PASS:
-
                         socketOut.writeObject(new PassAction(username));
                         socketOut.flush();
-                        ((Answer) socketIn.readObject()).handle(this);
+
                         break;
                     case USE_TOOL_CARD:
                         break;
@@ -196,7 +214,7 @@ public class CLISocketClient implements AnswerHandler {
                 }
 
             }
-        } while (!command.equals(LOGOUT_COMMAND));
+
 
     }
 }

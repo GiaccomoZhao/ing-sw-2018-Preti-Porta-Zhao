@@ -1,14 +1,14 @@
 package porprezhas.Network.Command;
 
-public class InsertDiceAction implements Action {
+public class InsertDiceGuiAction implements Action {
     public final String username;
-    public final int diceIndex;
+    public final long diceId;
     public final int row;
     public final int col;
 
-    public InsertDiceAction(String username, int diceIndex, int row, int col) {
+    public InsertDiceGuiAction(String username, long diceId, int row, int col) {
         this.username = username;
-        this.diceIndex = diceIndex;
+        this.diceId = diceId;
         this.row = row;
         this.col = col;
     }

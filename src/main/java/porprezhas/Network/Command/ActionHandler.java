@@ -5,7 +5,9 @@ public interface ActionHandler {
 
     Answer handle(JoinAction joinAction);
 
-    Answer handle(InsertDiceAction insertDiceAction);
+    Answer handle(InsertDiceGuiAction insertDiceGuiAction);
+
+
 
     Answer handle(ChoosePatternAction choosePatternAction);
 

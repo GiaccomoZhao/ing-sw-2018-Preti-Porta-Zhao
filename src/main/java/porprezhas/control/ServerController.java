@@ -9,7 +9,6 @@ import porprezhas.model.Player;
 import porprezhas.Network.SocketServerClientHandler;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -364,10 +363,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
     @Override
-    public synchronized Answer handle(InsertDiceAction insertDiceAction) {
-       String username= insertDiceAction.username;
+    public synchronized Answer handle(InsertDiceGuiAction insertDiceGuiAction) {
+
+        String username= insertDiceGuiAction.username;
         if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
-            if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceAction.diceIndex, insertDiceAction.row, insertDiceAction.row))
+            if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceGuiAction.diceId, insertDiceGuiAction.row, insertDiceGuiAction.col))
                 return new LoginActionAnswer(true, username);
         return new LoginActionAnswer(false, username);
     }
@@ -384,6 +384,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     @Override
     public synchronized Answer handle(PassAction passAction) {
+
         String username= passAction.username;
         if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
             this.getGameControllerByUsername(username).pass();

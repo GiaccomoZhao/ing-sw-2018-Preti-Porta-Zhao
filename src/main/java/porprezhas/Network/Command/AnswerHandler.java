@@ -9,4 +9,6 @@ public interface AnswerHandler {
     void handle(JoinActionAnswer joinActionAnswer);
 
     void handle(PassActionAnswer passActionAnswer);
+
+    Boolean handle(DiceInsertedAnswer diceInsertedAnswer);
 }
