@@ -546,10 +546,6 @@ public class GameViewController implements GameViewUpdaterInterface {
         this.playerPosition = playerPosition;
     }
 
-    public void setDraftPool(List<Dice> newDiceList) {
-        draftPoolView.reroll(newDiceList);
-    }
-
    public void updateSize() {
         updateEnemyPaneSize(fx_gamePane.getHeight());
         updatePlayerPaneSize(fx_playerPane.getWidth(), fx_playerPane.getHeight());
@@ -602,9 +598,7 @@ public class GameViewController implements GameViewUpdaterInterface {
 
         updatePlayerInfo(players);
 
-        Platform.runLater(() ->
-                SetupView()
-        );
+        SetupView();
     }
 
 
@@ -634,8 +628,18 @@ public class GameViewController implements GameViewUpdaterInterface {
         boardList.get(idBoard).update(dices);
     }
 
+
+    // activates roll animation
     public void updateDraftPool(List<Dice> dices) {
-        draftPoolView.update(dices);
+        Platform.runLater(() -> {
+            draftPoolView.update(dices);
+        });
+    }
+
+    // do not active animation
+    public void updateDraftPool(DraftPool draftPool) {
+        draftPoolView.update(draftPool);
+
     }
 
     public void updateRoundTrack(List<Dice>[] dices) {

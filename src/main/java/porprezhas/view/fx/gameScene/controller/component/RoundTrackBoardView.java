@@ -10,10 +10,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import porprezhas.Network.ClientActionSingleton;
 import porprezhas.model.Game;
-import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
-import porprezhas.view.fx.gameScene.state.GameViewState;
 
 import java.util.List;
 import java.util.Scanner;
@@ -242,8 +240,8 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
                             int iRound = getRoundNumberFromEvent(event);
                             // place down
 //                        System.out.println("round number = " + iRound);
-                            // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getIndexDice(), roundTrackBoard.getBoardId(), iRound, 666);
-                            success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), this.getBoardId().toInt(), iRound, 666);
+                            // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getDiceID(), roundTrackBoard.getBoardId(), iRound, 666);
+                            success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getDiceID(), this.getBoardId().toInt(), iRound, 666);
 //                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
 //                            success = true;
 //                        }
@@ -418,10 +416,12 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 
         getBoard().getChildren().clear();
         for (int round = 0; round < ROUND_QUANTITY; round++) {
-            for (int row = 0; row < MAX_DICE_PER_ROUND; row++) {
-                Dice dice = dices[round].get(row);
-                if(null != dice) {
-                    super.addDice(dice, row, round);
+            if(null != dices[round]) {
+                for (int row = 0; row < MAX_DICE_PER_ROUND && row < dices[round].size(); row++) {
+                    Dice dice = dices[round].get(row);
+                    if (null != dice) {
+                        super.addDice(dice, row, round);
+                    }
                 }
             }
         }

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static porprezhas.model.dices.Board.COLUMN;
 import static porprezhas.model.dices.Board.ROW;
-import static porprezhas.model.dices.Dice.MAX_DICE_NUM;
+import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
 import static porprezhas.model.dices.Pattern.*;
 
 public class BoardTestZX {
@@ -25,9 +25,11 @@ public class BoardTestZX {
     Dice dieSmall, dieBig;
     Dice dieTooSmall, dieTooBig;
 
-    Random random;      // we'll assign a random value to the attribute that we don't care about
     // the random values in test, stand for a correct value
     Dice dieGeneric;
+    Random random;      // we'll assign a random value to the attribute that we don't care about
+
+
     int correctRow_notBound;
     int correctColumn_notBound;
 
@@ -55,25 +57,38 @@ public class BoardTestZX {
     final Dice dieYellow;
     final Dice die1Yellow;
 
+    long idCounter = 0;
+
+
     public BoardTestZX() {
         random = new Random();
         die1 = new Dice(1,
-                ColorDice.values() [random.nextInt(ColorDice.values().length -1)]);  // -1 to skip white color that is last position // NOT -1 and +1 to skip white color that is at first position
-        diePurple = new Dice( random.nextInt(MAX_DICE_NUM) +1,
-                ColorDice.PURPLE);
+                ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
+                idCounter++);  // -1 to skip white color that is last position // NOT -1 and +1 to skip white color that is at first position
+        diePurple = new Dice( random.nextInt(MAX_DICE_NUMBER) +1,
+                ColorDice.PURPLE,
+                idCounter++);
         dieNot1 = new Dice(7 - 1,
-                ColorDice.values() [random.nextInt(ColorDice.values().length -1)]);
-        dieNotPurple = new Dice( random.nextInt(MAX_DICE_NUM) +1,
-                ColorDice.RED);
+                ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
+                idCounter++);
+        dieNotPurple = new Dice( random.nextInt(MAX_DICE_NUMBER) +1,
+                ColorDice.RED,
+                idCounter++);
 
-        dieNot1ButPurple = new Dice (7-1 , ColorDice.PURPLE);
-        die1NotPurple = new Dice (1, ColorDice.GREEN);
-        die1Purple = new Dice (1, ColorDice.PURPLE);
-        dieNot1NotPurple = new Dice( 7 - 1,  ColorDice.BLUE);
+        dieNot1ButPurple = new Dice (7-1 , ColorDice.PURPLE,
+                idCounter++);
+        die1NotPurple = new Dice (1, ColorDice.GREEN,
+                idCounter++);
+        die1Purple = new Dice (1, ColorDice.PURPLE,
+                idCounter++);
+        dieNot1NotPurple = new Dice( 7 - 1,  ColorDice.BLUE,
+                idCounter++);
 
-        dieYellow = new Dice( random.nextInt(MAX_DICE_NUM) +1,
-                ColorDice.YELLOW);
-        die1Yellow = new Dice( 1, ColorDice.YELLOW);
+        dieYellow = new Dice( random.nextInt(MAX_DICE_NUMBER) +1,
+                ColorDice.YELLOW,
+                idCounter++);
+        die1Yellow = new Dice( 1, ColorDice.YELLOW,
+                idCounter++);
     }
 
     @Before
@@ -85,7 +100,7 @@ public class BoardTestZX {
         // a random normal dice
         dieGeneric = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                random.nextInt(MAX_DICE_NUM) +1);
+                random.nextInt(MAX_DICE_NUMBER) +1);
 
         dieSmall = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
@@ -93,7 +108,7 @@ public class BoardTestZX {
         );
         dieBig = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                MAX_DICE_NUM
+                MAX_DICE_NUMBER
         );
 
         dieTooSmall = new Dice(
@@ -102,7 +117,7 @@ public class BoardTestZX {
         );
         dieTooBig = new Dice(
                 ColorDice.values() [random.nextInt(ColorDice.values().length -1)],
-                MAX_DICE_NUM +1
+                MAX_DICE_NUMBER +1
         );
 
 
@@ -304,8 +319,9 @@ public class BoardTestZX {
         for (int r = ROW_LowerBound; r <= ROW_HigherBound; r++) {
             for (int c = COLUMN_LowerBound; c <= COLUMN_HigherBound; c++) {
                 Dice dieDifferent = new Dice(
-                        (r+c)% MAX_DICE_NUM +1,
-                        ColorDice.values()[(r+c) %COLUMN] );
+                        (r+c)% MAX_DICE_NUMBER +1,
+                        ColorDice.values()[(r+c) %COLUMN],
+                        idCounter++ );
                 assertTrue( voidBoard.insertDice(dieDifferent, r, c) );
             }
         }

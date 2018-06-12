@@ -164,7 +164,7 @@ public class Game extends ModelObservable implements GameInterface {
         return roundTrack;
     }
 
-    public int getiCurrentPlayer() throws RemoteException{
+    public int getIndexCurrentPlayer() throws RemoteException{
         return iCurrentPlayer;
     }
 
@@ -434,6 +434,8 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public void nextRound() {
+        if(null != draftPool)
+            roundTrack.addDice(draftPool);
         getDraftPool().setDraftPool(getDiceBag(), playerList.size());
 
         gameNotifyState = NotifyState.NEXT_ROUND;
@@ -477,10 +479,11 @@ public class Game extends ModelObservable implements GameInterface {
 //    public int calcScore(Player player) {
 
 
-    public synchronized boolean insertDice(int indexDice, int row, int col)
+    public synchronized boolean insertDice(long diceID, int row, int col)
             throws IndexOutOfBoundsException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException
     {
+        int indexDice = draftPool.getDiceIndexByID(diceID);
         if (!Useful.isValueBetweenInclusive(indexDice, 0, draftPool.diceList().size() -1))
             throw new IndexOutOfBoundsException("\nIndex in draft pool should be: 0 <= " + indexDice + " <= " + (draftPool.diceList().size() -1));
 
@@ -494,7 +497,7 @@ public class Game extends ModelObservable implements GameInterface {
         } else {
             if (currentPlayer.getBoard().validMove(dice, row, col)) {
 
-                dice = draftPool.chooseDice(indexDice);
+                dice = draftPool.chooseDice(diceID);
                 if(null != dice) {
                     currentPlayer.placeDice(dice, row, col);
 

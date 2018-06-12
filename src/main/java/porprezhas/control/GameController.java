@@ -144,7 +144,7 @@ public class GameController  implements GameControllerInterface, Runnable {
                         else  {
                             for (Player p : playerList) {
                                 if(p.getName().toUpperCase().contains("ZX")) {
-                                    playTimeOut.wait(game.getRoundTimeOut()/20);
+                                    playTimeOut.wait(game.getRoundTimeOut()/50);
                                     player.passes(true);
                                     break;
                                 }
@@ -295,8 +295,8 @@ public class GameController  implements GameControllerInterface, Runnable {
         return bSet;
     }
 
-    public boolean insertDice(Integer indexDice, Integer row, Integer column) {
-        return game.insertDice(indexDice, row, column);
+    public boolean insertDice(long diceID, Integer row, Integer column) {
+        return game.insertDice(diceID, row, column);
     }
 
     public boolean useToolCard(int cardId){

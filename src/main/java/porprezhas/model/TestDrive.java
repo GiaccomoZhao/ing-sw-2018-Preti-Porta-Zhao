@@ -27,7 +27,7 @@ public class TestDrive {
         }
         System.out.println();
 
-        System.out.println("Draftpool");
+        System.out.println("Draft Pool");
         for (Dice cas:
              draftPool.diceList()) {
             System.out.print(cas.getDiceNumber());

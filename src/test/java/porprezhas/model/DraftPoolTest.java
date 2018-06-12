@@ -20,19 +20,20 @@ public class DraftPoolTest {
 
     @Before
     public void before() {
+        long idCounter = 0;
 
         diceList= new ArrayList<>(9);
-        die1 = new Dice(1, Dice.ColorDice.RED);
-        die2 = new Dice(2, Dice.ColorDice.BLUE);
-        die3 = new Dice(3, Dice.ColorDice.GREEN);
-        die4 = new Dice(4, Dice.ColorDice.YELLOW);
-        die5 = new Dice(5, Dice.ColorDice.PURPLE);
-        die6 = new Dice(6, Dice.ColorDice.RED);
-        die7 = new Dice(1, Dice.ColorDice.BLUE);
-        die8 = new Dice(2, Dice.ColorDice.GREEN);
-        die9 = new Dice(3, Dice.ColorDice.YELLOW);
+        die1 = new Dice(1, Dice.ColorDice.RED,      idCounter++);
+        die2 = new Dice(2, Dice.ColorDice.BLUE,     idCounter++);
+        die3 = new Dice(3, Dice.ColorDice.GREEN,    idCounter++);
+        die4 = new Dice(4, Dice.ColorDice.YELLOW,   idCounter++);
+        die5 = new Dice(5, Dice.ColorDice.PURPLE,   idCounter++);
+        die6 = new Dice(6, Dice.ColorDice.RED,      idCounter++);
+        die7 = new Dice(1, Dice.ColorDice.BLUE,     idCounter++);
+        die8 = new Dice(2, Dice.ColorDice.GREEN,    idCounter++);
+        die9 = new Dice(3, Dice.ColorDice.YELLOW,   idCounter++);
 
-        testDie = new Dice(4, Dice.ColorDice.BLUE);
+        testDie = new Dice(4, Dice.ColorDice.BLUE,  idCounter++);
 
         diceList.add(die1);
         diceList.add(die2);

@@ -7,6 +7,7 @@ import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
@@ -59,46 +60,55 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 //                System.out.println(pattern1.name() + "    o    " + pattern2.name());
                 break;
 
+
             case GAME_STARTED:
 
                 System.out.println("Game started!");
                 this.gameStarted=true;
 //                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
                 System.out.println(gameViewController);
-                gameViewController.setupView(players);
+                Platform.runLater(() -> gameViewController.setupView(players) );
                 break;
 
-            case NEXT_ROUND:
 
+            case NEXT_ROUND:
                 System.out.println("Next Round");
 
-                gameViewController.updateFirstPlayer(game.getCurrentPlayer());
-                gameViewController.updateDraftPool(game.getDraftPool().diceList());
-                gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+                Platform.runLater(() -> {
+                    // change the bag position
+                    gameViewController.updateFirstPlayer(game.getCurrentPlayer());
+
+                    // re-roll dices of Draft pool
+                    gameViewController.updateDraftPool(game.getDraftPool().diceList());
+
+                    gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+                });
 
                 // after next_round, update current player too
 
             case NEW_TURN:
-                gameViewController.updateTimer(game.getCurrentPlayer());
+                Platform.runLater(() -> {
+                    gameViewController.updateTimer(game.getCurrentPlayer());
+                });
                 break;
 
 
             case DICE_INSERTED:
-
-
                 System.out.println(game.getCurrentPlayer().getName() + " inserted a dice:");
 
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        for (Player player:
-                                game.getPlayerList()) {
-                            gameViewController.updateBoard(
-                                    player.getPosition(),
-                                    player.getBoard().getBoard());
-                            gameViewController.updateDraftPool(game.getDraftPool().diceList());
-                        }
+                Platform.runLater(() -> {
+                    for (Player player:
+                            game.getPlayerList()) {
 
+                        gameViewController.updateBoard(
+                                player.getPosition(),
+                                player.getBoard().getBoard());
+
+                        // check different with new draft pool
+                        // add / remove different dice
+                        gameViewController.updateDraftPool(game.getDraftPool());
                     }
+
                 });
 
                 break;

@@ -92,25 +92,29 @@ public class ViewTest extends Application {
         // insert dice must be after setup view done
         Platform.runLater(() -> {
 
+            long idCounter = 0;
             Random random = new Random();
             for (int col = 0; col < Game.GameConstants.ROUND_NUM; col++) {
                 if (random.nextInt(10) < 0) {
                     for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
                         gameViewController.addDiceToRoundTrack(
                                 new Dice(random.nextInt(6) + 1,
-                                        Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                                        Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],
+                                        idCounter++ ),
                                 col );
                     }
                 } else {
                     gameViewController.addDiceToRoundTrack(
                             new Dice(random.nextInt(6) + 1,
-                                    Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                                    Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],
+                                    idCounter++ ),
                             col );
                     for (int row = 0; row < Game.GameConstants.MAX_DICE_PER_ROUND; row++) {
                         if (random.nextInt(10) < 3) {
                             gameViewController.addDiceToRoundTrack(
                                     new Dice(random.nextInt(6) + 1,
-                                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],
+                                            idCounter++ ),
                                     col );
 
                         }
@@ -125,7 +129,8 @@ public class ViewTest extends Application {
                             gameViewController.addDice(
                                     i,
                                     new Dice(random.nextInt(6) + 1,
-                                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)]),
+                                            Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],
+                                            idCounter++ ),
                                     row, col );
                         }
                     }
@@ -136,10 +141,12 @@ public class ViewTest extends Application {
             for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
                 diceList.add(
                         new Dice(random.nextInt(6) + 1,
-                                Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)])
+                                Dice.ColorDice.values()[random.nextInt(Dice.ColorDice.values().length - 1)],
+                                idCounter++ )
                 );
             }
-            gameViewController.setDraftPool(diceList);
+//            gameViewController.setDraftPool(diceList);
+            gameViewController.updateDraftPool(diceList);
 
         });
 

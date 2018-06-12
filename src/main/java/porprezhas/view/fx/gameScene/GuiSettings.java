@@ -4,11 +4,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import porprezhas.model.dices.Dice;
 
 import java.io.File;
 
 public class GuiSettings {
-    public static boolean bFixedFont = true;
+    public static boolean bFixedFont = false;
 
     // ***** Game GUI attributes *****
     // path
@@ -79,6 +80,11 @@ public class GuiSettings {
     //
     public static long minuteFrequencyToMillis(double frequencyInMinute) {
         return (long) (60*1000.0 / frequencyInMinute);
+    }
+
+
+    public static String getPathToDice(Dice dice) {
+        return pathToDice + dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png";
     }
 
     // get the absolute path to the file with any extension. It is like */relativePath/fileName.*

@@ -7,12 +7,13 @@ import porprezhas.model.dices.DraftPool;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class RoundTrack implements Serializable {
 
     int actualRound;
-    ArrayList<Dice>[] track;
+    List<Dice>[] track;
 
     public RoundTrack() {
         track= new ArrayList[10];
@@ -22,23 +23,25 @@ public class RoundTrack implements Serializable {
         return actualRound;
     }
 
-    public ArrayList<Dice>[] getTrack() {
+    public List<Dice>[] getTrack() {
         return track;
     }
 
-    public ArrayList<Dice> getRoundDice(int round){
+    public List<Dice> getRoundDice(int round){
         return track[round-1];
     }
 
     public void addDice(DraftPool draftPool){
-        track[actualRound-1]=draftPool.diceList();
+        List<Dice> diceList = draftPool.diceList();
+        if(null != diceList  &&  diceList.size() > 0)
+            track[actualRound-1] = diceList;
         actualRound++;
     }
-    public void addDice(int round, Dice dice){
-        if(track[round-1]==null){
-            track[round-1] = new ArrayList<>();
+    public void addDice(int round_1, Dice dice){
+        if(track[round_1-1]==null){
+            track[round_1-1] = new ArrayList<>();
         }
-        track[round-1].add(dice);
+        track[round_1-1].add(dice);
     }
 
     public void removeDice(int round,Dice dice){

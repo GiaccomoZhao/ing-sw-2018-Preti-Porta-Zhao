@@ -56,6 +56,23 @@ public class Board implements Serializable {
         }
     }
 
+    public class CellPosition {
+        int row;
+        int col;
+
+        public CellPosition(int row, int col) {
+            this.row = row;
+            this.col = col;
+        }
+
+        public boolean equals(int row, int col) {
+            if(this.row == row  &&  this.col == col) {
+                return true;
+            } else
+                return false;
+        }
+    }
+
 
     private final Pattern pattern;
     private Dice[][] board;
@@ -167,7 +184,7 @@ public class Board implements Serializable {
                                     return false;
                                 }
                             } else {    // Diagonal Adjacent
-                                ;       // just check the it exists, counter++
+                                ;       // just check that it exists, counter++
                             }
                         }
                     }
@@ -175,10 +192,47 @@ public class Board implements Serializable {
             }
         }
         if (aroundDiceCounter > 0)
-            return true;
+            return true;    // can place
         else
-            return false;
+            return false;   // nobody around
     }
+
+
+    public CellPosition getNotAdjacentDicePosition(Dice dice, int row, int col, Restriction restriction) {
+
+        int aroundDiceCounter = 0;
+
+        for (int r = row - 1; r <= row + 1; r++) {
+            for (int c = col - 1; c <= col + 1; c++) {
+
+                // skip control on itself
+                if (r == row && c == col) {
+                    continue;
+                } else {
+
+                    if (isValueBetweenInclusive(r, 0, ROW - 1) &&
+                            isValueBetweenInclusive(c, 0, COLUMN - 1)) {
+
+                        if (isBoxOccupied(r, c)) {
+                            aroundDiceCounter++;
+                            if (r == row || c == col) {    // Orthogonal Adjacent
+                                if (!compatibleDice(dice, board[r][c], restriction)) {
+                                    return new CellPosition (r, c);     // can NOT place for this position's Dice
+                                }
+                            } else {    // Diagonal Adjacent
+                                ;       // just check that it exists, counter++
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (aroundDiceCounter > 0)
+            return new CellPosition(row, col);    // you can place
+        else
+            return null;    // nobody is around
+    }
+
 
 /*
     public Boolean aloneDice(Dice dice, int row, int col) {
@@ -438,10 +492,19 @@ public class Board implements Serializable {
             if (restriction.hasAdjacentRestriction() &&
                     !this.adjacentDice(dice, row, col, restriction)) {
 
+                String szDescription;
+
+                CellPosition position = getNotAdjacentDicePosition(dice, row, col, Restriction.ALL);
+                if(null != position) {
+                    szDescription = "has similar dice around";
+                } else {
+                    szDescription = "is isolate";
+                }
+
                 throw new AdjacentRestrictionException(
                         "You must respect the Adjacent constraint!\n" +
                                 "You placed the " + dice + " " +
-                                "in cell (" + row + "," + col + ") that is: " + "\n" +
+                                "in cell (" + row + "," + col + ") that " + szDescription +": " + "\n" +
                                 toString(dice, row, col)
                 );
             }
@@ -628,7 +691,7 @@ public class Board implements Serializable {
         int dimensionRow    =   ROW;
         int dimensionColumn =   COLUMN;
 
-        String exampleString = new Dice(1, Dice.ColorDice.GREEN).toString();
+        String exampleString = new Dice(1, Dice.ColorDice.GREEN, -1).toString();
         StringBuilder  sbBoard = new StringBuilder("Board[" + dimensionRow + "x" + dimensionColumn + "]: \n" );
 
         for (int r = 0; r < ROW; r++) {
@@ -659,9 +722,12 @@ public class Board implements Serializable {
 
     // Build a board-only message
     // around the dice at position (row,col)
+    // for adjacent constraint message
     public String toString(Dice dice, int row, int col) {
         int dimensionRow    =   calculateDimension(row-1, 3, 0, ROW);
         int dimensionColumn =   calculateDimension(col-1, 3, 0, COLUMN);
+
+        CellPosition notAdjacentPosition = getNotAdjacentDicePosition(dice, row, col, Restriction.ALL);
 
 //        String exampleDiceString = new Dice(1, Dice.ColorDice.PURPLE).toString();   // take the longest dice string, at moment are all the same
         String exampleDiceString = "  Dice{empty}  ";   // take the longest dice string
@@ -684,7 +750,11 @@ public class Board implements Serializable {
                             isValueBetweenInclusive(c, 0, COLUMN - 1)) {
 
                         if (isBoxOccupied(r, c)) {
-                            strDice = "  " + board[r][c].toString() + "  ";
+                            if(notAdjacentPosition.equals(r, c)) {
+                                strDice = "!!" + board[r][c].toString() + "!!";
+                            } else {
+                                strDice = "  " + board[r][c].toString() + "  ";
+                            }
                         } else {
                             strDice = "  Dice{empty}  ";
                         }

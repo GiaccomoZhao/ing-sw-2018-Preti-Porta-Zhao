@@ -49,7 +49,7 @@ public class ToolCard extends Card implements Serializable {
         return 0;
     }
 
-
+/*
     public boolean verify(int cardId) {
         if(this.effect.ID != cardId) {
             System.err.println("A Error has Occurred with tool card N." + (cardId));
@@ -143,7 +143,7 @@ public class ToolCard extends Card implements Serializable {
     }
 
     // Effect of tool card N.5
-    public boolean use(DraftPool draftPool, int indexDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
+    public boolean use(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
         if(!verify(TC5.ID))
             return false;
 
@@ -152,7 +152,7 @@ public class ToolCard extends Card implements Serializable {
         //add the dice removed from the roundTrack to the draftPool and replace the old dice in the roundTrack
         // with the dice in the chosen position
         roundTrack.addDice(indexRound,
-                draftPool.diceSubstitute(diceRoundTrack, indexDiceDraftPool));
+                draftPool.diceSubstitute(diceRoundTrack, idDiceDraftPool));
         return true;
     }
 
@@ -160,12 +160,12 @@ public class ToolCard extends Card implements Serializable {
     // rolls a chosen dice from the draftPool and,
     // if it cannot be placed in the board, re-adds it to the draftPool
     // @Return mustBePlaced true means the Caller MUST insert this dice in board
-    public boolean use (DraftPool draftPool, int indexDiceDraftPool, Board board) {
+    public boolean use (DraftPool draftPool, long idDiceDraftPool, Board board) {
         if(!verify(TC6.ID))
             return false;
 
         Dice rolledDice;
-        rolledDice = draftPool.chooseDice(indexDiceDraftPool);
+        rolledDice = draftPool.chooseDice(idDiceDraftPool);
         rolledDice.roll();
 
         boolean canBePlaced = false;
@@ -192,7 +192,7 @@ public class ToolCard extends Card implements Serializable {
         } else
             return false;
             */
-        if(!verify(TC7.ID))
+/*        if(!verify(TC7.ID))
             return false;
 
         draftPool.diceList().forEach(Dice::roll);
@@ -204,20 +204,20 @@ public class ToolCard extends Card implements Serializable {
     // NOTE: the Player MUST skip the second turn of the round
     // Effect of tool card N.9
     // place dice from draft pool to board anywhere
-    public boolean use(DraftPool draftPool, int indexDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
+    public boolean use(DraftPool draftPool, long idDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
         if( (verify(TC8.ID)  &&  restriction == Board.Restriction.ALL) ||
             (verify(TC9.ID) &&  restriction == Board.Restriction.WITHOUT_ADJACENT))
             return false;
 
         try {
-            board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction);
+            board.validMove(draftPool.diceList().get(idDiceDraftPool), row, col, restriction);
         } catch (Exception e) {
             return false;
         }
 
         // we not need catch this, because we already checked with validMove()
         board.insertDice(
-                draftPool.chooseDice(indexDiceDraftPool),
+                draftPool.chooseDice(idDiceDraftPool),
                 row, col,
                 restriction);   // note: insertDice does not need check valid move
         return true;
@@ -240,12 +240,12 @@ public class ToolCard extends Card implements Serializable {
     // pick a new dice from diceBag and
     // choose it's value to
     // place in board   // NOTE: this is caller job and must be done
-    public Dice use(DraftPool draftPool, int indexDiceDraftPool, DiceBag diceBag) {
+    public Dice use(DraftPool draftPool, long idDiceDraftPool, DiceBag diceBag) {
         if(!verify(TC11.ID))
             return null;
 
         diceBag.addDice(
-                draftPool.chooseDice(indexDiceDraftPool));
+                draftPool.chooseDice(idDiceDraftPool));
         return diceBag.extractDice();
     }
 
@@ -289,7 +289,7 @@ public class ToolCard extends Card implements Serializable {
         }
 
         return false;
-    }
+    }*/
 }
 
 
@@ -521,20 +521,20 @@ class ToolCard4 extends ToolCard2_4 {
 class ToolCard5 implements ToolCardStrategy {
     private boolean savedReturn = false;
     private DraftPool draftPool;
-    private int indexDiceDraftPool;
+    private long idDiceDraftPool;
     private RoundTrack roundTrack;
     private int indexRound;
     private Dice diceRoundTrack;
 
     @Override
     public boolean use() {
-        savedReturn = use(draftPool, indexDiceDraftPool, roundTrack, indexRound, diceRoundTrack);
+        savedReturn = use(draftPool, idDiceDraftPool, roundTrack, indexRound, diceRoundTrack);
         return savedReturn;
     }
 
-    public void setup(DraftPool draftPool, int indexDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
+    public void setup(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
         this.draftPool = draftPool;
-        this.indexDiceDraftPool = indexDiceDraftPool;
+        this.idDiceDraftPool = idDiceDraftPool;
         this.roundTrack = roundTrack;
         this.indexRound = indexRound;
         this.diceRoundTrack = diceRoundTrack;
@@ -546,14 +546,14 @@ class ToolCard5 implements ToolCardStrategy {
 
 
     // Effect of tool card N.5
-    public boolean use(DraftPool draftPool, int indexDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
+    public boolean use(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
 
         //remove the dice from the roundTrack
         roundTrack.removeDice(indexRound, diceRoundTrack);
         //add the dice removed from the roundTrack to the draftPool and replace the old dice in the roundTrack
         // with the dice in the chosen position
         roundTrack.addDice(indexRound,
-                draftPool.diceSubstitute(diceRoundTrack, indexDiceDraftPool));
+                draftPool.diceSubstitute(diceRoundTrack, idDiceDraftPool));
         return true;
     }
 }
@@ -562,18 +562,18 @@ class ToolCard5 implements ToolCardStrategy {
 class ToolCard6 implements ToolCardStrategy {
     private boolean savedReturn = false;
     private DraftPool draftPool;
-    private int indexDiceDraftPool;
+    private long idDiceDraftPool;
     private Board board;
 
     @Override
     public boolean use() {
-        savedReturn = use(draftPool, indexDiceDraftPool, board);
+        savedReturn = use(draftPool, idDiceDraftPool, board);
         return savedReturn;
     }
 
-    public void setup(DraftPool draftPool, int indexDiceDraftPool, Board board) {
+    public void setup(DraftPool draftPool, long idDiceDraftPool, Board board) {
         this.draftPool = draftPool;
-        this.indexDiceDraftPool = indexDiceDraftPool;
+        this.idDiceDraftPool = idDiceDraftPool;
         this.board = board;
     }
 
@@ -586,10 +586,10 @@ class ToolCard6 implements ToolCardStrategy {
     // rolls a chosen dice from the draftPool and,
     // if it cannot be placed in the board, re-adds it to the draftPool
     // @Return mustBePlaced true means the Caller MUST insert this dice in board
-    private boolean use (DraftPool draftPool, int indexDiceDraftPool, Board board) {
+    private boolean use (DraftPool draftPool, long idDiceDraftPool, Board board) {
 
         Dice rolledDice;
-        rolledDice = draftPool.chooseDice(indexDiceDraftPool);
+        rolledDice = draftPool.chooseDice(idDiceDraftPool);
         rolledDice.roll();
 
         boolean canBePlaced = false;
@@ -640,7 +640,7 @@ class ToolCard7 implements ToolCardStrategy {
 class ToolCard8_9 implements ToolCardStrategy {
     private boolean savedReturn = false;
     private DraftPool draftPool;
-    private int indexDiceDraftPool;
+    private long idDiceDraftPool;
     private Board board;
     private int row;
     private int col;
@@ -648,17 +648,17 @@ class ToolCard8_9 implements ToolCardStrategy {
 
     @Override
     public boolean use() {
-        savedReturn = use(draftPool, indexDiceDraftPool, board, row, col, restriction);
+        savedReturn = use(draftPool, idDiceDraftPool, board, row, col, restriction);
         return savedReturn;
     }
 
     protected boolean use(Board.Restriction restriction) {
-        return use(draftPool, indexDiceDraftPool, board, row, col, restriction);
+        return use(draftPool, idDiceDraftPool, board, row, col, restriction);
     }
 
-    public void setup(DraftPool draftPool, int indexDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
+    public void setup(DraftPool draftPool, long idDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
         this.draftPool = draftPool;
-        this.indexDiceDraftPool = indexDiceDraftPool;
+        this.idDiceDraftPool = idDiceDraftPool;
         this.board = board;
         this.row = row;
         this.col = col;
@@ -676,13 +676,13 @@ class ToolCard8_9 implements ToolCardStrategy {
     // NOTE: the Player MUST skip the second turn of the round
     // Effect of tool card N.9
     // place dice from draft pool to board anywhere
-    private boolean use(DraftPool draftPool, int indexDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
+    private boolean use(DraftPool draftPool, long idDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
 
         try {
-            if (board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction)) {
+            if (board.validMove(draftPool.getDiceByID(idDiceDraftPool), row, col, restriction)) {
 
                 board.insertDice(
-                        draftPool.chooseDice(indexDiceDraftPool),
+                        draftPool.chooseDice(idDiceDraftPool),
                         row, col,
                         restriction);   // note: insertDice does not need check valid move
                 return true;
@@ -715,17 +715,17 @@ class ToolCard9 extends ToolCard8_9 {
 class ToolCard10 implements ToolCardStrategy {
     private boolean savedReturn = false;
     private DraftPool draftPool;
-    private int indexDiceDraftPool;
+    private long idDiceDraftPool;
 
     @Override
     public boolean use() {
-        savedReturn = use(draftPool, indexDiceDraftPool);
+        savedReturn = use(draftPool, idDiceDraftPool);
         return savedReturn;
     }
 
     public void setup(DraftPool draftPool, int index) {
         this.draftPool = draftPool;
-        this.indexDiceDraftPool = index;
+        this.idDiceDraftPool = index;
     }
 
     public boolean getReturn() {
@@ -735,10 +735,14 @@ class ToolCard10 implements ToolCardStrategy {
 
     // Effect of tool card N.10
     // rotate a dice in draft pool, face up the bottom side
-    private boolean use(DraftPool draftPool, int index) {
+    private boolean use(DraftPool draftPool, long id) {
+        int index = draftPool.getDiceIndexByID(id);
         Dice dice = draftPool.diceList().get(index);
+
+        // rotate the selected dice
         dice.setNumber(7 - dice.getDiceNumber());
         draftPool.setDice(index, dice);
+
         return true;
     }
 }
@@ -746,21 +750,21 @@ class ToolCard10 implements ToolCardStrategy {
 class ToolCard11 implements ToolCardStrategy {
     private Dice savedReturn = null;
     private DraftPool draftPool;
-    private int indexDiceDraftPool;
+    private long idDiceDraftPool;
     private DiceBag diceBag;
 
     @Override
     public boolean use() {
-        savedReturn = use(draftPool, indexDiceDraftPool, diceBag);
+        savedReturn = use(draftPool, idDiceDraftPool, diceBag);
         if(null != savedReturn)
             return true;
         else
             return false;
     }
 
-    public void setup(DraftPool draftPool, int indexDiceDraftPool, DiceBag diceBag) {
+    public void setup(DraftPool draftPool, long idDiceDraftPool, DiceBag diceBag) {
         this.draftPool = draftPool;
-        this.indexDiceDraftPool = indexDiceDraftPool;
+        this.idDiceDraftPool = idDiceDraftPool;
         this.diceBag = diceBag;
     }
 
@@ -773,9 +777,9 @@ class ToolCard11 implements ToolCardStrategy {
     // pick a new dice from diceBag and
     // choose it's value to
     // place in board   // NOTE: this is caller job and must be done
-    private Dice use(DraftPool draftPool, int indexDiceDraftPool, DiceBag diceBag) {
+    private Dice use(DraftPool draftPool, long idDiceDraftPool, DiceBag diceBag) {
         diceBag.addDice(
-                draftPool.chooseDice(indexDiceDraftPool));
+                draftPool.chooseDice(idDiceDraftPool));
         return diceBag.extractDice();
     }
 }

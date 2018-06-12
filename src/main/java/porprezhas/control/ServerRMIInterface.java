@@ -9,7 +9,7 @@ public interface ServerRMIInterface extends Remote {
     Boolean joinGame(String username) throws RemoteException;
     Boolean login(String username) throws  RemoteException;
     Boolean logout(String username) throws RemoteException;
-    Boolean insertedDice(int dicePosition, int rowBoard, int colBoard, String username)
+    Boolean insertedDice(long diceID, int rowBoard, int colBoard, String username)
             throws RemoteException,
             IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException;

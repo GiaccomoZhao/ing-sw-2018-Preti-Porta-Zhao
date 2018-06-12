@@ -284,7 +284,7 @@ public class ViewClient {
             case DICE_INSERTED:
 
                     localPlayers= players;
-                    player= players.get(game.getiCurrentPlayer());
+                    player= players.get(game.getIndexCurrentPlayer());
                    // System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
                     System.out.println(player.getName() + " inserted a dice:");
                     //this.printAll(false, 4);

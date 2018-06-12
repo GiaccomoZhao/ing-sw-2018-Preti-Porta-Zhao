@@ -17,10 +17,10 @@ public interface GameInterface {
 
     DiceBag getDiceBag();
     DraftPool getDraftPool();
-    public RoundTrack getRoundTrack();
-    public Game.NotifyState getGameState();
+    RoundTrack getRoundTrack();
+    Game.NotifyState getGameState();
 
-    boolean insertDice(int indexDice, int xPose, int yPose)
+    boolean insertDice(long diceID, int xPose, int yPose)
             throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException;
     boolean isSolitaire();

@@ -8,8 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static porprezhas.model.dices.Dice.MAX_DICE_NUM;
+import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
 
 public class BoxTest {
     List<Box> boxList;
@@ -28,7 +27,7 @@ public class BoxTest {
         boxList = new ArrayList<>();
         diceList = new ArrayList<>();
 
-        for (int diceNum = 0; diceNum <= MAX_DICE_NUM; diceNum++) {
+        for (int diceNum = 0; diceNum <= MAX_DICE_NUMBER; diceNum++) {
             for (Dice.ColorDice diceColor : Dice.ColorDice.values()) {
                 if(!diceColor.equals(Dice.ColorDice.WHITE)  &&  0 != diceNum)
                     diceList.add( new Dice(diceColor, diceNum) );

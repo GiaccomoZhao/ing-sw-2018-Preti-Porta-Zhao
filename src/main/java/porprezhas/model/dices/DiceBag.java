@@ -10,13 +10,14 @@ public class DiceBag {
 
     //Constructor creates an arraylist of 90 dice, 18 for each color
     public DiceBag() {
+        long idCounter = 0;     // assign dices a Unique id
         this.diceSet = new ArrayList(90);
         for(int i=0; i<18; i++){
-            diceSet.add( new Dice( Dice.ColorDice.RED));
-            diceSet.add( new Dice( Dice.ColorDice.YELLOW));
-            diceSet.add( new Dice( Dice.ColorDice.GREEN));
-            diceSet.add( new Dice( Dice.ColorDice.BLUE));
-            diceSet.add( new Dice( Dice.ColorDice.PURPLE));
+            diceSet.add( new Dice( Dice.ColorDice.RED,    idCounter++));
+            diceSet.add( new Dice( Dice.ColorDice.YELLOW, idCounter++));
+            diceSet.add( new Dice( Dice.ColorDice.GREEN,  idCounter++));
+            diceSet.add( new Dice( Dice.ColorDice.BLUE, idCounter++));
+            diceSet.add( new Dice( Dice.ColorDice.PURPLE, idCounter++));
 
         }
     }

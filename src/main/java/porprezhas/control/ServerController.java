@@ -255,7 +255,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return -1;
     }*/
     @Override
-    public Boolean insertedDice(int dicePosition, int rowBoard, int columnBoard, String username)
+    public Boolean insertedDice(long diceID, int rowBoard, int columnBoard, String username)
             throws RemoteException,
             IndexOutOfBoundsException, NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException
@@ -268,7 +268,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                     "Current player is: " + currentPlayerName);
         } else {
             if (this.getGameControllerByUsername(username).getGame().
-                    insertDice(dicePosition, rowBoard, columnBoard))
+                    insertDice(diceID, rowBoard, columnBoard))
                 return true;
             else
                 return false;

@@ -17,10 +17,10 @@ public class RMIClientAction implements ClientActionInterface{
     }
 
     @Override
-    public boolean moveDice(int fromIdContainer, int index, int toIdContainer, int row, int col) {
+    public boolean moveDice(int fromIdContainer, long diceID, int toIdContainer, int row, int col) {
 
         try {
-            if( server.insertedDice(index, row, col, username)){
+            if( server.insertedDice(diceID, row, col, username)){
                 System.out.println("Dice inserted");
                 return true;
             }

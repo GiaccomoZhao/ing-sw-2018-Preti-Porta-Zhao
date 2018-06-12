@@ -149,7 +149,7 @@ public abstract class GenericBoardView implements SubController{
     // requires col < 5 && col > 0 &&
     //          row < 4 && row > 0
     public DiceView addDice(Dice dice, int row, int col) { //int num, char color){
-        DiceView diceImage = new DiceView(dice, row, col, nDice);
+        DiceView diceImage = new DiceView(dice, row, col);
         diceImage.setSmooth(true);
         diceImage.setCache(true);
 //        diceImage.setFitHeight(32);
@@ -235,10 +235,10 @@ public abstract class GenericBoardView implements SubController{
                     // place down
 //                if (null != addDice(diceView.getDice(), row, col)) {
                     if (bDebug) {
-                        System.out.println("insertDice: \tfrom " + idBoardFrom + " \tindex=" + diceView.getIndexDice()
+                        System.out.println("insertDice: \tfrom " + idBoardFrom + " \tid=" + diceView.getDiceID()
                                 + " \tto " + this.getBoardId().toInt() + " \trow=" + row + " \tcol=" + col);
                     }
-                    success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getIndexDice(), this.getBoardId().toInt(), row, col);
+                    success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getDiceID(), this.getBoardId().toInt(), row, col);
 //                    success = true;
 //                }
                 }

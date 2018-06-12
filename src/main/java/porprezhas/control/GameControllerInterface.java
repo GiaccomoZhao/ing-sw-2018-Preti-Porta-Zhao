@@ -13,7 +13,7 @@ public interface GameControllerInterface  {
     GameInterface getGame();
 
    boolean choosePattern(Player player, int indexPatternType) ;
-    boolean insertDice(Integer indexDice, Integer row, Integer column) ;
+    boolean insertDice(long diceID, Integer row, Integer column) ;
     boolean useToolCard(int cardId) throws RemoteException;  // TODO:
 
 
