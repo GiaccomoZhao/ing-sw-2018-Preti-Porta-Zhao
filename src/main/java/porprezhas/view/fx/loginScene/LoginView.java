@@ -1,10 +1,14 @@
 package porprezhas.view.fx.loginScene;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -24,6 +28,14 @@ public class LoginView extends Application{
     private double xOffset = 0;
     private double yOffset = 0;
     public static final String pathToMusicDirectory = "sound/music/loginMusic/";
+    private String voidString ="";
+
+    @FXML
+    Button loginViewButton;
+    @FXML
+    TextField textFieldLoginView;
+    @FXML
+    Button joinViewButton;
 
 
 
@@ -60,6 +72,7 @@ public class LoginView extends Application{
             primaryStage.setResizable(false);
             primaryStage.initStyle(StageStyle.UNDECORATED);
 
+
             rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -74,6 +87,7 @@ public class LoginView extends Application{
                     primaryStage.setY(event.getScreenY() - yOffset);
                 }
             });
+
             primaryStage.show();
 
         } catch (Exception e) {
@@ -81,6 +95,24 @@ public class LoginView extends Application{
         }
     }
 
+    @FXML
+    public void loginDone(ActionEvent event) {
+        if(textFieldLoginView.getText()!=null&&!(textFieldLoginView.getText().equals(voidString))){
+            loginViewButton.setVisible(false);
+            textFieldLoginView.setVisible(false);
+            joinViewButton.setStyle(
+                    "-fx-background-color: #FFF1C6; "+
+                    "-fx-background-radius: 50em; " +
+                            "-fx-min-width: 90px; " +
+                            "-fx-min-height: 90px; " +
+                            "-fx-max-width: 90px; " +
+                            "-fx-max-height: 90px;"
+            );
+            joinViewButton.setVisible(true);
+
+        }
+
+    }
 
     public static void main(String[] args) {
         launch(args);

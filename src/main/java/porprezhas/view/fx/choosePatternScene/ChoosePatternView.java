@@ -23,18 +23,6 @@ import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class ChoosePatternView extends Application {
 
-    @FXML private ImageView choosePatternViewPattern1;
-    @FXML private ImageView choosePatternViewPattern2;
-    @FXML private ImageView choosePatternViewPattern3;
-    @FXML private ImageView choosePatternViewPattern4;
-    List<ImageView> imageViewpatternList;
-
-    @FXML private Label choosePatternViewPatternLabel1;
-    @FXML private Label choosePatternViewPatternLabel2;
-    @FXML private Label choosePatternViewPatternLabel3;
-    @FXML private Label choosePatternViewPatternLabel4;
-    List<Label> labelList;
-
     private Stage primaryStage;
     private Parent rootLayout;
     private double xOffset = 0;
@@ -81,13 +69,6 @@ public class ChoosePatternView extends Application {
                 }
             });
 
-            List<Pattern.TypePattern> patternList = new ArrayList<>();
-            patternList.add(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
-            patternList.add(Pattern.TypePattern.WATER_OF_LIFE);
-            patternList.add(Pattern.TypePattern.VIRTUS);
-            patternList.add(Pattern.TypePattern.SUNS_GLORY);
-
-            patternSetup(patternList);
 
 
             primaryStage.show();
@@ -98,61 +79,6 @@ public class ChoosePatternView extends Application {
     }
 
 
-    private void patternSetup(List<Pattern.TypePattern> typePatternList){
-
-        imageViewpatternList = new ArrayList<>();
-        imageViewpatternList.add(choosePatternViewPattern1);
-        imageViewpatternList.add(choosePatternViewPattern2);
-        imageViewpatternList.add(choosePatternViewPattern3);
-        imageViewpatternList.add(choosePatternViewPattern4);
-
-        labelList = new ArrayList<>();
-        labelList.add(choosePatternViewPatternLabel1);
-        labelList.add(choosePatternViewPatternLabel2);
-        labelList.add(choosePatternViewPatternLabel3);
-        labelList.add(choosePatternViewPatternLabel4);
-
-        int i=0;
-        for (Pattern.TypePattern patternType: typePatternList) {
-            System.out.println(pathToPattern + patternType.name().toLowerCase() + ".png");
-            System.out.println(new Image(pathToPattern + patternType.name().toLowerCase() + ".png"));
-                imageViewpatternList.get(i).setImage(new Image(
-                        pathToPattern + patternType.name().toLowerCase() + ".png"
-                ));
-            i++;
-        }
-
-
-
-/*       String filePath = getPathToFileIgnoreExt(pathToBorder, "pattern");
-        if(filePath != null) {
-            cardBorder = new Border(new BorderImage(
-                    new Image(filePath),
-                    new BorderWidths(BORDER_SIZE), Insets.EMPTY, // new Insets(10, 10, 10, 10),
-                    new BorderWidths(BORDER_SIZE), true,
-                    BorderRepeat.STRETCH, BorderRepeat.STRETCH));
-        } else {
-            cardBorder = null;
-        }   */
-
-    }
-
-    @FXML
-    private void onMouseEnteredPattern(MouseEvent event){
-
-       // String borderpath = getPathToFileIgnoreExt(pathToBorder ,"PRIVATE_CARD" + ".gif");
-        System.out.println(labelList);
-        for (Label label:labelList) {
-            if(label.equals(event.getSource())){
-                label.setBorder(new Border(new BorderStroke( Color.rgb(200, 0, 0),
-                        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-
-            }
-        }
-
-        /*choosePatternViewPattern1.setBorder(new Border(new BorderStroke( Color.rgb(200, 200, 200),
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));*/
-    }
 
     public static void main(String[] args) {
         launch(args);
