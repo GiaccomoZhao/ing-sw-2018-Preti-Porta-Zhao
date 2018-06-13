@@ -19,18 +19,19 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import porprezhas.Network.ClientActionSingleton;
+import porprezhas.Network.*;
 import porprezhas.Network.Command.Action;
-import porprezhas.Network.RMIClientAction;
-import porprezhas.Network.SocketClientAction;
 import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.SceneController;
 import porprezhas.view.fx.StageManager;
 import porprezhas.view.fx.gameScene.GuiSettings;
+import porprezhas.view.fx.gameScene.controller.GameViewController;
 
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
@@ -68,7 +69,7 @@ public class LoginViewController implements SceneController, Initializable {
     //Default connection method: RMI
     ConnectionType connectionType=RMI;
 
-
+    private String username;
 
 
 
@@ -153,8 +154,23 @@ public class LoginViewController implements SceneController, Initializable {
 
     @FXML
     public void onJoinButton(ActionEvent event) {
+        GameViewController gameViewController=null;
+        //TODO TO-DO jack metti la get qua sopra
+
+        ViewUpdateHandlerInterface viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);
+        if(this.connectionType==RMI) {
+            try {
+                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            }
+        }
         ClientActionSingleton.getClientAction().join();
+
         System.out.println("Goto next");
+
         goToNextStage();
     }
 
@@ -165,7 +181,7 @@ public class LoginViewController implements SceneController, Initializable {
 
         if(textFieldLoginView.getText()!=null&&!(textFieldLoginView.getText().equals(voidString))){
 
-            // TODO: Matteo Scelgo te!!!
+
 
             if(this.connectionType==RMI)
                 ClientActionSingleton.setClientActionInstance(new RMIClientAction());
@@ -180,7 +196,7 @@ public class LoginViewController implements SceneController, Initializable {
             }
 
             if(ClientActionSingleton.getClientAction().login(textFieldLoginView.getText())) {
-
+                this.username=username;
                 loginViewButton.setVisible(false);
                 textFieldLoginView.setVisible(false);
                 joinViewButton.setStyle(

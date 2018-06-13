@@ -15,6 +15,7 @@ public class RMIClientAction implements ClientActionInterface{
     private String username;
     private Registry registry;
 
+
     public RMIClientAction() {
         try {
             registry = LocateRegistry.getRegistry();
@@ -51,8 +52,13 @@ public class RMIClientAction implements ClientActionInterface{
 
     @Override
     public boolean join() {
+
         try {
-            return server.joinGame(username);
+           if(server.joinGame(username)){
+
+                   return true;
+
+           }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -90,4 +96,6 @@ public class RMIClientAction implements ClientActionInterface{
             e.printStackTrace();
         }
     }
+
+
 }

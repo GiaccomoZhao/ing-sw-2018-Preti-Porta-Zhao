@@ -19,6 +19,7 @@ public class SocketClientAction implements ClientActionInterface {
     private ObjectOutputStream socketOut ;
     private ClientAnswerHandler clientAnswerHandler;
 
+
     //TO_DO DELETE THIS
     public SocketClientAction(String username,ObjectOutputStream objectOutputStream) {
         this.username = username;
@@ -109,6 +110,8 @@ public class SocketClientAction implements ClientActionInterface {
         }
     }
 
+
+
     public void closeConnection(){
         try {
             socketIn.close();
@@ -120,7 +123,5 @@ public class SocketClientAction implements ClientActionInterface {
 
     }
 
-    public void setViewUpdateHandler(ViewUpdateHandlerInterface viewUpdateHandler){
-        this.clientAnswerHandler.setViewUpdateHandlerInterface(viewUpdateHandler);
-    }
+
 }

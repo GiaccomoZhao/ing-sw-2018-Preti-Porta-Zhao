@@ -157,6 +157,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
     public GameViewController( String ourUserIdentifier) {   // NOTE: during the construction method the fxml variables haven't be set yet
 //    public GameViewController(List<Player> player, String ourUserIdentifier) {   // NOTE: during the construction method the fxml variables haven't be set yet
+
         if(bDebug)
             System.out.println("Constructing GameView");
         this.userName = ourUserIdentifier;  // NOTE: Currently, We use UNIQUE User Name to bind the client with the player
