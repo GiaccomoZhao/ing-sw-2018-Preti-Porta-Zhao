@@ -12,11 +12,26 @@ import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class BackgroundMusicPlayer {
     private static List<MediaPlayer> backgroundMusicPlayers = new ArrayList<>();
+    private static String currentPlayingMusic;
 
-    public static boolean playMusic() {
+
+    /**
+     * Play all the Music from the given path Randomly and Sequentially
+     *
+     * This static synchronized method is thread-safe,
+     * this would not give performance problem because it is called around 3~4 times in different timing
+     * so, never contemporaneously
+     *
+     * @param musicPath The path to the music folder, from the root path as resource
+     * @return is play successful
+     */
+    public static synchronized boolean playRandomMusic(String musicPath) {
         // Clear the old list to ensure  not having duplication.
-        // And then we can do a refresh of files in the folder
-        backgroundMusicPlayers.clear();
+        // Do not stop and replay the music from the same folder,
+        if(currentPlayingMusic == null  ||  !currentPlayingMusic.equals(musicPath)) {
+            backgroundMusicPlayers.clear();
+        }
+        // and then we can do a refresh of files in the folder
 
         // get resource path
         String resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();
@@ -25,11 +40,11 @@ public class BackgroundMusicPlayer {
         // Convert the file url in file path format
         resourcePath = resourcePath.replaceAll("%20", " ");
         if(bDebug) {
-            System.out.println("music resource path = " + resourcePath + pathToMusic );
+            System.out.println("music resource path = " + resourcePath + musicPath );
         }
 
         // Open the music directory
-        final File dir = new File(resourcePath + pathToMusic);
+        final File dir = new File(resourcePath + musicPath);
         if (!dir.exists() && dir.isDirectory()) {
             System.err.println("Cannot find audio source directory: " + dir);
             return false;
@@ -65,7 +80,7 @@ public class BackgroundMusicPlayer {
             return false;
         }
 
-        // play background music randomly
+        // play background music randomly one after an other
         for (MediaPlayer player : backgroundMusicPlayers) {
             player.setOnEndOfMedia(() -> {
                 backgroundMusicPlayers.get(new Random().nextInt(backgroundMusicPlayers.size())).play();
@@ -77,6 +92,13 @@ public class BackgroundMusicPlayer {
 
         // start the first music
         backgroundMusicPlayers.get(new Random().nextInt(backgroundMusicPlayers.size())).play();
+
+        // save current playing music's path
+        if(currentPlayingMusic == null  ||  !currentPlayingMusic.equals(musicPath)) {
+            currentPlayingMusic = musicPath;
+        }
+
         return true;
     }
+
 }

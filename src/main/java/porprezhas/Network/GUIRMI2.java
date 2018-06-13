@@ -80,7 +80,7 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
             }, 0, minuteFrequencyToMillis(FPS_PRINT_AT_MIN));
 
             // play background music
-            BackgroundMusicPlayer.playMusic();
+            BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
         }
 
 

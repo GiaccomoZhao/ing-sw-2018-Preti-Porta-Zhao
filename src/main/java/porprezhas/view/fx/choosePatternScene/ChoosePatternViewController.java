@@ -1,20 +1,28 @@
 package porprezhas.view.fx.choosePatternScene;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import porprezhas.model.dices.Pattern;
+import porprezhas.view.fx.SceneController;
+import porprezhas.view.fx.StageManager;
+import porprezhas.view.fx.gameScene.GuiSettings;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static porprezhas.view.fx.gameScene.GuiSettings.pathToPattern;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
-public class ChoosePatternViewController {
+public class ChoosePatternViewController implements SceneController {
 
 
 
@@ -30,8 +38,25 @@ public class ChoosePatternViewController {
     @FXML private Label choosePatternViewPatternLabel4;
     List<Label> labelList;
 
+    @FXML AnchorPane ChoosePatternView;
+    private Pane rootLayout;
+
+
+    // Parent Controller
+    StageManager stageManager;
+    String stageName;
+
+
+
 
     public void initialize(){
+        if(bDebug)
+            System.out.println("Initializing PatternView");
+
+        // assign the rootLayout the top most parent pane, now that it is initialized
+        rootLayout = ChoosePatternView;
+
+
         List<Pattern.TypePattern> patternList = new ArrayList<>();
         patternList.add(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
         patternList.add(Pattern.TypePattern.WATER_OF_LIFE);
@@ -84,6 +109,11 @@ public class ChoosePatternViewController {
     }
 
     @FXML
+    private void onMouseClickedPattern(MouseEvent event){
+        goToNextStage();
+    }
+
+    @FXML
     private void onMouseEnteredPattern(MouseEvent event){
 
         // String borderpath = getPathToFileIgnoreExt(pathToBorder ,"PRIVATE_CARD" + ".gif");
@@ -100,4 +130,46 @@ public class ChoosePatternViewController {
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));*/
     }
 
+    // Stage management
+    @Override
+    public void setStageManager(StageManager stageManager, String stageName) {
+        // Change Stages
+        this.stageManager = stageManager;
+        this.stageName = stageName;
+    }
+
+    public void goToNextStage() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_OUT),
+                new KeyValue(stageManager.getStage(stageName).getScene().getRoot().
+                        opacityProperty(), 0));
+        timeline.getKeyFrames().add(key);
+        timeline.setOnFinished((ae) -> {
+
+                    // Switch the Stage
+                    stageManager.setStage(GuiSettings.stageGameID, this.stageName);
+                }
+        );
+        timeline.play();
+
+    }
+
+    private void currentStageTransition() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+
+        // Add the transition animation
+        // Using Opacity Fading
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_IN),
+                new KeyValue(stageManager.getStage(stageName).
+                        getScene().getRoot().opacityProperty(), 0));
+        timeline.getKeyFrames().add(key);
+
+        // Change Stage
+        timeline.setOnFinished((actionEvent) -> {
+            ;
+        });
+        timeline.play();
+    }
 }

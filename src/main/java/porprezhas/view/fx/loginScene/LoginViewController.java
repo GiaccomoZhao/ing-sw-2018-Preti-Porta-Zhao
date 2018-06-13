@@ -1,38 +1,61 @@
 package porprezhas.view.fx.loginScene;
 
 import com.sun.javafx.css.Style;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+import porprezhas.Network.Command.Action;
+import porprezhas.view.fx.BackgroundMusicPlayer;
+import porprezhas.view.fx.SceneController;
+import porprezhas.view.fx.StageManager;
+import porprezhas.view.fx.gameScene.GuiSettings;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 import static porprezhas.view.fx.loginScene.LoginViewController.ConnectionType.RMI;
 import static porprezhas.view.fx.loginScene.LoginViewController.ConnectionType.SOCKET;
 
-public class LoginViewController {
+public class LoginViewController implements SceneController, Initializable {
 
-    @FXML
-    Button loginViewButton;
-    @FXML
-    TextField textFieldLoginView;
-    @FXML
-    Button joinViewButton;
-    @FXML
-    Button loginViewRMIButton;
-    @FXML
-    Button loginViewSocketButton;
-    @FXML
-    Text loginViewText;
+    @FXML Button loginViewButton;
+    @FXML TextField textFieldLoginView;
+    @FXML Button joinViewButton;
+    @FXML Button loginViewRMIButton;
+    @FXML Button loginViewSocketButton;
+    @FXML Text loginViewText;
+    @FXML AnchorPane loginView;
 
-    private String voidString ="";
+    private Pane rootLayout;
+
+
+    private StageManager stageManager;
+    private String stageName;
+
+    private final String voidString = "";
+    private double xOffset = 0;
+    private double yOffset = 0;
+
+    private DoubleProperty opacityProperty;
+
+
+
     enum ConnectionType{
         RMI,SOCKET
     }
@@ -40,8 +63,80 @@ public class LoginViewController {
     ConnectionType connectionType=RMI;
 
 
-    public void initialize() {
+
+
+
+
+    // Stage management
+    @Override
+    public void setStageManager(StageManager stageManager, String stageName) {
+        // Change Stages
+        this.stageManager = stageManager;
+        this.stageName = stageName;
+    }
+
+    public void goToNextStage() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_OUT),
+                new KeyValue(stageManager.getStage(stageName).getScene().getRoot().
+                        opacityProperty(), 0));
+        timeline.getKeyFrames().add(key);
+        timeline.setOnFinished((ae) -> {
+
+            // Switch the Stage
+            stageManager.setStage(GuiSettings.stagePatternID, this.stageName);
+        });
+        timeline.play();
+
+    }
+
+    private void currentStageTransition() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+
+        // Add the transition animation
+        // Using Opacity Fading
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_IN),
+                new KeyValue(stageManager.getStage(stageName).
+                        getScene().getRoot().opacityProperty(), 0));
+        timeline.getKeyFrames().add(key);
+
+        // Change Stage
+        timeline.setOnFinished((actionEvent) -> {
+            ;
+        });
+        timeline.play();
+    }
+
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if(bDebug)
+            System.out.println("Initializing LoginView");
+
         connectionButtonsSetup();
+
+        // assign the rootLayout the top most parent pane, now that it is initialized
+        rootLayout = loginView;
+
+        rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            }
+        });
+        rootLayout.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stageManager.getStage(stageName).setX(event.getScreenX() - xOffset);
+                stageManager.getStage(stageName).setY(event.getScreenY() - yOffset);
+            }
+        });
+
+        BackgroundMusicPlayer.playRandomMusic(pathToLoginMusic);
     }
 
     public void connectionButtonsSetup(){
@@ -49,6 +144,12 @@ public class LoginViewController {
                 BorderStrokeStyle.SOLID, new CornerRadii(2),new BorderWidths(2))));
     }
 
+
+    @FXML
+    public void onJoinButton(ActionEvent event) {
+        System.out.println("Goto next");
+        goToNextStage();
+    }
 
     @FXML
     public void loginDone(ActionEvent event) {
@@ -68,19 +169,17 @@ public class LoginViewController {
             loginViewSocketButton.setVisible(false);
             joinViewButton.setVisible(true);
 
-
         }
         else{
 
             loginViewText.setText("⚠Choose an username⚠");
-            loginViewText.setFill(Paint.valueOf("#CB3C15"));
+            loginViewText.setFill(Color.rgb(0xCB, 0x3C, 0x15));
             loginViewText.setStyle("-fx-stroke:black;"+
             "-fx-stroke-width:1.5;");
+            loginViewText.setOpacity(1);
             final Timeline timeline = new Timeline();
-            timeline.setCycleCount(2);
-            timeline.setAutoReverse(true);
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
-                    new KeyValue(loginViewText.opacityProperty(), 0)));
+                    new KeyValue(loginViewText.opacityProperty(), 0, Interpolator.LINEAR)));
             timeline.play();
         }
 
@@ -95,14 +194,13 @@ public class LoginViewController {
             loginViewSocketButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                     BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(0))));
             loginViewText.setText("Connection mode set to RMI");
-            loginViewText.setFill(Paint.valueOf("#7BD7E1"));
+            loginViewText.setFill(Color.rgb(0x7B, 0xD7, 0xE1));
             loginViewText.setStyle("-fx-stroke:black;"+
                     "-fx-stroke-width:1.5;");
+            loginViewText.setOpacity(1);
             final Timeline timeline = new Timeline();
-            timeline.setCycleCount(2);
-            timeline.setAutoReverse(true);
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
-                    new KeyValue(loginViewText.opacityProperty(), 0)));
+                    new KeyValue(loginViewText.opacityProperty(), 0, Interpolator.LINEAR)));
             timeline.play();
         }
         //If the connection is already set to RMI, there is no  need to do anything
@@ -120,14 +218,13 @@ public class LoginViewController {
             loginViewRMIButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                     BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(0))));
             loginViewText.setText("Connection mode set to Socket");
-            loginViewText.setFill(Paint.valueOf("#7BD7E1"));
+            loginViewText.setFill(Color.rgb(0x7B, 0xD7, 0xE1));
             loginViewText.setStyle("-fx-stroke:black;"+
                     "-fx-stroke-width:1.5;");
+            loginViewText.setOpacity(1);
             final Timeline timeline = new Timeline();
-            timeline.setCycleCount(2);
-            timeline.setAutoReverse(true);
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
-                    new KeyValue(loginViewText.opacityProperty(), 0)));
+                    new KeyValue(loginViewText.opacityProperty(), 0, Interpolator.LINEAR)));
             timeline.play();
         }
         //If the connection is already set to RMI, there is no  need to do anything

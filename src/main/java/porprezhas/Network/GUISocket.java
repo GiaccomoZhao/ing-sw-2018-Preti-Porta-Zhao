@@ -18,7 +18,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.*;
 
 import static javafx.application.Application.launch;
@@ -56,6 +55,10 @@ public class GUISocket extends Application implements AnswerHandler {
     ObjectInputStream socketIn;
     ObjectOutputStream socketOut;
 
+    public GUISocket()  {
+        this.in = null;
+        ;
+    }
     public GUISocket(InetAddress ip , int port)  {
         this.port=port;
         this.in = new Scanner(System.in);
@@ -95,7 +98,7 @@ public class GUISocket extends Application implements AnswerHandler {
         }, 0, minuteFrequencyToMillis(FPS_PRINT_AT_MIN));
 
         // play background music
-        BackgroundMusicPlayer.playMusic();
+        BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
     }
 
 
@@ -245,6 +248,7 @@ public class GUISocket extends Application implements AnswerHandler {
 
         launch(args);
 
+        System.out.println("Launched");
     }
 
     @Override

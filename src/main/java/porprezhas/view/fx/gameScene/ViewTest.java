@@ -9,14 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
-import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
@@ -163,7 +161,7 @@ public class ViewTest extends Application {
         }, 0, minuteFrequencyToMillis(FPS_PRINT_AT_MIN));
 
         // play background music
-        BackgroundMusicPlayer.playMusic();
+        BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
     }
 
 

@@ -21,40 +21,11 @@ import java.io.File;
 
 public class ResultsView extends Application {
     private Stage primaryStage;
-    private Parent rootLayout;
-    private static BorderPane bpi;
-    private double xOffset = 0;
-    private double yOffset = 0;
-    public static final String pathToMusicDirectory = "sound/music/resultsMusic/";
-    public static final String pathToVideoDirectory = "video/";
-
-    @FXML
-    private Button resultsViewCloseButton;
-
-
-    @FXML
-    public void handleCloseButtonAction(ActionEvent event) {
-    Stage stage = (Stage)resultsViewCloseButton.getScene().getWindow();
-        Platform.exit();
-        System.exit(0);
-    }
 
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        String resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();
-        resourcePath = resourcePath.substring(1, resourcePath.length());
-        resourcePath = resourcePath.replaceAll("%20", " ");
-        final File directory = new File(resourcePath + pathToMusicDirectory);
-        String[] musicFiles = directory.list((dir1, name) -> name.endsWith(".mp3"));
-
-        musicFiles[0] = "file:///" + (directory + "\\" + musicFiles[0]).replace("\\", "/").replaceAll(" ", "%20");
-        MediaPlayer player = new MediaPlayer( new Media(musicFiles[0]) );
-
-        player.play();
-
 
         this.primaryStage = primaryStage;
         initRootLayout();
@@ -62,41 +33,9 @@ public class ResultsView extends Application {
     }
 
     public void initRootLayout() {
-        try {
-            // create a FXMLLoader and open fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/ResultsView.fxml"));
-            if (loader == null)
-                System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/ResultsView.fxml") + ")");
-            rootLayout = loader.load();
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
-            primaryStage.initStyle(StageStyle.UNDECORATED);
-
-            rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    xOffset = event.getSceneX();
-                    yOffset = event.getSceneY();
-                }
-            });
-            rootLayout.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    primaryStage.setX(event.getScreenX() - xOffset);
-                    primaryStage.setY(event.getScreenY() - yOffset);
-                }
-            });
-
-
-
 
             primaryStage.show();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

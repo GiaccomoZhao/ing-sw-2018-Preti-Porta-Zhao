@@ -4,15 +4,20 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import porprezhas.CircularArrayList;
 import porprezhas.model.dices.Dice;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class GuiSettings {
-    public static boolean bFixedFont = false;
+    public static final boolean bFixedFont = false;
 
     // ***** Game GUI attributes *****
     // path
+    public static final String pathToRoot = "/";
+    public static final String pathToFxml = pathToRoot;
     public static final String pathToBackground = "background/";
     public static final String pathToBorder = "border/";
     public static final String pathToToolCard = "cards/templateFolder/";
@@ -22,21 +27,28 @@ public class GuiSettings {
     public static final String pathToHeadIcon = "head/64x64x64/";
     public static final String pathToDice = "dice/36x36/";
     public static final String pathToCursor = "cursor/";
+
     public static final String pathToMusic = "sound/music/";
+    public static final String pathToGameMusic = pathToMusic + "gameMusic/";
+    public static final String pathToLoginMusic = pathToMusic + "loginMusic/";
+    public static final String pathToResultMusic = pathToMusic + "resultsMusic/";
+    public static final String pathToPatternMusic = pathToGameMusic;
 
 
     // string
     public static final String GAME_TITLE = "SAGRADA";
 
     // scene names
-    public static String loginID = "login";
-    public static String loginFile = "LoginView.fxml";
-    public static String patternID = "pattern";
-    public static String patternFile = "ChoosePatternView.fxml";
-    public static String gameID = "game";
-    public static String gameFile = "GameView.fxml";
-    public static String resultsID = "results";
-    public static String resultsFile = "Results.fxml";
+    public static final String stageLoginID = "login";
+    public static final String stageLoginFile = "LoginView";
+    public static final String stagePatternID = "pattern";
+    public static final String stagePatternFile = "ChoosePatternView";
+    public static final String stageGameID = "game";
+    public static final String stageGameFile = "GameView";
+    public static final String stageResultsID = "results";
+    public static final String stageResultsFile = "ResultsView";
+//    public static final List<String> stageIDs = Arrays.asList(
+//            stageLoginID, stageGameID, stagePatternID, stageResultsID);
 
 
     // number
@@ -66,9 +78,12 @@ public class GuiSettings {
     public static double DRAFT_DICE_ZOOM = 0.96;    // this value must be below 2, and should be much bigger than 0.5
     public static double BORDER_SIZE = 1.8;         // should be around 2
 
-    public static double cardOpacity = 0.8086;
-    public static double CARD_FADE_IN = 420;
+    public static double cardOpacity = 0.8086;      // normal opacity of the cards
+    public static double CARD_FADE_IN = 420;        // time in [ms]
     public static double CARD_FADE_OUT = 1200;
+
+    public static double STAGE_FADE_IN = 500;
+    public static double STAGE_FADE_OUT = 1000;
 
     // Sound
     public static BooleanProperty bMuteMusic = new SimpleBooleanProperty(false);

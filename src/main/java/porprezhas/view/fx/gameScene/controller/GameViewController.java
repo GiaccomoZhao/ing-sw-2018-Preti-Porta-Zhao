@@ -1,6 +1,9 @@
 package porprezhas.view.fx.gameScene.controller;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +25,10 @@ import porprezhas.model.cards.PrivateObjectiveCard;
 import porprezhas.model.cards.PublicObjectiveCard;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
+import porprezhas.view.fx.BackgroundMusicPlayer;
+import porprezhas.view.fx.SceneController;
+import porprezhas.view.fx.StageManager;
+import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.component.*;
 import porprezhas.view.fx.gameScene.state.GameViewState;
 import porprezhas.view.fx.gameScene.state.PlayerInfo;
@@ -32,12 +39,13 @@ import java.util.List;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
-public class GameViewController implements GameViewUpdaterInterface {
+public class GameViewController implements SceneController, GameViewUpdaterInterface {
 
     //  ***** JavaFX attributes *****
     // these will be initialized by the FXMLLoader when the load() method is called
+          private Pane       rootLayout;
     @FXML private AnchorPane fx_gameScene;   // top parent layout
-    @FXML private StackPane fx_gamePane;   // fx:id="fx_gamePane"
+    @FXML private StackPane  fx_gamePane;   // fx:id="fx_gamePane"
 
     @FXML private VBox fx_enemyPanesParent;    // contain all enemies board
 
@@ -72,7 +80,11 @@ public class GameViewController implements GameViewUpdaterInterface {
 
 
 
-    //  ***** Game View attributes *****
+    //  ***** Game View Controller attributes *****
+    // Parent Controller
+    private StageManager stageManager;
+    private String stageName;
+
     // Sub Controllers
     private List<EnemyViewController> enemyViewControllers;
     private Pane[] enemyPanes;      // panel of 0-3 enemies, contain board, name, icon
@@ -91,8 +103,9 @@ public class GameViewController implements GameViewUpdaterInterface {
     private ImageCursor cursorHandUp;
 
 
-    //  ***** Game View Controller attributes *****
+    // auxiliary controller
     private GameViewState state;
+
 
 
     //  ***** Player attributes *****
@@ -107,6 +120,37 @@ public class GameViewController implements GameViewUpdaterInterface {
     // *************************************
     // ********** <<< Methods >>> **********
 
+    public GameViewController() {
+
+        num_player = 4; // TODO: Remove this Fake
+//        updatePlayerInfo(player);
+//        if(this.num_player > 1)
+        enemyPanes = new Pane[this.num_player-1];
+//        else
+//            enemyPanes = new Pane[0];
+        boardList = new ArrayList<>(num_player);
+
+        enemyViewControllers = new ArrayList<>();
+
+        roundTrackBoard = new RoundTrackBoardView(GameConstants.MAX_DICE_PER_ROUND, GameConstants.ROUND_NUM);
+/*        for (int i = 0; i < num_player; i++) {
+            boardList.add(new GridPane());
+        }*/
+//        roundTrackLists = new ArrayList<>();
+/*        roundTrackDiceLists = new ArrayList[Game.GameConstants.ROUND_NUM];
+        for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+            roundTrackDiceLists[i] = new ArrayList<>();
+        }
+*/
+
+        draftPoolView = new DraftPoolView();
+
+        cardPanes = new CardPane[CardTab.values().length];
+
+        if(bDebug)
+            System.out.println("GameView Constructed");
+
+    }
 
     // @requires playersInfo.size >= 1
     // @Param playersInfo.get(0).typePattern == player.typePattern &&
@@ -152,6 +196,9 @@ public class GameViewController implements GameViewUpdaterInterface {
         if(bDebug)
             System.out.println("Initializing GameView");
 
+        // assign the rootLayout the top most parent pane, now that it is initialized
+        rootLayout = fx_gameScene;
+
         // setup our game GUI with following methods
         // Images
         setGameCursor();
@@ -171,7 +218,75 @@ public class GameViewController implements GameViewUpdaterInterface {
             roundTrackDiceTable.add(vBox, i, 1, 1, 8);
         }
 */
+
+        // add gaming BackGround Music
+        BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
+
+        // Fade In current Stage
+//        currentStageTransition();
     }
+
+
+
+
+
+
+
+    // Stage management
+    @Override
+    public void setStageManager(StageManager stageManager, String stageName) {
+        // Change Stages
+        System.out.println(stageManager);
+        this.stageManager = stageManager;
+        this.stageName = stageName;
+    }
+
+    public void goToNextStage() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_OUT),
+                new KeyValue(stageManager.getStage(stageName).getScene().getRoot().
+                        opacityProperty(), 0));
+        timeline.getKeyFrames().add(key);
+        timeline.setOnFinished((ae) -> {
+
+            // Switch the Stage
+            stageManager.setStage(GuiSettings.stageResultsID, this.stageName);
+//            stageManager.setStage(GuiSettings.stageLoginID, this.stageName);
+//            stageManager.getStage(stageLoginID).setOpacity(1);
+//            stageManager.getStage(stageLoginID).show();
+//            System.out.println(stageManager.getStage(stageLoginID).getScene());
+        });
+        timeline.play();
+
+    }
+
+    private void currentStageTransition() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+
+
+        System.out.println();
+        System.out.println();
+        System.out.println("GameViewController");
+        System.out.println(stageName);
+        System.out.println(stageManager);
+        // Add the transition animation
+        // Using Opacity Fading
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_IN),
+                new KeyValue(stageManager.getStage(stageName).
+                        getScene().getRoot().opacityProperty(), 0));
+        timeline.getKeyFrames().add(key);
+
+        // Change Stage
+        timeline.setOnFinished((actionEvent) -> {
+            ;
+        });
+        timeline.play();
+    }
+
+
+
 
     public List<BoardView> getBoardList() {
         return boardList;
@@ -359,7 +474,7 @@ public class GameViewController implements GameViewUpdaterInterface {
         cursorHandUp = new ImageCursor(
                 new Image(pathToCursor + "cursor_hand_up.png") );
 
-        fx_gameScene.setCursor(cursorHand);
+        rootLayout.setCursor(cursorHand);
 //        fx_gamePane.setCursor(cursorHand);
     }
 
@@ -508,7 +623,7 @@ public class GameViewController implements GameViewUpdaterInterface {
 
     @FXML protected void onPass(ActionEvent event) {
         System.out.println("PASS");
-
+        goToNextStage(); // TODO:  delete this
         // for test
        /* Random random = new Random();
         List<Dice> diceList = new ArrayList<>();
@@ -519,6 +634,7 @@ public class GameViewController implements GameViewUpdaterInterface {
             );
         }
         draftPoolView.reroll(diceList);*/
+       if(!bDebug)
         ClientActionSingleton.getClientAction().pass();
     }
 

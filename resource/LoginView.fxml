@@ -16,7 +16,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="loginView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="loginView" fx:controller="porprezhas.view.fx.loginScene.LoginViewController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="loginViewImage" blendMode="SRC_ATOP" fitHeight="340.0" fitWidth="600.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -30,21 +30,21 @@
             </SepiaTone>
          </effect>
       </ImageView>
-      <Button fx:id="loginViewButton" cache="true" layoutX="265.0" layoutY="205.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="17.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
+      <Button fx:id="loginViewButton" cache="true" layoutX="256.0" layoutY="202.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
          <font>
-            <Font name="Book Antiqua" size="15.0" />
+            <Font name="Book Antiqua" size="18.0" />
          </font>
          <effect>
             <DropShadow />
          </effect></Button>
-      <TextField fx:id="textFieldLoginView" layoutX="230.0" layoutY="152.0" onAction="#loginDone" prefHeight="26.0" prefWidth="142.0" promptText="Username" style="-fx-background-color: #FFF7DE;">
+      <TextField fx:id="textFieldLoginView" layoutX="230.0" layoutY="152.0" prefHeight="26.0" prefWidth="142.0" promptText="Username" style="-fx-background-color: #FFF7DE;">
          <effect>
             <DropShadow />
          </effect>
          <font>
             <Font name="Book Antiqua" size="12.0" />
          </font></TextField>
-      <Button fx:id="joinViewButton" layoutX="256.0" layoutY="165.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="13.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Join" textFill="#390f01" visible="false" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="255.0">
+      <Button fx:id="joinViewButton" layoutX="256.0" layoutY="165.0" mnemonicParsing="false" onAction="#onJoinButton" prefHeight="13.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Join" textFill="#390f01" visible="false" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="255.0">
          <font>
             <Font name="Book Antiqua" size="20.0" />
          </font>

@@ -7,9 +7,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import porprezhas.Network.*;
 import porprezhas.model.Player;
-import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.gameScene.ConfirmBox;
+import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
@@ -49,7 +49,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("tester");
+        this.primaryStage.setTitle(GuiSettings.GAME_TITLE);
 
         // initialize the layout from fxml and
         // setup the game GUI in base the player info!!!
@@ -68,7 +68,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
         }, 0, minuteFrequencyToMillis(FPS_PRINT_AT_MIN));
 
         // play background music
-        BackgroundMusicPlayer.playMusic();
+        BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
     }
 
 

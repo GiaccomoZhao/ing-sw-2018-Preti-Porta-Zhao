@@ -1,12 +1,14 @@
 ...
 
-MODEL: ToolCard
-GUI: pattern scene
-GUI: single player scene
-Network: Socket
-GUI: ToolCard
+Network
 GUI: multiple Scene management
+
+MODEL: ToolCard
+GUI: single player preparation scene
+GUI: ToolCard
 Network: Reconnecting
+
+------------------------------  for 17/06 zx die...
 
 ...
 
@@ -18,4 +20,5 @@ UML
 User Action list
 Animation
 
-1
+JavaDoc
+Tests
