@@ -344,6 +344,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         loggedPlayer.add(new Player(username));
         this.socketUsers.put(username, loginAction.getObjectOutputStream());
+
         return  new LoginActionAnswer(true, username);
     }
 
@@ -355,11 +356,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 loggedPlayer) {
             if(findPlayer.getName().equals(username)) {
                 this.join(findPlayer);
-                return new LoginActionAnswer(true, username);
+                return new JoinActionAnswer(true);
 
             }
         }
-        return new LoginActionAnswer(false, username);
+        return new JoinActionAnswer(false);
     }
 
     @Override

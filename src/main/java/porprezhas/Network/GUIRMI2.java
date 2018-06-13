@@ -201,8 +201,6 @@ public class GUIRMI2 extends Application implements RMIClientInterface {
         }
         public void joinPhase() throws RemoteException, NotBoundException {
             viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);
-
-
             clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
             ClientActionSingleton.setClientActionInstance(new RMIClientAction(server, username));
             server.joinGame(username);

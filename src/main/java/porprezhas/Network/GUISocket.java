@@ -252,27 +252,27 @@ public class GUISocket extends Application implements AnswerHandler {
     }
 
     @Override
-    public void handle(UpdateAnswer updateAnswer) {
-
+    public boolean handle(UpdateAnswer updateAnswer) {
+    return true;
     }
 
     @Override
-    public void handle(LoginActionAnswer loginActionAnswer) {
-
+    public boolean handle(LoginActionAnswer loginActionAnswer) {
+return true;
     }
 
     @Override
-    public void handle(JoinActionAnswer joinActionAnswer) {
-
+    public boolean handle(JoinActionAnswer joinActionAnswer) {
+return true;
     }
 
     @Override
-    public void handle(PassActionAnswer passActionAnswer) {
-
+    public boolean handle(PassActionAnswer passActionAnswer) {
+return true;
     }
 
     @Override
-    public Boolean handle(DiceInsertedAnswer diceInsertedAnswer) {
-        return null;
+    public boolean handle(DiceInsertedAnswer diceInsertedAnswer) {
+        return true;
     }
 }

@@ -17,7 +17,8 @@ public class ClientActionSingleton {
     }
 
     public static void setClientActionInstance(ClientActionInterface clientActionInstance) {
-        ClientActionSingleton.clientActionInstance = clientActionInstance;
+            ClientActionSingleton.clientActionInstance = clientActionInstance;
+
     }
 
 

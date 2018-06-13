@@ -10,7 +10,7 @@ public class DiceInsertedAnswer implements Answer {
     }
 
     @Override
-    public void handle(AnswerHandler answerHandler) {
-
+    public boolean handle(AnswerHandler answerHandler) {
+        return answerHandler.handle(this);
     }
 }
