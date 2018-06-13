@@ -32,10 +32,6 @@ public class ChoosePatternView extends Application {
     public void start(Stage primaryStage) throws Exception {
     this.primaryStage = primaryStage;
 
-  /*  FileInputStream input = new FileInputStream("target/classes/pattern/aurora_sagradis.png");
-    Image image = new Image(input);
-    ImageView imageView = new ImageView(image);
-    Button button = new Button("Pattern1",imageView);*/
 
 
     initRootLayout();

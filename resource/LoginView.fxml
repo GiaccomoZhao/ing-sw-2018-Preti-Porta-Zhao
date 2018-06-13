@@ -30,7 +30,7 @@
             </SepiaTone>
          </effect>
       </ImageView>
-      <Button fx:id="loginViewButton" cache="true" layoutX="256.0" layoutY="202.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" stylesheets="@LoginViewLoginButton.css" text="Login" textFill="#390f01">
+      <Button fx:id="loginViewButton" cache="true" layoutX="256.0" layoutY="202.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
          <font>
             <Font name="Book Antiqua" size="18.0" />
          </font>
@@ -44,13 +44,29 @@
          <font>
             <Font name="Book Antiqua" size="12.0" />
          </font></TextField>
-      <Button fx:id="joinViewButton" layoutX="256.0" layoutY="165.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="13.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" stylesheets="@LoginViewJoinButton.css" text="Join" textFill="#390f01" visible="false" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="255.0">
+      <Button fx:id="joinViewButton" layoutX="256.0" layoutY="165.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="13.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Join" textFill="#390f01" visible="false" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="255.0">
          <font>
             <Font name="Book Antiqua" size="20.0" />
          </font>
          <effect>
             <DropShadow />
          </effect>
+      </Button>
+      <Button fx:id="loginViewRMIButton" cache="true" layoutX="224.0" layoutY="260.0" mnemonicParsing="false" onAction="#connectionMethodChooseRMI" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="RMI" textFill="#390f01">
+         <effect>
+            <DropShadow />
+         </effect>
+         <font>
+            <Font name="Book Antiqua" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="loginViewSocketButton" cache="true" layoutX="301.0" layoutY="260.0" mnemonicParsing="false" onAction="#connectionMethodChooseSocket" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="Socket" textFill="#390f01">
+         <effect>
+            <DropShadow />
+         </effect>
+         <font>
+            <Font name="Book Antiqua" size="12.0" />
+         </font>
       </Button>
    </children>
 </AnchorPane>

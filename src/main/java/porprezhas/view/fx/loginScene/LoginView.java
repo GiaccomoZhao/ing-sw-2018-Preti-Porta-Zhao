@@ -24,18 +24,9 @@ public class LoginView extends Application{
 
     private Stage primaryStage;
     private Parent rootLayout;
-    private static BorderPane bpi;
     private double xOffset = 0;
     private double yOffset = 0;
     public static final String pathToMusicDirectory = "sound/music/loginMusic/";
-    private String voidString ="";
-
-    @FXML
-    Button loginViewButton;
-    @FXML
-    TextField textFieldLoginView;
-    @FXML
-    Button joinViewButton;
 
 
 
@@ -95,24 +86,9 @@ public class LoginView extends Application{
         }
     }
 
-    @FXML
-    public void loginDone(ActionEvent event) {
-        if(textFieldLoginView.getText()!=null&&!(textFieldLoginView.getText().equals(voidString))){
-            loginViewButton.setVisible(false);
-            textFieldLoginView.setVisible(false);
-            joinViewButton.setStyle(
-                    "-fx-background-color: #FFF1C6; "+
-                    "-fx-background-radius: 50em; " +
-                            "-fx-min-width: 90px; " +
-                            "-fx-min-height: 90px; " +
-                            "-fx-max-width: 90px; " +
-                            "-fx-max-height: 90px;"
-            );
-            joinViewButton.setVisible(true);
 
-        }
 
-    }
+
 
     public static void main(String[] args) {
         launch(args);
