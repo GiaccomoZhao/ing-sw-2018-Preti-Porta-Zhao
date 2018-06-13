@@ -29,7 +29,10 @@ public class ClientApplication extends Application {
         stageController.loadStage(stageResultsID, stageResultsFile, StageStyle.TRANSPARENT);
 
         // display the first stage
-        stageController.setStage(stageLoginID);
+        Platform.runLater(() -> {
+            System.out.println("Show!\n\n");
+            stageController.setStage(stageLoginID);
+        });
     }
 
     public static void main(String[] args) {

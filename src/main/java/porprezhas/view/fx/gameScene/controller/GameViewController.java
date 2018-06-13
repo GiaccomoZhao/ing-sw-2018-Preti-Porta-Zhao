@@ -200,6 +200,12 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         // assign the rootLayout the top most parent pane, now that it is initialized
         rootLayout = fx_gameScene;
 
+        Platform.runLater(() -> {
+            // Add Window Appear Animation
+            setCurrentStageTransition();
+        });
+
+
         // setup our game GUI with following methods
         // Images
         setGameCursor();
@@ -223,8 +229,6 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         // add gaming BackGround Music
         BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
 
-        // Fade In current Stage
-//        currentStageTransition();
     }
 
 
@@ -236,33 +240,35 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     // Stage management
     @Override
     public void setStageManager(StageManager stageManager, String stageName) {
-        // Change Stages
-        System.out.println(stageManager);
+        // Used to change Stages
+        if(bDebug)
+            System.out.println("Set " + stageManager + " to " + stageName + " in " + this);
         this.stageManager = stageManager;
         this.stageName = stageName;
     }
 
+    @Override
     public void goToNextStage() {
         // Create a Timeline to animate the transition between stages
         Timeline timeline = new Timeline();
+
         KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_OUT),
                 new KeyValue(stageManager.getStage(stageName).getScene().getRoot().
                         opacityProperty(), 0));
-        timeline.getKeyFrames().add(key);
-        timeline.setOnFinished((ae) -> {
 
+        timeline.getKeyFrames().add(key);
+
+        timeline.setOnFinished((ae) -> {
             // Switch the Stage
             stageManager.setStage(GuiSettings.stageResultsID, this.stageName);
-//            stageManager.setStage(GuiSettings.stageLoginID, this.stageName);
-//            stageManager.getStage(stageLoginID).setOpacity(1);
-//            stageManager.getStage(stageLoginID).show();
-//            System.out.println(stageManager.getStage(stageLoginID).getScene());
         });
+
         timeline.play();
 
     }
 
-    private void currentStageTransition() {
+    @Override
+    public void setCurrentStageTransition() {
         // Create a Timeline to animate the transition between stages
         Timeline timeline = new Timeline();
 
@@ -272,18 +278,23 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         System.out.println("GameViewController");
         System.out.println(stageName);
         System.out.println(stageManager);
+
+
         // Add the transition animation
         // Using Opacity Fading
         KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_IN),
                 new KeyValue(stageManager.getStage(stageName).
-                        getScene().getRoot().opacityProperty(), 0));
+                        getScene().getRoot().opacityProperty(), 1));
         timeline.getKeyFrames().add(key);
 
-        // Change Stage
+        //
         timeline.setOnFinished((actionEvent) -> {
             ;
         });
-        timeline.play();
+
+        stageManager.getStage(stageName).setOnShowing(event -> {
+            timeline.play();
+        });
     }
 
 

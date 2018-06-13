@@ -44,6 +44,14 @@ public class Useful {
 
 
 
+    public static double getMaxBetween(double firstValue, double secondValue){
+        return firstValue > secondValue ? firstValue : secondValue;
+    }
+
+    public static double getMinBetween(double firstValue, double secondValue){
+        return firstValue < secondValue ? firstValue : secondValue;
+    }
+
 
 
     public static StringBuilder appendSpaces(StringBuilder sb, int nSpace) {
@@ -51,5 +59,22 @@ public class Useful {
             sb.append(' ');
         }
         return sb;
+    }
+
+
+    /**
+     * Force Convert the type of the Object into clazz's Type
+     * @param o     the Object to be converted
+     * @param clazz the Class -Type- you want convert to be, example: String.class
+     * @param <T>   Generic Type of class
+     * @return Object o Casted in type of clazz, if there is not exception
+     *         null, otherwise
+     */
+    public static <T> T convertInstanceOfObject(Object o, Class<T> clazz) {
+        try {
+            return clazz.cast(o);
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 }
