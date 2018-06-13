@@ -169,6 +169,8 @@ public class LoginViewController implements SceneController, Initializable {
             loginViewSocketButton.setVisible(false);
             joinViewButton.setVisible(true);
 
+            // TODO: Matteo Scelgo te!!!
+
         }
         else{
 
