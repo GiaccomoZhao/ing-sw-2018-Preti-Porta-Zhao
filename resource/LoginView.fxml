@@ -30,9 +30,9 @@
             </SepiaTone>
          </effect>
       </ImageView>
-      <Button fx:id="loginViewButton" cache="true" layoutX="256.0" layoutY="202.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
+      <Button fx:id="loginViewButton" cache="true" layoutX="265.0" layoutY="205.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="17.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
          <font>
-            <Font name="Book Antiqua" size="18.0" />
+            <Font name="Book Antiqua" size="15.0" />
          </font>
          <effect>
             <DropShadow />
@@ -68,5 +68,10 @@
             <Font name="Book Antiqua" size="12.0" />
          </font>
       </Button>
+      <Text fx:id="loginViewText" fill="#ff2e2e" layoutX="121.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-stroke: #CCBDA6; -fx-stroke-width: 2;">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

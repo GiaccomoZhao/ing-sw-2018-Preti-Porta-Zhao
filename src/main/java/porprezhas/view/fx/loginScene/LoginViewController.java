@@ -1,12 +1,18 @@
 package porprezhas.view.fx.loginScene;
 
 import com.sun.javafx.css.Style;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import static porprezhas.view.fx.loginScene.LoginViewController.ConnectionType.RMI;
 import static porprezhas.view.fx.loginScene.LoginViewController.ConnectionType.SOCKET;
@@ -23,6 +29,8 @@ public class LoginViewController {
     Button loginViewRMIButton;
     @FXML
     Button loginViewSocketButton;
+    @FXML
+    Text loginViewText;
 
     private String voidString ="";
     enum ConnectionType{
@@ -44,6 +52,7 @@ public class LoginViewController {
 
     @FXML
     public void loginDone(ActionEvent event) {
+
         if(textFieldLoginView.getText()!=null&&!(textFieldLoginView.getText().equals(voidString))){
             loginViewButton.setVisible(false);
             textFieldLoginView.setVisible(false);
@@ -61,6 +70,19 @@ public class LoginViewController {
 
 
         }
+        else{
+
+            loginViewText.setText("⚠Choose an username⚠");
+            loginViewText.setFill(Paint.valueOf("#CB3C15"));
+            loginViewText.setStyle("-fx-stroke:black;"+
+            "-fx-stroke-width:1.5;");
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(2);
+            timeline.setAutoReverse(true);
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
+                    new KeyValue(loginViewText.opacityProperty(), 0)));
+            timeline.play();
+        }
 
     }
     @FXML
@@ -72,6 +94,16 @@ public class LoginViewController {
                     BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
             loginViewSocketButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                     BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(0))));
+            loginViewText.setText("Connection mode set to RMI");
+            loginViewText.setFill(Paint.valueOf("#7BD7E1"));
+            loginViewText.setStyle("-fx-stroke:black;"+
+                    "-fx-stroke-width:1.5;");
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(2);
+            timeline.setAutoReverse(true);
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
+                    new KeyValue(loginViewText.opacityProperty(), 0)));
+            timeline.play();
         }
         //If the connection is already set to RMI, there is no  need to do anything
 
@@ -87,8 +119,20 @@ public class LoginViewController {
                     BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
             loginViewRMIButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                     BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(0))));
+            loginViewText.setText("Connection mode set to Socket");
+            loginViewText.setFill(Paint.valueOf("#7BD7E1"));
+            loginViewText.setStyle("-fx-stroke:black;"+
+                    "-fx-stroke-width:1.5;");
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(2);
+            timeline.setAutoReverse(true);
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
+                    new KeyValue(loginViewText.opacityProperty(), 0)));
+            timeline.play();
         }
         //If the connection is already set to RMI, there is no  need to do anything
 
     }
+
+
 }
