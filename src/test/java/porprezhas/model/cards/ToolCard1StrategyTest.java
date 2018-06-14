@@ -19,9 +19,13 @@ public class ToolCard1StrategyTest {
 
     Random random;  // used to choose an in range number arbitrarily
 
+    DraftPool draftPool;
+
     // not used container
     DiceBag diceBag;
-    DraftPool draftPool;
+    RoundTrack roundTrack;
+    Board voidBoard;
+
 
     @Before
     public void setUp() {
@@ -30,11 +34,11 @@ public class ToolCard1StrategyTest {
         draftPool = new DraftPool(diceBag.GetRandomDices(random.nextInt(GameConstants.MAX_PLAYER_QUANTITY) + 1));
         integerParams = new ArrayList<>();
 
-        RoundTrack roundTrack = new RoundTrack();
-        Board board = new Board(Pattern.TypePattern.VOID);
+        roundTrack = new RoundTrack();
+        voidBoard = new Board(Pattern.TypePattern.VOID);
 
         toolCard1 = new ToolCard(Card.Effect.TC1);
-        param = new ToolCardParam(roundTrack, draftPool, diceBag, board, integerParams);
+        param = new ToolCardParam(roundTrack, draftPool, diceBag, voidBoard, integerParams);
     }
 
     @Test
