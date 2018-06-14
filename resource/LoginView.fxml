@@ -16,11 +16,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="loginView" fx:controller="porprezhas.view.fx.loginScene.LoginViewController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="loginView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="porprezhas.view.fx.loginScene.LoginViewController">
    <children>
-      <ImageView fx:id="loginViewImage" blendMode="SRC_ATOP" fitHeight="340.0" fitWidth="600.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="loginViewImage" blendMode="SRC_ATOP" fitHeight="340.0" fitWidth="600.0" layoutX="125.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@background/sagrada%20game%20review%20main.jpg" />
+            <Image url="@../../resource/background/SagradaLogin.png" />
          </image>
          <effect>
             <SepiaTone level="0.2">
@@ -30,14 +30,14 @@
             </SepiaTone>
          </effect>
       </ImageView>
-      <Button fx:id="loginViewButton" cache="true" layoutX="256.0" layoutY="202.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
+      <Button fx:id="loginViewButton" cache="true" layoutX="250.0" layoutY="206.0" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
          <font>
             <Font name="Book Antiqua" size="18.0" />
          </font>
          <effect>
             <DropShadow />
          </effect></Button>
-      <TextField fx:id="textFieldLoginView" layoutX="230.0" layoutY="152.0" prefHeight="26.0" prefWidth="142.0" promptText="Username" style="-fx-background-color: #FFF7DE;">
+      <TextField fx:id="textFieldLoginView" layoutX="224.0" layoutY="139.0" prefHeight="26.0" prefWidth="142.0" promptText="Username" style="-fx-background-color: #FFF7DE;">
          <effect>
             <DropShadow />
          </effect>
@@ -52,7 +52,7 @@
             <DropShadow />
          </effect>
       </Button>
-      <Button fx:id="loginViewRMIButton" cache="true" layoutX="224.0" layoutY="260.0" mnemonicParsing="false" onAction="#connectionMethodChooseRMI" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="RMI" textFill="#390f01">
+      <Button fx:id="loginViewRMIButton" cache="true" layoutX="221.0" layoutY="260.0" mnemonicParsing="false" onAction="#connectionMethodChooseRMI" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="RMI" textFill="#390f01">
          <effect>
             <DropShadow />
          </effect>
@@ -60,7 +60,7 @@
             <Font name="Book Antiqua" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="loginViewSocketButton" cache="true" layoutX="301.0" layoutY="260.0" mnemonicParsing="false" onAction="#connectionMethodChooseSocket" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="Socket" textFill="#390f01">
+      <Button fx:id="loginViewSocketButton" cache="true" layoutX="303.0" layoutY="260.0" mnemonicParsing="false" onAction="#connectionMethodChooseSocket" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="Socket" textFill="#390f01">
          <effect>
             <DropShadow />
          </effect>
