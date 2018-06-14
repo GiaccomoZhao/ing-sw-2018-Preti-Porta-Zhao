@@ -61,10 +61,24 @@ public class ToolCard1StrategyTest {
         assertFalse(toolCard1.getStrategy().use(param));
 
         // test with Correct Container and param, but Null not used Container
-        integerParams.add(0);   // correct param, the first dice of the list
+        int indexDraftPool = 0;
+        integerParams.add(indexDraftPool);   // correct param, the first dice of the list
         integerParams.add(ToolCardParam.IncDec.DECREMENT.toInteger());  // correct param
         param = new ToolCardParam(null, draftPool, null, null, integerParams);   // correct Container
-        assertTrue(toolCard1.getStrategy().use(param));     // CORRECT TEST
+
+
+        // CORRECT TEST
+
+        // PRINT the Draft Pool, because we are testing a generic dices
+        System.out.println("\n\nnullTest: ");
+        System.out.println(draftPool.toString());
+
+        if(draftPool.diceList().get(indexDraftPool).getDiceNumber() != Dice.MIN_DICE_NUMBER)
+            assertTrue( toolCard1.getStrategy().use(param) );           // USE
+        else
+            assertFalse( toolCard1.getStrategy().use(param) );          // USE
+
+        System.out.println(draftPool.toString());
     }
 
     @Test
@@ -102,27 +116,37 @@ public class ToolCard1StrategyTest {
 
     @Test
     public void incrementFirstTest() {
-        integerParams.add(0);   // the first dice of the draft pool dice list
+        int indexFirst = 0;
+        integerParams.add(indexFirst);   // the first dice of the draft pool dice list
         integerParams.add(INCREMENT.toInteger());       // INC
+        param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         // PRINT the Draft Pool, because we are testing a generic dices
         System.out.println("\n\nincrementFirstTest: ");
         System.out.println(draftPool.toString());
 
-        assertTrue( toolCard1.getStrategy().use(param) );             // USE
+        if(draftPool.diceList().get(0).getDiceNumber() != Dice.MAX_DICE_NUMBER)
+            assertTrue( toolCard1.getStrategy().use(param) );           // USE
+        else
+            assertFalse( toolCard1.getStrategy().use(param) );          // USE
 
         System.out.println(draftPool.toString());
     }
 
     @Test
     public void decrementFirstTest() {
-        integerParams.add(0);       // first
+        int indexFirst = 0;
+        integerParams.add(indexFirst);       // first
         integerParams.add(DECREMENT.toInteger());       // DEC
+        param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         System.out.println("\n\ndecrementFirstTest: ");
         System.out.println(draftPool.toString());
 
-        assertTrue( toolCard1.getStrategy().use(param) );             // USE
+        if(draftPool.diceList().get(0).getDiceNumber() != Dice.MIN_DICE_NUMBER)
+            assertTrue( toolCard1.getStrategy().use(param) );           // USE
+        else
+            assertFalse( toolCard1.getStrategy().use(param) );          // USE
 
         System.out.println(draftPool.toString());
     }
@@ -130,26 +154,36 @@ public class ToolCard1StrategyTest {
 
     @Test
     public void incrementLastTest() {
-        integerParams.add(draftPool.diceList().size() -1);
+        int indexLast = draftPool.diceList().size() -1;
+        integerParams.add(indexLast);
         integerParams.add(INCREMENT.toInteger());
+        param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         System.out.println("\n\nincrementLastTest: ");
         System.out.println(draftPool.toString());
 
-        assertTrue( toolCard1.getStrategy().use(param) );      // USE
+        if(draftPool.diceList().get(indexLast).getDiceNumber() != Dice.MAX_DICE_NUMBER)
+            assertTrue( toolCard1.getStrategy().use(param) );           // USE
+        else
+            assertFalse( toolCard1.getStrategy().use(param) );          // USE
 
         System.out.println(draftPool.toString());
     }
 
     @Test
     public void decrementLastTest() {
-        integerParams.add(draftPool.diceList().size() -1);
+        int indexLast = draftPool.diceList().size() -1;
+        integerParams.add(indexLast);
         integerParams.add(DECREMENT.toInteger());
+        param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         System.out.println("\n\ndecrementLastTest: ");
         System.out.println(draftPool.toString());
 
-        assertTrue( toolCard1.getStrategy().use(param) );      // USE
+        if(draftPool.diceList().get(indexLast).getDiceNumber() != Dice.MIN_DICE_NUMBER)
+            assertTrue( toolCard1.getStrategy().use(param) );           // USE
+        else
+            assertFalse( toolCard1.getStrategy().use(param) );          // USE
 
         System.out.println(draftPool.toString());
     }
@@ -157,14 +191,15 @@ public class ToolCard1StrategyTest {
 
     @Test
     public void outLowBoundTest() {
-        integerParams.add(-1);
+        integerParams.add(-1);      // LOW BOUND
         integerParams.add(ToolCardParam.IncDec.DECREMENT.toInteger());
+        param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         assertFalse( toolCard1.getStrategy().use(param) );      // USE
 
 
         integerParams.clear();
-        integerParams.add(-1);
+        integerParams.add(-1);      // LOW BOUND
         integerParams.add(ToolCardParam.IncDec.INCREMENT.toInteger());
 
         assertFalse( toolCard1.getStrategy().use(param) );
@@ -172,17 +207,19 @@ public class ToolCard1StrategyTest {
 
     @Test
     public void outHighBoundTest() {
-        integerParams.add(draftPool.diceList().size());
+        integerParams.add(draftPool.diceList().size()); // HIGH BOUND
         integerParams.add(ToolCardParam.IncDec.DECREMENT.toInteger());
+        param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         assertFalse( toolCard1.getStrategy().use(param) );      // USE
 
         integerParams.clear();
-        integerParams.add(draftPool.diceList().size());
+        integerParams.add(draftPool.diceList().size()); // HIGH BOUND
         integerParams.add(ToolCardParam.IncDec.DECREMENT.toInteger());
 
         assertFalse( toolCard1.getStrategy().use(param) );
     }
+
 
     @Test
     public void increment1Test() {
@@ -196,7 +233,7 @@ public class ToolCard1StrategyTest {
         param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         // check use() Success and Number Changes
-        assertTrue( toolCard1.getStrategy().use(param) );       // USE
+        assertTrue( toolCard1.getStrategy().use(param) );       // USE  SUCCESS TEST
         assertEquals(2, draftPool.diceList().get(0).getDiceNumber() );
 
         // check remain property does not change
@@ -219,7 +256,7 @@ public class ToolCard1StrategyTest {
         param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         // check use() Fails and Number does Not Changes
-        assertFalse( toolCard1.getStrategy().use(param) );      // USE
+        assertFalse( toolCard1.getStrategy().use(param) );      // USE  FAIL TEST
         assertEquals(6, draftPool.diceList().get(0).getDiceNumber() );
 
         // check remain property does not change
@@ -243,7 +280,7 @@ public class ToolCard1StrategyTest {
         param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         // check use() successful and Dice Number Change of -1
-        assertTrue( toolCard1.getStrategy().use(param) );       // USE
+        assertTrue( toolCard1.getStrategy().use(param) );       // USE  SUCCESS TEST
         assertEquals(5, draftPool.diceList().get(0).getDiceNumber() );
 
         // check remain property does not changes
@@ -266,7 +303,7 @@ public class ToolCard1StrategyTest {
         param = new ToolCardParam(null, draftPool, null, null, integerParams);
 
         // check use() Fails and Number does not change
-        assertFalse( toolCard1.getStrategy().use(param) );      // USE
+        assertFalse( toolCard1.getStrategy().use(param) );      // USE  FAIL TEST
         assertEquals(1, draftPool.diceList().get(0).getDiceNumber() );
 
         // check remain property does not changes
