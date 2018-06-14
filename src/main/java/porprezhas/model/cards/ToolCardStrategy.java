@@ -1,5 +1,6 @@
 package porprezhas.model.cards;
 
+import porprezhas.Useful;
 import porprezhas.model.dices.*;
 
 import java.io.Serializable;
@@ -7,8 +8,12 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
+import static porprezhas.model.cards.ToolCardParam.IncDec.DECREMENT;
+import static porprezhas.model.cards.ToolCardParam.IncDec.INCREMENT;
 import static porprezhas.model.dices.Board.COLUMN;
 import static porprezhas.model.dices.Board.ROW;
+import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
+import static porprezhas.model.dices.Dice.MIN_DICE_NUMBER;
 
 public interface ToolCardStrategy {
     ToolCardStrategy[] list = {
@@ -46,6 +51,7 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -66,20 +72,32 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
     }
 
     private boolean use(DraftPool draftPool, int indexChosenDice, boolean bIncDec) {
+        // safety Check
+        // Null Pointer
+        if(null == draftPool)
+            return false;
+        List<Dice> diceList = draftPool.diceList();
+        if(null == diceList)
+            return false;
+        // Index Out of Bounds
+        if(Useful.isValueOutOfBounds(indexChosenDice, 0, diceList.size()-1)) {
+            return false;
+        }
+
 
         // Get dice Information from selected Dice
-        Dice chosenDice = draftPool.diceList().get(indexChosenDice);
+        Dice chosenDice = diceList.get(indexChosenDice);
         Dice.ColorDice diceColor = chosenDice.getColorDice();
         int diceNumber = chosenDice.getDiceNumber();
         long id = chosenDice.getId();
 
         // Increment the dice number
-        if(diceNumber != 6  &&  bIncDec) {
+        if(diceNumber != MAX_DICE_NUMBER  &&  INCREMENT.toBoolean().equals( bIncDec )) {
             diceNumber++;
         }
 
         // Decrement the dice number
-        else if(diceNumber != 1  &&  !bIncDec) {
+        else if(diceNumber != MIN_DICE_NUMBER  &&  DECREMENT.toBoolean().equals( bIncDec )) {
             diceNumber--;
         }
 
@@ -112,6 +130,7 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -199,6 +218,7 @@ class ToolCard4 extends ToolCard2_4 {
     // Move 2 dices
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -264,6 +284,7 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -309,6 +330,7 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -361,6 +383,7 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -400,6 +423,7 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -457,6 +481,7 @@ class ToolCard8 extends ToolCard8_9 {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -470,6 +495,7 @@ class ToolCard9 extends ToolCard8_9 {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -489,6 +515,7 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -530,6 +557,7 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 
@@ -580,6 +608,7 @@ class ToolCard12 implements ToolCardStrategy, Serializable {
 
     @Override
     public boolean use(ToolCardParam param) {
+        // safety Check
         if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
             return false;
 

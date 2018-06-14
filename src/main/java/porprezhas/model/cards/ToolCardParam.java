@@ -32,6 +32,9 @@ public class ToolCardParam {
             return this.equals(DECREMENT)? 0 : 1;   // 0 means DEC, 1 is just a arbitrary number
         }
 
+        public Boolean toBoolean() {
+            return this.equals(DECREMENT)? Boolean.FALSE : Boolean.TRUE;   // FALSE means DECREMENT, TRUE means INCREMENT
+        }
     }
 
 

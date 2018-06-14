@@ -19,6 +19,7 @@ public class Dice implements Serializable {
     }
 
     static public final int MAX_DICE_NUMBER = 6;
+    static public final int MIN_DICE_NUMBER = 1;
 
 
 

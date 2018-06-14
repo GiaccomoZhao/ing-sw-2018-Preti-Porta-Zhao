@@ -3,6 +3,8 @@ package porprezhas.model.cards;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -12,7 +14,7 @@ import static porprezhas.model.cards.ToolCardParam.IncDec.*;
 public class IncDecTest {
 
     @Test
-    public void toBooleanTest() {
+    public void toBooleanStaticTest() {
         assertTrue(toBoolean(INCREMENT));
         assertFalse(toBoolean(DECREMENT));
     }
@@ -21,6 +23,12 @@ public class IncDecTest {
     public void toIntegerTest() {
         assertNotEquals(new Integer(0), INCREMENT.toInteger());
         assertEquals(new Integer(0), DECREMENT.toInteger());
+    }
+
+    @Test
+    public void toBooleanTest() {
+        assertEquals(TRUE,  INCREMENT.toBoolean());
+        assertEquals(FALSE, DECREMENT.toBoolean());
     }
 
     @Test
@@ -38,15 +46,15 @@ public class IncDecTest {
 
     @Test
     public void fromIntegerToBooleanTest() {
-        assertEquals(Boolean.FALSE, fromIntegerToBoolean(0) );
+        assertEquals(FALSE, fromIntegerToBoolean(0) );
 
-        assertEquals(Boolean.TRUE, fromIntegerToBoolean(1) );
-        assertEquals(Boolean.TRUE, fromIntegerToBoolean(0xFFFF) );
-        assertEquals(Boolean.TRUE, fromIntegerToBoolean(0xFFFFFFFF) );
-        assertEquals(Boolean.TRUE, fromIntegerToBoolean(-0xFFFFFFFF) );
-        assertEquals(Boolean.TRUE, fromIntegerToBoolean(-1) );
-        assertEquals(Boolean.TRUE, fromIntegerToBoolean(Integer.MIN_VALUE) );
-        assertEquals(Boolean.TRUE, fromIntegerToBoolean(Integer.MAX_VALUE) );
+        assertEquals(TRUE, fromIntegerToBoolean(1) );
+        assertEquals(TRUE, fromIntegerToBoolean(0xFFFF) );
+        assertEquals(TRUE, fromIntegerToBoolean(0xFFFFFFFF) );
+        assertEquals(TRUE, fromIntegerToBoolean(-0xFFFFFFFF) );
+        assertEquals(TRUE, fromIntegerToBoolean(-1) );
+        assertEquals(TRUE, fromIntegerToBoolean(Integer.MIN_VALUE) );
+        assertEquals(TRUE, fromIntegerToBoolean(Integer.MAX_VALUE) );
 
     }
 }
