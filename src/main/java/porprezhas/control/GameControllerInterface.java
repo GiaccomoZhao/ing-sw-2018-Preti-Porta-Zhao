@@ -2,6 +2,7 @@ package porprezhas.control;
 
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
+import porprezhas.model.cards.ToolCardParam;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -14,7 +15,7 @@ public interface GameControllerInterface  {
 
    boolean choosePattern(Player player, int indexPatternType) ;
     boolean insertDice(long diceID, Integer row, Integer column) ;
-    boolean useToolCard(int cardId) throws RemoteException;  // TODO:
+    boolean useToolCard(int cardIndex, ToolCardParam param) throws RemoteException;  // TODO:
 
 
     // do i put this in concrete class or in interface? depends by getState method

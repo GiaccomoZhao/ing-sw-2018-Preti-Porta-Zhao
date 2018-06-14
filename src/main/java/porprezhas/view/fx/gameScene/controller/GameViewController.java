@@ -758,8 +758,6 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
         SetupView();
 
-        System.out.println(cardPanes[0]);
-
         setupCards(toolCards, publicObjectiveCards, privateObjectiveCards);
     }
 

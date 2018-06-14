@@ -5,6 +5,8 @@ import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 import porprezhas.model.cards.ToolCard;
+import porprezhas.model.cards.ToolCardParam;
+import porprezhas.model.cards.ToolCardStrategy;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.dices.Pattern;
 
@@ -301,8 +303,9 @@ public class GameController  implements GameControllerInterface, Runnable {
         return game.insertDice(diceID, row, column);
     }
 
-    public boolean useToolCard(int cardIndex){
-//        ((ToolCard) game.getToolCardList().get(cardIndex)).getStrategy().use();
+    public boolean useToolCard(int cardIndex, ToolCardParam param){
+        ToolCard toolCard = (ToolCard) game.getToolCardList().get(cardIndex);
+        toolCard.getStrategy().use(param);
 //       game.useToolCard();
         return false;
     }

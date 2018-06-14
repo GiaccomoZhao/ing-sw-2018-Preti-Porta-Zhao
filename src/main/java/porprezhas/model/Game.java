@@ -434,7 +434,9 @@ public class Game extends ModelObservable implements GameInterface {
         // sum of private objectives
         List<Card> privateObjectiveCardList = player.getPrivateObjectiveCardList();
         if (null != privateObjectiveCardList) {
-            for (Card privateObjectiveCard : privateObjectiveCardList) {
+            for (int i = 0; i < privateObjectiveCardList.size(); i++) {
+                PrivateObjectiveCard privateObjectiveCard = (PrivateObjectiveCard) privateObjectiveCardList.get(i);
+
                 scorePrivate += privateObjectiveCard.apply(board);
             }
         }
@@ -444,7 +446,9 @@ public class Game extends ModelObservable implements GameInterface {
         // sum of public objectives
         List<Card> publicObjectiveCardList = this.getPublicObjectiveCardList();
         if (null != publicObjectiveCardList) {
-            for (Card publicObjectiveCard : publicObjectiveCardList) {
+            for (int i = 0; i < publicObjectiveCardList.size(); i++) {
+                PublicObjectiveCard publicObjectiveCard = (PublicObjectiveCard) publicObjectiveCardList.get(i);
+
                 scorePublic += publicObjectiveCard.apply(board);
             }
         }
