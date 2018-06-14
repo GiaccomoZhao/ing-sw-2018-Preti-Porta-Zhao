@@ -67,6 +67,10 @@ public class RoundTrack implements Serializable {
         track[round_1-1].add(dice);
     }
 
+    public Dice removeDice(int round, int indexDice){
+        return track[round-1].remove(indexDice);
+    }
+
     public void removeDice(int round,Dice dice){
         track[round-1].remove(dice);
     }

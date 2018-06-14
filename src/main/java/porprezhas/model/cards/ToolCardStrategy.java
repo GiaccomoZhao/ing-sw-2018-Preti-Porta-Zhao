@@ -104,7 +104,7 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
 
         // initialize Parameters
         int iParam = 0;
-        this.board      = param.getBoards().get(0);
+        this.board      = param.getBoard();
         this.fromRow    = param.getParams().get(iParam++);
         this.fromColumn = param.getParams().get(iParam++);
         this.toRow      = param.getParams().get(iParam++);
@@ -191,7 +191,7 @@ class ToolCard4 extends ToolCard2_4 {
 
         // Initialize from Parameters
         int iParam = 0;
-        this.board      = param.getBoards().get(0);
+        this.board      = param.getBoard();
         this.fromRow1   = param.getParams().get(iParam++);
         this.fromColumn1= param.getParams().get(iParam++);
         this.toRow1     = param.getParams().get(iParam++);
@@ -244,7 +244,7 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
     private long idDiceDraftPool;
     private RoundTrack roundTrack;
     private int indexRound;
-    private Dice diceRoundTrack;    // the dice to be removed from round track
+    private int indexDiceRoundTrack;    // the dice to be removed from round track
 
     private final int parameterSize = 2;
 
@@ -259,9 +259,9 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
         this.idDiceDraftPool= param.getParams().get(iParam++).longValue();
         this.roundTrack     = param.getRoundTrack();
         this.indexRound     = param.getParams().get(iParam++);
-        this.diceRoundTrack = param.getDice();
+        this.indexDiceRoundTrack = param.getParams().get(iParam++);
 
-        savedReturn = use(draftPool, idDiceDraftPool, roundTrack, indexRound, diceRoundTrack);
+        savedReturn = use(draftPool, idDiceDraftPool, roundTrack, indexRound, indexDiceRoundTrack);
         return savedReturn;
     }
 
@@ -272,10 +272,10 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
 
 
     // Effect of tool card N.5
-    public boolean use(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  Dice diceRoundTrack) {
+    public boolean use(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  int indexDiceRoundTrack) {
 
         //remove the dice from the roundTrack
-        roundTrack.removeDice(indexRound, diceRoundTrack);
+        Dice diceRoundTrack = roundTrack.removeDice(indexRound, indexDiceRoundTrack);
         //add the dice removed from the roundTrack to the draftPool and replace the old dice in the roundTrack
         // with the dice in the chosen position
         roundTrack.addDice(indexRound,
@@ -301,7 +301,7 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
 
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(0).longValue();
-        this.board          = param.getBoards().get(0);
+        this.board          = param.getBoard();
 
         savedReturn = use(draftPool, idDiceDraftPool, board);
         return savedReturn;
@@ -393,7 +393,7 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
         int iParam = 0;
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(iParam++).longValue();
-        this.board          = param.getBoards().get(0);
+        this.board          = param.getBoard();
         this.row            = param.getParams().get(iParam++);
         this.col            = param.getParams().get(iParam++);
         this.restriction    = Board.Restriction.values()[ param.getParams().get(iParam++) ];
@@ -572,7 +572,7 @@ class ToolCard12 implements ToolCardStrategy, Serializable {
 
         int iParam = 0;
         this.roundTrack = param.getRoundTrack();
-        this.board      = param.getBoards().get(0);
+        this.board      = param.getBoard();
         this.fromRow1   = param.getParams().get(iParam++);
         this.fromColumn1= param.getParams().get(iParam++);
         this.toRow1     = param.getParams().get(iParam++);

@@ -8,17 +8,15 @@ public class ToolCardParam {
     private final RoundTrack roundTrack;
     private final DraftPool draftPool;
     private final DiceBag diceBag;
-    private final Dice dice;
-    private final List<Board> boards;
+    private final Board board;
     private final List<Integer> params;
 
 
-    public ToolCardParam(RoundTrack roundTrack, DraftPool draftPool, DiceBag diceBag, Dice dice, List<Board> boards, List<Integer> params) {
+    public ToolCardParam(RoundTrack roundTrack, DraftPool draftPool, DiceBag diceBag, Board board, List<Integer> params) {
         this.roundTrack = roundTrack;
         this.draftPool  = draftPool;
         this.diceBag    = diceBag;
-        this.dice       = dice;
-        this.boards     = boards;
+        this.board     = board;
         this.params     = params;
     }
 
@@ -26,8 +24,7 @@ public class ToolCardParam {
         this.roundTrack = param.getRoundTrack();
         this.draftPool  = param.getDraftPool();
         this.diceBag    = param.getDiceBag();
-        this.dice       = param.getDice();
-        this.boards     = param.getBoards();
+        this.board     = param.getBoard();
         this.params     = param.getParams().subList(fromIndex, toIndex);
     }
 
@@ -44,12 +41,8 @@ public class ToolCardParam {
         return diceBag;
     }
 
-    public Dice getDice() {
-        return dice;
-    }
-
-    public List<Board> getBoards() {
-        return boards;
+    public Board getBoard() {
+        return board;
     }
 
     public List<Integer> getParams() {
