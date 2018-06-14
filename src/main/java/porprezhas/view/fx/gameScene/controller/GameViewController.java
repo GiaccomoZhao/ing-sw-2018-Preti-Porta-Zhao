@@ -646,12 +646,12 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
     @FXML protected void onMovingInRoundTrack(MouseEvent event) {
-        try { return; } catch (Exception e) { e.printStackTrace(); }
+/*        try { return; } catch (Exception e) { e.printStackTrace(); }
         int i = (int) (event.getX() / ((HBox) event.getSource()).getWidth() *10);
         if( i > 10)
             i  = 9;
         System.out.println("Moving on " + (i+1) );
-    }
+*/    }
     @FXML protected void onTabelEntered(MouseEvent event) {
         System.out.println("Tabel Entered!");
     }
@@ -677,13 +677,13 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
     @FXML protected void onToolCardTab() {
-        System.out.println("Tool Cards");;
+//        System.out.println("Tool Cards");
     }
     @FXML protected void onPrivateCardTab() {
-        System.out.println("Private Objectives");
+        //System.out.println("Private Objectives");
     }
     @FXML protected void onPublicCardTab() {
-        System.out.println("Public Objectives");
+        //System.out.println("Public Objectives");
     }
 
 
@@ -797,7 +797,6 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     // do not active animation
     public void updateDraftPool(DraftPool draftPool) {
         draftPoolView.update(draftPool);
-
     }
 
     public void updateRoundTrack(List<Dice>[] dices) {
