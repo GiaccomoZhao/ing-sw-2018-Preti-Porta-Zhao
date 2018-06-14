@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -16,16 +17,16 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import porprezhas.view.fx.BackgroundMusicPlayer;
-import porprezhas.view.fx.SceneController;
-import porprezhas.view.fx.StageManager;
+import porprezhas.view.fx.*;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
-public class ResultViewController implements SceneController {
+public class ResultViewController implements Initializable, SceneController, MovebleWindowInterface {
 
     @FXML
     private Button resultsViewCloseButton;
@@ -37,62 +38,26 @@ public class ResultViewController implements SceneController {
     StageManager stageManager;
     String stageName;
 
+    private MovebleWindowInterface movable;
+
     // Music controller
     public final String pathToMusicDirectory = pathToResultMusic;
-
-    private double xOffset = 0;
-    private double yOffset = 0;
 //    public static final String pathToVideoDirectory = "video/";
 
 
-    // this will be called by JavaFX
-    public void initialize() {
-        if(bDebug)
-            System.out.println("Initializing ResultView");
-
-        // assign the rootLayout the top most parent pane, now that it is initialized
-        rootLayout = resultsView;
-
-        // this window is borderless and
-        // we do not want it be resized
-//        stageManager.getStage(stageName).setResizable(false);
-
-        // Add Move Window by dragging listener
-        rootLayout.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // save the Mouse's actual position on the scene (inside the window,
-                // with the origin(0,0) in the top left anchor below the title bar)
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            }
-        });
-        rootLayout.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // calculate the differences between x,y offsets,
-                // to determinate the new position of window
-                stageManager.getStage(stageName).setX(event.getScreenX() - xOffset);
-                stageManager.getStage(stageName).setY(event.getScreenY() - yOffset);
-            }
-        });
-
-        // add Ending music
-        BackgroundMusicPlayer.playRandomMusic(pathToMusicDirectory);
-
-        // Fade In current Stage
-//        currentStageTransition();
-    }
 
 
     // Stage management
     @Override
     public void setStageManager(StageManager stageManager, String stageName) {
-        // Change Stages
+        if(bDebug)
+            System.out.println("Set " + stageManager + " to " + stageName + " in " + this);
         this.stageManager = stageManager;
         this.stageName = stageName;
     }
 
+
+    @Override
     public void goToNextStage() {
         // Create a Timeline to animate the transition between stages
         Timeline timeline = new Timeline();
@@ -110,7 +75,8 @@ public class ResultViewController implements SceneController {
 
     }
 
-    private void currentStageTransition() {
+    @Override
+    public void setCurrentStageTransition() {
         // Create a Timeline to animate the transition between stages
         Timeline timeline = new Timeline();
 
@@ -118,15 +84,66 @@ public class ResultViewController implements SceneController {
         // Using Opacity Fading
         KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_IN),
                 new KeyValue(stageManager.getStage(stageName).
-                        getScene().getRoot().opacityProperty(), 0));
+                        getScene().getRoot().opacityProperty(), 1));
         timeline.getKeyFrames().add(key);
 
         // Change Stage
         timeline.setOnFinished((actionEvent) -> {
             ;
         });
-        timeline.play();
+
+        stageManager.getStage(stageName).setOnShowing(event -> {
+            timeline.play();
+        });
     }
+
+
+
+
+    @Override
+    public void setupWindowMoveListener(Pane rootLayout, Stage stage) {
+        movable.setupWindowMoveListener(rootLayout, stage);
+    }
+
+    @Override
+    public void addWindowMoveListener() {
+        movable.addWindowMoveListener();
+    }
+
+
+
+
+
+    // this will be called by JavaFX
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if(bDebug)
+            System.out.println("Initializing ResultView");
+
+        // assign the rootLayout the top most parent pane, now that it is initialized
+        rootLayout = resultsView;
+
+        Platform.runLater(() -> {
+            // Add Move Window Listener
+            movable = new MovebleWindow();
+            setupWindowMoveListener(rootLayout, stageManager.getStage(this.stageName));
+            addWindowMoveListener();
+
+            // Add Window Appear Animation
+            setCurrentStageTransition();
+        });
+
+        // this window is borderless and
+        // we do not want it be resized
+//        stageManager.getStage(stageName).setResizable(false);
+
+
+        // add Ending music
+        BackgroundMusicPlayer.playRandomMusic(pathToMusicDirectory);
+
+    }
+
+
 
 
 

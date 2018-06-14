@@ -90,39 +90,42 @@ public class CLISocketClient implements AnswerHandler {
     }
 
         @Override
-    public void handle(UpdateAnswer updateAnswer) {
+    public boolean handle(UpdateAnswer updateAnswer) {
 
         this.viewUpdateHandlerInterface.update(updateAnswer.serializableGameInterface);
+        return true;
     }
 
     @Override
-    public void handle(LoginActionAnswer loginActionAnswer) {
+    public boolean handle(LoginActionAnswer loginActionAnswer) {
 
         if(loginActionAnswer.answer.equals(true))
             flag=true;
         else
             System.out.println("Username not available");
-
+    return true;
     }
 
     @Override
-    public void handle(JoinActionAnswer joinActionAnswer) {
+    public boolean handle(JoinActionAnswer joinActionAnswer) {
         if(joinActionAnswer.answer.equals(true)) {
             System.out.println("You join a game");
             flag=true;
         }
         else
             System.out.println("Error in join phase");
+        return true;
     }
 
     @Override
-    public void handle(PassActionAnswer passActionAnswer) {
+    public boolean handle(PassActionAnswer passActionAnswer) {
         if (!passActionAnswer.answer.equals(true))
             System.out.println("It's not your turn!");
+        return true;
     }
 
     @Override
-    public Boolean handle(DiceInsertedAnswer diceInsertedAnswer) {
+    public boolean handle(DiceInsertedAnswer diceInsertedAnswer) {
 return false;
     }
 

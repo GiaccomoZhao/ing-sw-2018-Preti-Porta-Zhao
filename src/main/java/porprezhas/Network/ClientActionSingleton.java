@@ -1,6 +1,9 @@
 package porprezhas.Network;
 
+import porprezhas.view.fx.gameScene.controller.GameViewController;
+
 public class ClientActionSingleton {
+
     private volatile static ClientActionInterface clientActionInstance;     // volatile guarantee the sub-atomic action of new are done in order
                                                                     // (new() => 1. alloc, 2. constructor initialize, 3. give instance alloc-ed memory)
     private ClientActionSingleton(){}       // default constructor
@@ -17,7 +20,8 @@ public class ClientActionSingleton {
     }
 
     public static void setClientActionInstance(ClientActionInterface clientActionInstance) {
-        ClientActionSingleton.clientActionInstance = clientActionInstance;
+            ClientActionSingleton.clientActionInstance = clientActionInstance;
+
     }
 
 

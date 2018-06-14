@@ -5,30 +5,42 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import porprezhas.Useful;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
 import java.util.HashMap;
 
-import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
-import static porprezhas.view.fx.gameScene.GuiSettings.pathToFxml;
+import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class StageManager {
 
     // create a HashMap to save all Stages
     private HashMap<String, Stage> stages = new HashMap<String, Stage>();
+    private HashMap<String, SceneController> controllers = new HashMap<String, SceneController>();
 
 
     /**
-     * Add the loaded Stage into the Map collection
+     * Save the loaded Stage into a collection
      * to manage them later
-     *
-     * @param name  set Stage name
+     *s
+     * @param name  set Stage name - as key
      * @param stage Stage's Object
      */
     public void addStage(String name, Stage stage) {
         stages.put(name, stage);
+    }
+
+    /**
+     * Save the loaded Controller into a collection
+     *
+     * @param name       set Controller name - as key
+     * @param controller Controller to save
+     */
+    public void addController(String name, SceneController controller) {
+        controllers.put(name, controller);
     }
 
 
@@ -40,6 +52,16 @@ public class StageManager {
      */
     public Stage getStage(String name) {
         return stages.get(name);
+    }
+
+    /**
+     *  get the specified Scene Controller by name
+     *
+     * @param name  name of Stage that contain the scene with the controller
+     * @return Correspondent Scene Controller
+     */
+    public SceneController getController(String name) {
+        return controllers.get(name);
     }
 
 
@@ -54,21 +76,6 @@ public class StageManager {
         this.addStage(primaryStageName, primaryStage);
     }
 
-
-    private void clipToCircle(Pane tempPane){
-        System.out.println("Circle!!!!!!!!!!!!!!!!!");
-        //Drawing a Circle
-        Circle circle = new Circle();
-
-        //Setting the properties of the circle
-        double radius = ( tempPane.getPrefWidth() > tempPane.getPrefHeight() ? tempPane.getPrefHeight() : tempPane.getPrefWidth() ) /2;
-
-        circle.setCenterX( tempPane.getPrefWidth() /2 );
-        circle.setCenterY( tempPane.getPrefHeight() /2 );
-        circle.setRadius(radius);
-
-        tempPane.setClip(circle);
-    }
 
 
     /**
@@ -88,16 +95,11 @@ public class StageManager {
             Pane tempPane = loader.load();
 
 
-            // Clip the Root Layout in a Circle for Login Stage
-            if(stageName.equals(GuiSettings.stageLoginID)) {
-                clipToCircle(tempPane);
-            }
-
-
             // Get the ViewController from the FXML resource using Loader and
             // Set the this StageManager into the ViewController
             SceneController controlledStage = (SceneController) loader.getController();
-            System.out.println(controlledStage);
+            if(bDebug)
+                System.out.println("\nScene Controller = " + controlledStage + " \n\t\thas been loaded successfully");
             controlledStage.setStageManager(this, stageName);
 
 
@@ -114,8 +116,9 @@ public class StageManager {
                 tempStage.initStyle(style);
             }
 
-            // Save the loaded Stage in the HashMap
+            // Save the loaded Stage and Controller in the HashMap
             this.addStage(stageName, tempStage);
+            this.addController(stageName, controlledStage);
 
             return true;
         } catch (Exception e) {

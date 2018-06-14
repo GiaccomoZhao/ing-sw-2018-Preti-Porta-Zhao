@@ -9,7 +9,7 @@ public class PassActionAnswer implements Answer {
 
 
     @Override
-    public void handle(AnswerHandler answerHandler) {
-        answerHandler.handle(this);
+    public boolean handle(AnswerHandler answerHandler) {
+       return answerHandler.handle(this);
     }
 }

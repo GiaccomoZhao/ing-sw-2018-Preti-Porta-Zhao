@@ -3,7 +3,9 @@ package porprezhas.view.fx.choosePatternScene;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,18 +13,23 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import porprezhas.model.dices.Pattern;
+import porprezhas.view.fx.MovebleWindow;
+import porprezhas.view.fx.MovebleWindowInterface;
 import porprezhas.view.fx.SceneController;
 import porprezhas.view.fx.StageManager;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
-public class ChoosePatternViewController implements SceneController {
+public class ChoosePatternViewController implements Initializable, SceneController, MovebleWindowInterface {
 
 
 
@@ -46,15 +53,91 @@ public class ChoosePatternViewController implements SceneController {
     StageManager stageManager;
     String stageName;
 
+    private MovebleWindowInterface movable;
 
 
 
-    public void initialize(){
+
+    // Stage management
+    @Override
+    public void setStageManager(StageManager stageManager, String stageName) {
+        if(bDebug)
+            System.out.println("Set " + stageManager + " to " + stageName + " in " + this);
+        this.stageManager = stageManager;
+        this.stageName = stageName;
+    }
+
+    @Override
+    public void goToNextStage() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_OUT),
+                new KeyValue(stageManager.getStage(stageName).getScene().getRoot().
+                        opacityProperty(), 0));
+        timeline.getKeyFrames().add(key);
+        timeline.setOnFinished((ae) -> {
+            // Switch the Stage
+            stageManager.setStage(GuiSettings.stageGameID, this.stageName);
+        }
+        );
+        timeline.play();
+
+    }
+
+    @Override
+    public void setCurrentStageTransition() {
+        // Create a Timeline to animate the transition between stages
+        Timeline timeline = new Timeline();
+
+        // Add the transition animation
+        // Using Opacity Fading
+        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_IN),
+                new KeyValue(stageManager.getStage(stageName).
+                        getScene().getRoot().opacityProperty(), 1));
+        timeline.getKeyFrames().add(key);
+
+        // Change Stage
+        timeline.setOnFinished((actionEvent) -> {
+            ;
+        });
+
+        stageManager.getStage(stageName).setOnShowing(event -> {
+            timeline.play();
+        });
+    }
+
+
+
+
+    @Override
+    public void setupWindowMoveListener(Pane rootLayout, Stage stage) {
+        movable.setupWindowMoveListener(rootLayout, stage);
+    }
+
+    @Override
+    public void addWindowMoveListener() {
+        movable.addWindowMoveListener();
+    }
+
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         if(bDebug)
             System.out.println("Initializing PatternView");
 
         // assign the rootLayout the top most parent pane, now that it is initialized
         rootLayout = ChoosePatternView;
+
+        Platform.runLater(() -> {
+            // Add Move Window Listener
+            movable = new MovebleWindow();
+            setupWindowMoveListener(rootLayout, stageManager.getStage(this.stageName));
+            addWindowMoveListener();
+
+            // Add Window Appear Animation
+            setCurrentStageTransition();
+        });
 
 
         List<Pattern.TypePattern> patternList = new ArrayList<>();
@@ -64,8 +147,9 @@ public class ChoosePatternViewController implements SceneController {
         patternList.add(Pattern.TypePattern.SUNS_GLORY);
 
         patternSetup(patternList);
-
     }
+
+
 
 
 
@@ -130,46 +214,4 @@ public class ChoosePatternViewController implements SceneController {
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));*/
     }
 
-    // Stage management
-    @Override
-    public void setStageManager(StageManager stageManager, String stageName) {
-        // Change Stages
-        this.stageManager = stageManager;
-        this.stageName = stageName;
-    }
-
-    public void goToNextStage() {
-        // Create a Timeline to animate the transition between stages
-        Timeline timeline = new Timeline();
-        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_OUT),
-                new KeyValue(stageManager.getStage(stageName).getScene().getRoot().
-                        opacityProperty(), 0));
-        timeline.getKeyFrames().add(key);
-        timeline.setOnFinished((ae) -> {
-
-                    // Switch the Stage
-                    stageManager.setStage(GuiSettings.stageGameID, this.stageName);
-                }
-        );
-        timeline.play();
-
-    }
-
-    private void currentStageTransition() {
-        // Create a Timeline to animate the transition between stages
-        Timeline timeline = new Timeline();
-
-        // Add the transition animation
-        // Using Opacity Fading
-        KeyFrame key = new KeyFrame(Duration.millis(STAGE_FADE_IN),
-                new KeyValue(stageManager.getStage(stageName).
-                        getScene().getRoot().opacityProperty(), 0));
-        timeline.getKeyFrames().add(key);
-
-        // Change Stage
-        timeline.setOnFinished((actionEvent) -> {
-            ;
-        });
-        timeline.play();
-    }
 }
