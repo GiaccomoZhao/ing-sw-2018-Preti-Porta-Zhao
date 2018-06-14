@@ -41,6 +41,8 @@ public class ClientAnswerHandler implements AnswerHandler {
 
     @Override
     public boolean handle(DiceInsertedAnswer diceInsertedAnswer) {
+
+        System.out.println("Il tentativo è: " + diceInsertedAnswer.answer);
         return false;
     }
 }

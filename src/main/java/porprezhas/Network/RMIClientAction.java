@@ -51,7 +51,7 @@ public class RMIClientAction implements ClientActionInterface{
     }
 
     @Override
-    public boolean join() {
+    public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
 
         try {
            if(server.joinGame(username)){

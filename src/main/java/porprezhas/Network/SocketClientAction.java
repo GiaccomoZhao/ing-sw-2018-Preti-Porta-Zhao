@@ -68,14 +68,27 @@ public class SocketClientAction implements ClientActionInterface {
     }
 
     @Override
-    public boolean join() {
-
+    public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+        this.clientAnswerHandler.setViewUpdateHandlerInterface(viewUpdateHandlerInterface);
         try {
 
             socketOut.writeObject(new JoinAction(username));
             socketOut.flush();
             ((Answer) socketIn.readObject()).handle(clientAnswerHandler);
-
+           Thread thread = new Thread(){
+                public void run() {
+                    Boolean bool=true;
+                    while(bool){
+                        try {
+                            ((Answer) socketIn.readObject()).handle(clientAnswerHandler);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }}
+            };
+            thread.start();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -87,8 +100,8 @@ public class SocketClientAction implements ClientActionInterface {
     @Override
     public boolean moveDice(int fromIdContainer, long diceID, int toIdContainer, int row, int col) {
         try {
-             socketOut.writeObject(new InsertDiceGuiAction(username, toIdContainer, row, col ));
-                return false;
+             socketOut.writeObject(new InsertDiceGuiAction(username, diceID, row, col ));
+             socketOut.flush();
 
 
         }  catch (Exception e) {

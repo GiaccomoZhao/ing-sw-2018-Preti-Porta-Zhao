@@ -4,6 +4,8 @@ import porprezhas.exceptions.diceMove.*;
 import porprezhas.Network.Command.*;
 import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
+import porprezhas.model.GameInterface;
+import porprezhas.model.cards.ToolCardParam;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
 import porprezhas.Network.SocketServerClientHandler;
@@ -290,8 +292,24 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
     @Override
-    public Boolean usedToolCard() throws RemoteException {
-        return null;
+    public Boolean usedToolCard(String username, int toolCardID, ArrayList<Integer> paramList) throws RemoteException {
+        GameInterface playerGame= this.getGameControllerByUsername(username).getGame();
+        if(username.equals(playerGame.getCurrentPlayer().getName())){
+           ToolCardParam toolCardParam = new ToolCardParam(
+                   playerGame.getRoundTrack(),
+                    playerGame.getDraftPool(),
+                    playerGame.getDiceBag(),
+                    playerGame.getCurrentPlayer().getBoard(),
+                    paramList
+            );
+           if( this.getGameControllerByUsername(username).useToolCard(toolCardID, toolCardParam))
+               return true;
+           else
+               return false;
+        }
+        else
+            return false;
+
     }
 
 
@@ -369,8 +387,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         String username= insertDiceGuiAction.username;
         if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
             if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceGuiAction.diceId, insertDiceGuiAction.row, insertDiceGuiAction.col))
-                return new LoginActionAnswer(true, username);
-        return new LoginActionAnswer(false, username);
+                return new DiceInsertedAnswer(true);
+        return new DiceInsertedAnswer(false);
     }
 
     @Override

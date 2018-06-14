@@ -305,7 +305,8 @@ public class GameController  implements GameControllerInterface, Runnable {
 
     public boolean useToolCard(int cardIndex, ToolCardParam param){
         ToolCard toolCard = (ToolCard) game.getToolCardList().get(cardIndex);
-        toolCard.getStrategy().use(param);
+        if(toolCard.getStrategy().use(param))
+            return true;
 //       game.useToolCard();
         return false;
     }

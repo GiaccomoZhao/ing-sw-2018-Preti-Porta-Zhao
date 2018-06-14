@@ -299,7 +299,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                 e.printStackTrace();
             }
         }
-        ClientActionSingleton.getClientAction().join();
+        ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface);
 
         System.out.println("Goto next");
 

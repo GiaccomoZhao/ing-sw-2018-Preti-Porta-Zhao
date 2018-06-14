@@ -7,6 +7,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RMIClient implements RMIClientInterface, Runnable {
@@ -22,10 +23,10 @@ public class RMIClient implements RMIClientInterface, Runnable {
     public static final String LOGIN_COMMAND = "login";
     public static final String JOIN_COMMAND = "join";
     public static final String LOGOUT_COMMAND = "logout";
-    public static final String INSERT_DICE_COMMAND = "insertDice";
+    public static final String INSERT_DICE_COMMAND = "dice";
     public static final String CHOOSE_PATTERN = "choosePattern";
     public static final String PASS = "pass";
-    public static final String USE_TOOL_CARD = "useToolCard";
+    public static final String USE_TOOL_CARD = "card";
 
 
 
@@ -87,36 +88,31 @@ public class RMIClient implements RMIClientInterface, Runnable {
         do {
             command =  in.nextLine();
 
+            String[] splittedStrings = command.split(" ");
+
+            for (String s : splittedStrings)
+                System.out.println(s);
+
+            command= splittedStrings[0];
 
             if (!command.equals(LOGOUT_COMMAND) ) {
-                String parsingString= null;
-                String method=null;
-                int space=0;
-                if(command.contains(" ")){
-                    space = command.indexOf(" ");
-                    parsingString = command.substring(space + 1, command.length());
-                    method = command.substring(0, space);
-                }
-                else
-                    method=command;
 
-                switch (method) {
+
+                switch (command) {
                     case JOIN_COMMAND:
                         server.joinGame(username);
                         break;
                     case INSERT_DICE_COMMAND:
-                        int space2 = space+1 + parsingString.indexOf(" ");
-                        parsingString = parsingString.substring(space2 - space, parsingString.length());
-                        int space3 = space2+1 + parsingString.indexOf(" ");
-                        String numberDice = command.substring(space+1 , space2 );
-                        String xBoardValue= command.substring(space2+1, space3);
-                        String yBoardValue= command.substring(space3+1, command.length());
+                        if (splittedStrings.length<4){
+                            System.out.println("Command param Error");
+                            break;
+                        }
                         try {
 
-                            int index = Integer.parseInt(numberDice) -1;
+                            int index = Integer.parseInt(splittedStrings[1]) -1;
                             long diceID = ((CLIViewUpdateHandler) viewUpdateHandlerInterface).getID(index);
 
-                            if(server.insertedDice(diceID,Integer.parseInt(xBoardValue)-1 , Integer.parseInt(yBoardValue)-1, username )) {
+                            if(server.insertedDice(diceID,Integer.parseInt(splittedStrings[2])-1 , Integer.parseInt(splittedStrings[3])-1, username )) {
 
                                 System.out.println("Dice inserted!");
                                 //TO-DO fix
@@ -141,6 +137,27 @@ public class RMIClient implements RMIClientInterface, Runnable {
                             System.out.println(" Non è il tuo turno.");
                         break;
                     case USE_TOOL_CARD:
+                        ArrayList<Integer> paramList=new ArrayList<Integer>();
+                        for (int i=2; i < splittedStrings.length; i ++)
+                            paramList.add(Integer.parseInt(splittedStrings[i])-1);
+
+                        try {
+
+
+
+                            if(server.usedToolCard(username,Integer.parseInt(splittedStrings[1])-1 , paramList)) {
+
+                                System.out.println("ToolCardUsed!");
+
+
+                            } else {
+                                System.out.println("Param error");
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());     // print Invalid Move Message
+                        }
                         break;
                     default:
                         printHelp();

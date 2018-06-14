@@ -34,6 +34,7 @@ int i=0;
 
             UpdateAnswer updateAnswer= new UpdateAnswer(serializableGameInterface);
             synchronized (lock){
+
                 out.reset();
                 out.writeObject(updateAnswer);
                 out.flush();
