@@ -1,5 +1,6 @@
 package porprezhas.model;
 
+import porprezhas.model.cards.Card;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
 
@@ -12,16 +13,20 @@ public class SerializableGame implements SerializableGameInterface {
 
     private RoundTrack roundTrack;
     private DraftPool draftPool;
-    private Game.NotifyState gameNotifyState;
+    private List<Card> toolCards;
+    private List<Card> publicCards;
     private List<Player> playerList;
     private Player currentPlayer;
+    private Game.NotifyState gameNotifyState;
 
     public SerializableGame(GameInterface game) {
         this.roundTrack=game.getRoundTrack() ;
         this.draftPool= game.getDraftPool();
-        this.gameNotifyState= game.getGameState();
+        this.toolCards = game.getToolCardList();
+        this.publicCards = game.getPublicObjectiveCardList();
         this.playerList= game.getPlayerList();
         this.currentPlayer= game.getCurrentPlayer();
+        this.gameNotifyState= game.getGameState();
     }
 
     public RoundTrack getRoundTrack() {
@@ -31,6 +36,15 @@ public class SerializableGame implements SerializableGameInterface {
     public DraftPool getDraftPool() {
         return draftPool;
     }
+
+
+    public List<Card> getToolCardList() {
+        return toolCards;
+    }
+    public List<Card> getPublicObjectiveCardList() {
+        return publicCards;
+    }
+
 
     public Game.NotifyState getGameNotifyState() {
         return gameNotifyState;
@@ -54,4 +68,5 @@ public class SerializableGame implements SerializableGameInterface {
         }
     return null;
     }
+
 }

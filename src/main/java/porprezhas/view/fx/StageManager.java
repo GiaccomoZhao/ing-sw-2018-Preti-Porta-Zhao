@@ -99,7 +99,7 @@ public class StageManager {
             // Set the this StageManager into the ViewController
             SceneController controlledStage = (SceneController) loader.getController();
             if(bDebug)
-                System.out.println("\nScene Controller = " + controlledStage + " \n\t\thas been loaded successfully");
+                System.out.println("\nScene Controller = " + controlledStage + " \n\t\t\thas been loaded successfully");
             controlledStage.setStageManager(this, stageName);
 
 

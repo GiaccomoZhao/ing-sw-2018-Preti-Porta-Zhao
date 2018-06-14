@@ -242,7 +242,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     public void setStageManager(StageManager stageManager, String stageName) {
         // Used to change Stages
         if(bDebug)
-            System.out.println("Set " + stageManager + " to " + stageName + " in " + this);
+            System.out.println("Set " + stageManager + "\n\t\t to " + stageName + "\n\t\t in " + this);
         this.stageManager = stageManager;
         this.stageName = stageName;
     }
@@ -304,6 +304,32 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         return boardList;
     }
 
+
+    private void setupCards(List<Card> toolCards, List<Card> publicObjectiveCards, List<Card> privateObjectiveCards) {
+        if(bDebug)
+            System.out.println("\nSetup Cards");
+
+
+        cardPanes[CardTab.TOOL_CARD.ordinal()] =    new CardPane( fx_toolCardPane,      CardTab.TOOL_CARD,      pathToToolCard);
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()] =  new CardPane( fx_publicCardPane,    CardTab.PUBLIC_CARD,    pathToPublicCard);
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()] = new CardPane( fx_privateCardPane,   CardTab.PRIVATE_CARD,   pathToPrivateCard);
+
+
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupCardPane(publicObjectiveCards);
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupSubController(this);
+        if(bDebug)
+            System.out.println("Public Objective Cards set up done");
+
+        cardPanes[CardTab.TOOL_CARD.ordinal()].setupCardPane(toolCards);
+        cardPanes[CardTab.TOOL_CARD.ordinal()].setupSubController(this);
+        if(bDebug)
+            System.out.println("Tool Cards set up done");
+
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupCardPane(privateObjectiveCards);
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupSubController(this);
+        if(bDebug)
+            System.out.println("Private Objective Cards set up done");
+    }
 
     private void setupCards() {
         System.out.println("\nSetup Cards");
@@ -726,17 +752,21 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         }
     }
 
-    public void setupView(List<Player> players) {
+    public void setupView(List<Player> players, List<Card> toolCards, List<Card> publicObjectiveCards, List<Card> privateObjectiveCards) {
 
         updatePlayerInfo(players);
 
         SetupView();
+
+        System.out.println(cardPanes[0]);
+
+        setupCards(toolCards, publicObjectiveCards, privateObjectiveCards);
     }
 
 
     private void SetupView() {
-
-        System.out.println("\n\n\nUpdate Game View!!!\n");
+        if(bDebug)
+            System.out.println("\n\n\nUpdate Game View!!!\n");
 
         // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
         setEnemyPanes();    //NOTE: If the program give error on loading fxml, the problem may be here.
@@ -749,10 +779,8 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
         setupDraftPool();
 
-        setupCards();
-
         if(bDebug) {
-            System.out.println("\nSetup Done!\n\n");
+            System.out.println("\nSetup Game View -Dice Containers- Done!\n\n");
         }
     }
 

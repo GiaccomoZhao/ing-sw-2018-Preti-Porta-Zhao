@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -49,6 +50,8 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML Button loginViewRMIButton;
     @FXML Button loginViewSocketButton;
     @FXML Text loginViewText;
+    @FXML ImageView loginViewImage;
+    @FXML StackPane backgroundPane;
     @FXML AnchorPane loginView;
 
     private Pane rootLayout;
@@ -85,7 +88,8 @@ public class LoginViewController implements Initializable, SceneController, Move
     // Stage management
     @Override
     public void setStageManager(StageManager stageManager, String stageName) {
-        // Change Stages
+        if(bDebug)
+            System.out.println("Set " + stageManager + "\n\t\t to " + stageName + "\n\t\t in " + this);
         this.stageManager = stageManager;
         this.stageName = stageName;
     }
@@ -121,7 +125,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         // and using Rotation transformation
         KeyFrame keyRotate = new KeyFrame(Duration.millis(STAGE_FADE_IN),
-                new KeyValue(rootLayout.rotateProperty(), 3* 360));
+                new KeyValue(backgroundPane.rotateProperty(), 3* 360));
 
         // and add window dimension Growing effect
         // using shape Clip
@@ -144,7 +148,8 @@ public class LoginViewController implements Initializable, SceneController, Move
             clipWindow.setRadius(1);      // Set starting Dimension
             timeline.play();
         });
-        System.out.println("set!!!\n\n" + rootLayout);
+        if(bDebug)
+            System.out.println("set " + rootLayout);
     }
 
 

@@ -51,7 +51,7 @@ public class ResultViewController implements Initializable, SceneController, Mov
     @Override
     public void setStageManager(StageManager stageManager, String stageName) {
         if(bDebug)
-            System.out.println("Set " + stageManager + " to " + stageName + " in " + this);
+            System.out.println("Set " + stageManager + "\n\t\t to " + stageName + "\n\t\t in " + this);
         this.stageManager = stageManager;
         this.stageName = stageName;
     }

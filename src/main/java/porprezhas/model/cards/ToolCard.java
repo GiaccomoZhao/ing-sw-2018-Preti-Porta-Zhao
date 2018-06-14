@@ -33,6 +33,10 @@ public class ToolCard extends Card implements Serializable {
         this.cardColor = cardColors[this.effect.ID -1];
     }
 
+    public ToolCardStrategy getStrategy() {
+        return strategy;
+    }
+
     private void setStrategy() {
         strategy = ToolCardStrategy.list[effect.ID -1];
     }
@@ -334,7 +338,7 @@ interface ToolCardStrategy {
 }
 
 
-class ToolCard1 implements ToolCardStrategy {
+class ToolCard1 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;        // NOTE: this may be not need to be saved; savedReturn is used to return 2 times: a boolean and an other type
     private DraftPool draftPool;
     private int indexChosenDice;
@@ -383,7 +387,7 @@ class ToolCard1 implements ToolCardStrategy {
 
 
 
-class ToolCard2_4 implements ToolCardStrategy {
+class ToolCard2_4 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
     private Board board;
     private int fromRow;
@@ -518,7 +522,7 @@ class ToolCard4 extends ToolCard2_4 {
 }
 
 
-class ToolCard5 implements ToolCardStrategy {
+class ToolCard5 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
     private DraftPool draftPool;
     private long idDiceDraftPool;
@@ -559,7 +563,7 @@ class ToolCard5 implements ToolCardStrategy {
 }
 
 
-class ToolCard6 implements ToolCardStrategy {
+class ToolCard6 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
     private DraftPool draftPool;
     private long idDiceDraftPool;
@@ -608,7 +612,7 @@ class ToolCard6 implements ToolCardStrategy {
 }
 
 
-class ToolCard7 implements ToolCardStrategy {
+class ToolCard7 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
     private DraftPool draftPool;
 
@@ -637,7 +641,7 @@ class ToolCard7 implements ToolCardStrategy {
 }
 
 
-class ToolCard8_9 implements ToolCardStrategy {
+class ToolCard8_9 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
     private DraftPool draftPool;
     private long idDiceDraftPool;
@@ -712,7 +716,7 @@ class ToolCard9 extends ToolCard8_9 {
 }
 
 
-class ToolCard10 implements ToolCardStrategy {
+class ToolCard10 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
     private DraftPool draftPool;
     private long idDiceDraftPool;
@@ -747,7 +751,7 @@ class ToolCard10 implements ToolCardStrategy {
     }
 }
 
-class ToolCard11 implements ToolCardStrategy {
+class ToolCard11 implements ToolCardStrategy, Serializable {
     private Dice savedReturn = null;
     private DraftPool draftPool;
     private long idDiceDraftPool;
@@ -785,7 +789,7 @@ class ToolCard11 implements ToolCardStrategy {
 }
 
 
-class ToolCard12 implements ToolCardStrategy {
+class ToolCard12 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
     private RoundTrack roundTrack;
     private Board board;

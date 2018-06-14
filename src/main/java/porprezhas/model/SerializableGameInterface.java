@@ -1,5 +1,6 @@
 package porprezhas.model;
 
+import porprezhas.model.cards.Card;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
 
@@ -14,6 +15,9 @@ public interface SerializableGameInterface extends Serializable {
     public List<Player> getPlayerList();
     public Player getCurrentPlayer();
     public Player getUsernamePlayer(String username);
+
+    public List<Card> getPublicObjectiveCardList();
+    public List<Card> getToolCardList();
 
 //    public Player getFirstPlayer();
 

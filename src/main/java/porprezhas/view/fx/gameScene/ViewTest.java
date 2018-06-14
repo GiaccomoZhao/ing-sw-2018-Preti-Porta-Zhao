@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import porprezhas.model.GameConstants;
 import porprezhas.model.Player;
+import porprezhas.model.cards.Card;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.BackgroundMusicPlayer;
@@ -86,7 +87,7 @@ public class ViewTest extends Application {
         initMainLogic();
 
 
-        gameViewController.setupView(players);  // calls runLater, so we cannot use it immediately
+        gameViewController.setupView(players, new ArrayList<Card>(), new ArrayList<Card>(), new ArrayList<Card>());
 
         // insert dice must be after setup view done
         Platform.runLater(() -> {
