@@ -674,7 +674,11 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         this.playerPosition = playerPosition;
     }
 
-   public void updateSize() {
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void updateSize() {
         updateEnemyPaneSize(fx_gamePane.getHeight());
         updatePlayerPaneSize(fx_playerPane.getWidth(), fx_playerPane.getHeight());
         updateRoundTrackSize( ((Pane) fx_roundTrack.getParent()).getWidth(),

@@ -118,11 +118,11 @@ public class LoginViewController implements Initializable, SceneController, Move
         // Using Opacity Fading
         KeyFrame keyFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN),
                 new KeyValue(rootLayout.opacityProperty(), 1));
-/*
+
         // and using Rotation transformation
         KeyFrame keyRotate = new KeyFrame(Duration.millis(STAGE_FADE_IN),
                 new KeyValue(rootLayout.rotateProperty(), 3* 360));
-*/
+
         // and add window dimension Growing effect
         // using shape Clip
         KeyFrame keyViewPortDimension = new KeyFrame(Duration.millis(STAGE_FADE_IN),
@@ -131,7 +131,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         // add the effects in the time line
         timeline.getKeyFrames().add(keyFadeIn);
-//        timeline.getKeyFrames().add(keyRotate);
+        timeline.getKeyFrames().add(keyRotate);
         timeline.getKeyFrames().add(keyViewPortDimension);
 
         //
@@ -276,9 +276,12 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     @FXML
     public void onJoinButton(ActionEvent event) {
-        GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(this.stageName), GameViewController.class);
 
+        GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
         ViewUpdateHandlerInterface viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);
+
+        gameViewController.setUserName(username);
+
         System.out.println(viewUpdateHandlerInterface);
         System.out.println(username);
 
