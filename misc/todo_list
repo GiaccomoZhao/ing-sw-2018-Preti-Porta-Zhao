@@ -1,9 +1,3 @@
-...
-
-Network
-GUI: multiple Scene management
-
-MODEL: ToolCard
 GUI: single player preparation scene
 GUI: ToolCard
 Network: Reconnecting

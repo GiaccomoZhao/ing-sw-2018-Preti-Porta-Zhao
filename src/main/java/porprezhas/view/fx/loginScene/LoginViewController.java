@@ -1,31 +1,22 @@
 package porprezhas.view.fx.loginScene;
 
-import com.sun.javafx.css.Style;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import porprezhas.Network.*;
-import porprezhas.Network.Command.Action;
 import porprezhas.Useful;
 import porprezhas.view.fx.*;
 import porprezhas.view.fx.gameScene.GuiSettings;
@@ -45,13 +36,16 @@ import static porprezhas.view.fx.loginScene.LoginViewController.ConnectionType.S
 public class LoginViewController implements Initializable, SceneController, MovebleWindowInterface {
 
     @FXML Button loginViewButton;
-    @FXML TextField textFieldLoginView;
+    @FXML TextField userNameTextField;
     @FXML Button joinViewButton;
     @FXML Button loginViewRMIButton;
     @FXML Button loginViewSocketButton;
-    @FXML Text loginViewText;
+    @FXML Text warningText;
     @FXML ImageView loginViewImage;
     @FXML StackPane backgroundPane;
+
+    @FXML VBox loginScene;
+    @FXML AnchorPane joinScene;
     @FXML AnchorPane loginView;
 
     private Pane rootLayout;
@@ -65,7 +59,8 @@ public class LoginViewController implements Initializable, SceneController, Move
     private Circle clipWindow;
     private double clipRadius;
 
-    private DoubleProperty opacityProperty;
+//    private DoubleProperty opacityProperty;
+    private Timeline timeline;
 
 
     private final String voidString = "";
@@ -120,23 +115,25 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         // Add the transition animation
         // Using Opacity Fading
-        KeyFrame keyFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN),
+        KeyFrame keyFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN * 0.2),
                 new KeyValue(rootLayout.opacityProperty(), 1));
 
         // and using Rotation transformation
         KeyFrame keyRotate = new KeyFrame(Duration.millis(STAGE_FADE_IN),
-                new KeyValue(backgroundPane.rotateProperty(), 3* 360));
+                new KeyValue(backgroundPane.rotateProperty(), 1* 360));
 
         // and add window dimension Growing effect
         // using shape Clip
-        KeyFrame keyViewPortDimension = new KeyFrame(Duration.millis(STAGE_FADE_IN),
-                new KeyValue(clipWindow.radiusProperty(), clipRadius, Interpolator.EASE_IN));
+        KeyFrame keyViewPortDimension = new KeyFrame(Duration.millis(STAGE_FADE_IN*0.6),
+                new KeyValue(clipWindow.radiusProperty(), clipRadius));
 
 
         // add the effects in the time line
         timeline.getKeyFrames().add(keyFadeIn);
         timeline.getKeyFrames().add(keyRotate);
         timeline.getKeyFrames().add(keyViewPortDimension);
+
+        timeline.setDelay(Duration.millis(STAGE_FADE_IN/2));
 
         //
         timeline.setOnFinished((actionEvent) -> {
@@ -145,7 +142,8 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         stageManager.getStage(stageName).setOnShowing(event -> {
             rootLayout.setOpacity(0.8f);    // Set starting Opacity value
-            clipWindow.setRadius(1);      // Set starting Dimension
+            clipWindow.setRadius(50);      // Set starting Dimension
+//            backgroundPane.setRotate(180);
             timeline.play();
         });
         if(bDebug)
@@ -193,7 +191,8 @@ public class LoginViewController implements Initializable, SceneController, Move
 
 
         connectionButtonsSetup();
-
+        joinButtonSetup();
+        timeline = new Timeline();
 
         BackgroundMusicPlayer.playRandomMusic(pathToLoginMusic);
     }
@@ -202,10 +201,22 @@ public class LoginViewController implements Initializable, SceneController, Move
 
 
     private void connectionButtonsSetup(){
+        loginScene.setVisible(true);
         loginViewRMIButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                 BorderStrokeStyle.SOLID, new CornerRadii(2),new BorderWidths(2))));
     }
 
+    private void joinButtonSetup() {
+        joinScene.setVisible(false);
+        joinViewButton.setStyle(
+                "-fx-background-color: #FFF1C6; " +
+                        "-fx-background-radius: 50em; " +
+                        "-fx-min-width: 90px; " +
+                        "-fx-min-height: 90px; " +
+                        "-fx-max-width: 90px; " +
+                        "-fx-max-height: 90px;"
+        );
+    }
 
 
 
@@ -224,7 +235,7 @@ public class LoginViewController implements Initializable, SceneController, Move
         double y = tempPane.getPrefHeight();
 
         // Calculate the Radius of the Circle Window
-        double radius = Useful.getMinBetween(x , y) /2;
+        double radius = Double.min(x , y) /2;
 
         //Setting the properties of the circle
         circle.setCenterX( x /2 );
@@ -274,6 +285,33 @@ public class LoginViewController implements Initializable, SceneController, Move
 
 
 
+    private void showWarningText(String text) {
+        warningText.setText(text);
+        warningText.setFill(Color.rgb(0xCB, 0x3C, 0x15));
+        warningText.setStyle("-fx-stroke:black;" +
+                "-fx-stroke-width:1.5;");
+        warningText.setOpacity(1);
+
+        timeline.stop();
+        timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
+                new KeyValue(warningText.opacityProperty(), 0, Interpolator.DISCRETE)));
+        timeline.play();
+    }
+
+    private void showTipText(String text) {
+        warningText.setText(text);
+        warningText.setFill(Color.rgb(0x7B, 0xD7, 0xE1));
+        warningText.setStyle("-fx-stroke:black;"+
+                "-fx-stroke-width:1.5;");
+        warningText.setOpacity(1);
+
+        timeline.stop();
+        timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
+                new KeyValue(warningText.opacityProperty(), 0, Interpolator.LINEAR)));
+        timeline.play();
+    }
 
 
 
@@ -281,6 +319,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     @FXML
     public void onJoinButton(ActionEvent event) {
+        System.out.println("Click Join");
 
         GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
         ViewUpdateHandlerInterface viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);
@@ -311,65 +350,59 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML
     public void loginDone(ActionEvent event) {
 
+        // if user typed his UserName
+        if(userNameTextField.getText()!=null  &&  !(userNameTextField.getText().equals(voidString))) {
 
-
-        if(textFieldLoginView.getText()!=null  &&  !(textFieldLoginView.getText().equals(voidString))){
-
-
-
-            if(this.connectionType==RMI)
-                ClientActionSingleton.setClientActionInstance(new RMIClientAction());
-            else{
-
+            // Start the Connection to the Server
+            if (this.connectionType == RMI) {
+                try {
+                    ClientActionSingleton.setClientActionInstance(new RMIClientAction());
+                } catch (RemoteException e) {
+                    System.err.println(e.getMessage());
+                } catch (NotBoundException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+            else if(this.connectionType == SOCKET){
                 try {
                     ip = InetAddress.getLocalHost();
+                    ClientActionSingleton.setClientActionInstance(new SocketClientAction(ip, port));
                 } catch (UnknownHostException e) {
-                    e.printStackTrace();
+                    System.err.println(e.getMessage());
                 }
-                ClientActionSingleton.setClientActionInstance(new SocketClientAction(ip , port));
             }
 
-            if(ClientActionSingleton.getClientAction().login(textFieldLoginView.getText())) {
-                this.username = textFieldLoginView.getText();
-                loginViewButton.setVisible(false);
-                textFieldLoginView.setVisible(false);
-                joinViewButton.setStyle(
-                        "-fx-background-color: #FFF1C6; " +
-                                "-fx-background-radius: 50em; " +
-                                "-fx-min-width: 90px; " +
-                                "-fx-min-height: 90px; " +
-                                "-fx-max-width: 90px; " +
-                                "-fx-max-height: 90px;"
-                );
-                loginViewRMIButton.setVisible(false);
-                loginViewSocketButton.setVisible(false);
-                joinViewButton.setVisible(true);
+            // Error cached
+            if(null == ClientActionSingleton.getClientAction()  ||
+                    !ClientActionSingleton.getClientAction().isConnected() ) {
+                showWarningText("404: Server NOT Found");
+
+            // Connected to server
+            } else {
+                // Try to Login with given user name
+                if (ClientActionSingleton.getClientAction().login(userNameTextField.getText())) {
+                    // Logged In
+                    this.username = userNameTextField.getText();
+
+                    // Open next Scene - Join Scene
+                    loginScene.setVisible(false);
+                    joinScene.setVisible(true);
+//                    joinScene.toFront();
+
+
+                // Login Failed!!!
+                } else {
+                    //if there is an active Socket connection we close it
+                    if (this.connectionType == SOCKET && ClientActionSingleton.getClientAction() != null)
+                        ((SocketClientAction) ClientActionSingleton.getClientAction()).closeConnection();
+                }
             }
-            else {
-                //if there is an active Socket connection we close it
-                if(this.connectionType==SOCKET && ClientActionSingleton.getClientAction()!=null)
-                    ((SocketClientAction)ClientActionSingleton.getClientAction()).closeConnection();
-
-                loginViewText.setText("⚠Choose an username⚠");
-                loginViewText.setText("");
-                loginViewText.setFill(Color.rgb(0xCB, 0x3C, 0x15));
-                loginViewText.setStyle("-fx-stroke:black;"+
-                        "-fx-stroke-width:1.5;");
-//                loginViewText.setOpacity(1);
-                final Timeline timeline = new Timeline();
-                timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
-                        new KeyValue(loginViewText.opacityProperty(), 0, Interpolator.LINEAR)));
-                timeline.play();
-            }
-
-
+        } else {
+            showWarningText("⚠Choose an username⚠");
         }
-
-
-
-
-
     }
+
+
     @FXML
     public void connectionMethodChooseRMI(ActionEvent event){
        //If the connection is already set to Socket, the RMI border is highlighted
@@ -379,16 +412,8 @@ public class LoginViewController implements Initializable, SceneController, Move
                     BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
             loginViewSocketButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                     BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(0))));
-            loginViewText.setText("Connection mode set to RMI");
-            loginViewText.setText("");
-            loginViewText.setFill(Color.rgb(0x7B, 0xD7, 0xE1));
-            loginViewText.setStyle("-fx-stroke:black;"+
-                    "-fx-stroke-width:1.5;");
-//            loginViewText.setOpacity(1);
-            final Timeline timeline = new Timeline();
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
-                    new KeyValue(loginViewText.opacityProperty(), 0, Interpolator.LINEAR)));
-            timeline.play();
+
+            showTipText("Connection mode set to RMI");
         }
         //If the connection is already set to RMI, there is no  need to do anything
 
@@ -404,16 +429,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                     BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
             loginViewRMIButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                     BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(0))));
-            loginViewText.setText("Connection mode set to Socket");
-            loginViewText.setText("");
-            loginViewText.setFill(Color.rgb(0x7B, 0xD7, 0xE1));
-            loginViewText.setStyle("-fx-stroke:black;"+
-                    "-fx-stroke-width:1.5;");
-//            loginViewText.setOpacity(1);
-            final Timeline timeline = new Timeline();
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
-                    new KeyValue(loginViewText.opacityProperty(), 0, Interpolator.LINEAR)));
-            timeline.play();
+            showTipText("Connection mode set to Socket");
         }
         //If the connection is already set to RMI, there is no  need to do anything
 

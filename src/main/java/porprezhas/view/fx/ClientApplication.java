@@ -9,6 +9,14 @@ import sun.plugin2.main.server.ResultID;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
+/*
+start rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
+
+far partire nanohttp
+
+Far partire test total(prima bisogna aggiungere in edit configurations la stringa nel VM options
+ 	-Djava.rmi.server.useCodebaseOnly=false -Djava.rmi.server.codebase=http://localhost:80/
+ */
 public class ClientApplication extends Application {
 
     private StageManager stageController;

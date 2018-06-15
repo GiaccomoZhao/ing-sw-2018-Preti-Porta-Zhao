@@ -2,6 +2,7 @@ package porprezhas.Network;
 
 import porprezhas.control.ServerRMIInterface;
 
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -16,16 +17,9 @@ public class RMIClientAction implements ClientActionInterface{
     private Registry registry;
 
 
-    public RMIClientAction() {
-        try {
-            registry = LocateRegistry.getRegistry();
-            server = (ServerRMIInterface) registry.lookup("serverController");
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        }
-
+    public RMIClientAction() throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry();
+        server = (ServerRMIInterface) registry.lookup("serverController");
     }
 
 
@@ -35,6 +29,10 @@ public class RMIClientAction implements ClientActionInterface{
         this.username = username;
     }
 
+    @Override
+    public boolean isConnected() {
+        return null != server;
+    }
 
     @Override
     public boolean login(String username) {

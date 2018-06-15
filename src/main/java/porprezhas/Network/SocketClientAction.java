@@ -47,6 +47,11 @@ public class SocketClientAction implements ClientActionInterface {
     }
 
     @Override
+    public boolean isConnected() {
+        return null != socket;
+    }
+
+    @Override
     public boolean login(String username) {
 
         try {

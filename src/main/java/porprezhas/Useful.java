@@ -43,7 +43,7 @@ public class Useful {
     }
 
 
-
+/*
     public static double getMaxBetween(double firstValue, double secondValue){
         return firstValue > secondValue ? firstValue : secondValue;
     }
@@ -51,7 +51,7 @@ public class Useful {
     public static double getMinBetween(double firstValue, double secondValue){
         return firstValue < secondValue ? firstValue : secondValue;
     }
-
+*/
 
 
     public static StringBuilder appendSpaces(StringBuilder sb, int nSpace) {
