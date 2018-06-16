@@ -467,7 +467,7 @@ public class Game extends ModelObservable implements GameInterface {
 
     public synchronized boolean insertDice(long diceID, int row, int col)
             throws IndexOutOfBoundsException, AlreadyPickedException,
-            BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException
+            BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException
     {
         int indexDice = draftPool.getDiceIndexByID(diceID);
         if (!Useful.isValueBetweenInclusive(indexDice, 0, draftPool.diceList().size() -1))

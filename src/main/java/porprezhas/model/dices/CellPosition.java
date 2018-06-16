@@ -48,6 +48,14 @@ public class CellPosition {
         return this;
     }
 
+    public static boolean isBorderPosition(int row, int col){
+        if(     row == MIN_ROW    ||  row == MAX_ROW  ||
+                col == MIN_COLUMN ||  col == MAX_COLUMN )
+            return true;
+        else
+            return false;
+    }
+
     public static CellPosition getRandomInnerValue(long seed) {
         Random seededRandom = new Random(seed);
         CellPosition position = new CellPosition(

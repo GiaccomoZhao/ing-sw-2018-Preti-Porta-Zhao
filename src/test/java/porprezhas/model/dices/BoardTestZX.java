@@ -232,7 +232,7 @@ public class BoardTestZX {
     public void ColorRestrictionTest() {
         assertTrue( testBoard.insertDice(diePurple, 0, 1) );  // correct action
     }
-    @Test (expected = ColorRestrictionException.class)
+    @Test (expected = PatternColorRestrictionException.class)
     public void ColorRestrictionFailureTest() {
         testBoard.insertDice(dieNotPurple, 0, 1);   // not correct Action
     }
@@ -243,7 +243,7 @@ public class BoardTestZX {
     public void NumberRestrictionTest() {
         assertTrue( testBoard.insertDice(die1, 0, 0) );
     }
-    @Test (expected = NumberRestrictionException.class)
+    @Test (expected = PatternNumericRestrictionException.class)
     public void NumberRestrictionFailureTest() {
         testBoard.insertDice(dieNot1, 0, 0);
     }

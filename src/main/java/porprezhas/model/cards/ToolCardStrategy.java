@@ -214,7 +214,7 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
                 e1.printStackTrace();
             }
 
-            throw new ToolCardParameterException(e.getMessage());
+            throw e; // new ToolCardParameterException(e.getMessage());
         }
         return true;
     }

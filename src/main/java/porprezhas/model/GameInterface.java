@@ -31,7 +31,7 @@ public interface GameInterface {
 
     boolean insertDice(long diceID, int xPose, int yPose)
             throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
-            BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException;
+            BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
 
     boolean setPattern(Player player, int indexPatternType);
     void nextRound();

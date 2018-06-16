@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runners.Parameterized;
-import porprezhas.exceptions.diceMove.ColorRestrictionException;
-import porprezhas.exceptions.diceMove.NumberRestrictionException;
+import porprezhas.exceptions.diceMove.AdjacentRestrictionException;
+import porprezhas.exceptions.diceMove.PatternColorRestrictionException;
+import porprezhas.exceptions.diceMove.PatternNumericRestrictionException;
 import porprezhas.exceptions.toolCard.ToolCardParameterException;
 import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
@@ -16,6 +16,7 @@ import porprezhas.view.fx.gameScene.GuiSettings;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -70,9 +71,10 @@ public class ToolCard2StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        assertTrue(toolCard2.getStrategy().use(testParams));
+        boolean bSuccess = toolCard2.getStrategy().use(testParams);
 
         testBoard.print(GuiSettings.bFixedFont);
+        assertEquals(true, bSuccess);
     }
 
     @Test
@@ -101,9 +103,10 @@ public class ToolCard2StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        assertTrue(toolCard2.getStrategy().use(testParams));
+        boolean bSuccess = toolCard2.getStrategy().use(testParams);
 
         testBoard.print(GuiSettings.bFixedFont);
+        assertEquals(true, bSuccess);
     }
 
     @Test
@@ -132,9 +135,10 @@ public class ToolCard2StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        assertTrue(toolCard2.getStrategy().use(testParams));
+        boolean bSuccess = toolCard2.getStrategy().use(testParams);
 
         testBoard.print(GuiSettings.bFixedFont);
+        assertEquals(true, bSuccess);
     }
 
 
@@ -166,10 +170,13 @@ public class ToolCard2StrategyTest {
         System.out.println("\nignorePatternNumberTest: ");
         testBoard.print(GuiSettings.bFixedFont);
 
-        exception.expect(NumberRestrictionException.class);
-        assertFalse(toolCard2.getStrategy().use(testParams));
+        exception.expect(PatternNumericRestrictionException.class);
+//        exception.expect(ToolCardParameterException.class);
+//        exception.expectMessage("Numeric");
+        boolean bSuccess = toolCard2.getStrategy().use(testParams);
 
         testBoard.print(GuiSettings.bFixedFont);
+        assertEquals(false, bSuccess);
     }
 
     @Test
@@ -197,10 +204,13 @@ public class ToolCard2StrategyTest {
         System.out.println("\nignoreNumberAdjacentTest: ");
         testBoard.print(GuiSettings.bFixedFont);
 
-        exception.expect(NumberRestrictionException.class);
-        assertFalse(toolCard2.getStrategy().use(testParams));
+        exception.expect(AdjacentRestrictionException.class);
+//        exception.expect(ToolCardParameterException.class);
+//        exception.expectMessage("Numeric");
+        boolean bSuccess = toolCard2.getStrategy().use(testParams);
 
         testBoard.print(GuiSettings.bFixedFont);
+        assertEquals(false, bSuccess);
     }
 
 
@@ -234,10 +244,11 @@ public class ToolCard2StrategyTest {
         System.out.println("\nfarMoveTest: ");
         testBoard.print(GuiSettings.bFixedFont);
 
-        exception.expect(ToolCardParameterException.class);
-        assertFalse(toolCard2.getStrategy().use(testParams));
+        exception.expect(AdjacentRestrictionException.class);
+        boolean bSuccess = toolCard2.getStrategy().use(testParams);
 
         testBoard.print(GuiSettings.bFixedFont);
+        assertEquals(false, bSuccess);
     }
 
 
