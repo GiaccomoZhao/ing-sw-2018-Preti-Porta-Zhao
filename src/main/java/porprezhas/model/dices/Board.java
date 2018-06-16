@@ -528,6 +528,7 @@ public class Board implements Serializable {
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COLUMN; j++) {
                 if (!flag) {
+                    //     one of inner Columns and all Rows
                     if (!((i == 1 && (Useful.isValueBetweenInclusive(j, MIN_COLUMN, MAX_COLUMN))) || (i == 2 && Useful.isValueBetweenInclusive(j, MIN_COLUMN, MAX_COLUMN)))) {
                         if (isBoxOccupied(i, j) && !(i == row && j == col)) {
                             dummyBoard[i][j] = true;

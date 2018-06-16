@@ -66,7 +66,7 @@ public class Useful {
             return 0;
 
         // calculate not excepted numbers quantity
-        int randomNumber = getRandomNumber(length) - excepts.length;
+        int randomNumber = getRandomNumber(length - excepts.length );
 
         // sort the excepted numbers
         List<Integer> integerExcepts = Arrays.asList(excepts);

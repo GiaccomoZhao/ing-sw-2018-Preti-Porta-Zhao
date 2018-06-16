@@ -257,13 +257,21 @@ class ToolCard3 extends ToolCard2_4 {
     }
 
     @Override
-    public boolean use(ToolCardParam param) {
-        // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+    public boolean use(ToolCardParam param)
+            throws IncorrectParamQuantityException, MoveToSelfException, NotRemovableDiceException {
 
-        param.getParams().add(Board.Restriction.WITHOUT_NUMBER.ordinal());
-        return super.use(param);
+        // safety Check
+        // check NULL
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
+
+        // add parameter
+        ToolCardParam newToolCardParam = new ToolCardParam(param, Board.Restriction.WITHOUT_NUMBER.ordinal());
+        return super.use(newToolCardParam);
     }
 }
 
