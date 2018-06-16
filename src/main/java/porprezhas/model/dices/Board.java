@@ -4,9 +4,12 @@ import porprezhas.Useful;
 import porprezhas.exceptions.diceMove.*;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import static porprezhas.Useful.appendSpaces;
 import static porprezhas.Useful.isValueBetweenInclusive;
+import static porprezhas.model.dices.CellPosition.MAX_COLUMN;
+import static porprezhas.model.dices.CellPosition.MIN_COLUMN;
 
 public class Board implements Serializable {
 
@@ -57,22 +60,6 @@ public class Board implements Serializable {
         }
     }
 
-    public class CellPosition {
-        int row;
-        int col;
-
-        public CellPosition(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
-
-        public boolean equals(int row, int col) {
-            if(this.row == row  &&  this.col == col) {
-                return true;
-            } else
-                return false;
-        }
-    }
 
 
     private final Pattern pattern;
@@ -384,6 +371,7 @@ public class Board implements Serializable {
         if (canBeRemoved(row, col)) {
             auxDice = getDice(row, col);
             board[row][col] = null;
+            diceQuantity--;
             return auxDice;
         }
         return null;
@@ -430,22 +418,12 @@ public class Board implements Serializable {
 
 
     public boolean validMove(Dice dice, int row, int col, Restriction restriction)
-            throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
+            throws IndexOutOfBoardBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, ColorRestrictionException, NumberRestrictionException, AdjacentRestrictionException {
         // Check index bound
         if (!isValueBetweenInclusive(row, 0, ROW - 1) ||
                 !isValueBetweenInclusive(col, 0, COLUMN - 1))
-            throw new IndexOutOfBoundsException(
-                    "\n" +
-                            (row < 0 ? "   Row value is too low! \t" : row > (ROW - 1) ?
-                                    "   Row value is too high!\t" :
-                                    "                         \t") +
-                            "\t   row: \t0 <= " + row + " <= " + (ROW - 1) + "\n" +
-                            (col < 0 ? "Column value is too low! \t" : col > (COLUMN - 1) ?
-                                    "Column value is too high!\t" :
-                                    "                         \t") +
-                            "\tcolumn: \t0 <= " + col + " <= " + (COLUMN - 1) + "\n"
-            );
+            throw new IndexOutOfBoardBoundsException( row, col );
 
         //Check if the box is already occupied
         if (this.isBoxOccupied(row, col))
@@ -530,10 +508,11 @@ public class Board implements Serializable {
     }
 
 
+    // save the date for recursion
     Boolean[][] dummyBoard = new Boolean[ROW][COLUMN];
 
 
-    //given a certain dice coordinates, it returns true if the dice can be removed from the board, without breaking the rules
+    //given a certain dice positions, it returns true if the dice can be removed from the board, without breaking the rules
     public boolean canBeRemoved(int row, int col) {
 
         boolean flag = false;
@@ -549,7 +528,7 @@ public class Board implements Serializable {
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COLUMN; j++) {
                 if (!flag) {
-                    if (!((i == 1 && (0 < j && j < COLUMN - 1)) || (i == 2 && (0 < j && j < COLUMN - 1)))) {
+                    if (!((i == 1 && (Useful.isValueBetweenInclusive(j, MIN_COLUMN, MAX_COLUMN))) || (i == 2 && Useful.isValueBetweenInclusive(j, MIN_COLUMN, MAX_COLUMN)))) {
                         if (isBoxOccupied(i, j) && !(i == row && j == col)) {
                             dummyBoard[i][j] = true;
                             markCell(i, j, row, col);
@@ -693,7 +672,12 @@ public class Board implements Serializable {
         int dimensionRow    =   ROW;
         int dimensionColumn =   COLUMN;
 
+//        String exampleString = new Dice(1, Dice.ColorDice.GREEN, -1).toString();
         String exampleString = new Dice(1, Dice.ColorDice.GREEN, -1).toString();
+        String emptyDiceString = "Dice{empty}";
+        int diceStringMaxLength = Integer.max(exampleString.length(), emptyDiceString.length());
+
+        String diceString;
         StringBuilder  sbBoard = new StringBuilder("Board[" + dimensionRow + "x" + dimensionColumn + "]: \n" );
 
         for (int r = 0; r < ROW; r++) {
@@ -702,18 +686,20 @@ public class Board implements Serializable {
                 if (isValueBetweenInclusive(r, 0, ROW - 1) &&
                         isValueBetweenInclusive(c, 0, COLUMN - 1)) {
 
+                    sbBoard.append("  ");
+
+                    // get dice string
                     if (isBoxOccupied(r, c)) {
-                        sbBoard.append("   " + board[r][c] + "   \t");
+                        diceString = board[r][c].toString();
 
                     } else {
-                        sbBoard.append("   ");
-                        String szEmpty = "Dice{empty}";
-                        sbBoard.append(szEmpty);
-                        for (int nSpace = 0; nSpace < exampleString.length() - szEmpty.length(); nSpace++) {
-                            sbBoard.append(' ');
-                        }
-                        sbBoard.append("   \t");
+                        diceString = emptyDiceString;
                     }
+
+                    // add dice string
+                    sbBoard.append(diceString);
+                    // tabulation
+                    Useful.appendSpaces(sbBoard, diceStringMaxLength - diceString.length() +2);
                 }
             }
             sbBoard.append("\n");
@@ -729,7 +715,11 @@ public class Board implements Serializable {
         int dimensionRow    =   calculateDimension(row-1, 3, 0, ROW);
         int dimensionColumn =   calculateDimension(col-1, 3, 0, COLUMN);
 
-        CellPosition notAdjacentPosition = getNotAdjacentDicePosition(dice, row, col, Restriction.ALL);
+        CellPosition notAdjacentPosition;
+        if(dice != null)
+            notAdjacentPosition = getNotAdjacentDicePosition(dice, row, col, Restriction.ALL);
+        else
+            notAdjacentPosition = new CellPosition(row, col);
 
 //        String exampleDiceString = new Dice(1, Dice.ColorDice.PURPLE).toString();   // take the longest dice string, at moment are all the same
         String exampleDiceString = "  Dice{empty}  ";   // take the longest dice string

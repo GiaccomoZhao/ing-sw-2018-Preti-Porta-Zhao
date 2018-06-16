@@ -82,7 +82,7 @@ public class GuiSettings {
     public static double CARD_FADE_IN = 420;        // time in [ms]
     public static double CARD_FADE_OUT = 1200;
 
-    public static double STAGE_FADE_IN = 2000;
+    public static double STAGE_FADE_IN = 1500;
     public static double STAGE_FADE_OUT = 1000;
 
     // Sound
