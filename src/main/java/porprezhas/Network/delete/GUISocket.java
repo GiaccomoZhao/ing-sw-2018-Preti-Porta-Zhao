@@ -1,30 +1,36 @@
-package porprezhas;
+package porprezhas.Network.delete;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import porprezhas.Network.delete.RMIClient;
-import porprezhas.Network.delete.RMIClientInterface;
+import porprezhas.Network.CLIViewUpdateHandler;
+import porprezhas.Network.ClientActionSingleton;
+import porprezhas.Network.SocketClientAction;
+import porprezhas.Network.ViewUpdateHandlerInterface;
+import porprezhas.Network.command.*;
+import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.model.Player;
+import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.gameScene.ConfirmBox;
-import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
 import java.io.IOException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.*;
 
+import static javafx.application.Application.launch;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.GuiSettings.ICON_QUANTITY;
+import static porprezhas.view.fx.gameScene.GuiSettings.SOLITAIRE_WIDTH;
 
-public class GuiRmiClient extends Application implements RMIClientInterface {
-    static int mainPlayerPosition;  // to identify which player am i?
+public class GUISocket extends Application implements AnswerHandler {
 
     private Stage primaryStage;
     private AnchorPane rootLayout;
@@ -35,22 +41,50 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
     private GameViewController gameViewController;
 
-
-    public static void startRMI() throws RemoteException, NotBoundException {
-        RMIClient rmiClient = new RMIClient();
-
-        Registry registry= LocateRegistry.getRegistry();
+    private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
+    private String username;
 
 
-        new Thread(rmiClient).start();
-       // ClientActionSingleton.setClientActionInstance(new RMIClientAction());
+
+    private final Scanner in;
+    private ClientObserver clientObserver;
+
+
+    private int port;
+    private Thread thread;
+
+
+
+    Boolean flag=false;
+    Socket socket ;
+    ObjectInputStream socketIn;
+    ObjectOutputStream socketOut;
+
+    public GUISocket()  {
+        this.in = null;
+        ;
+    }
+    public GUISocket(InetAddress ip , int port)  {
+        this.port=port;
+        this.in = new Scanner(System.in);
+        try {
+            socket = new Socket(ip, port);
+            socketOut = new ObjectOutputStream(socket.getOutputStream());
+            socketIn = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Connection established");
+
     }
 
 
-    @Override
+
+
     public void start(Stage primaryStage) {
+
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle(GuiSettings.GAME_TITLE);
+        this.primaryStage.setTitle(GAME_TITLE);
 
         // initialize the layout from fxml and
         // setup the game GUI in base the player info!!!
@@ -88,7 +122,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
     }
 
     private void quitGame() {
-        Boolean bQuit = new ConfirmBox().display("Title", "Are you sure to quit during a Game?");
+        Boolean bQuit = new ConfirmBox().display(GAME_TITLE, "Are you sure to quit during a Game?");
         if(bQuit) {
             primaryStage.close();
         }
@@ -97,7 +131,7 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
     /**
      * Initializes the root layout.
      */
-    public void initRootLayout() {
+    public void initRootLayout()  {
         try {
             // create a FXMLLoader and open fxml file.
             FXMLLoader loader = new FXMLLoader();
@@ -108,7 +142,6 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
 
 
             // TODO: test-use, This should be initialized before this scene starts
-            // build fake players
             Random random = new Random();
             // add all players
             players = new ArrayList<>();
@@ -118,18 +151,30 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
             players.add( new Player("P2"));
             players.get(players.size()-1).setPosition(players.size()-1);
             players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
-            players.add( new Player("PlayerZX"));
+            players.add( new Player(username));
             players.get(players.size()-1).setPosition(players.size()-1);
             players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
             players.add( new Player("P4"));
             players.get(players.size()-1).setPosition(players.size()-1);
             players.get(players.size()-1).setIcon(random.nextInt(ICON_QUANTITY) +1);
 
+            this.playersInfo = new ArrayList<>();
+            int i = 0;
+            for (Player player : players) {
+                playersInfo.add(new PlayerInfo(
+                        i++,
+                        player.getName(),
+                        player.getIconId(),
+                        Pattern.TypePattern.values()[1]));
+            }
+
+            this.loginPhase();
 
             // Create a controller instance, passing the information about players
-//            gameViewController = new GameViewController(players, "PlayerZX");
-            gameViewController = new GameViewController("PlayerZX");
+            gameViewController = new GameViewController(username);
 
+
+                this.joinPhase();
 
 
             // Set it in the FXMLLoader
@@ -152,6 +197,49 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
         }
     }
 
+    public void loginPhase()  {
+        System.out.println("\t\tSAGRADA\t\t");
+
+
+        while (!flag) {
+            System.out.println(">>> Login:");
+            username = in.nextLine();
+
+            try {
+                socketOut.writeObject(new LoginAction(username));
+                socketOut.flush();
+                ((Answer) socketIn.readObject()).handle(this);
+
+            } catch (IOException e) {
+                System.err.println("Exception on network: " + e.getMessage());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+        this.viewUpdateHandlerInterface=new CLIViewUpdateHandler(username);
+        System.out.println("Login effettuato correttamente");
+        System.out.println();
+    }
+    public void joinPhase()  {
+        flag=false;
+        while(!flag){
+            try {
+
+                socketOut.writeObject(new JoinAction(username));
+                socketOut.flush();
+                ((Answer) socketIn.readObject()).handle(this);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ClientActionSingleton.setClientActionInstance(new SocketClientAction(username, socketOut));
+
+    }
     /**
      * Returns the main stage.
      * @return
@@ -160,18 +248,36 @@ public class GuiRmiClient extends Application implements RMIClientInterface {
         return primaryStage;
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String input;
-        System.out.println("输入玩家位置，type player position (from 0 to MAX_PLAYER_QUANTITY-1):");
-        input = scanner.next();
-        mainPlayerPosition = Integer.parseInt(input);
+    public static void main(String[] args) throws IOException {
+        GUISocket guiSocket=new GUISocket(InetAddress.getLocalHost(), 1457);
 
-        try {
-            startRMI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         launch(args);
+
+        System.out.println("Launched");
+    }
+
+    @Override
+    public boolean handle(UpdateAnswer updateAnswer) {
+    return true;
+    }
+
+    @Override
+    public boolean handle(LoginActionAnswer loginActionAnswer) {
+return true;
+    }
+
+    @Override
+    public boolean handle(JoinActionAnswer joinActionAnswer) {
+return true;
+    }
+
+    @Override
+    public boolean handle(PassActionAnswer passActionAnswer) {
+return true;
+    }
+
+    @Override
+    public boolean handle(DiceInsertedAnswer diceInsertedAnswer) {
+        return true;
     }
 }

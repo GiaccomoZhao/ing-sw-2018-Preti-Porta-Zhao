@@ -1,14 +1,11 @@
 package porprezhas.Network;
 
-import porprezhas.control.ServerRMIInterface;
+import porprezhas.Network.rmi.common.ServerRMIInterface;
 
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
-import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
 
 public class RMIClientAction implements ClientActionInterface{
 

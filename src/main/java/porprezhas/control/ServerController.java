@@ -1,14 +1,15 @@
 package porprezhas.control;
 
+import porprezhas.Network.rmi.common.ServerRMIInterface;
 import porprezhas.exceptions.diceMove.*;
-import porprezhas.Network.Command.*;
+import porprezhas.Network.command.*;
 import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.cards.ToolCardParam;
 import porprezhas.model.database.DatabaseInterface;
 import porprezhas.model.Player;
-import porprezhas.Network.SocketServerClientHandler;
+import porprezhas.Network.socket.SocketServerClientHandler;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -339,7 +340,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             System.err.println(e.getMessage()); // The port is not available
             return;
         }
-        System.out.println("Server socket ready");
+        System.out.println("server socket ready");
         while (true) {
             try {
                 Socket socket = serverSocket.accept();

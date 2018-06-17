@@ -2,7 +2,6 @@ package porprezhas.view.fx.loginScene;
 
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import porprezhas.Network.*;
+import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.Useful;
 import porprezhas.view.fx.*;
 import porprezhas.view.fx.gameScene.GuiSettings;
@@ -72,7 +72,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     enum ConnectionType{
         RMI,SOCKET
     }
-    //Default connection method: RMI
+    //Default connection method: rmi
     ConnectionType connectionType=RMI;
 
     private String username;
@@ -369,7 +369,7 @@ public class LoginViewController implements Initializable, SceneController, Move
         // if user typed his UserName
         if(userNameTextField.getText()!=null  &&  !(userNameTextField.getText().equals(voidString))) {
 
-            // Start the Connection to the Server
+            // Start the Connection to the server
             if (this.connectionType == RMI) {
                 try {
                     ClientActionSingleton.setClientActionInstance(new RMIClientAction());
@@ -391,7 +391,7 @@ public class LoginViewController implements Initializable, SceneController, Move
             // Error cached
             if(null == ClientActionSingleton.getClientAction()  ||
                     !ClientActionSingleton.getClientAction().isConnected() ) {
-                showWarningText("404: Server NOT Found");
+                showWarningText("404: server NOT Found");
 
             // Connected to server
             } else {
@@ -421,7 +421,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     @FXML
     public void connectionMethodChooseRMI(ActionEvent event){
-       //If the connection is already set to Socket, the RMI border is highlighted
+       //If the connection is already set to Socket, the rmi border is highlighted
         if (connectionType.equals(SOCKET)) {
             connectionType = RMI;
             loginViewRMIButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
@@ -429,16 +429,16 @@ public class LoginViewController implements Initializable, SceneController, Move
             loginViewSocketButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
                     BorderStrokeStyle.SOLID,new CornerRadii(0), new BorderWidths(0))));
 
-            showTipText("Connection mode set to RMI");
+            showTipText("Connection mode set to rmi");
         }
-        //If the connection is already set to RMI, there is no  need to do anything
+        //If the connection is already set to rmi, there is no  need to do anything
 
     }
 
 
     @FXML
     public void connectionMethodChooseSocket(ActionEvent event){
-        //If the connection is already set to RMI, the Socket border is highlighted
+        //If the connection is already set to rmi, the Socket border is highlighted
         if (connectionType.equals(RMI)) {
             connectionType = SOCKET;
             loginViewSocketButton.setBorder(new Border(new BorderStroke( Color.rgb(200, 177, 39),
@@ -447,7 +447,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                     BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(0))));
             showTipText("Connection mode set to Socket");
         }
-        //If the connection is already set to RMI, there is no  need to do anything
+        //If the connection is already set to rmi, there is no  need to do anything
 
     }
 

@@ -1,6 +1,6 @@
 package porprezhas.Network;
 
-import porprezhas.Network.Command.*;
+import porprezhas.Network.command.*;
 
 public class ClientAnswerHandler implements AnswerHandler {
 

@@ -1,6 +1,6 @@
 package porprezhas.model;
 
-import porprezhas.RMI.Server.ModelObservable;
+import porprezhas.Network.rmi.server.ModelObservable;
 import porprezhas.Useful;
 import porprezhas.control.GameController;
 import porprezhas.exceptions.diceMove.*;

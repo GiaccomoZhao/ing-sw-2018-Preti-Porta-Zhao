@@ -1,14 +1,12 @@
 package porprezhas.Network;
 
-import porprezhas.Network.Command.*;
+import porprezhas.Network.command.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class SocketClientAction implements ClientActionInterface {
 

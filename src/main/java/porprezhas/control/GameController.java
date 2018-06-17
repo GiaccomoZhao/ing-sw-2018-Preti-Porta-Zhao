@@ -262,7 +262,7 @@ public class GameController  implements GameControllerInterface, Runnable {
 
 // *********************************
     // ------- External Methods --------            // Clients call these
-    // TODO: Command Pattern?
+    // TODO: command Pattern?
 
     /* @requires parameter != null
      * @ensure (*return sum of all game's public and player's private objectives*)

@@ -94,7 +94,7 @@ public class DraftPool implements Serializable {
     }
 */
 
-    // Only Server can do this operation
+    // Only server can do this operation
     public void setDice(int indexDice, Dice dice) {
         draftPool.set(indexDice, dice);
     }

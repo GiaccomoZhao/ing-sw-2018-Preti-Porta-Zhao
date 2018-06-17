@@ -60,7 +60,7 @@ public class TestTotal {
         // Wait Game Controller be created
         while(newGameController.getState() == null)
             Thread.sleep(10);
-        System.out.println("-- Server start to receive commands");  // NOTE: we simulate to receive command from client
+        System.out.println("-- server start to receive commands");  // NOTE: we simulate to receive command from client
 
         // Wait until Game ask for a choose to player
         while(!newGameController.getState().equals(GameControllerInterface.StateMachine.PLAYER_PREPARING))
@@ -107,6 +107,6 @@ public class TestTotal {
             newGameController.pass();
         }*/
         gameThread.join(1000000);
-        System.out.println("\n\n\n-- Server tear down.");
+        System.out.println("\n\n\n-- server tear down.");
     }
 }

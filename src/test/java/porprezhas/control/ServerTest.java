@@ -51,7 +51,7 @@ public class ServerTest {
 
     @After
     public void tearDown() throws Exception {
-        System.out.println("\n\nServer tear down");
+        System.out.println("\n\nserver tear down");
     }
 
 
