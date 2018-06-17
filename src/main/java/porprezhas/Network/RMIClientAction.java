@@ -87,12 +87,13 @@ public class RMIClientAction implements ClientActionInterface{
     }
 
     @Override
-    public void pass() {
+    public boolean pass() {
         try {
-            server.passUser(username);
+           return server.passUser(username);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 

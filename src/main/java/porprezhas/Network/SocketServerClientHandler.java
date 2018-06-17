@@ -2,6 +2,7 @@ package porprezhas.Network;
 
 import porprezhas.Network.Command.*;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,25 +16,27 @@ public class SocketServerClientHandler extends Observable implements Runnable {
     private ProxyObserverSocket proxyObserverSocket;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
-    private Boolean first=true;
+    private Boolean first = true;
     public static Object lock;
-    private Boolean test=true;
+    private Boolean test = true;
+
     public int getState() {
         return state;
     }
 
     public SocketServerClientHandler(Socket socket, ActionHandler serverController) throws IOException {
         this.socket = socket;
-        this.serverController= serverController;
+        this.serverController = serverController;
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.in = new ObjectInputStream(socket.getInputStream());
-        lock= new Object();
+        lock = new Object();
     }
 
 
     public void run() {
-        while(test) {
-            try {
+
+        try {
+            while (test) {
                 Action action = ((Action) in.readObject());
                 if (first)
                     ((LoginAction) action).setObjectOutputStream(out);
@@ -41,25 +44,29 @@ public class SocketServerClientHandler extends Observable implements Runnable {
                 if (first)
                     if (((LoginActionAnswer) answer).answer.equals(true))
                         first = false;
-                synchronized (lock){
-                out.reset();
-                out.writeObject(answer);
-                out.flush();
+                synchronized (lock) {
+                    out.reset();
+                    out.writeObject(answer);
+                    out.flush();
                 }
 
-
+            }
+        } catch (IOException e) {
+            if( e instanceof EOFException)
+                System.out.println("Invalid username");
+            else
+                e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                out.close();
+                in.close();
+                socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
-
         }
-        /*try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
-
 }

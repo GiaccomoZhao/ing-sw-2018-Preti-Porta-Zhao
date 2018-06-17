@@ -120,12 +120,14 @@ public class SocketClientAction implements ClientActionInterface {
     }
 
     @Override
-    public void pass() {
+    public boolean pass() {
         try {
             socketOut.writeObject(new PassAction(username));
+            socketOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
 
