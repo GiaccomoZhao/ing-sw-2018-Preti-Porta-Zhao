@@ -10,6 +10,7 @@ import org.junit.runners.Parameterized;
 import org.mockito.Mock;
 import porprezhas.Useful;
 import porprezhas.exceptions.GameAbnormalException;
+import porprezhas.exceptions.diceMove.EdgeRestrictionException;
 import porprezhas.exceptions.diceMove.IndexOutOfBoardBoundsException;
 import porprezhas.exceptions.toolCard.DiceNotFoundInBoardException;
 import porprezhas.exceptions.toolCard.IncorrectParamQuantityException;
@@ -60,7 +61,8 @@ public class ToolCard2_4StrategyTest {
     private RoundTrack roundTrack;
 
 
-    Board newBoard;
+    Board newBoard;         // a new board that will be initialized by parameterizedBoard
+                            // used to separate toolCard2 Test with toolCard3 Test
     boolean bSuccess;
 
     // CREATE SOME NOTE POSITIONS
@@ -327,36 +329,39 @@ public class ToolCard2_4StrategyTest {
                         new Board(Pattern.TypePattern.VOID),
                         new Dice(ColorDice.RED, 6, -1),
                         Arrays.asList(
-                                bottomRightPosition.getRow(),
-                                bottomRightPosition.getCol(),
-                                innerPosition.getRow(),
-                                innerPosition.getCol()),
-                        false,
-                        false,
-                        ToolCardParameterException.class},
-
-                {"from border to inner board Test",
-                        new Board(Pattern.TypePattern.VOID),
-                        new Dice(ColorDice.RED, 6, -1),
-                        Arrays.asList(
                                 topBorderPosition.getRow(),
                                 topBorderPosition.getCol(),
-                                innerPosition.getRow(),
-                                innerPosition.getCol()),
+                                MIN_ROW +1,
+                                MAX_COLUMN /2),
                         false,
                         false,
-                        ToolCardParameterException.class},
-                {"from border to inner board Test",
+                        EdgeRestrictionException.class},
+
+                // from corner to inner board
+                {"from corner to inner board Test",
                         new Board(Pattern.TypePattern.VOID),
                         new Dice(ColorDice.RED, 6, -1),
                         Arrays.asList(
                                 bottomRightPosition.getRow(),
                                 bottomRightPosition.getCol(),
-                                innerPosition.getRow(),
-                                innerPosition.getCol()),
+                                MAX_ROW -1,
+                                MAX_COLUMN -1),
                         false,
                         false,
-                        ToolCardParameterException.class},
+                        EdgeRestrictionException.class},
+
+                // from corner to inner Border
+                {"from corner to inner border Test",
+                        new Board(Pattern.TypePattern.VOID),
+                        new Dice(ColorDice.RED, 6, -1),
+                        Arrays.asList(
+                                bottomLeftPosition.getRow(),
+                                bottomLeftPosition.getCol(),
+                                MIN_ROW +1,
+                                MAX_COLUMN),
+                        true,
+                        true,
+                        null},
 
                 // from board's border to an other border
                 // corners exchange - 14
@@ -516,7 +521,7 @@ public class ToolCard2_4StrategyTest {
         for (CellPosition fromPosition : fromPositions) {
                     for (CellPosition toPosition : outBoundsPositions) {
                         dataList.add(
-                                new Object[]{"corner to inner border Test",
+                                new Object[]{"inner border to Out Bound Test",
                                         new Board(Pattern.TypePattern.VOID),
                                         new Dice(ColorDice.RED, 6, -1),
                                         Arrays.asList(
@@ -601,6 +606,7 @@ public class ToolCard2_4StrategyTest {
             System.out.println(newBoard.toString());
         }
 
+        bSuccess = false;
     }
 
 
@@ -609,8 +615,6 @@ public class ToolCard2_4StrategyTest {
 
     @Test
     public void parametrizedCard2Test() throws RuntimeException{
-        bSuccess = false;
-
         try {
             bSuccess = toolCard2.getStrategy().use(param);      // USE
 
@@ -630,12 +634,12 @@ public class ToolCard2_4StrategyTest {
         }
 
         assertEquals(parameterizedReturnValue, ((ToolCard2) toolCard2.getStrategy()).getReturn());
+
+        assertEquals(1, newBoard.getDiceQuantity());        // in these tests we test with only 1 dice!!!
     }
 
     @Test
     public void parametrizedCard3Test() throws RuntimeException{
-        bSuccess = false;
-
         try {
             bSuccess = toolCard3.getStrategy().use(param);      // USE
 
@@ -655,6 +659,8 @@ public class ToolCard2_4StrategyTest {
         }
 
         assertEquals(parameterizedReturnValue, ((ToolCard3) toolCard3.getStrategy()).getReturn());
+
+        assertEquals(1, newBoard.getDiceQuantity());        // in these tests we test with only 1 dice!!!
     }
 
     @After
@@ -665,11 +671,14 @@ public class ToolCard2_4StrategyTest {
         if(null != newBoard)
             System.out.println(newBoard.toString());
 
+        if(bSuccess)
+            System.out.println("\nSUCCESS!!!");
+        else
+            System.out.println("\nFAILURE!!!");
+        System.out.println("_______________________________________________________________________\n\n");
+        System.out.flush();
+
         assertEquals(parameterizedSuccess, bSuccess);
-
-        System.out.println("\n\n\nSUCCESS!!!");
-        System.out.println("_______________________________________________________________________");
-
     }
 /*
     @Test

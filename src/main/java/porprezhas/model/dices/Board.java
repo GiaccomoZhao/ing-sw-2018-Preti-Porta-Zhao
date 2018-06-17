@@ -453,13 +453,13 @@ public class Board implements Serializable {
     public Dice removeDice(int row, int col) {
 
         Dice auxDice;
-        if (canBeRemoved(row, col)) {
+//        if (canBeRemoved(row, col)) {
             auxDice = getDice(row, col);
             board[row][col] = null;
             diceQuantity--;
             return auxDice;
-        }
-        return null;
+//        }
+//        return null;
     }
 
 
