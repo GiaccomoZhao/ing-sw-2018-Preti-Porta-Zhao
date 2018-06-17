@@ -9,6 +9,12 @@ public class PublicObjectiveCardFactory implements CardFactory {
     ArrayList<Integer> numberList;
     private final int numberOfCard;
 
+    /**
+     * create the Public Objective Cards
+     *
+     * @param numberOfPlayer used to know if the game mode is singleplayer or multiplayer
+     */
+
     public PublicObjectiveCardFactory(int numberOfPlayer) {
         numberList = new ArrayList<Integer>();
 

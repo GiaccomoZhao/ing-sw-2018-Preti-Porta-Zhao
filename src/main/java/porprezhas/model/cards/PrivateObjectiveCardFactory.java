@@ -9,6 +9,12 @@ public class PrivateObjectiveCardFactory implements CardFactory {
 //    int numberOfPlayer;
     private final int numberOfCard;
 
+    /**
+     * create the Private Objective Cards for every player
+     *
+     * @param numberOfPlayer used to know if the game mode is singleplayer or multiplayer
+     */
+
 
     public PrivateObjectiveCardFactory( int numberOfPlayer) {
         numberList = new ArrayList<Integer>();
@@ -21,6 +27,7 @@ public class PrivateObjectiveCardFactory implements CardFactory {
         else
             this.numberOfCard = 1;
     }
+
 
     @Override
     public ArrayList<Card> createCard() {

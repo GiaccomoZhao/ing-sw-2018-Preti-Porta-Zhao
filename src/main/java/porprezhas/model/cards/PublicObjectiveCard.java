@@ -14,6 +14,12 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
         super(effect);
     }
 
+    /**
+     * Apply the public objective card to the player's board and return points gained
+     *
+     * @param board the player's board
+     * @return
+     */
 
     @Override
     public int apply(Board board) {
