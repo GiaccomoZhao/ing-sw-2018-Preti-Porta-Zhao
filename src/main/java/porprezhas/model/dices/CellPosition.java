@@ -11,6 +11,13 @@ public class CellPosition {
     public static final int MAX_ROW = ROW - 1;
     public static final int MAX_COLUMN = Board.COLUMN - 1;
 
+    // Corner positions
+    public static final CellPosition topLeftPosition = new CellPosition(MIN_ROW, MIN_COLUMN);
+    public static final CellPosition bottomRightPosition = new CellPosition(MAX_ROW, MAX_COLUMN);
+    public static final CellPosition topRightPosition = new CellPosition(MIN_ROW, MAX_COLUMN);
+    public static final CellPosition bottomLeftPosition = new CellPosition(MAX_ROW, MIN_COLUMN);
+
+
     private int row;
     private int col;
 

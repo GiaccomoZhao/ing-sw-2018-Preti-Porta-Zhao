@@ -178,9 +178,9 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
 
 
         // check adjacent constraint after removing this
-        if(!board.canBeRemoved(fromRow, fromColumn)) {
-            throw new NotRemovableDiceException(fromRow, fromColumn, board.toString(null, fromRow, fromColumn));
-        }
+//        if(!board.canBeRemoved(fromRow, fromColumn)) {
+//            throw new NotRemovableDiceException(fromRow, fromColumn, board.toString(null, fromRow, fromColumn));
+//        }
 
         // DO the operation
         savedReturn = use(board, fromRow, fromColumn, toRow, toColumn, restriction);
@@ -210,7 +210,7 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
             try {
                 board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
             } catch (Exception e1) {
-                System.err.println("Abnormal error: Can not use tool card " + this + "");
+                System.err.println("Abnormal error: Can NOT undo the effect of tool card " + this + "");
                 e1.printStackTrace();
             }
 
@@ -298,8 +298,12 @@ class ToolCard4 extends ToolCard2_4 {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         // Initialize from Parameters
         int iParam = 0;
@@ -321,28 +325,37 @@ class ToolCard4 extends ToolCard2_4 {
         // Save the dice of first action for Undo
         Dice storeDice1 = board.getDice(fromRow1, fromColumn1);
 
-        // we call 2 times use(tool card N.2-3) without ADJACENT restriction
-        param1.getParams().add( Board.Restriction.WITHOUT_ADJACENT.ordinal() );
+        // we call 2 times use(tool card N.2-3) without ALL restriction
+
+        // add parameter
+        param1 = new ToolCardParam(param1, Board.Restriction.ALL.ordinal());
+
         if( !super.use(param1) ) {
             return false;
         }
 
-        param2.getParams().add( Board.Restriction.WITHOUT_ADJACENT.ordinal() );
+        // add parameter
+        param2 = new ToolCardParam(param2, Board.Restriction.ALL.ordinal());
 
-        // If it Fails at second action: UNDO the insert done by first action
-        if( !super.use(param2) ) {
-            board.removeDice(fromRow1, fromColumn1);
-            try {
-                board.insertDice(
-                        storeDice1,
-                        fromRow1, fromColumn1,
-                        Board.Restriction.NONE);    // no restriction because we are doing a UNDO
-                return false;
+        try {
+            // If it Fails at second action: UNDO the insert done by first action
+            if( !super.use(param2) ) {
+                board.removeDice(fromRow1, fromColumn1);
+                try {
+                    board.insertDice(
+                            storeDice1,
+                            fromRow1, fromColumn1,
+                            Board.Restriction.NONE);    // no restriction because we are doing a UNDO
+                    return false;
 
-            } catch (Exception e) {
-                System.err.println("Insert with Restriction.NONE shouldn't give exception!!!");
-                e.printStackTrace();
+                } catch (Exception e) {
+                    System.err.println("Insert with Restriction.NONE shouldn't give exception!!!");
+                    e.printStackTrace();
+                }
             }
+        } catch (ToolCardParameterException e) {
+            throw new ToolCardParameterException( "Error in the second placement:\n"
+                    + e.getMessage());
         }
         return true;
     }

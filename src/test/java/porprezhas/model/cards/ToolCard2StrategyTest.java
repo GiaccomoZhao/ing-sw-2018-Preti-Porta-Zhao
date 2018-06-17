@@ -1,5 +1,6 @@
 package porprezhas.model.cards;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,6 +31,9 @@ public class ToolCard2StrategyTest {
 
     private ToolCard toolCard2;
 
+    boolean bSuccess;
+
+
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -39,6 +43,8 @@ public class ToolCard2StrategyTest {
         testBoard = new Board(testPattern);
         testIntegerParams = new ArrayList<>();
         toolCard2 = new ToolCard(Card.Effect.TC2);
+
+        bSuccess = false;
     }
 
 
@@ -71,9 +77,8 @@ public class ToolCard2StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        boolean bSuccess = toolCard2.getStrategy().use(testParams);
+        bSuccess = toolCard2.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(true, bSuccess);
     }
 
@@ -103,9 +108,8 @@ public class ToolCard2StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        boolean bSuccess = toolCard2.getStrategy().use(testParams);
+        bSuccess = toolCard2.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(true, bSuccess);
     }
 
@@ -135,9 +139,8 @@ public class ToolCard2StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        boolean bSuccess = toolCard2.getStrategy().use(testParams);
+        bSuccess = toolCard2.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(true, bSuccess);
     }
 
@@ -173,9 +176,8 @@ public class ToolCard2StrategyTest {
         exception.expect(PatternNumericRestrictionException.class);
 //        exception.expect(ToolCardParameterException.class);
 //        exception.expectMessage("Numeric");
-        boolean bSuccess = toolCard2.getStrategy().use(testParams);
+        bSuccess = toolCard2.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(false, bSuccess);
     }
 
@@ -207,9 +209,8 @@ public class ToolCard2StrategyTest {
         exception.expect(AdjacentRestrictionException.class);
 //        exception.expect(ToolCardParameterException.class);
 //        exception.expectMessage("Numeric");
-        boolean bSuccess = toolCard2.getStrategy().use(testParams);
+        bSuccess = toolCard2.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(false, bSuccess);
     }
 
@@ -245,12 +246,28 @@ public class ToolCard2StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         exception.expect(AdjacentRestrictionException.class);
-        boolean bSuccess = toolCard2.getStrategy().use(testParams);
+        bSuccess = toolCard2.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(false, bSuccess);
     }
 
 
-//    Board TypePattern.SUNS_GLORY; // 1, purple, yello, white,
+    @After
+    public void tearDown() {
+        // Check After -result-
+        if(null != testBoard)
+            System.out.println(testBoard.toString());
+
+        if(bSuccess)
+            System.out.println("\nSUCCESS!!!");
+        else
+            System.out.println("\nFAILURE!!!");
+        System.out.println("_______________________________________________________________________\n\n");
+        System.out.flush();
+
+        // check dice quantity in the board doesn't change
+        // eight it successes and fails
+        assertEquals(2, testBoard.getDiceQuantity());        // in these tests we always test with only 2 dice!!!
+    }
+
 }

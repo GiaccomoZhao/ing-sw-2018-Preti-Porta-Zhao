@@ -369,6 +369,7 @@ public class BoardTestZX {
         patternTest();
         assertTrue( testBoard.insertDice(dieNot1ButPurple, 2, 2) );
         assertFalse( testBoard.canBeRemoved(1, 1) );
-        assertNull( testBoard.removeDice(1, 1) );
+//        assertNull( testBoard.removeDice(1, 1) );
+        assertNotNull( testBoard.removeDice(1, 1) );
     }
 }

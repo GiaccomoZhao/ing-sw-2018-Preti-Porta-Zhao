@@ -1,5 +1,6 @@
 package porprezhas.model.cards;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static porprezhas.model.dices.CellPosition.MAX_COLUMN;
 import static porprezhas.model.dices.CellPosition.MAX_ROW;
+import static porprezhas.model.dices.CellPosition.MIN_ROW;
 
 public class ToolCard3StrategyTest {
 
@@ -30,6 +32,9 @@ public class ToolCard3StrategyTest {
 
     private ToolCard toolCard3;
 
+    boolean bSuccess;
+
+
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
@@ -39,6 +44,8 @@ public class ToolCard3StrategyTest {
         testBoard = new Board(testPattern);
         testIntegerParams = new ArrayList<>();
         toolCard3 = new ToolCard(Card.Effect.TC3);
+
+        bSuccess = false;
     }
 
 
@@ -70,9 +77,8 @@ public class ToolCard3StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        boolean bSuccess = toolCard3.getStrategy().use(testParams);
+        bSuccess =toolCard3.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(true, bSuccess);
     }
 
@@ -102,9 +108,8 @@ public class ToolCard3StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        boolean bSuccess = toolCard3.getStrategy().use(testParams);
+        bSuccess =toolCard3.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(true, bSuccess);
     }
 
@@ -134,9 +139,8 @@ public class ToolCard3StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         // SUCCESS use
-        boolean bSuccess = toolCard3.getStrategy().use(testParams);
+        bSuccess =toolCard3.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(true, bSuccess);
     }
 
@@ -170,9 +174,8 @@ public class ToolCard3StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         exception.expect(PatternColorRestrictionException.class);
-        boolean bSuccess = toolCard3.getStrategy().use(testParams);
+        bSuccess =toolCard3.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(false, bSuccess);
     }
 
@@ -202,9 +205,8 @@ public class ToolCard3StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         exception.expect(AdjacentRestrictionException.class);
-        boolean bSuccess = toolCard3.getStrategy().use(testParams);
+        bSuccess = toolCard3.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(false, bSuccess);
     }
 
@@ -223,7 +225,7 @@ public class ToolCard3StrategyTest {
         int fromRow = 0;
         int fromCol = 0;
         int toRow = 0;
-        int toCol = 3;
+        int toCol = 2;
 
         testIntegerParams.add(fromRow);
         testIntegerParams.add(fromCol);
@@ -236,11 +238,43 @@ public class ToolCard3StrategyTest {
         System.out.println("\nrootMoveTest: ");
         testBoard.print(GuiSettings.bFixedFont);
 
-        exception.expect(AdjacentRestrictionException.class);
-        boolean bSuccess = toolCard3.getStrategy().use(testParams);
+//        exception.expect(AdjacentRestrictionException.class);
+        bSuccess =toolCard3.getStrategy().use(testParams);
 
+//        assertEquals(false, bSuccess);
+        assertEquals(true, bSuccess);
+    }
+
+    @Test
+    public void rootDeletionMoveTest() {
+        testBoard.insertDice(
+                new Dice(Dice.ColorDice.YELLOW, 1, -1),
+                0, 0);
+        testBoard.insertDice(
+                new Dice(Dice.ColorDice.YELLOW, 2, -1),
+                1, 1);
+
+        int fromRow = 0;
+        int fromCol = 0;
+        int toRow = 2;
+        int toCol = 2;
+
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
+
+        testParams = new ToolCardParam(null, null, null, testBoard, testIntegerParams);
+
+
+        System.out.println("\nrootMoveTest: ");
         testBoard.print(GuiSettings.bFixedFont);
-        assertEquals(false, bSuccess);
+
+//        exception.expect(AdjacentRestrictionException.class);
+        bSuccess =toolCard3.getStrategy().use(testParams);
+
+//        assertEquals(false, bSuccess);
+        assertEquals(true, bSuccess);
     }
 
 
@@ -253,9 +287,9 @@ public class ToolCard3StrategyTest {
                 new Dice(Dice.ColorDice.PURPLE, 2, -1),
                 0, 1);
 
-        int fromRow = 0;
+        int fromRow = MIN_ROW;
         int fromCol = 1;
-        int toRow = 0;
+        int toRow = MIN_ROW;
         int toCol = 3;
 
 
@@ -271,10 +305,29 @@ public class ToolCard3StrategyTest {
         testBoard.print(GuiSettings.bFixedFont);
 
         exception.expect(AdjacentRestrictionException.class);
-        boolean bSuccess = toolCard3.getStrategy().use(testParams);
+        bSuccess =toolCard3.getStrategy().use(testParams);
 
-        testBoard.print(GuiSettings.bFixedFont);
         assertEquals(false, bSuccess);
+    }
+
+
+
+    @After
+    public void tearDown() {
+        // Check After -result-
+        if(null != testBoard)
+            testBoard.print(GuiSettings.bFixedFont);
+
+        if(bSuccess)
+            System.out.println("\nSUCCESS!!!");
+        else
+            System.out.println("\nFAILURE!!!");
+        System.out.println("_______________________________________________________________________\n\n");
+        System.out.flush();
+
+        // check dice quantity in the board doesn't change
+        // eight it successes and fails
+        assertEquals(2, testBoard.getDiceQuantity());        // in these tests we always test with only 2 dice!!!
     }
 
 }
