@@ -570,13 +570,14 @@ class ToolCard8 extends ToolCard8_9 {
 }
 
 class ToolCard9 extends ToolCard8_9 {
-    private final int parameterSize = 2;
+    private final int parameterSize = 3;
 
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param  ||  !param.safetyCheck(parameterSize)){
+            return false;}
+
 
         param.getParams().add(Board.Restriction.WITHOUT_ADJACENT.ordinal());
         return super.use(param);

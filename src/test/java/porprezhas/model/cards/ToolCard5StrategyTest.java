@@ -124,8 +124,6 @@ public class ToolCard5StrategyTest {
         assertEquals(roundTrack.getRoundDice(4).get(0).getColorDice(), Dice.ColorDice.PURPLE);
         assertEquals(roundTrack.getRoundDice(4).get(0).getDiceNumber(), 5);
 
-
-
     }
 
 }
