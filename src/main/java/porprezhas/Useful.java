@@ -1,6 +1,9 @@
 package porprezhas;
 
+import java.util.*;
+
 public class Useful {
+    static final Random seededRandom = new Random();
 
     // return a true when the value is between the bound, Including the bound
     public static boolean isValueBetweenInclusive(long x, long lowBound, long highBound) {
@@ -52,6 +55,36 @@ public class Useful {
         return firstValue < secondValue ? firstValue : secondValue;
     }
 */
+
+
+    public static int getRandomNumber(Integer length) {
+        return seededRandom.nextInt(length);
+    }
+
+    public static int getRandomNumberExcept(Integer length, Integer... excepts) {
+        if( length <= excepts.length )
+            return 0;
+
+        // calculate not excepted numbers quantity
+        int randomNumber = getRandomNumber(length - excepts.length );
+
+        // sort the excepted numbers
+        List<Integer> integerExcepts = Arrays.asList(excepts);
+        integerExcepts.sort(Comparator.naturalOrder());
+
+        // SKIP every excepted numbers in order
+        for (Integer except : integerExcepts) {
+            // if have already skipped all exceptions
+            if(randomNumber < except)
+                break;
+            // skip
+            if( randomNumber == except ) {
+                randomNumber++;
+            }
+        }
+        return randomNumber;
+    }
+
 
 
     public static StringBuilder appendSpaces(StringBuilder sb, int nSpace) {

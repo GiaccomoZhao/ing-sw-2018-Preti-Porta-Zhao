@@ -1,17 +1,20 @@
 package porprezhas.model.cards;
 
 import porprezhas.Useful;
+import porprezhas.exceptions.GameAbnormalException;
+import porprezhas.exceptions.diceMove.DiceNotFoundException;
+import porprezhas.exceptions.diceMove.IndexOutOfBoardBoundsException;
+import porprezhas.exceptions.toolCard.*;
 import porprezhas.model.dices.*;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 
 import static porprezhas.model.cards.ToolCardParam.IncDec.DECREMENT;
 import static porprezhas.model.cards.ToolCardParam.IncDec.INCREMENT;
 import static porprezhas.model.dices.Board.COLUMN;
 import static porprezhas.model.dices.Board.ROW;
+import static porprezhas.model.dices.CellPosition.*;
 import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
 import static porprezhas.model.dices.Dice.MIN_DICE_NUMBER;
 
@@ -35,6 +38,7 @@ public interface ToolCardStrategy {
 }
 
 
+
 // Effect of tool card N.1
 // @Param bIncDec   bIncDec == true → increment,
 //                  bIncDec == false → decrement the number of dice
@@ -52,7 +56,8 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        // check NULL
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         // initialize Parameters
@@ -73,17 +78,10 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
 
     private boolean use(DraftPool draftPool, int indexChosenDice, boolean bIncDec) {
         // safety Check
-        // Null Pointer
-        if(null == draftPool)
+        if(null == draftPool  ||  !draftPool.safetyCheck(indexChosenDice))
             return false;
-        List<Dice> diceList = draftPool.diceList();
-        if(null == diceList)
-            return false;
-        // Index Out of Bounds
-        if(Useful.isValueOutOfBounds(indexChosenDice, 0, diceList.size()-1)) {
-            return false;
-        }
 
+        List<Dice> diceList = draftPool.diceList();
 
         // Get dice Information from selected Dice
         Dice chosenDice = diceList.get(indexChosenDice);
@@ -117,7 +115,7 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
 
 
 class ToolCard2_4 implements ToolCardStrategy, Serializable {
-    private boolean savedReturn = false;
+    private boolean savedReturn;
 
     private Board board;
     private int fromRow;
@@ -128,11 +126,22 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 5;
 
+    public ToolCard2_4() {
+        this.savedReturn = false;
+    }
+
     @Override
-    public boolean use(ToolCardParam param) {
-        // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
-            return false;
+    public boolean use(ToolCardParam param)
+            throws IncorrectParamQuantityException, MoveToSelfException, NotRemovableDiceException {
+
+        // reset the return
+        resetReturn();      // TODO: reset this at NEW_TURN
+
+        // safety Check parameter quantity
+        if(null == param  ||  !param.safetyCheck(parameterSize)) {
+            throw new GameAbnormalException("integer parameter should not be incorrect!\n"
+                    + "A previous Check must not be verified");
+        }
 
         // initialize Parameters
         int iParam = 0;
@@ -141,18 +150,47 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
         this.fromColumn = param.getParams().get(iParam++);
         this.toRow      = param.getParams().get(iParam++);
         this.toColumn   = param.getParams().get(iParam++);
-        this.restriction= Board.Restriction.values()[ param.getParams().get(iParam++) ];
+        this.restriction= Board.Restriction.values()[ param.getParams().get(iParam) ];
 
-        // use tool card
+        // CHECK
+        // check NULL Pointer
+        if(null == board) {
+            throw new GameAbnormalException("Board is " + board + "!");
+        }
+        // check Out of Bound
+        if(     Useful.isValueOutOfBounds(fromRow,      MIN_ROW,    MAX_ROW)    ||
+                Useful.isValueOutOfBounds(fromColumn,   MIN_COLUMN, MAX_COLUMN) ) {
+            throw new IndexOutOfBoardBoundsException(fromRow, fromColumn);
+
+        }
+        if(     Useful.isValueOutOfBounds(toRow,        MIN_ROW,    MAX_ROW)    ||
+                Useful.isValueOutOfBounds(toColumn,     MIN_COLUMN, MAX_COLUMN)     ) {
+            throw new IndexOutOfBoardBoundsException(toRow, toColumn);
+        }
+        // NULL Dice
+        if(null == board.getBoard()[fromRow][fromColumn]) {
+            throw new DiceNotFoundInBoardException(fromRow, fromColumn);
+        }
+        // moving to the same position
+        if(fromRow == toRow && fromColumn == toColumn) {
+            throw new MoveToSelfException();
+        }
+
+
+        // check adjacent constraint after removing this
+        if(!board.canBeRemoved(fromRow, fromColumn)) {
+            throw new NotRemovableDiceException(fromRow, fromColumn, board.toString(null, fromRow, fromColumn));
+        }
+
+        // DO the operation
         savedReturn = use(board, fromRow, fromColumn, toRow, toColumn, restriction);
         return savedReturn;
     }
 
-    protected boolean use(Board.Restriction restriction) {
-        savedReturn = use(board, fromRow, fromColumn, toRow, toColumn, restriction);
-        return savedReturn;
-    }
 
+    public void resetReturn() {
+        savedReturn = false;
+    }
 
     public boolean getReturn() {
         return savedReturn;
@@ -160,42 +198,80 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
 
 
     // Effect of tool card N.2-3, used by card n.4 too
-    private boolean use(Board board, int fromRow, int fromColumn, int toRow, int toColumn, Board.Restriction restriction) {
+    private boolean use(Board board, int fromRow, int fromColumn, int toRow, int toColumn, Board.Restriction restriction)
+            throws ToolCardParameterException {
+        // remove and save the dice
+        Dice removedDice = board.removeDice(fromRow, fromColumn);
 
-        if(board.canBeRemoved(fromRow, fromColumn)) {
-            // remove and save the dice
-            Dice removedDice = board.removeDice(fromRow, fromColumn);
-
+        try {
+            board.insertDice(removedDice, toRow, toColumn, restriction);
+        } catch (Exception e) {
+            // if the insertion is not a valid move then we undo the remove
             try {
-                board.insertDice(removedDice, toRow, toColumn, restriction);
-            } catch (Exception e) {
-                // if the insertion is not a valid move then we undo the remove
-                try {
-                    board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
-                } catch (Exception e1) {
-                    System.err.println("Can not use tool card " + this + "");
-                } finally {
-                    return false;
-                }
+                board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
+            } catch (Exception e1) {
+                System.err.println("Abnormal error: Can not use tool card " + this + "");
+                e1.printStackTrace();
             }
+
+            throw e; // new ToolCardParameterException(e.getMessage());
         }
-        return false;
+        return true;
     }
 }
 
 class ToolCard2 extends ToolCard2_4 {
+    private final int parameterSize = 4;
+
+    public ToolCard2() {
+        super();
+    }
+
+
     @Override
-    public boolean use(ToolCardParam param) {
-        param.getParams().add(Board.Restriction.COLOR.ordinal());
-        return super.use(param);
+    public boolean use(ToolCardParam param)
+            throws IncorrectParamQuantityException, MoveToSelfException, NotRemovableDiceException {
+
+        // safety Check
+        // check NULL
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+                throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
+
+        // add parameter
+        ToolCardParam newToolCardParam = new ToolCardParam(param, Board.Restriction.WITHOUT_COLOR.ordinal());
+
+        // use
+        return super.use(newToolCardParam);
     }
 }
 
 class ToolCard3 extends ToolCard2_4 {
+    private final int parameterSize = 4;
+
+    public ToolCard3() {
+        super();
+    }
+
     @Override
-    public boolean use(ToolCardParam param) {
-        param.getParams().add(Board.Restriction.NUMBER.ordinal());
-        return super.use(param);
+    public boolean use(ToolCardParam param)
+            throws IncorrectParamQuantityException, MoveToSelfException, NotRemovableDiceException {
+
+        // safety Check
+        // check NULL
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
+
+        // add parameter
+        ToolCardParam newToolCardParam = new ToolCardParam(param, Board.Restriction.WITHOUT_NUMBER.ordinal());
+        return super.use(newToolCardParam);
     }
 }
 
@@ -213,13 +289,16 @@ class ToolCard4 extends ToolCard2_4 {
 
     private final int parameterSize = 8;
 
+    public ToolCard4() {
+        super();
+    }
 
     // Effect of tool card N.4: Lathekin
     // Move 2 dices
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         // Initialize from Parameters
@@ -285,7 +364,7 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         int iParam = 0;
@@ -331,7 +410,7 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         this.draftPool      = param.getDraftPool();
@@ -384,7 +463,7 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         this.draftPool = param.getDraftPool();
@@ -424,7 +503,7 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         int iParam = 0;
@@ -482,7 +561,7 @@ class ToolCard8 extends ToolCard8_9 {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         param.getParams().add(Board.Restriction.ALL.ordinal());
@@ -496,7 +575,7 @@ class ToolCard9 extends ToolCard8_9 {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         param.getParams().add(Board.Restriction.WITHOUT_ADJACENT.ordinal());
@@ -516,7 +595,7 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         this.draftPool      = param.getDraftPool();
@@ -558,7 +637,7 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         this.draftPool      = param.getDraftPool();
@@ -609,7 +688,7 @@ class ToolCard12 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  null == param.getParams()  ||  param.getParams().size() != parameterSize)
+        if(null == param  ||  !param.safetyCheck(parameterSize))
             return false;
 
         int iParam = 0;

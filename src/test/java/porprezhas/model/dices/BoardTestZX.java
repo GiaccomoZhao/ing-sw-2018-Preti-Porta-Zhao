@@ -9,9 +9,7 @@ import java.util.Random;
 import porprezhas.model.dices.Dice.ColorDice;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static porprezhas.model.dices.Board.COLUMN;
 import static porprezhas.model.dices.Board.ROW;
 import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
@@ -183,30 +181,30 @@ public class BoardTestZX {
     }
 
     // check board.insert out of bounds
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test (expected = IndexOutOfBoardBoundsException.class)
     public void IndexOutOfBounds_RowColumnUnderTest() {
         voidBoard.insertDice(dieGeneric, -1, -1);
     }
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test (expected = IndexOutOfBoardBoundsException.class)
     public void IndexOutOfBounds_RowColumnOverTest() {
         voidBoard.insertDice(dieGeneric, ROW, Board.COLUMN);
     }
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test (expected = IndexOutOfBoardBoundsException.class)
     public void IndexOutOfBounds_RowUnderTest() {
         int correctColumn = random.nextInt(Board.COLUMN);
         voidBoard.insertDice(dieGeneric, -1, correctColumn);
     }
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test (expected = IndexOutOfBoardBoundsException.class)
     public void IndexOutOfBounds_ColumnUnderTest() {
         int correctRow = random.nextInt(ROW);
         voidBoard.insertDice(dieGeneric, correctRow, -1);
     }
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test (expected = IndexOutOfBoardBoundsException.class)
     public void IndexOutOfBounds_RowOverTest() {
         int correctColumn = random.nextInt(Board.COLUMN);
         voidBoard.insertDice(dieGeneric, ROW, correctColumn);
     }
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test (expected = IndexOutOfBoardBoundsException.class)
     public void IndexOutOfBounds_ColumnOverTest() {
         int correctRow = random.nextInt(ROW);
         voidBoard.insertDice(dieGeneric, correctRow, Board.COLUMN);
@@ -234,7 +232,7 @@ public class BoardTestZX {
     public void ColorRestrictionTest() {
         assertTrue( testBoard.insertDice(diePurple, 0, 1) );  // correct action
     }
-    @Test (expected = ColorRestrictionException.class)
+    @Test (expected = PatternColorRestrictionException.class)
     public void ColorRestrictionFailureTest() {
         testBoard.insertDice(dieNotPurple, 0, 1);   // not correct Action
     }
@@ -245,7 +243,7 @@ public class BoardTestZX {
     public void NumberRestrictionTest() {
         assertTrue( testBoard.insertDice(die1, 0, 0) );
     }
-    @Test (expected = NumberRestrictionException.class)
+    @Test (expected = PatternNumericRestrictionException.class)
     public void NumberRestrictionFailureTest() {
         testBoard.insertDice(dieNot1, 0, 0);
     }
@@ -350,8 +348,8 @@ public class BoardTestZX {
     // ***********************************
 
     @Test
-    public void removeTest() {
-        // success test
+    public void removableTest() {
+        // SUCCESS test
         patternTest();
         assertTrue( testBoard.canBeRemoved(0, 0) );
 
@@ -359,11 +357,18 @@ public class BoardTestZX {
         patternTest();
         assertTrue( testBoard.canBeRemoved(1, 1) );
 
-        // failure test
+        // FAILURE test
         assertTrue( voidBoard.insertDice(dieGeneric, 0, 1, Board.Restriction.NONE) );
         assertTrue( voidBoard.insertDice(dieGeneric, 1, 2, Board.Restriction.NONE) );
         assertFalse( voidBoard.canBeRemoved(0, 1) );
 
     }
 
+    @Test
+    public void forceRemoveTest() {
+        patternTest();
+        assertTrue( testBoard.insertDice(dieNot1ButPurple, 2, 2) );
+        assertFalse( testBoard.canBeRemoved(1, 1) );
+        assertNull( testBoard.removeDice(1, 1) );
+    }
 }

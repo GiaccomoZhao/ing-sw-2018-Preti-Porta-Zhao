@@ -25,6 +25,7 @@ public class ToolCard extends Card implements Serializable {
     private Dice.ColorDice cardColor;
 
 
+    // NB: create a new ToolCard means get the instance of this card, it is NOT a NEW card
     public ToolCard(Effect effect) {
         super(effect);  //if(effect.ID<16) throw  new InvalidIdException();
         setStrategy();
@@ -37,6 +38,7 @@ public class ToolCard extends Card implements Serializable {
         return strategy;
     }
 
+    // Get Strategy from Array
     private void setStrategy() {
         strategy = ToolCardStrategy.list[effect.ID -1];
     }
@@ -48,6 +50,7 @@ public class ToolCard extends Card implements Serializable {
     }
 
 
+
 /*
     public boolean verify(int cardId) {
         if(this.effect.ID != cardId) {
@@ -56,7 +59,6 @@ public class ToolCard extends Card implements Serializable {
         } else
             return true;
     }
-
 
     // Effect of tool card N.1
     // @Param bIncDec   bIncDec == true → increment,
@@ -83,7 +85,6 @@ public class ToolCard extends Card implements Serializable {
             return false;
         return true;
     }
-
 
     // Effect of tool card N.2-3, used by card n.4 too
     public boolean use(Board board, int fromRow, int fromColumn, int toRow, int toColumn, Board.Restriction restriction) {

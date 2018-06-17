@@ -1,10 +1,5 @@
 package porprezhas.model.dices;
 
-import com.github.javafaker.Bool;
-import porprezhas.exceptions.diceMove.ColorRestrictionException;
-import porprezhas.exceptions.diceMove.NumberRestrictionException;
-import porprezhas.model.dices.Dice;
-
 import java.io.Serializable;
 
 import static porprezhas.model.dices.Dice.ColorDice.WHITE;

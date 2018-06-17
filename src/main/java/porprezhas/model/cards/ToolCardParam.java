@@ -2,6 +2,7 @@ package porprezhas.model.cards;
 
 import porprezhas.model.dices.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToolCardParam {
@@ -54,6 +55,18 @@ public class ToolCardParam {
         this.params     = param.getParams().subList(fromIndex, toIndex);
     }
 
+    public ToolCardParam(ToolCardParam param, Integer addIntegerParam) {
+        // NB: Arrays.asList() returns AbstractList that hasn't implemented a correct add method
+        // So: to avoid adding on a AbstractList, we must create a new Concrete List, like ArrayList
+        ArrayList newParams = new ArrayList(param.getParams());
+        newParams.add(addIntegerParam);
+        this.params     = newParams;
+
+        this.roundTrack = param.getRoundTrack();
+        this.draftPool  = param.getDraftPool();
+        this.diceBag    = param.getDiceBag();
+        this.board      = param.getBoard();
+    }
 
     public RoundTrack getRoundTrack() {
         return roundTrack;
@@ -73,5 +86,13 @@ public class ToolCardParam {
 
     public List<Integer> getParams() {
         return params;
+    }
+
+
+
+    public boolean safetyCheck(int parameterSize) {
+        if(null == this.getParams()  ||  this.getParams().size() != parameterSize)
+            return false;
+        return true;
     }
 }

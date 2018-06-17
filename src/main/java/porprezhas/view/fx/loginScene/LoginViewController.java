@@ -115,8 +115,8 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         // Add the transition animation
         // Using Opacity Fading
-        KeyFrame keyFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN * 0.2),
-                new KeyValue(rootLayout.opacityProperty(), 1));
+//        KeyFrame keyFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN * 0.2),
+//                new KeyValue(rootLayout.opacityProperty(), 1));
 
         // and using Rotation transformation
         KeyFrame keyRotate = new KeyFrame(Duration.millis(STAGE_FADE_IN),
@@ -124,26 +124,42 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         // and add window dimension Growing effect
         // using shape Clip
-        KeyFrame keyViewPortDimension = new KeyFrame(Duration.millis(STAGE_FADE_IN*0.6),
+        KeyFrame keyViewPortDimension = new KeyFrame(Duration.millis(STAGE_FADE_IN*0.80),
                 new KeyValue(clipWindow.radiusProperty(), clipRadius));
 
 
         // add the effects in the time line
-        timeline.getKeyFrames().add(keyFadeIn);
+//        timeline.getKeyFrames().add(keyFadeIn);
         timeline.getKeyFrames().add(keyRotate);
         timeline.getKeyFrames().add(keyViewPortDimension);
 
         timeline.setDelay(Duration.millis(STAGE_FADE_IN/2));
 
-        //
+        // set Show Component transition Animation
         timeline.setOnFinished((actionEvent) -> {
-            ;
+            if(null == username  ||  voidString.equals(username)) {
+                loginScene.setVisible(true);
+                joinScene.setVisible(false);
+
+            Timeline sceneFading = new Timeline();
+
+            // Add the transition animation
+            // Using Opacity Fading
+            KeyFrame sceneFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN * 0.3),
+                    new KeyValue(loginScene.opacityProperty(), 1));
+
+            sceneFading.getKeyFrames().add(sceneFadeIn);
+
+            sceneFading.play();
+            }
         });
 
+        // set on Window appear Animation
         stageManager.getStage(stageName).setOnShowing(event -> {
-            rootLayout.setOpacity(0.8f);    // Set starting Opacity value
-            clipWindow.setRadius(50);      // Set starting Dimension
+            rootLayout.setOpacity(1);    // Set starting Opacity value
+            clipWindow.setRadius(68);      // Set starting Dimension
 //            backgroundPane.setRotate(180);
+            loginScene.setOpacity(0);
             timeline.play();
         });
         if(bDebug)

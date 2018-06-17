@@ -131,4 +131,15 @@ public class DraftPool implements Serializable {
                 "{" + draftPool +
                 '}';
     }
+
+    public boolean safetyCheck(int indexDice) {
+        // check Null Pointer
+        if(null == draftPool  ||  0 == draftPool.size())
+            return false;
+        // check Index Out of Bounds
+        if(Useful.isValueOutOfBounds(indexDice, 0, draftPool.size()-1)) {
+            return false;
+        }
+        return true;
+    }
 }

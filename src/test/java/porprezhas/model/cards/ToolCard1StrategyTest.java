@@ -19,6 +19,7 @@ public class ToolCard1StrategyTest {
 
     Random random;  // used to choose an in range number arbitrarily
 
+    // used dice container
     DraftPool draftPool;
 
     // not used container
@@ -56,18 +57,25 @@ public class ToolCard1StrategyTest {
         param = new ToolCardParam(null, null, null, null, null);
         assertFalse(toolCard1.getStrategy().use(param));
 
-        // test with Null Integer Params
-        param = new ToolCardParam(null, draftPool, diceBag, null, null);
+        // test with Only DraftPool, but Null Integer Params
+        param = new ToolCardParam(null, draftPool, null, null, null);
         assertFalse(toolCard1.getStrategy().use(param));
 
-        // test with Correct Container and param, but Null not used Container
+
+
+        // setup correct integer Params
         int indexDraftPool = 0;
         integerParams.add(indexDraftPool);   // correct param, the first dice of the list
         integerParams.add(ToolCardParam.IncDec.DECREMENT.toInteger());  // correct param
-        param = new ToolCardParam(null, draftPool, null, null, integerParams);   // correct Container
+
+        // test with NULL Container, but Correct params
+        param = new ToolCardParam(null, null, null, null, integerParams);
+        assertFalse(toolCard1.getStrategy().use(param));
 
 
         // CORRECT TEST
+        // test with Correct Container and param, but NULL not used Container
+        param = new ToolCardParam(null, draftPool, null, null, integerParams);   // correct Container and Params
 
         // PRINT the Draft Pool, because we are testing a generic dices
         System.out.println("\n\nnullTest: ");
@@ -108,6 +116,10 @@ public class ToolCard1StrategyTest {
 
         // test with EMPTY Dice Container and Correct Integer Params
         param = new ToolCardParam(emptyRoundTrack, emptyDraftPool, emptyDiceBag, emptyBoard, integerParams);
+        assertFalse(toolCard1.getStrategy().use(param));
+
+        // test with EMPTY Dice Container and Correct Integer Params, and Null unused container
+        param = new ToolCardParam(null, emptyDraftPool, null, null, integerParams);
         assertFalse(toolCard1.getStrategy().use(param));
     }
 
@@ -314,4 +326,15 @@ public class ToolCard1StrategyTest {
         assertEquals(1, draftPool.diceList().size());
     }
 
+    @Test
+    public void returnFalseTest() {
+        decrement1Test();
+        assertEquals( false, ((ToolCard1) toolCard1.getStrategy()).getReturn() );
+    }
+
+    @Test
+    public void returnTrueTest() {
+        decrement6Test();
+        assertEquals( true, ((ToolCard1) toolCard1.getStrategy()).getReturn() );
+    }
 }
