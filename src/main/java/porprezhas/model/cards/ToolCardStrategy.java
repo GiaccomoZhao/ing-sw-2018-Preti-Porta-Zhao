@@ -358,7 +358,7 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
     private int indexRound;
     private int indexDiceRoundTrack;    // the dice to be removed from round track
 
-    private final int parameterSize = 2;
+    private final int parameterSize = 3;
 
 
     @Override

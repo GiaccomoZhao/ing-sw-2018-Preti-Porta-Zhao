@@ -139,7 +139,7 @@ public class ResultViewController implements Initializable, SceneController, Mov
 
 
         // add Ending music
-        BackgroundMusicPlayer.playRandomMusic(pathToMusicDirectory);
+    //    BackgroundMusicPlayer.playRandomMusic(pathToMusicDirectory);
 
     }
 

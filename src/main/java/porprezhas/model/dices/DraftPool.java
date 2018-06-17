@@ -115,8 +115,8 @@ public class DraftPool implements Serializable {
         int index = getDiceIndexByID(idDiceDraftPool);
         Dice oldDice;
 
-        oldDice = draftPool.get(index-1);
-        draftPool.set(index-1,newDice);
+        oldDice = draftPool.get(index);
+        draftPool.set(index,newDice);
         return oldDice;
     }
 

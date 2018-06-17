@@ -40,7 +40,7 @@ public class LoginView extends Application{
         musicFiles[0] = "file:///" + (directory + "\\" + musicFiles[0]).replace("\\", "/").replaceAll(" ", "%20");
         MediaPlayer player = new MediaPlayer( new Media(musicFiles[0]) );
 
-        player.play();
+      //  player.play();
 
 
         this.primaryStage = primaryStage;
