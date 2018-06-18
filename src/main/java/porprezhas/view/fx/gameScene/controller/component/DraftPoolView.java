@@ -39,7 +39,7 @@ public class DraftPoolView implements SubController{
 
 
 
-    protected GameViewController parentController;
+    private GameViewController parentController;
     @Override
     public void setupSubController(GameViewController parentController) {
         this.parentController = parentController;
@@ -145,6 +145,24 @@ public class DraftPoolView implements SubController{
         return stackPane;
     }
 
+    public int getIndexByDiceID(long diceID) throws DiceNotFoundException{
+        boolean bFound = false;
+        int i = 0;
+        for (Node node : stackPane.getChildren()) {
+            if(node instanceof DiceView) {
+                DiceView diceView = (DiceView) node;
+                if(diceView.getDiceID() == (diceID)) {
+                    bFound = true;
+                    break;
+                }
+                i++;
+            }
+        }
+        if(bFound)
+            return i;
+        else
+            throw new DiceNotFoundException("Dice with id = " + diceID + " NOT FOUND in " + DiceContainer.fromInt(idBoard.toInt()) );
+    }
 
 
     // *****************************************
@@ -289,7 +307,7 @@ public class DraftPoolView implements SubController{
             // the drag and drop gesture ended
             // if the data was successfully moved, clear it
             if (event.getTransferMode() == TransferMode.MOVE) {
-                int index = getIndexByDiceView(diceView);
+                int index = getIndexByDiceID(diceView.getDiceID());
                 if(index >= 0) {
                     // controller.chooseDice(index)
 //                    chooseDice(index); //clear()
@@ -308,7 +326,8 @@ public class DraftPoolView implements SubController{
         diceView.toFront();
     }
 
-    private int getIndexByDiceView(DiceView searchedDiceView) {
+
+/*    private int getIndexByDiceView(DiceView searchedDiceView) {
         boolean bFound = false;
         int i = 0;
         for (Node node : stackPane.getChildren()) {
@@ -325,6 +344,7 @@ public class DraftPoolView implements SubController{
             return i;
         return -1;  // or throw exception
     }
+    */
 /*
     public Dice chooseDice(int indexDice) {
         stackPane.getChildren().remove(indexDice);
@@ -354,7 +374,7 @@ public class DraftPoolView implements SubController{
 
     private void playAnimation (DiceView diceView, int toX, int toY) {
         Random random = new Random();
-        int ranndomDuration = random.nextInt(1000);
+        int randomDuration = random.nextInt(1000);
 
 //        System.out.println("to x = " + toX + " \tto y =" + toY);
         //定义矩形的淡入淡出效果
@@ -366,7 +386,7 @@ public class DraftPoolView implements SubController{
         //fadeTransition.play();
 
         //定义矩形的平移效果
-        TranslateTransition translateTransition=new TranslateTransition(Duration.millis(2000 + ranndomDuration), diceView);
+        TranslateTransition translateTransition=new TranslateTransition(Duration.millis(2000 + randomDuration), diceView);
         translateTransition.setFromX(random.nextGaussian() * 100 % 100);
         translateTransition.setFromY(random.nextGaussian() * 100 % 100);
         translateTransition.setToX(toX);
@@ -377,8 +397,8 @@ public class DraftPoolView implements SubController{
 
         //定义矩形旋转效果
         RotateTransition rotateTransition =
-                new RotateTransition(Duration.millis(2400 + ranndomDuration), diceView);
-        rotateTransition.setByAngle(1.2f * (2400+ranndomDuration) );//旋转度数
+                new RotateTransition(Duration.millis(2400 + randomDuration), diceView);
+        rotateTransition.setByAngle(1.2f * (2400+randomDuration) );//旋转度数
 //        rotateTransition.setCycleCount(1);
 //        rotateTransition.setAutoReverse(true);
         //rotateTransition.play();

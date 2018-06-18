@@ -112,10 +112,11 @@ public class RMIClient implements RMIClientInterface, Runnable {
                         }
                         try {
 
-                            int index = Integer.parseInt(splittedStrings[1]) -1;
-                            long diceID = ((CLIViewUpdateHandler) viewUpdateHandlerInterface).getID(index);
+                            int indexDiceDraftPool = Integer.parseInt(splittedStrings[1]) -1;
+                            long diceID = ((CLIViewUpdateHandler) viewUpdateHandlerInterface).getID(indexDiceDraftPool);
 
                             if(server.insertedDice(diceID,Integer.parseInt(splittedStrings[2])-1 , Integer.parseInt(splittedStrings[3])-1, username )) {
+//                            if(server.insertedDice(indexDiceDraftPool,Integer.parseInt(splittedStrings[2])-1 , Integer.parseInt(splittedStrings[3])-1, username )) {
 
                                 System.out.println("Dice inserted!");
                                 //TO-DO fix

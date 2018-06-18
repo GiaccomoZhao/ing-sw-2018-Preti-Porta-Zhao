@@ -3,6 +3,7 @@ package porprezhas;
 import porprezhas.Network.*;
 import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
+import porprezhas.view.fx.gameScene.state.DiceContainer;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -89,7 +90,7 @@ public class CliClient {
 
                             int index = Integer.parseInt(splittedStrings[1]) -1;
                             long diceID = ((CLIViewUpdateHandler) viewUpdateHandlerInterface).getID(index);
-                            ClientActionSingleton.getClientAction().moveDice(0, diceID, 0,
+                            ClientActionSingleton.getClientAction().insertDice( diceID,
                                     Integer.parseInt(splittedStrings[2]) -1 , Integer.parseInt(splittedStrings[3])-1);
 
                         break;

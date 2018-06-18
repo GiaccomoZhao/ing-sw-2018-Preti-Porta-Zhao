@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
 import porprezhas.Network.ClientActionSingleton;
+import porprezhas.exceptions.GameAbnormalException;
 import porprezhas.model.*;
 import porprezhas.model.cards.Card;
 import porprezhas.model.cards.PrivateObjectiveCard;
@@ -30,6 +31,7 @@ import porprezhas.view.fx.SceneController;
 import porprezhas.view.fx.StageManager;
 import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.component.*;
+import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.view.fx.gameScene.state.GameViewState;
 import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
@@ -593,7 +595,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     // adjust Player panel size, working on button size and layout padding
     private void updatePlayerPaneSize(double playerPaneWidth, double playerPaneHeight) {
-        if(bDebug)
+        if (bDebug)
             System.out.println("fx_playerPane: w=" + playerPaneWidth + "\th=" + playerPaneHeight);
 
         // dimension configured for player panel
@@ -613,53 +615,98 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
             fx_buttonPass.setPrefWidth(defaultPassButtonMinSize);
             ((Pane) fx_buttonPass.getParent()).setPadding(new Insets(0, 0, 0, 0));
         }
-   }
+    }
 
-   // this resize only the round numbers
-   private void updateRoundTrackSize (double roundTrackParentWidth, double roundTrackHeight) {
-       if (bDebug)
-           System.out.println("update round track: w=" + roundTrackParentWidth + "\th=" + roundTrackHeight);
-       final double referenceButtonSize = 24;  // estimated button size, not necessary to have an accurate measure of this
-       double height = roundTrackHeight;   // fx_roundTrack number icon height
-       double width = (roundTrackParentWidth - referenceButtonSize) / 10;  // fx_roundTrack number icon width, 10 numbers
-       if (width >= height) {
-           width = height;     // adapt to height
-       } else {
-           height = width;     // adapt to width, cut height
-       }
-       for (Node node : fx_roundTrack.getChildren()) {
-           ImageView imageView = (ImageView) node;
-           imageView.setFitHeight(width);  // height == width
-           imageView.setFitWidth(width);
+    // this resize only the round numbers
+    private void updateRoundTrackSize (double roundTrackParentWidth, double roundTrackHeight) {
+        if (bDebug)
+            System.out.println("update round track: w=" + roundTrackParentWidth + "\th=" + roundTrackHeight);
+        final double referenceButtonSize = 24;  // estimated button size, not necessary to have an accurate measure of this
+        double height = roundTrackHeight;   // fx_roundTrack number icon height
+        double width = (roundTrackParentWidth - referenceButtonSize) / 10;  // fx_roundTrack number icon width, 10 numbers
+        if (width >= height) {
+            width = height;     // adapt to height
+        } else {
+            height = width;     // adapt to width, cut height
+        }
+        for (Node node : fx_roundTrack.getChildren()) {
+            ImageView imageView = (ImageView) node;
+            imageView.setFitHeight(width);  // height == width
+            imageView.setFitWidth(width);
 //            imageView.setPreserveRatio(true); // this is the default value
-       }
-   }
+        }
+    }
 
 
+
+    // ********** <<< Send Message to Server >>> **********
+    private boolean insertDice(long diceID, int idBoardTo, int row, int col) {
+        if(idBoardTo == DiceContainer.fromPlayer(playerPosition).toInt()) {
+            return ClientActionSingleton.getClientAction().
+                    insertDice(diceID, row, col);
+        } else
+            return false;
+    }
+
+    public boolean moveDice(int idBoardFrom, DiceView diceView, int idBoardTo, int toRow, int toCol) {
+        boolean bSuccess = false;
+        int fromRow = diceView.getRow();
+        int fromCol = diceView.getColumn();
+        long diceID = diceView.getDiceID();
+
+        switch (DiceContainer.fromInt(idBoardFrom)) {
+            case DRAFT:
+//                int index = draftPoolView.getIndexByDiceID(diceID);
+                bSuccess = insertDice(diceID, idBoardTo, toRow, toCol);
+                break;
+            case BAG:
+                break;
+            case TRACK:
+                // TODO: save the action for tool card?
+                break;
+            case BOARD1:
+            case BOARD2:
+            case BOARD3:
+            case BOARD4:
+                // todo
+                break;
+            default:
+                throw new GameAbnormalException("Abnormal Error in moveDice with dice container id = " + DiceContainer.fromInt(idBoardFrom));
+        }
+        return bSuccess;
+    }
 
 
     // ******************************************
     // ********** <<< FXML Methods >>> **********
 
-    @FXML protected  void onShowRoundTrackDices(ActionEvent event) {
+    @FXML
+    protected void onShowRoundTrackDices(ActionEvent event) {
         roundTrackBoard.showRoundTrackDices(-1);
     }
 
-    @FXML protected void onMovingInRoundTrack(MouseEvent event) {
+    @FXML
+    protected void onMovingInRoundTrack(MouseEvent event) {
 /*        try { return; } catch (Exception e) { e.printStackTrace(); }
         int i = (int) (event.getX() / ((HBox) event.getSource()).getWidth() *10);
         if( i > 10)
             i  = 9;
         System.out.println("Moving on " + (i+1) );
-*/    }
-    @FXML protected void onTabelEntered(MouseEvent event) {
+*/
+    }
+
+    @FXML
+    protected void onTabelEntered(MouseEvent event) {
         System.out.println("Tabel Entered!");
     }
-    @FXML protected void onTabelExited(MouseEvent event) {
+
+    @FXML
+    protected void onTabelExited(MouseEvent event) {
         System.out.println("Tabel Exited");
     }
 
-    @FXML protected void onPass(ActionEvent event) {
+    @FXML
+    protected void onPass(ActionEvent event) {
         System.out.println("PASS");
         goToNextStage(); // TODO:  delete this
         // for test
@@ -672,20 +719,24 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
             );
         }
         draftPoolView.reroll(diceList);*/
-       if(!bDebug)
-        ClientActionSingleton.getClientAction().pass();
+        if (!bDebug)
+            ClientActionSingleton.getClientAction().pass();
     }
 
-    @FXML protected void onToolCardTab() {
+    @FXML
+    protected void onToolCardTab() {
 //        System.out.println("Tool Cards");
     }
-    @FXML protected void onPrivateCardTab() {
+
+    @FXML
+    protected void onPrivateCardTab() {
         //System.out.println("Private Objectives");
     }
-    @FXML protected void onPublicCardTab() {
+
+    @FXML
+    protected void onPublicCardTab() {
         //System.out.println("Public Objectives");
     }
-
 
 
     // ********************************************
@@ -712,12 +763,12 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
     public DiceView addDice(int indexPlayer, Dice dice, int row, int col) {
-        if(null == boardList)
+        if (null == boardList)
             System.err.println("\nWarning BoardList is empty!!!\n");
         return boardList.get(indexPlayer).addDice(dice, row, col);
     }
 
-    public DiceView addDiceToRoundTrack(Dice dice, int round0_9){
+    public DiceView addDiceToRoundTrack(Dice dice, int round0_9) {
         DiceView diceImage = roundTrackBoard.addDice(dice, 0, round0_9);
 //        if(null != diceImage)
 //        diceImage.setPreserveRatio(false);
@@ -726,9 +777,6 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 //        diceImage.fitHeightProperty().bind( fx_diceListReference.heightProperty().divide(Game.GameConstants.MAX_DICE_PER_ROUND));
         return diceImage;
     }
-
-
-
 
 
     // MVC interface methods
@@ -763,7 +811,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
 
     private void SetupView() {
-        if(bDebug)
+        if (bDebug)
             System.out.println("\n\n\nUpdate Game View!!!\n");
 
         // Load EnemyPanels; get their ViewController; setup the PlayerInfo;
@@ -777,7 +825,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
         setupDraftPool();
 
-        if(bDebug) {
+        if (bDebug) {
             System.out.println("\nSetup Game View -Dice Containers- Done!\n\n");
         }
     }
@@ -806,7 +854,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     public void updateFirstPlayer(Player player) {
         for (int i = 0; i < boardList.size(); i++) {
             BoardView boardView = boardList.get(i);
-            if(i == player.getPosition()) {
+            if (i == player.getPosition()) {
                 boardView.showBag(true);
             } else {
                 boardView.showBag(false);
@@ -821,7 +869,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     public void updateTimer(Player player) {
         for (int i = 0; i < boardList.size(); i++) {
             BoardView boardView = boardList.get(i);
-            if(i == player.getPosition()) {
+            if (i == player.getPosition()) {
                 boardView.showTimer(true);
             } else {
                 boardView.showTimer(false);

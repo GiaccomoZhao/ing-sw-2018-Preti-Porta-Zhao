@@ -279,7 +279,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
     @Override
-    public Boolean chooseDPattern(String namePattern) throws RemoteException {
+    public Boolean choosePattern(String namePattern) throws RemoteException {
         return null;
     }
 

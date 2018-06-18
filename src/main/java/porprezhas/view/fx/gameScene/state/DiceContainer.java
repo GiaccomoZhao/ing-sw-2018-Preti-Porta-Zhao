@@ -21,4 +21,8 @@ public enum DiceContainer {
         return values()[val];
     }
 
+    @Override
+    public String toString() {
+        return "DiceContainer{" + name() + "}";
+    }
 }

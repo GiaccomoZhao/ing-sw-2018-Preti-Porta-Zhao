@@ -242,8 +242,9 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
                             int iRound = getRoundNumberFromEvent(event);
                             // place down
 //                        System.out.println("round number = " + iRound);
-                            // TODO: success = ClientActionInterface.moveDice(idBoardFrom, diceView.getDiceID(), roundTrackBoard.getBoardId(), iRound, 666);
-                            success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getDiceID(), this.getBoardId().toInt(), iRound, 666);
+                            success = getParentController().moveDice(
+                                    idBoardFrom, diceView,
+                                    this.getBoardId().toInt(), iRound, 666);      // we don't care about the column value
 //                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
 //                            success = true;
 //                        }
@@ -439,6 +440,20 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
         // see: setupRoundTrackNumberListener();
     }
 
+
+    public int getIndexByDiceID(long diceID) {
+        int indexCounter = 0;
+        for (Node node : getBoard().getChildren()) {
+            if (node instanceof DiceView) {
+                DiceView diceView = (DiceView) node;
+                if( diceView.getDiceID() == diceID ) {
+                    return  indexCounter;
+                }
+                indexCounter++;
+            }
+        }
+        return -1;
+    }
 
     public boolean hasDiceInRound(int iRound0) {    // iRound0 is an index from 0
         for (Node node : getBoard().getChildren()) {

@@ -11,10 +11,11 @@ public interface ServerRMIInterface extends Remote {
     Boolean login(String username) throws  RemoteException;
     Boolean logout(String username) throws RemoteException;
     Boolean insertedDice(long diceID, int rowBoard, int colBoard, String username)
+//    Boolean insertedDice(int index, int rowBoard, int colBoard, String username)
             throws RemoteException,
             IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
-    Boolean chooseDPattern(String namePattern) throws RemoteException;
+    Boolean choosePattern(String namePattern) throws RemoteException;
     Boolean passUser(String username) throws RemoteException;
     Boolean usedToolCard(String username, int toolCardID, ArrayList<Integer> paramList) throws RemoteException;
 

@@ -29,7 +29,8 @@ public interface GameInterface {
 
     Game.NotifyState getGameState();
 
-    boolean insertDice(long diceID, int xPose, int yPose)
+    //    boolean insertDice(int indexDiceDraftPool, int toRow, int toColumn)
+    boolean insertDice(long diceID, int toRow, int toColumn)
             throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
 

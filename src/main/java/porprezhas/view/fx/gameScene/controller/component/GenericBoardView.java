@@ -238,8 +238,10 @@ public abstract class GenericBoardView implements SubController{
                         System.out.println("insertDice: \tfrom " + idBoardFrom + " \tid=" + diceView.getDiceID()
                                 + " \tto " + this.getBoardId().toInt() + " \trow=" + row + " \tcol=" + col);
                     }
-                    success = ClientActionSingleton.getClientAction().moveDice(idBoardFrom, diceView.getDiceID(), this.getBoardId().toInt(), row, col);
-//                    success = true;
+
+                    success = parentController.moveDice(
+                            idBoardFrom, diceView,
+                            this.getBoardId().toInt(), row, col);
 //                }
                 }
             }

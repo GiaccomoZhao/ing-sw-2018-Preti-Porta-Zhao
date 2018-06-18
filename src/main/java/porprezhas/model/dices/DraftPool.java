@@ -70,10 +70,20 @@ public class DraftPool implements Serializable {
     }
 
 
+    public Dice chooseDice(Integer index) {
+        Dice chosenDice = draftPool.remove(index.intValue());
+
+        if(null == chosenDice)
+            System.err.println("Could NOT Remove dice with index = " + index + " in position = " + index + " from Draft Pool");
+
+        return chosenDice;
+    }
+
     // remove dice from the list and return it
-    public Dice chooseDice(long diceID){
+    public Dice chooseDice(Long diceID){
         int index = getDiceIndexByID(diceID);   // throw except when not found
-        Dice chosenDice = draftPool.remove(index);
+
+        Dice chosenDice = chooseDice(index);
 
         if(null == chosenDice)
             System.err.println("Could NOT Remove dice with id = " + diceID + " in position = " + index + " from Draft Pool");

@@ -102,7 +102,7 @@ public class SocketClientAction implements ClientActionInterface {
     }
 
     @Override
-    public boolean moveDice(int fromIdContainer, long diceID, int toIdContainer, int row, int col) {
+    public boolean insertDice(long diceID, int row, int col) {
         try {
              socketOut.writeObject(new InsertDiceAction(username, diceID, row, col ));
              socketOut.flush();
@@ -117,7 +117,24 @@ public class SocketClientAction implements ClientActionInterface {
 
         return false;
     }
+/*
+    @Override
+    public boolean moveDice(int fromIdContainer, int fromRow, int fromCol, int toIdContainer, int toRow, int toCol) {
+        try {
+//             socketOut.writeObject(new InsertDiceGuiAction(username, diceID, row, col ));
+             socketOut.flush();
 
+
+        }  catch (Exception e) {
+
+            System.err.println(e.getMessage());     // print Invalid Move Message
+//            if(bDebug)
+//                e.printStackTrace();
+        }
+
+        return false;
+    }
+*/
     @Override
     public boolean pass() {
         try {

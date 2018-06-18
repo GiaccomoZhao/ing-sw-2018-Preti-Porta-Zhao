@@ -416,6 +416,7 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
 
     private DraftPool draftPool;
     private long idDiceDraftPool;
+//    private int indexDiceDraftPool;
     private Board board;
 
     private final int parameterSize = 1;
@@ -428,9 +429,11 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
 
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(0).longValue();
+//        this.indexDiceDraftPool= param.getParams().get(0);
         this.board          = param.getBoard();
 
         savedReturn = use(draftPool, idDiceDraftPool, board);
+//        savedReturn = use(draftPool, indexDiceDraftPool, board);
         return savedReturn;
     }
 
@@ -445,9 +448,11 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
     // if it cannot be placed in the board, re-adds it to the draftPool
     // @Return mustBePlaced true means the Caller MUST insert this dice in board
     private boolean use (DraftPool draftPool, long idDiceDraftPool, Board board) {
+//    private boolean use (DraftPool draftPool, int indexDiceDraftPool, Board board) {
 
         Dice rolledDice;
         rolledDice = draftPool.chooseDice(idDiceDraftPool);
+//        rolledDice = draftPool.chooseDice(indexDiceDraftPool);
         rolledDice.roll();
 
         boolean canBePlaced = false;
@@ -506,6 +511,7 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
 
     private DraftPool draftPool;
     private long idDiceDraftPool;
+//    private int indexDiceDraftPool;
     private Board board;
     private int row;
     private int col;
@@ -522,17 +528,20 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
         int iParam = 0;
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(iParam++).longValue();
+//        this.indexDiceDraftPool= param.getParams().get(iParam++);
         this.board          = param.getBoard();
         this.row            = param.getParams().get(iParam++);
         this.col            = param.getParams().get(iParam++);
         this.restriction    = Board.Restriction.values()[ param.getParams().get(iParam++) ];
 
         savedReturn = use(draftPool, idDiceDraftPool, board, row, col, restriction);
+//        savedReturn = use(draftPool, indexDiceDraftPool, board, row, col, restriction);
         return savedReturn;
     }
 
     protected boolean use(Board.Restriction restriction) {
         return use(draftPool, idDiceDraftPool, board, row, col, restriction);
+//        return use(draftPool, indexDiceDraftPool, board, row, col, restriction);
     }
 
 
@@ -548,12 +557,15 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
     // Effect of tool card N.9
     // place dice from draft pool to board anywhere
     private boolean use(DraftPool draftPool, long idDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
+//    private boolean use(DraftPool draftPool, int indexDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
 
         try {
             if (board.validMove(draftPool.getDiceByID(idDiceDraftPool), row, col, restriction)) {
+//            if (board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction)) {
 
                 board.insertDice(
                         draftPool.chooseDice(idDiceDraftPool),
+//                        draftPool.chooseDice(indexDiceDraftPool),
                         row, col,
                         restriction);   // note: insertDice does not need check valid move
                 return true;
@@ -603,6 +615,7 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
 
     private DraftPool draftPool;
     private long idDiceDraftPool;
+//    private int indexDiceDraftPool;
 
     private final int parameterSize = 1;
 
@@ -613,9 +626,11 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
             return false;
 
         this.draftPool      = param.getDraftPool();
-        this.idDiceDraftPool= param.getParams().get(0);
+        this.idDiceDraftPool= param.getParams().get(0).longValue();
+//        this.indexDiceDraftPool= param.getParams().get(0);
 
         savedReturn = use(draftPool, idDiceDraftPool);
+//        savedReturn = use(draftPool, indexDiceDraftPool);
         return savedReturn;
     }
 
@@ -644,6 +659,7 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 
     private DraftPool draftPool;
     private long idDiceDraftPool;
+//    private int indexDiceDraftPool;
     private DiceBag diceBag;
 
     private final int parameterSize = 1;
@@ -656,9 +672,11 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(0).longValue();
+//        this.indexDiceDraftPool= param.getParams().get(0);
         this.diceBag        = param.getDiceBag();
 
         savedReturn = use(draftPool, idDiceDraftPool, diceBag);
+//        savedReturn = use(draftPool, indexDiceDraftPool, diceBag);
         if(null != savedReturn)
             return true;
         else
@@ -676,8 +694,10 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
     // choose it's value to
     // place in board   // NOTE: this is caller job and must be done
     private Dice use(DraftPool draftPool, long idDiceDraftPool, DiceBag diceBag) {
+//    private Dice use(DraftPool draftPool, int indexDiceDraftPool, DiceBag diceBag) {
         diceBag.addDice(
                 draftPool.chooseDice(idDiceDraftPool));
+//                draftPool.chooseDice(indexDiceDraftPool));
         return diceBag.extractDice();
     }
 }
