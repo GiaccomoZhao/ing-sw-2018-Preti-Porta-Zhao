@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 
 public class RMIClientAction implements ClientActionInterface{
 
@@ -91,6 +92,25 @@ public class RMIClientAction implements ClientActionInterface{
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public boolean useToolCard(String username, int toolCardID, ArrayList<Integer> paramList) {
+        try {
+            if(server.usedToolCard(username,toolCardID , paramList)) {
+
+                System.out.println("ToolCardUsed!");
+
+
+            } else {
+                System.out.println("Param error");
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());     // print Invalid Move Message
+        }
+        return true;
     }
 
 

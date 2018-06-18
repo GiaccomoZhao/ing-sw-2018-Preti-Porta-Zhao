@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class SocketClientAction implements ClientActionInterface {
 
@@ -103,7 +104,7 @@ public class SocketClientAction implements ClientActionInterface {
     @Override
     public boolean moveDice(int fromIdContainer, long diceID, int toIdContainer, int row, int col) {
         try {
-             socketOut.writeObject(new InsertDiceGuiAction(username, diceID, row, col ));
+             socketOut.writeObject(new InsertDiceAction(username, diceID, row, col ));
              socketOut.flush();
 
 
@@ -128,6 +129,16 @@ public class SocketClientAction implements ClientActionInterface {
         return true;
     }
 
+    @Override
+    public boolean useToolCard(String username, int toolCardID, ArrayList<Integer> paramList) {
+        try {
+            socketOut.writeObject(new UseToolCardAction(username, toolCardID, paramList));
+            socketOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
 
     public void closeConnection(){

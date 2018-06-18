@@ -202,7 +202,7 @@ return false;
                         String yBoardValue= command.substring(space3+1, command.length());
                         int index = Integer.parseInt(numberDice) -1;
                         long diceID = ((CLIViewUpdateHandler) viewUpdateHandlerInterface).getID(index);
-                        socketOut.writeObject(new InsertDiceGuiAction(username, diceID,Integer.parseInt(xBoardValue)-1,Integer.parseInt(yBoardValue)-1 ));
+                        socketOut.writeObject(new InsertDiceAction(username, diceID,Integer.parseInt(xBoardValue)-1,Integer.parseInt(yBoardValue)-1 ));
                         socketOut.flush();
 
                         break;

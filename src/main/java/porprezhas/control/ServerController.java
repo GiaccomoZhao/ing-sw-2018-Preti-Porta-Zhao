@@ -383,11 +383,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
     @Override
-    public synchronized Answer handle(InsertDiceGuiAction insertDiceGuiAction) {
+    public synchronized Answer handle(InsertDiceAction insertDiceAction) {
 
-        String username= insertDiceGuiAction.username;
+        String username= insertDiceAction.username;
         if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
-            if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceGuiAction.diceId, insertDiceGuiAction.row, insertDiceGuiAction.col))
+            if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceAction.diceId, insertDiceAction.row, insertDiceAction.col))
                 return new DiceInsertedAnswer(true);
         return new DiceInsertedAnswer(false);
     }
@@ -399,7 +399,24 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     @Override
     public synchronized Answer handle(UseToolCardAction useToolCardAction) {
-        return null;
+
+        String username= useToolCardAction.username;
+        GameInterface playerGame=this.getGameControllerByUsername(username).getGame();
+        if(username.equals(playerGame.getCurrentPlayer().getName())){
+            ToolCardParam toolCardParam = new ToolCardParam(
+                    playerGame.getRoundTrack(),
+                    playerGame.getDraftPool(),
+                    playerGame.getDiceBag(),
+                    playerGame.getCurrentPlayer().getBoard(),
+                    useToolCardAction.paramList
+            );
+            try {
+                if( this.getGameControllerByUsername(username).useToolCard(useToolCardAction.toolCardID, toolCardParam));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return new DiceInsertedAnswer(true);
     }
 
     @Override

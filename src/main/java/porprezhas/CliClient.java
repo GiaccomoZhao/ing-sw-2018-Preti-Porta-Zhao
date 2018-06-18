@@ -12,6 +12,11 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*
+* This is the main class for CLI client.
+* The user can choose here which type of connection use and the type of game( single player or multiplayer).
+* */
+
 public class CliClient {
 
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
@@ -24,7 +29,7 @@ public class CliClient {
     private int port=1457;
     private InetAddress ip;
 
-    public static final String LOGIN_COMMAND = "login";
+
     public static final String JOIN_COMMAND = "join";
     public static final String LOGOUT_COMMAND = "logout";
     public static final String INSERT_DICE_COMMAND = "dice";
