@@ -2,7 +2,7 @@ package porprezhas.model.cards;
 
 import porprezhas.Useful;
 import porprezhas.exceptions.GameAbnormalException;
-import porprezhas.exceptions.diceMove.DiceNotFoundException;
+import porprezhas.exceptions.diceMove.DiceNotFoundInDraftPoolException;
 import porprezhas.exceptions.diceMove.IndexOutOfBoardBoundsException;
 import porprezhas.exceptions.toolCard.*;
 import porprezhas.model.dices.*;
@@ -57,8 +57,12 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
     public boolean use(ToolCardParam param) {
         // safety Check
         // check NULL
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         // initialize Parameters
         int iParam = 0;
@@ -114,7 +118,7 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
 
 
 
-class ToolCard2_4 implements ToolCardStrategy, Serializable {
+class ToolCard_Move implements ToolCardStrategy, Serializable {
     private boolean savedReturn;
 
     private Board board;
@@ -126,7 +130,7 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 5;
 
-    public ToolCard2_4() {
+    public ToolCard_Move() {
         this.savedReturn = false;
     }
 
@@ -220,7 +224,7 @@ class ToolCard2_4 implements ToolCardStrategy, Serializable {
     }
 }
 
-class ToolCard2 extends ToolCard2_4 {
+class ToolCard2 extends ToolCard_Move {
     private final int parameterSize = 4;
 
     public ToolCard2() {
@@ -249,7 +253,7 @@ class ToolCard2 extends ToolCard2_4 {
     }
 }
 
-class ToolCard3 extends ToolCard2_4 {
+class ToolCard3 extends ToolCard_Move {
     private final int parameterSize = 4;
 
     public ToolCard3() {
@@ -276,7 +280,7 @@ class ToolCard3 extends ToolCard2_4 {
 }
 
 
-class ToolCard4 extends ToolCard2_4 {
+class ToolCard4 extends ToolCard_Move {
     private Board board;
     private int fromRow1;
     private int fromColumn1;
@@ -703,7 +707,12 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 }
 
 
-class ToolCard12 implements ToolCardStrategy, Serializable {
+
+// Effect of tool card N.12
+// Move 2 dice in the board, respecting ALL constraints
+// These dices must have the same color and this color's dice exists in the round track
+
+class ToolCard12 extends ToolCard4 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
 
     private RoundTrack roundTrack;
@@ -722,9 +731,14 @@ class ToolCard12 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
+        // get parameters information
         int iParam = 0;
         this.roundTrack = param.getRoundTrack();
         this.board      = param.getBoard();
@@ -737,58 +751,60 @@ class ToolCard12 implements ToolCardStrategy, Serializable {
         this.toRow2     = param.getParams().get(iParam++);
         this.toColumn2  = param.getParams().get(iParam++);
 
-        savedReturn = use(roundTrack, board, fromRow1, fromColumn1, toRow1, toColumn1, fromRow2, fromColumn2, toRow2, toColumn2);
-        return savedReturn;
-    }
+        // NULL POINTER safety check
+        if(null == board) {
+            throw new GameAbnormalException("Board is " + board + "!");
+        }
+        if( null == roundTrack ) {
+            throw new GameAbnormalException("Round Track is " + roundTrack + "!");
+        }
+
+        // getDice return a new White 0 Dice when it does not exists
+        if(0 == board.getDice(fromRow1, fromColumn1).getDiceNumber() )
+            throw new DiceNotFoundInBoardException(fromRow1, fromColumn1);
+        if(0 == board.getDice(fromRow2, fromColumn2).getDiceNumber())
+            throw new DiceNotFoundInBoardException(fromRow2, fromColumn2);
 
 
-    public boolean getReturn() {
-        return savedReturn;
-    }
+        // COLOR Check
 
+        boolean bHasColorInTrack = false;    // has RoundTrack this color
+        Dice.ColorDice searchedColor = board.getDice(fromRow1, fromColumn1).getColorDice();
 
-    // Effect of tool card N.12
-    // Move 2 dice in the board, respecting ALL constraints
-    // These dices must have the same color and this color's dice exists in the round track
-    private boolean use(RoundTrack roundTrack, Board board, int fromRow1, int fromColumn1, int toRow1, int toColumn1, int fromRow2, int fromColumn2, int toRow2, int toColumn2) {
+        // have the 2 dices to move in the board the same color
+        if (!searchedColor.equals(board.getDice(fromRow2, fromColumn2).getColorDice())) {
+            throw new DifferentColorException(
+                    board.getDice(fromRow1, fromColumn1),
+                    board.getDice(fromRow2, fromColumn2)
+            );
 
-        boolean bExistSameColor = false;    // has RoundTrack this color
-        Dice.ColorDice colorDice = board.getDice(fromRow1, fromColumn1).getColorDice();
-        if (colorDice.equals(board.getDice(fromRow2, fromColumn2).getColorDice())) {  // have dices to move the same color
-
-            // search in round track
-            for (int i = 1; i <= roundTrack.getActualRound() && !bExistSameColor; i++) {
-                for (Dice die : roundTrack.getRoundDice(i)) {
-                    if (colorDice.equals(die.getColorDice())) {
-                        bExistSameColor = true;
-                        break;
+        } else {
+            // search that color exists in round track,
+            // until current round, because after it we shouldn't have dices in
+            for (int i = 1; i <= roundTrack.getActualRound() && !bHasColorInTrack; i++) {
+                if (null != roundTrack.getRoundDice(i)) {
+                    for (Dice die : roundTrack.getRoundDice(i)) {
+                        if (searchedColor.equals(die.getColorDice())) {
+                            bHasColorInTrack = true;
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        if (bExistSameColor) {
-            Dice dice1 = board.getDice(fromRow1, fromColumn1);
-            Dice dice2 = board.getDice(fromRow2, fromColumn2);
-
-            try {
-                // inside if we have read only methods
-                if (    board.canBeRemoved(fromRow1, fromColumn1) &&
-                        board.canBeRemoved(fromRow2, fromColumn2) &&
-                        board.validMove(dice1, toRow1, toColumn1, Board.Restriction.ALL) &&
-                        board.validMove(dice2, toRow2, toColumn2, Board.Restriction.ALL)) {
-
-                    board.insertDice(board.removeDice(fromRow1, fromColumn1), toRow1, toColumn1);
-                    board.insertDice(board.removeDice(fromRow2, fromColumn2), toRow2, toColumn2);
-                    return true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
+        if (!bHasColorInTrack) {
+            throw new CorlorNotFoundInRoundTrackException("A dice with color = " + searchedColor  + " has NOT be FOUND in Round Track\n"
+                    + roundTrack);
         }
 
-        return false;
+        // MOVE dices using the same strategy of tool card n.4
+        return super.use(param);
     }
+
+    public boolean getReturn() {
+        return savedReturn;
+    }
+
 }
 

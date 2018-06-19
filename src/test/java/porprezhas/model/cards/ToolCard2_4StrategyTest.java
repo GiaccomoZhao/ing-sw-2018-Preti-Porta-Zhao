@@ -61,7 +61,7 @@ public class ToolCard2_4StrategyTest {
     private RoundTrack roundTrack;
 
 
-    Board newBoard;         // a new board that will be initialized by parameterizedBoard
+    Board newBoard;         // a new testBoard that will be initialized by parameterizedBoard
                             // used to separate toolCard2 Test with toolCard3 Test
     boolean bSuccess;
 
@@ -70,7 +70,7 @@ public class ToolCard2_4StrategyTest {
     private static final Random random = new Random();    // used to choose an in range(correct) number arbitrarily
     // NB: this random should NOT influence the Result of tests
 
-    // inside board -Not border-
+    // inside testBoard -Not border-
     private static final CellPosition innerPosition = getRandomInnerValue(random.nextLong());
     private static final CellPosition[] innerPositions = {innerPosition};
 
@@ -238,7 +238,7 @@ public class ToolCard2_4StrategyTest {
                         false,
                         MoveToSelfException.class},
 
-/*              // Impossible initial situation!!! (to place inside inner board position)
+/*              // Impossible initial situation!!! (to place inside inner testBoard position)
                 {"Move on self Test3",
                         new Board(Pattern.TypePattern.VOID),
                         new Dice(ColorDice.RED, 6, -1),
@@ -300,14 +300,14 @@ public class ToolCard2_4StrategyTest {
                         false,
                         IndexOutOfBoardBoundsException.class},
 
-/*              // from inner board to border
+/*              // from inner testBoard to border
                 {new Board(Pattern.TypePattern.VOID),
                         new Dice(ColorDice.RED, 6, -1),
                         Arrays.asList(MAX_ROW / 2, MAX_COLUMN + 2, MIN_ROW, MAX_COLUMN / 2),
                         false,
                         false},
 
-                // from inner board to border
+                // from inner testBoard to border
                 {new Board(Pattern.TypePattern.VOID),
                         new Dice(ColorDice.RED, 6, -1),
                         Arrays.asList(MAX_ROW / 2, MAX_COLUMN, MAX_ROW, MAX_COLUMN),
@@ -324,8 +324,8 @@ public class ToolCard2_4StrategyTest {
                         false,
                         false},
 */
-                // from border to inner board - 11
-                {"from border to inner board Test",
+                // from border to inner testBoard - 11
+                {"from border to inner testBoard Test",
                         new Board(Pattern.TypePattern.VOID),
                         new Dice(ColorDice.RED, 6, -1),
                         Arrays.asList(
@@ -337,8 +337,8 @@ public class ToolCard2_4StrategyTest {
                         false,
                         EdgeRestrictionException.class},
 
-                // from corner to inner board
-                {"from corner to inner board Test",
+                // from corner to inner testBoard
+                {"from corner to inner testBoard Test",
                         new Board(Pattern.TypePattern.VOID),
                         new Dice(ColorDice.RED, 6, -1),
                         Arrays.asList(
@@ -363,7 +363,7 @@ public class ToolCard2_4StrategyTest {
                         true,
                         null},
 
-                // from board's border to an other border
+                // from testBoard's border to an other border
                 // corners exchange - 14
                 {"corners exchange Test",
                         new Board(Pattern.TypePattern.VOID),
@@ -549,13 +549,13 @@ public class ToolCard2_4StrategyTest {
     @Before
     public void setUp() {
 /*        emptyBoard = new Board(Pattern.TypePattern.VOID);
-        integerParams = new ArrayList<>();
+        testIntegerParams = new ArrayList<>();
 
-        diceBag = new DiceBag();
-        draftPool = new DraftPool(diceBag.GetRandomDices(random.nextInt(GameConstants.MAX_PLAYER_QUANTITY) + 1));
-        roundTrack = new RoundTrack();
+        testDiceBag = new DiceBag();
+        testDraftPool = new DraftPool(testDiceBag.GetRandomDices(random.nextInt(GameConstants.MAX_PLAYER_QUANTITY) + 1));
+        testRoundTrack = new RoundTrack();
 
-        param = new ToolCardParam(roundTrack, draftPool, diceBag, emptyBoard, integerParams);
+        testParams = new ToolCardParam(testRoundTrack, testDraftPool, testDiceBag, emptyBoard, testIntegerParams);
 
         ColorDice genericColor = ColorDice.values()[random.nextInt(ColorDice.values().length - 1)];
         int genericNumber = random.nextInt(MAX_DICE_NUMBER) + 1;
@@ -576,7 +576,7 @@ public class ToolCard2_4StrategyTest {
         boolean bImpossibleInitialSituation = false;
 
 
-        // emulate the board situation
+        // emulate the testBoard situation
         if(null != parameterizedDice && null != parameterizedIntegerParams && parameterizedIntegerParams.size()>=2) {
             try {
                 newBoard.insertDice(parameterizedDice, parameterizedIntegerParams.get(0), parameterizedIntegerParams.get(1));
@@ -597,7 +597,7 @@ public class ToolCard2_4StrategyTest {
 
         // Check Before
         // do not check return, because it depends by previous use
-        // PRINT the situation of board
+        // PRINT the situation of testBoard
         if(null != parameterizedIntegerParams && parameterizedIntegerParams.size()>=4) {
             System.out.println("Move from (" + parameterizedIntegerParams.get(0) + ":" + parameterizedIntegerParams.get(1) +
                     ") \tto (" + parameterizedIntegerParams.get(2) + ":" + parameterizedIntegerParams.get(3) + ")");
@@ -690,34 +690,34 @@ public class ToolCard2_4StrategyTest {
         assertFalse(toolCard2.getStrategy().use(null));
 
         // test with Empty parameters
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // test with all Null
-        param = new ToolCardParam(null, null, null, null, null);
-        assertFalse(toolCard2.getStrategy().use(param));
+        testParams = new ToolCardParam(null, null, null, null, null);
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // test with Null Integer Params
-        param = new ToolCardParam(null, null, null, emptyBoard, null);
-        assertFalse(toolCard2.getStrategy().use(param));
+        testParams = new ToolCardParam(null, null, null, emptyBoard, null);
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
 
         // CORRECT TEST
 
-        // test with Correct Container and param, but Null not used Container
+        // test with Correct Container and testParams, but Null not used Container
         int fromRow = botBorderPosition.getRow();
         int fromCol = botBorderPosition.getCol();
         int toRow = topBorderPosition.getRow();
         int toCol = topBorderPosition.getCol();
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
         ColorDice genericColor = ColorDice.values()[random.nextInt(ColorDice.values().length - 1)];
         int genericNumber = random.nextInt(MAX_DICE_NUMBER) + 1;
         emptyBoard.insertDice(new Dice(genericColor, genericNumber, -1), fromRow, fromCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
         // PRINT the Board, because we are testing a generic situation
         System.out.print("\n\nnullTest: ");
@@ -725,7 +725,7 @@ public class ToolCard2_4StrategyTest {
                 ") \tto (" + parameterizedIntegerParams.get(2) + ":" + parameterizedIntegerParams.get(3) + ")");
         System.out.println(emptyBoard.toString());
 
-        assertTrue(toolCard2.getStrategy().use(param));           // USE
+        assertTrue(toolCard2.getStrategy().use(testParams));           // USE
 
         System.out.println(emptyBoard.toString());
     }
@@ -740,24 +740,24 @@ public class ToolCard2_4StrategyTest {
         List<Integer> emptyParams = new ArrayList<>();
 
         // test with All Empty
-        param = new ToolCardParam(emptyRoundTrack, emptyDraftPool, emptyDiceBag, emptyBoard, emptyParams);
-        assertFalse(toolCard2.getStrategy().use(param));
+        testParams = new ToolCardParam(emptyRoundTrack, emptyDraftPool, emptyDiceBag, emptyBoard, emptyParams);
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // test with Null Dice Container and EMPTY Integer Params
-        param = new ToolCardParam(null, null, null, null, emptyParams);
-        assertFalse(toolCard2.getStrategy().use(param));
+        testParams = new ToolCardParam(null, null, null, null, emptyParams);
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // test with Correct Dice Container and EMPTY Integer Params
-        param = new ToolCardParam(emptyRoundTrack, draftPool, diceBag, emptyBoard, emptyParams);
-        assertFalse(toolCard2.getStrategy().use(param));
+        testParams = new ToolCardParam(emptyRoundTrack, testDraftPool, testDiceBag, emptyBoard, emptyParams);
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // test with NULL Dice Container and Correct Integer Params
-        param = new ToolCardParam(null, null, null, null, integerParams);
-        assertFalse(toolCard2.getStrategy().use(param));
+        testParams = new ToolCardParam(null, null, null, null, testIntegerParams);
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // test with EMPTY Dice Container and Correct Integer Params
-        param = new ToolCardParam(emptyRoundTrack, emptyDraftPool, emptyDiceBag, emptyBoard, integerParams);
-        assertFalse(toolCard2.getStrategy().use(param));
+        testParams = new ToolCardParam(emptyRoundTrack, emptyDraftPool, emptyDiceBag, emptyBoard, testIntegerParams);
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
 
     @Test
@@ -772,12 +772,12 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
         // PRINT the Board, because we are testing a generic situation
         System.out.print("\n\ngenericTest: ");
@@ -786,9 +786,9 @@ public class ToolCard2_4StrategyTest {
         System.out.println(emptyBoard.toString());
 
         if (!fromPosition.equals(toPosition))
-            assertTrue(toolCard2.getStrategy().use(param));           // USE
+            assertTrue(toolCard2.getStrategy().use(testParams));           // USE
         else
-            assertFalse(toolCard2.getStrategy().use(param));
+            assertFalse(toolCard2.getStrategy().use(testParams));
 
         System.out.println(emptyBoard.toString());
     }
@@ -807,15 +807,15 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
         // use
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // check result
         assertFalse(((ToolCard2) toolCard2.getStrategy()).getReturn());
@@ -834,15 +834,15 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
         // use
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
 
         // check result
         assertFalse(((ToolCard2) toolCard2.getStrategy()).getReturn());
@@ -861,14 +861,14 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
 
     @Test
@@ -883,14 +883,14 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
 
     @Test
@@ -905,14 +905,14 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
 
     @Test
@@ -927,14 +927,14 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
 
     @Test
@@ -949,14 +949,14 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
 
     @Test
@@ -971,14 +971,14 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
 
     @Test
@@ -993,14 +993,14 @@ public class ToolCard2_4StrategyTest {
 
         emptyBoard.insertDice(genericDice, fromRow, fromCol);
 
-        integerParams.add(fromRow);
-        integerParams.add(fromCol);
-        integerParams.add(toRow);
-        integerParams.add(toCol);
+        testIntegerParams.add(fromRow);
+        testIntegerParams.add(fromCol);
+        testIntegerParams.add(toRow);
+        testIntegerParams.add(toCol);
 
-        param = new ToolCardParam(null, null, null, emptyBoard, integerParams);   // correct Container
+        testParams = new ToolCardParam(null, null, null, emptyBoard, testIntegerParams);   // correct Container
 
-        assertFalse(toolCard2.getStrategy().use(param));
+        assertFalse(toolCard2.getStrategy().use(testParams));
     }
     */
 }

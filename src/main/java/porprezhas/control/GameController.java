@@ -1,14 +1,11 @@
 package porprezhas.control;
 
-import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.cards.ToolCardParam;
-import porprezhas.model.cards.ToolCardStrategy;
 import porprezhas.model.database.DatabaseInterface;
-import porprezhas.model.dices.Pattern;
 
 
 import java.text.SimpleDateFormat;
@@ -239,7 +236,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         for (int iRound = 0; iRound < GameConstants.ROUND_NUM; iRound++) {
 //            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
             System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
-            game.nextRound(); //Prepare for next round: Create a new DraftPool
+            game.newRound(iRound);      // Prepare for the new round: Setup a new DraftPool
             playRound();
             System.out.println("}");
         }

@@ -1,7 +1,7 @@
 package porprezhas.model.dices;
 
 import porprezhas.Useful;
-import porprezhas.exceptions.diceMove.DiceNotFoundException;
+import porprezhas.exceptions.diceMove.DiceNotFoundInDraftPoolException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class DraftPool implements Serializable {
         }
 
         // if not found then:
-        throw new DiceNotFoundException("dice with id = " + diceID + " does NOT Exist in Draft Pool");
+        throw new DiceNotFoundInDraftPoolException(diceID);
     }
 
     // get index of the dice in draft pool based by the id
@@ -53,7 +53,7 @@ public class DraftPool implements Serializable {
         }
 
         // if not found then:
-        throw new DiceNotFoundException("dice with id = " + diceID + " does NOT Exist in Draft Pool");
+        throw new DiceNotFoundInDraftPoolException(diceID);
     }
 
     // search the dice based by the id
@@ -66,7 +66,7 @@ public class DraftPool implements Serializable {
         }
 
         // if not found then:
-        throw new DiceNotFoundException("dice with id = " + diceID + " does NOT Exist in Draft Pool");
+        throw new DiceNotFoundInDraftPoolException(diceID);
     }
 
 

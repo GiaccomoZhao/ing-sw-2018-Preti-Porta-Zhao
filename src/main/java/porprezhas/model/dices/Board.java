@@ -606,7 +606,6 @@ public class Board implements Serializable {
             return board[row][col];
         else
             return new Dice(Dice.ColorDice.WHITE, 0, -1);
-
     }
 
     public int getDiceQuantity() {

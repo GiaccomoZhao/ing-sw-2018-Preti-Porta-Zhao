@@ -5,8 +5,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -156,6 +158,10 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         // set on Window appear Animation
         stageManager.getStage(stageName).setOnShowing(event -> {
+            // add gaming BackGround Music
+            BackgroundMusicPlayer.playRandomMusic(pathToLoginMusic);
+
+            // setup transition animation
             rootLayout.setOpacity(1);    // Set starting Opacity value
             clipWindow.setRadius(68);      // Set starting Dimension
 //            backgroundPane.setRotate(180);
@@ -208,9 +214,10 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         connectionButtonsSetup();
         joinButtonSetup();
-        timeline = new Timeline();
+        setGameCursor();
 
-        BackgroundMusicPlayer.playRandomMusic(pathToLoginMusic);
+
+        timeline = new Timeline();
     }
 
 
@@ -232,6 +239,13 @@ public class LoginViewController implements Initializable, SceneController, Move
                         "-fx-max-width: 90px; " +
                         "-fx-max-height: 90px;"
         );
+    }
+
+
+
+    private void setGameCursor() {
+        rootLayout.setCursor(new ImageCursor(
+                new Image(pathToCursor + "cursor_hand.png", 64.0, 64.0, true, true)));
     }
 
 
@@ -324,8 +338,9 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         timeline.stop();
         timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(5000),
-                new KeyValue(warningText.opacityProperty(), 0, Interpolator.LINEAR)));
+        timeline.setDelay(Duration.millis(2000));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(3000),
+                new KeyValue(warningText.opacityProperty(), 0, Interpolator.EASE_IN)));
         timeline.play();
     }
 
@@ -348,10 +363,9 @@ public class LoginViewController implements Initializable, SceneController, Move
         if(this.connectionType==RMI) {
             try {
                 ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
-            } catch (RemoteException e) {
+            } catch (RemoteException | NotBoundException e) {
                 e.printStackTrace();
-            } catch (NotBoundException e) {
-                e.printStackTrace();
+                showWarningText("Could not Join");
             }
         }
         ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface);
@@ -408,6 +422,8 @@ public class LoginViewController implements Initializable, SceneController, Move
 
                 // Login Failed!!!
                 } else {
+                    showWarningText("Can not Login with given username");
+
                     //if there is an active Socket connection we close it
                     if (this.connectionType == SOCKET && ClientActionSingleton.getClientAction() != null)
                         ((SocketClientAction) ClientActionSingleton.getClientAction()).closeConnection();

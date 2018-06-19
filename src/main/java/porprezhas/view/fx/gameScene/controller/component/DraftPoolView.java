@@ -1,6 +1,5 @@
 package porprezhas.view.fx.gameScene.controller.component;
 
-import com.sun.prism.image.Coords;
 import javafx.animation.*;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -12,13 +11,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
-import porprezhas.exceptions.diceMove.DiceNotFoundException;
+import porprezhas.exceptions.diceMove.DiceNotFoundInDraftPoolException;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -30,7 +28,7 @@ public class DraftPoolView implements SubController{
     private StackPane stackPane;
 //    private List<DiceView> diceList;
 
-    private DiceContainer idBoard = DiceContainer.DRAFT;    // Unknonw
+    private DiceContainer idBoard = DiceContainer.DRAFT;
 
     public DraftPoolView() {
         stackPane = new StackPane();
@@ -54,9 +52,10 @@ public class DraftPoolView implements SubController{
         parent.getChildren().add( this.get() ); // add this.stackPane to parent.pane
 
         addBackground(parent);
+        addResizeListener(parent);
         addDragListener();
 
-        if(bShowFrames || true) {
+        if(bShowFrames) {
             get().setBorder(new Border(new BorderStroke(Color.rgb(214, 54, 79),
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         }
@@ -106,7 +105,7 @@ public class DraftPoolView implements SubController{
                         System.err.println("Can not Remove dice: " + diceView);
                     }
 
-                } catch (DiceNotFoundException e) {
+                } catch (DiceNotFoundInDraftPoolException e) {
                     // Remove not found dice from View
                     stackPane.getChildren().remove(index);
                 } }
@@ -145,7 +144,7 @@ public class DraftPoolView implements SubController{
         return stackPane;
     }
 
-    public int getIndexByDiceID(long diceID) throws DiceNotFoundException{
+    public int getIndexByDiceID(long diceID) throws DiceNotFoundInDraftPoolException {
         boolean bFound = false;
         int i = 0;
         for (Node node : stackPane.getChildren()) {
@@ -161,13 +160,35 @@ public class DraftPoolView implements SubController{
         if(bFound)
             return i;
         else
-            throw new DiceNotFoundException("Dice with id = " + diceID + " NOT FOUND in " + DiceContainer.fromInt(idBoard.toInt()) );
+            throw new DiceNotFoundInDraftPoolException("Dice with id = " + diceID + " NOT FOUND in " + DiceContainer.fromInt(idBoard.toInt()) );
     }
 
 
     // *****************************************
     // *** Private Methods - View Management ***
 
+    private void addBackground(Pane parent) {
+        Background background = new Background(
+                new BackgroundFill(new ImagePattern(
+                        new Image(pathToBackground + "draftPool0.png")),
+                        CornerRadii.EMPTY, Insets.EMPTY));
+        stackPane.setBackground(background);
+
+        if(bShowGridLines) {
+            parent.setBorder(new Border(new BorderStroke(Color.rgb(34,245,23),
+                    BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(1))));
+            stackPane.setBorder(new Border(new BorderStroke(Color.rgb(34,245,23),
+                    BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(1))));
+        }
+    }
+
+
+    private void addResizeListener(Pane parent) {
+        stackPane.prefWidthProperty().bindBidirectional(parent.prefWidthProperty());
+
+//        parent.minWidthProperty().bind( parent.heightProperty().multiply(1.1f) );
+//        parent.prefWidthProperty().bind( parent.heightProperty().multiply(1.1f) );
+    }
 
     private void addDragListener () {
         stackPane.setOnDragDropped(event -> {
@@ -235,21 +256,6 @@ public class DraftPoolView implements SubController{
             }
             event.consume();
         });
-    }
-
-    private void addBackground(Pane parent) {
-        stackPane.prefWidthProperty().bind(parent.widthProperty());
-        stackPane.prefHeightProperty().bind(parent.heightProperty());
-        Background background = new Background(
-                new BackgroundFill(new ImagePattern(
-                        new Image(pathToBackground + "draftPool0.png")),
-                        CornerRadii.EMPTY, Insets.EMPTY));
-        stackPane.setBackground(background);
-
-        if(bShowGridLines) {
-            stackPane.setBorder(new Border(new BorderStroke(Color.rgb(34,245,23),
-                    BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(1))));
-        }
     }
 
 
@@ -368,53 +374,48 @@ public class DraftPoolView implements SubController{
                     (int) ((random.nextGaussian() * stackPane.getHeight()) % (stackPane.getHeight()/(2 * Math.sqrt(2)))));
 */
         // set their position
-        playAnimation(diceView, diceView.getRow(), diceView.getColumn());
+        playDiceRollAnimation(diceView, diceView.getRow(), diceView.getColumn());
     }
 
 
-    private void playAnimation (DiceView diceView, int toX, int toY) {
+    private void playDiceRollAnimation(DiceView diceView, int toX, int toY) {
+        final double fadeDuration = 1600;
+        final double translateDuration = 2000;
+        final double rotateDuration = 2400;
+        final double scaleDuration = 1600;
+        final int maxDeviation = 1000;
         Random random = new Random();
-        int randomDuration = random.nextInt(1000);
+        int randomDeviation = random.nextInt(maxDeviation);
 
 //        System.out.println("to x = " + toX + " \tto y =" + toY);
-        //定义矩形的淡入淡出效果
-        FadeTransition fadeTransition=new FadeTransition(Duration.millis(1600), diceView);
+
+        //Add dice opacity fading effect
+        FadeTransition fadeTransition=new FadeTransition(Duration.millis(fadeDuration), diceView);
         fadeTransition.setFromValue(0.01f);
         fadeTransition.setToValue(1.0f);
-//        fadeTransition.setCycleCount(1);
-//        fadeTransition.setAutoReverse(true);
-        //fadeTransition.play();
 
-        //定义矩形的平移效果
-        TranslateTransition translateTransition=new TranslateTransition(Duration.millis(2000 + randomDuration), diceView);
-        translateTransition.setFromX(random.nextGaussian() * 100 % 100);
+        //Add dice position translating effect
+        TranslateTransition translateTransition=new TranslateTransition(Duration.millis(translateDuration + randomDeviation), diceView);
+        translateTransition.setFromX(random.nextGaussian() * 100 % 100);        // this will make dice move throw the center zone of the draft pool
         translateTransition.setFromY(random.nextGaussian() * 100 % 100);
         translateTransition.setToX(toX);
         translateTransition.setToY(toY);
-//        translateTransition.setCycleCount(1);
-//        translateTransition.setAutoReverse(true);
-        //translateTransition.play();
 
-        //定义矩形旋转效果
+        //Add dice image rotating effect
         RotateTransition rotateTransition =
-                new RotateTransition(Duration.millis(2400 + randomDuration), diceView);
-        rotateTransition.setByAngle(1.2f * (2400+randomDuration) );//旋转度数
-//        rotateTransition.setCycleCount(1);
-//        rotateTransition.setAutoReverse(true);
-        //rotateTransition.play();
+                new RotateTransition(Duration.millis(rotateDuration + randomDeviation), diceView);
+        rotateTransition.setByAngle(1.2f * (2400+randomDeviation) );     // rotation in degree (360°)
 
-        //矩形的缩放效果
+        //Add dice zooming out effect
         ScaleTransition scaleTransition =
-                new ScaleTransition(Duration.millis(1600), diceView);
+                new ScaleTransition(Duration.millis(scaleDuration), diceView);
         scaleTransition.setFromX(2f);
         scaleTransition.setFromY(2f);
         scaleTransition.setToX(1f);
         scaleTransition.setToY(1f);
-//        scaleTransition.setCycleCount(1);
-//        scaleTransition.setAutoReverse(true);
-        //scaleTransition.play();
 
-        //并行执行动画
+
+        //Paralleling execute these effects
         ParallelTransition parallelTransition=new ParallelTransition(fadeTransition,rotateTransition,
                 translateTransition,scaleTransition);
         parallelTransition.setCycleCount(1);

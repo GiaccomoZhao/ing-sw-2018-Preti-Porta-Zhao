@@ -23,6 +23,9 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static porprezhas.model.GameConstants.*;
+
+
 public class ServerController extends UnicastRemoteObject implements ServerControllerInterface, ServerRMIInterface, Runnable, ActionHandler {
 
     private final int port;
@@ -46,6 +49,9 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     private HashMap socketUsers;
 
     private  Registry registry;
+
+    Timer queueTimeOut;
+
 
     public ServerController(int port) throws RemoteException {
         super(port);
@@ -95,33 +101,34 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             System.out.println("But he is already inside a running game. Putting new player in that game!");
 
         } else {
+            // Create a timer to auto Start a new game
+            if( 0 == playerBuffer.size() ) {
+                queueTimeOut = new Timer();
+                queueTimeOut.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            createNewGame();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, secondsToMillis(TIMEOUT_JOIN_SEC));
+            }
+
             playerBuffer.add(newPlayer);
 
             if (playerBuffer.size() == GameConstants.MAX_PLAYER_QUANTITY) {
+                // Create a game before timeout
+                if(queueTimeOut != null) {
+                    queueTimeOut.cancel();
+                    queueTimeOut = null;
+                }
                 try {
                     createNewGame();
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-
-                GameControllerInterface actualGameController = getGameControllerByPlayer(newPlayer);
-                Game gamet= (Game) actualGameController.getGame();
-                for (Player readyPlayer:
-                        gamet.getPlayerList()) {
-                    if(socketUsers.containsKey(readyPlayer.getName())){
-
-                        gamet.addObserver((ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
-
-                    }
-                    else
-                    try {
-                        gamet.addObserver(readyPlayer.getName());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
 
             }
         }
@@ -146,9 +153,25 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         gameControllerList.add( gameController );
         // NOTE: make player leave from the queue before creating single game
         playerBuffer.remove(player);    // if player has joined but want play single game
-        // TODO: send a message to client:  like token
-        // for(Player player : subBuffer) player.getClient().player.setGameController(gameController);
+
         //send to clients gameController
+        Game game = (Game) gameController.getGame();
+        for (Player readyPlayer:
+                game.getPlayerList()) {
+            if(socketUsers.containsKey(readyPlayer.getName())){
+
+                game.addObserver((ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
+
+            }
+            else
+                try {
+                    game.addObserver(readyPlayer.getName());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+        }
+
         return gameController;
 	}
 
@@ -176,8 +199,25 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 */
         gameControllerList.add( gameController );
         playerBuffer.removeAll(subBuffer);
-        // TODO: send a message to client:  like token
-        // for(Player player : subBuffer) player.getClient().player.setGameController(gameController);
+
+        //send to clients gameController
+        Game game = (Game) gameController.getGame();
+        for (Player readyPlayer:
+                game.getPlayerList()) {
+            if(socketUsers.containsKey(readyPlayer.getName())){
+
+                game.addObserver((ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
+
+            }
+            else
+                try {
+                    game.addObserver(readyPlayer.getName());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+        }
+
         return gameController;
 	}
 

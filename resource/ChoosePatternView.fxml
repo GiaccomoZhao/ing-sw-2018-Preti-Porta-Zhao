@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="ChoosePatternView" fx:controller="porprezhas.view.fx.choosePatternScene.ChoosePatternViewController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="600.0" stylesheets="@ChoosePatternView.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="ChoosePatternView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="600.0" stylesheets="@ChoosePatternView.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="porprezhas.view.fx.choosePatternScene.ChoosePatternViewController">
    <children>
       <ImageView fitHeight="508.0" fitWidth="600.0" layoutX="-14.0" layoutY="-73.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
@@ -43,38 +48,47 @@
       </Text>
       <StackPane layoutX="70.0" layoutY="72.0" prefHeight="195.0" prefWidth="223.0" styleClass="pattern" stylesheets="@ChoosePatternView.css">
          <children>
-            <Label fx:id="choosePatternViewPatternLabel1" onMouseEntered="#onMouseEnteredPattern" onMouseClicked="#onMouseClickedPattern" prefHeight="195.0" prefWidth="228.0" />
-            <ImageView fx:id="choosePatternViewPattern1" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" onMouseEntered="#onMouseEnteredPattern" pickOnBounds="true" preserveRatio="true" styleClass="pattern">
-               <image>
-                  <Image url="@pattern/aurora_sagradis.png" />
-               </image>
-            </ImageView>
+             <Label fx:id="choosePatternViewPatternLabel1" onMouseClicked="#onMouseClickedPattern" onMouseEntered="#onMouseEnteredPattern" onMouseExited="#onMouseExitedPattern">
+                 <graphic>
+                     <ImageView fx:id="choosePatternViewPattern1" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                         <image>
+                             <Image url="@pattern/bellesguard.png" />
+                         </image>
+                     </ImageView>
+                 </graphic>
+             </Label>
          </children></StackPane>
       <StackPane layoutX="319.0" layoutY="72.0" prefHeight="195.0" prefWidth="223.0" stylesheets="@ChoosePatternView.css">
          <children>
-            <Label fx:id="choosePatternViewPatternLabel2" onMouseEntered="#onMouseEnteredPattern"  onMouseClicked="#onMouseClickedPattern"/>
-            <ImageView fx:id="choosePatternViewPattern2" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@pattern/aurora_sagradis.png" />
-               </image>
-            </ImageView>
+             <Label fx:id="choosePatternViewPatternLabel2" onMouseClicked="#onMouseClickedPattern" onMouseEntered="#onMouseEnteredPattern" onMouseExited="#onMouseExitedPattern">
+                 <graphic>
+                     <ImageView fx:id="choosePatternViewPattern2" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                         <image>
+                             <Image url="@pattern/bellesguard.png" />
+                         </image>
+                     </ImageView>
+                 </graphic>
+             </Label>
          </children></StackPane>
       <StackPane layoutX="70.0" layoutY="291.0" prefHeight="195.0" prefWidth="223.0" stylesheets="@ChoosePatternView.css">
          <children>
-            <Label fx:id="choosePatternViewPatternLabel3" onMouseEntered="#onMouseEnteredPattern"  onMouseClicked="#onMouseClickedPattern"/>
-            <ImageView fx:id="choosePatternViewPattern3" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@pattern/aurora_sagradis.png" />
-               </image>
-            </ImageView>
+            <Label fx:id="choosePatternViewPatternLabel3" onMouseClicked="#onMouseClickedPattern" onMouseEntered="#onMouseEnteredPattern" onMouseExited="#onMouseExitedPattern">
+               <graphic>
+                  <ImageView fx:id="choosePatternViewPattern3" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pattern/bellesguard.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
          </children></StackPane>
       <StackPane layoutX="319.0" layoutY="291.0" prefHeight="195.0" prefWidth="223.0" stylesheets="@ChoosePatternView.css">
          <children>
-            <Label fx:id="choosePatternViewPatternLabel4" onMouseEntered="#onMouseEnteredPattern"  onMouseClicked="#onMouseClickedPattern">
+            <Label fx:id="choosePatternViewPatternLabel4" onMouseClicked="#onMouseClickedPattern" onMouseEntered="#onMouseEnteredPattern" onMouseExited="#onMouseExitedPattern" >
                <graphic>
                   <ImageView fx:id="choosePatternViewPattern4" fitHeight="195.0" fitWidth="250.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@pattern/aurora_sagradis.png" />
+                        <Image url="@pattern/bellesguard.png" />
                      </image>
                   </ImageView>
                </graphic>

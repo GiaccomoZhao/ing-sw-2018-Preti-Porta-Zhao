@@ -2,6 +2,7 @@ package porprezhas.model.cards;
 
 import org.junit.Before;
 import org.junit.Test;
+import porprezhas.exceptions.toolCard.IncorrectParamQuantityException;
 import porprezhas.model.GameConstants;
 import porprezhas.model.dices.*;
 
@@ -43,30 +44,43 @@ public class ToolCard1StrategyTest {
     }
 
     @Test
-    public void nullTest() {
+    public void nullTest1() {
         // test toolCard is constructed
         assertNotNull(toolCard1.getStrategy());
+    }
 
+    @Test (expected = IncorrectParamQuantityException.class)
+    public void nullTest2() {
         // test with Null parameters
         assertFalse(toolCard1.getStrategy().use(null));
+    }
 
+    @Test (expected = IncorrectParamQuantityException.class)
+    public void nullTest3() {
         // test with Empty parameters
         assertFalse(toolCard1.getStrategy().use(param));
+    }
 
+    @Test (expected = IncorrectParamQuantityException.class)
+    public void nullTest4() {
         // test with all Null
         param = new ToolCardParam(null, null, null, null, null);
         assertFalse(toolCard1.getStrategy().use(param));
+    }
 
+    @Test (expected = IncorrectParamQuantityException.class)
+    public void nullTest5() {
         // test with Only DraftPool, but Null Integer Params
         param = new ToolCardParam(null, draftPool, null, null, null);
         assertFalse(toolCard1.getStrategy().use(param));
+    }
 
-
-
+    @Test
+    public void notNullTest() {
         // setup correct integer Params
         int indexDraftPool = 0;
-        integerParams.add(indexDraftPool);   // correct param, the first dice of the list
-        integerParams.add(ToolCardParam.IncDec.DECREMENT.toInteger());  // correct param
+        integerParams.add(indexDraftPool);   // correct testParams, the first dice of the list
+        integerParams.add(ToolCardParam.IncDec.DECREMENT.toInteger());  // correct testParams
 
         // test with NULL Container, but Correct params
         param = new ToolCardParam(null, null, null, null, integerParams);
@@ -74,7 +88,7 @@ public class ToolCard1StrategyTest {
 
 
         // CORRECT TEST
-        // test with Correct Container and param, but NULL not used Container
+        // test with Correct Container and testParams, but NULL not used Container
         param = new ToolCardParam(null, draftPool, null, null, integerParams);   // correct Container and Params
 
         // PRINT the Draft Pool, because we are testing a generic dices
@@ -91,6 +105,8 @@ public class ToolCard1StrategyTest {
 
     @Test
     public void emptyTest() {
+        Class<IncorrectParamQuantityException> excepted = IncorrectParamQuantityException.class;
+        int iExcepted = 0;
         // initialize empty containers and params
         RoundTrack emptyRoundTrack = new RoundTrack();
         DraftPool emptyDraftPool = new DraftPool();
@@ -100,27 +116,63 @@ public class ToolCard1StrategyTest {
 
         // test with All Empty
         param = new ToolCardParam(emptyRoundTrack, emptyDraftPool, emptyDiceBag, emptyBoard, emptyParams);
-        assertFalse(toolCard1.getStrategy().use(param));
+        try {
+            toolCard1.getStrategy().use(param);
+        } catch (IncorrectParamQuantityException e) {
+            iExcepted++;
+        }
+        if(iExcepted < 1)
+            fail();
 
         // test with Null Dice Container and EMPTY Integer Params
         param = new ToolCardParam(null, null, null, null, emptyParams);
-        assertFalse(toolCard1.getStrategy().use(param));
+        try {
+            toolCard1.getStrategy().use(param);
+        } catch (IncorrectParamQuantityException e) {
+            iExcepted++;
+        }
+        if(iExcepted < 2)
+            fail();
 
         // test with Correct Dice Container and EMPTY Integer Params
         param = new ToolCardParam(emptyRoundTrack, draftPool, diceBag, emptyBoard, emptyParams);
-        assertFalse(toolCard1.getStrategy().use(param));
+        try {
+            toolCard1.getStrategy().use(param);
+        } catch (IncorrectParamQuantityException e) {
+            iExcepted++;
+        }
+        if(iExcepted < 3)
+            fail();
 
         // test with NULL Dice Container and Correct Integer Params
         param = new ToolCardParam(null, null, null, null, integerParams);
-        assertFalse(toolCard1.getStrategy().use(param));
+        try {
+            toolCard1.getStrategy().use(param);
+        } catch (IncorrectParamQuantityException e) {
+            iExcepted++;
+        }
+        if(iExcepted < 4)
+            fail();
 
         // test with EMPTY Dice Container and Correct Integer Params
         param = new ToolCardParam(emptyRoundTrack, emptyDraftPool, emptyDiceBag, emptyBoard, integerParams);
-        assertFalse(toolCard1.getStrategy().use(param));
+        try {
+            toolCard1.getStrategy().use(param);
+        } catch (IncorrectParamQuantityException e) {
+            iExcepted++;
+        }
+        if(iExcepted < 5)
+            fail();
 
         // test with EMPTY Dice Container and Correct Integer Params, and Null unused container
         param = new ToolCardParam(null, emptyDraftPool, null, null, integerParams);
-        assertFalse(toolCard1.getStrategy().use(param));
+        try {
+            toolCard1.getStrategy().use(param);
+        } catch (IncorrectParamQuantityException e) {
+            iExcepted++;
+        }
+        if(iExcepted < 6)
+            fail();
     }
 
 

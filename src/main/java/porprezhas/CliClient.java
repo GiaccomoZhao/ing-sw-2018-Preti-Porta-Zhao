@@ -167,7 +167,7 @@ public class CliClient {
            // Error cached
            if (null == ClientActionSingleton.getClientAction() ||
                    !ClientActionSingleton.getClientAction().isConnected()) {
-               System.out.println("404: server NOT Found");
+               System.out.println("Error Code = 404: Server NOT Found");
 
                // Connected to server
            } else {
@@ -175,6 +175,7 @@ public class CliClient {
                if (ClientActionSingleton.getClientAction().login(username)) {
                    // Logged In
                    bLog=true;
+                   System.out.println("Logged in!\n");
 
                    // Login Failed!!!
                } else {
@@ -205,8 +206,10 @@ public class CliClient {
                 e.printStackTrace();
             }
         }
-        ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface);
-    }
+           if (ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface)) {
+               System.out.println("Joined in the game successfully!\n");
+           }
+       }
 
     }
 

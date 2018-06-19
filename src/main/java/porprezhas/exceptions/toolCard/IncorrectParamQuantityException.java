@@ -12,7 +12,11 @@ public class IncorrectParamQuantityException extends ToolCardParameterException{
     }
 
     public IncorrectParamQuantityException(int excepted, List<Integer> actual) {
-        super("Incorrect parameter quantity: \texpected = " + excepted + "\tactual = " + actual);
+        super("Incorrect parameter quantity: \texpected = " + excepted + " \tactual = " +
+                (null == actual ?
+                        (actual) :
+                        actual.size() + " \t" + actual.toString() )
+        );
     }
 
 }

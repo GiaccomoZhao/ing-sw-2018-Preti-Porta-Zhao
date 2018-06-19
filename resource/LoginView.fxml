@@ -85,7 +85,7 @@
             </VBox>
             <AnchorPane fx:id="joinScene" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="joinViewButton" layoutX="256.0" layoutY="280.0" mnemonicParsing="false" onAction="#onJoinButton" prefHeight="13.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Join" textFill="#390f01">
+                  <Button fx:id="joinViewButton" layoutX="256.0" layoutY="256.0" mnemonicParsing="false" onAction="#onJoinButton" prefHeight="13.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Join" textFill="#390f01">
                      <font>
                         <Font name="Book Antiqua" size="20.0" />
                      </font>
@@ -100,7 +100,7 @@
                   <Font size="32.0" />
                </font>
                <StackPane.margin>
-                  <Insets />
+                  <Insets bottom="96.0" />
                </StackPane.margin>
             </Text>
          </children>

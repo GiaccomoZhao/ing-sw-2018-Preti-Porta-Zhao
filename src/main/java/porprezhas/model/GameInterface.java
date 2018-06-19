@@ -35,7 +35,7 @@ public interface GameInterface {
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
 
     boolean setPattern(Player player, int indexPatternType);
-    void nextRound();
+    void newRound(int indexRound);
     int calcScore(Player player);
     void newTurn();
 

@@ -6,6 +6,6 @@ public class DiceNotFoundInBoardException extends ToolCardParameterException {
     }
 
     public DiceNotFoundInBoardException(int row, int col) {
-        super("The specified Dice in board (" + row + ":" + col + ") is not found");
+        super("The specified Dice in board (" + row + ":" + col + ") is NOT FOUND");
     }
 }

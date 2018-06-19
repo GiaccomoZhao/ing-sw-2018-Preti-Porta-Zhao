@@ -265,7 +265,7 @@ public class ToolCard2StrategyTest {
         System.out.println("_______________________________________________________________________\n\n");
         System.out.flush();
 
-        // check dice quantity in the board doesn't change
+        // check dice quantity in the testBoard doesn't change
         // eight it successes and fails
         assertEquals(2, testBoard.getDiceQuantity());        // in these tests we always test with only 2 dice!!!
     }

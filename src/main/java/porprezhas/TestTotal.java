@@ -14,6 +14,15 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * instruction:
+ * 1. in terminal type:
+ *      start rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
+ * 2. run NanoHTTP
+ * 3. run this -SERVER-
+ * 4. run clients
+ */
 public class TestTotal {
     public static void main(String[] args) throws RemoteException, InterruptedException {
 
@@ -24,7 +33,7 @@ public class TestTotal {
         Thread gameThread;
 
         // test parameter
-        final int NUM_PLAYER = 4;
+        final int NUM_PLAYER = 0;
 
 
             server = new ServerController(1456);
@@ -35,7 +44,7 @@ public class TestTotal {
         myThread.start();
         players = new ArrayList<>();
 
-        for (int i = 0; i < 0; i++) {
+        for (int i = 0; i < NUM_PLAYER; i++) {
             Faker faker = new Faker();
 
 

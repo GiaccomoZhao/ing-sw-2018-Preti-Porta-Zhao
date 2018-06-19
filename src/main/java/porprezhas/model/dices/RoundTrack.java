@@ -21,9 +21,7 @@ public class RoundTrack implements Serializable {
 
     public RoundTrack() {
         track= new ArrayList[ROUND_NUM];
-        actualRound = 0;        // NOTE: this round counter really starts from 1
-                                // Game Controller will start the game calling:
-                                // addDice(emptyDraftPool){ nextRound(); }
+        actualRound = 1;
     }
 
     public int getActualRound() {

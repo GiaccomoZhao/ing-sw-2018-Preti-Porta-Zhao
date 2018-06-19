@@ -11,8 +11,9 @@ import java.util.Random;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class BackgroundMusicPlayer {
-    private static List<MediaPlayer> backgroundMusicPlayers = new ArrayList<>();
-    private static String currentPlayingMusic;
+    private static List<MediaPlayer> backgroundMusicPlayList = new ArrayList<>();
+    private static String currentPlayingMusicPath = null;
+    private static int currentPlayingMusicIndex;
 
 
     /**
@@ -26,10 +27,16 @@ public class BackgroundMusicPlayer {
      * @return is play successful
      */
     public static synchronized boolean playRandomMusic(String musicPath) {
-        // Clear the old list to ensure  not having duplication.
         // Do not stop and replay the music from the same folder,
-        if(currentPlayingMusic == null  ||  !currentPlayingMusic.equals(musicPath)) {
-            backgroundMusicPlayers.clear();
+        // just continue it
+        if(null != currentPlayingMusicPath  &&  currentPlayingMusicPath.equals(musicPath)) {
+            return true;
+        }
+
+        // Stop and Clear the old play list
+        if( backgroundMusicPlayList != null  &&  !backgroundMusicPlayList.isEmpty()) {
+            backgroundMusicPlayList.get(currentPlayingMusicIndex).stop();
+            backgroundMusicPlayList.clear();
         }
         // and then we can do a refresh of files in the folder
 
@@ -72,30 +79,32 @@ public class BackgroundMusicPlayer {
             MediaPlayer player = new MediaPlayer( new Media(musicFiles[i]) );
             player.setOnError(() ->
                     System.err.println("Media player error occurred: " + player.getError()));
-            backgroundMusicPlayers.add(player);
-        }
 
-        if (backgroundMusicPlayers.isEmpty()) {
-            System.out.println("\t0 .mp3 audio file found in " + dir);
-            return false;
-        }
-
-        // play background music randomly one after an other
-        for (MediaPlayer player : backgroundMusicPlayers) {
+            // set: play background music randomly one after an other
             player.setOnEndOfMedia(() -> {
-                backgroundMusicPlayers.get(new Random().nextInt(backgroundMusicPlayers.size())).play();
+                currentPlayingMusicIndex = new Random().nextInt(backgroundMusicPlayList.size());
+                backgroundMusicPlayList.get(currentPlayingMusicIndex).play();
             });
             // bind some sound property for user setting
             player.muteProperty().bindBidirectional(bMuteMusic);
             player.volumeProperty().bindBidirectional(musicVolume);
+
+            backgroundMusicPlayList.add(player);
+        }
+
+        if (backgroundMusicPlayList.isEmpty()) {
+            System.out.println("\t0 .mp3 audio file found in " + dir);
+            return false;
         }
 
         // start the first music
-        backgroundMusicPlayers.get(new Random().nextInt(backgroundMusicPlayers.size())).play();
+        currentPlayingMusicIndex = new Random().nextInt(backgroundMusicPlayList.size());
+        backgroundMusicPlayList.get(currentPlayingMusicIndex).play();
 
         // save current playing music's path
-        if(currentPlayingMusic == null  ||  !currentPlayingMusic.equals(musicPath)) {
-            currentPlayingMusic = musicPath;
+        // now that the we have verified the path is valid
+        if( !musicPath.equals(currentPlayingMusicPath) ) {
+            currentPlayingMusicPath = musicPath;
         }
 
         return true;

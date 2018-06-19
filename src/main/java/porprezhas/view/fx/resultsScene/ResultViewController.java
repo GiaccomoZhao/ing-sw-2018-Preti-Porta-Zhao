@@ -9,7 +9,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -39,11 +41,6 @@ public class ResultViewController implements Initializable, SceneController, Mov
     String stageName;
 
     private MovebleWindowInterface movable;
-
-    // Music controller
-    public final String pathToMusicDirectory = pathToResultMusic;
-//    public static final String pathToVideoDirectory = "video/";
-
 
 
 
@@ -93,6 +90,9 @@ public class ResultViewController implements Initializable, SceneController, Mov
         });
 
         stageManager.getStage(stageName).setOnShowing(event -> {
+            // add Ending music
+            BackgroundMusicPlayer.playRandomMusic(pathToResultMusic);
+
             timeline.play();
         });
     }
@@ -123,6 +123,8 @@ public class ResultViewController implements Initializable, SceneController, Mov
         // assign the rootLayout the top most parent pane, now that it is initialized
         rootLayout = resultsView;
 
+        setGameCursor();
+
         Platform.runLater(() -> {
             // Add Move Window Listener
             movable = new MovebleWindow();
@@ -137,14 +139,14 @@ public class ResultViewController implements Initializable, SceneController, Mov
         // we do not want it be resized
 //        stageManager.getStage(stageName).setResizable(false);
 
-
-        // add Ending music
-    //    BackgroundMusicPlayer.playRandomMusic(pathToMusicDirectory);
-
     }
 
 
 
+    private void setGameCursor() {
+        rootLayout.setCursor(new ImageCursor(
+                new Image(pathToCursor + "cursor_hand.png", 64.0, 64.0, true, true)));
+    }
 
 
 

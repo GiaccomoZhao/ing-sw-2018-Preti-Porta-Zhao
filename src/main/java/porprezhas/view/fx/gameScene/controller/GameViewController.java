@@ -89,7 +89,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     // Sub Controllers
     private List<EnemyViewController> enemyViewControllers;
-    private Pane[] enemyPanes;      // panel of 0-3 enemies, contain board, name, icon
+    private List<Pane> enemyPanes;      // panel of 0-3 enemies, contain board, name, icon
     //private List<VBox> roundTrackLists;
 
     private List<BoardView> boardList;      // board of all players
@@ -127,10 +127,10 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         num_player = 4; // TODO: Remove this Fake
 //        updatePlayerInfo(player);
 //        if(this.num_player > 1)
-        enemyPanes = new Pane[this.num_player-1];
+        enemyPanes = new ArrayList<>();     // Pane[this.num_player-1];
 //        else
 //            enemyPanes = new Pane[0];
-        boardList = new ArrayList<>(num_player);
+        boardList = new ArrayList<>();
 
         enemyViewControllers = new ArrayList<>();
 
@@ -167,7 +167,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         num_player = 4; // TODO: Remove this Fake
 //        updatePlayerInfo(player);
 //        if(this.num_player > 1)
-            enemyPanes = new Pane[this.num_player-1];
+            enemyPanes = new ArrayList<>(this.num_player-1);
 //        else
 //            enemyPanes = new Pane[0];
         boardList = new ArrayList<>(num_player);
@@ -227,9 +227,6 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
             roundTrackDiceTable.add(vBox, i, 1, 1, 8);
         }
 */
-
-        // add gaming BackGround Music
-        BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
 
     }
 
@@ -295,6 +292,9 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         });
 
         stageManager.getStage(stageName).setOnShowing(event -> {
+            // add gaming BackGround Music
+            BackgroundMusicPlayer.playRandomMusic(pathToGameMusic);
+
             timeline.play();
         });
     }
@@ -331,32 +331,6 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupSubController(this);
         if(bDebug)
             System.out.println("Private Objective Cards set up done");
-    }
-
-    private void setupCards() {
-        System.out.println("\nSetup Cards");
-
-        cardPanes[CardTab.TOOL_CARD.ordinal()] = new CardPane(fx_toolCardPane, CardTab.TOOL_CARD, pathToToolCard);
-        cardPanes[CardTab.PRIVATE_CARD.ordinal()] = new CardPane(fx_privateCardPane, CardTab.PRIVATE_CARD, pathToPrivateCard);
-        cardPanes[CardTab.PUBLIC_CARD.ordinal()] = new CardPane(fx_publicCardPane, CardTab.PUBLIC_CARD, pathToPublicCard);
-
-        List<Card> toolCards = new ArrayList<>();
-        toolCards.add(new ToolCard(Card.Effect.TC4));
-        toolCards.add(new ToolCard(Card.Effect.TC2));
-        toolCards.add(new ToolCard(Card.Effect.TC11));
-        cardPanes[CardTab.TOOL_CARD.ordinal()].setupCardPane(toolCards);
-        cardPanes[CardTab.TOOL_CARD.ordinal()].setupSubController(this);
-
-        List<Card> privateObjectCards = new ArrayList<>();
-        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC1));
-        privateObjectCards.add(new PrivateObjectiveCard(Card.Effect.PRC4));
-        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupCardPane(privateObjectCards);
-        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupSubController(this);
-
-        List<Card> publicObjectCards = new ArrayList<>();
-        publicObjectCards.add(new PublicObjectiveCard(Card.Effect.PUC10));
-        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupCardPane(publicObjectCards);
-        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupSubController(this);
     }
 
     private void setupCardPane(Pane cardPane, String pathToCards, List<String> cardsName) {
@@ -435,7 +409,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
     private void setupDraftPool() {
         draftPoolView.setup(fx_draftPoolParent);
-        roundTrackBoard.setupSubController(this);
+        draftPoolView.setupSubController(this);
     }
 
 
@@ -479,14 +453,14 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         if(bDebug) {
             System.out.println("Loading Enemy Pane"); }
         fx_enemyPanesParent.getChildren().clear();
-        for (int i = 0; i < enemyPanes.length; i++) {
+        for (int i = 0; i < playersInfo.size() -1; i++) {
             // Load the panel from .fxml
             FXMLLoader loader = new FXMLLoader();   //NOTE: We must create more time loader to get multiple pane; Otherwise only one pane would be displayed
             loader.setLocation(getClass().getResource("/EnemyPaneView.fxml"));
             if(loader == null)
                 System.err.println(this + ": Error with loader.setLocation(" + getClass().getResource("/EnemyPaneView.fxml") + ")");
             try {
-                enemyPanes[i] = loader.load();  // if there is a error, it may be caused by incorrect setting in EnemyPaneView.fxml
+                enemyPanes.add( loader.load() );  // if there is a error, it may be caused by incorrect setting in EnemyPaneView.fxml
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -495,11 +469,17 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
                 System.out.println("Enemy Pane View Loaded successfully"); }
 
             // add the enemy panel on the game view
-            fx_enemyPanesParent.getChildren().add(enemyPanes[i]);
+            fx_enemyPanesParent.getChildren().add(enemyPanes.get(i));
 
             // get controller
             EnemyViewController enemyViewController = loader.getController();
             enemyViewControllers.add(enemyViewController);
+
+            // disable enemy board from dragging
+            if(!bDebug) {
+                fx_enemyPanesParent.setDisable(true);
+            }
+
             // setup player info
             enemyViewController.setPlayerInfo(playersInfo.get(i >= playerPosition ? i+1 : i));
         }
@@ -566,11 +546,11 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
         final double newHeight = gamePaneHeight;    // final is used to mark this read only
         boolean bMinimum = newHeight <= referenceEnemyPaneHeight;
-//            double minSpacing = (referenceEnemyPaneHeight/3 *  (3- (num_player-1)));
+//            double minSpacing = (referenceEnemyPaneHeight/3 *  (3- (playersInfo.size()-1)));
         double totalSpacing =
                 bMinimum ?
                         0 :
-                        ( newHeight - (referenceEnemyPaneHeight) * (num_player-1)/designedEnemyNumber ) * enemyPaneSpacingRatio;
+                        ( newHeight - (referenceEnemyPaneHeight) * (playersInfo.size()-1)/designedEnemyNumber ) * enemyPaneSpacingRatio;
         double paneHeight =
                 bMinimum ?
                         newHeight * enemyPaneHeightFactor :
@@ -578,7 +558,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         double paneWidth = paneHeight * enemyPaneWidthFactor;
 
         // if the height isn't narrow increase size and gap between enemy panels
-        fx_enemyPanesParent.setSpacing(totalSpacing / (num_player-1 +1));  // num_player -1 == enemy_num;
+        fx_enemyPanesParent.setSpacing(totalSpacing / (playersInfo.size()-1 +1));  // playersInfo.size() -1 == enemy_num;
                                                                         // +1 for spacing top and bottom too,
                                                                         // -1 if you just want increase the gap
         for ( Pane pane: enemyPanes) {
@@ -697,18 +677,19 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     @FXML
     protected void onTabelEntered(MouseEvent event) {
-        System.out.println("Tabel Entered!");
+        if(bDebug)
+            System.out.println("Tabel Entered!");
     }
 
     @FXML
     protected void onTabelExited(MouseEvent event) {
-        System.out.println("Tabel Exited");
+        if(bDebug)
+            System.out.println("Tabel Exited");
     }
 
     @FXML
     protected void onPass(ActionEvent event) {
         System.out.println("PASS");
-        goToNextStage(); // TODO:  delete this
         // for test
        /* Random random = new Random();
         List<Dice> diceList = new ArrayList<>();
@@ -748,6 +729,8 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
     public void setPlayerPosition(int playerPosition) {
+        if(bDebug)
+            System.out.println("\nPlayer position set to " + playerPosition);
         this.playerPosition = playerPosition;
     }
 
@@ -795,7 +778,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
                     player.getBoard().getPattern().getTypePattern()));
 
             if (userName.equals(player.getName())) {
-                playerPosition = i;
+                setPlayerPosition(i);   //playerPosition = i;
             }
         }
     }

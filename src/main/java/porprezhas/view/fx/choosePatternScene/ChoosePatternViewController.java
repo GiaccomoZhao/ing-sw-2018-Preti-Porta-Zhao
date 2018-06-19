@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.mockito.Mock;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.MovebleWindow;
 import porprezhas.view.fx.MovebleWindowInterface;
@@ -147,6 +149,8 @@ public class ChoosePatternViewController implements Initializable, SceneControll
         patternList.add(Pattern.TypePattern.SUNS_GLORY);
 
         patternSetup(patternList);
+
+        setGameCursor();
     }
 
 
@@ -192,16 +196,29 @@ public class ChoosePatternViewController implements Initializable, SceneControll
 
     }
 
+    private void setGameCursor() {
+        rootLayout.setCursor(new ImageCursor(
+                new Image(pathToCursor + "cursor_hand.png", 64.0, 64.0, true, true)));
+    }
+
+
     @FXML
     private void onMouseClickedPattern(MouseEvent event){
         goToNextStage();
     }
 
     @FXML
+    private void onMouseExitedPattern(MouseEvent event) {
+        for (Label label:labelList) {
+            if(label.equals(event.getSource())){
+                label.setBorder(null);
+            }
+        }
+    }
+
+    @FXML
     private void onMouseEnteredPattern(MouseEvent event){
 
-        // String borderpath = getPathToFileIgnoreExt(pathToBorder ,"PRIVATE_CARD" + ".gif");
-        System.out.println(labelList);
         for (Label label:labelList) {
             if(label.equals(event.getSource())){
                 label.setBorder(new Border(new BorderStroke( Color.rgb(200, 114, 73),
@@ -209,9 +226,6 @@ public class ChoosePatternViewController implements Initializable, SceneControll
 
             }
         }
-
-        /*choosePatternViewPattern1.setBorder(new Border(new BorderStroke( Color.rgb(200, 200, 200),
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));*/
     }
 
 }

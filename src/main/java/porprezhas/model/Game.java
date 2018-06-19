@@ -415,10 +415,11 @@ public class Game extends ModelObservable implements GameInterface {
         notifyObservers(new SerializableGame(this));
     }
 
-    public void nextRound() {
-        if(null != draftPool)
+    public void newRound(int indexRound) {
+        boolean bFirstRound = 0 == indexRound;
+        if(!bFirstRound)
             roundTrack.addDice(draftPool);
-        getDraftPool().setDraftPool(getDiceBag(), playerList.size());
+        draftPool.setDraftPool(getDiceBag(), playerList.size());
 
         gameNotifyState = NotifyState.NEXT_ROUND;
         setChanged();

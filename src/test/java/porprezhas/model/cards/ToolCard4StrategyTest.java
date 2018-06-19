@@ -297,7 +297,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(true, bSuccess);
-        assertEquals(true, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(true, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(2, testBoard.getDiceQuantity());
     }
 
@@ -347,7 +347,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(false, bSuccess);
-        assertEquals(false, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(false, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(2, testBoard.getDiceQuantity());
     }
 
@@ -393,7 +393,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(false, bSuccess);
-        assertEquals(false, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(false, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(2, testBoard.getDiceQuantity());
     }
 
@@ -441,7 +441,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(true, bSuccess);
-        assertEquals(true, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(true, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(2, testBoard.getDiceQuantity());
     }
 
@@ -487,7 +487,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(false, bSuccess);
-        assertEquals(false, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(false, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(2, testBoard.getDiceQuantity());
     }
 
@@ -534,7 +534,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(false, bSuccess);
-        assertEquals(false, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(false, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(2, testBoard.getDiceQuantity());
     }
 
@@ -580,7 +580,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(true, bSuccess);
-        assertEquals(true, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(true, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(2, testBoard.getDiceQuantity());
     }
 
@@ -622,7 +622,7 @@ public class ToolCard4StrategyTest {
         bSuccess = toolCard4.getStrategy().use(testParams);
 
         assertEquals(true, bSuccess);
-        assertEquals(true, ((ToolCard2) toolCard4.getStrategy()).getReturn());
+        assertEquals(true, ((ToolCard4) toolCard4.getStrategy()).getReturn());
         assertEquals(1, testBoard.getDiceQuantity());
     }
 

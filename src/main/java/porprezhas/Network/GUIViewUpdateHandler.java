@@ -67,7 +67,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 this.gameStarted=true;
 //                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
 //                System.out.println(gameViewController);
-                Platform.runLater(() -> gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList()) );
+                Platform.runLater(() -> {
+                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList());
+                } );
                 break;
 
 
