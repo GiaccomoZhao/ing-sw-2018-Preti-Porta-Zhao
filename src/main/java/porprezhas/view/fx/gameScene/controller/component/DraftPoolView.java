@@ -224,7 +224,7 @@ public class DraftPoolView implements SubController{
                                     DiceView guiDiceView = (DiceView) node;
 //                                    if (draggedDiceView.getDiceID() == draggedDiceView.getDiceID() &&
 //                                            guiDiceView.getColumn() == draggedDiceView.getColumn() &&
-                                    if(guiDiceView.getRow() == draggedDiceView.getRow()) {
+                                    if(guiDiceView.getDiceID() == draggedDiceView.getDiceID()) {
                                         System.out.println("Translate DiceView " + guiDiceView + " to x = " + x + " \ty = " + y);
                                         translateDice(guiDiceView, x, y);
                                         break;
