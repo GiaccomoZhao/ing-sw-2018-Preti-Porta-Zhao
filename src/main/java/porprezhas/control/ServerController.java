@@ -50,6 +50,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     private  Registry registry;
 
+    private HashMap inGameLostConnection;
+
     Timer queueTimeOut;
 
 
@@ -61,6 +63,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 		loggedPlayer = new ArrayList<>();
 		socketUsers = new HashMap();
         registry= LocateRegistry.getRegistry();
+        inGameLostConnection=new HashMap();
 
 
 	}
@@ -160,7 +163,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 game.getPlayerList()) {
             if(socketUsers.containsKey(readyPlayer.getName())){
 
-                game.addObserver((ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
+                game.addObserver(readyPlayer.getName(), (ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
 
             }
             else
@@ -206,7 +209,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 game.getPlayerList()) {
             if(socketUsers.containsKey(readyPlayer.getName())){
 
-                game.addObserver((ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
+                game.addObserver(readyPlayer.getName(), (ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
 
             }
             else
@@ -243,6 +246,16 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             }
         }
         return null;    // NOTE: throw game not found ?
+    }
+
+    @Override
+    public void closedConnection(String username) {
+
+        Game game= (Game) getGameControllerByUsername(username).getGame();
+        if(this.socketUsers.containsKey(username))
+           socketUsers.remove(username);
+       game.removeObserver(username);
+        this.inGameLostConnection.put(username,game);
     }
 
     @Override

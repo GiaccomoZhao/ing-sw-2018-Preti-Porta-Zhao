@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public interface RemoteObservable extends Remote {
     void addObserver(String username)throws RemoteException ;
 
-    void printBoard() throws RemoteException;
 
-    Game GetThisGame() throws RemoteException;
+
+
     Player getActualPlayer() throws RemoteException;
     ArrayList<Player> getPlayers() throws RemoteException;
 

@@ -38,5 +38,7 @@ public  class ProxyObserverRMI implements Observer
 
 
 
+
+
     }
 

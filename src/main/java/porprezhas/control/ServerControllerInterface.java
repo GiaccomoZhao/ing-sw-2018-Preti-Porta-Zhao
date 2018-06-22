@@ -14,6 +14,7 @@ public interface ServerControllerInterface  {
     GameControllerInterface createNewGame(Player player, Game.SolitaireDifficulty difficulty) throws RemoteException;
     boolean isAlreadyInGame(Player player) throws RemoteException;
     GameControllerInterface getGameController(Player player) throws RemoteException;
+    void closedConnection(String username);
 
     //int getGameControllerIndex(String username) throws RemoteException;
 }

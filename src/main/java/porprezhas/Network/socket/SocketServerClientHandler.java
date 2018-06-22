@@ -1,6 +1,7 @@
 package porprezhas.Network.socket;
 
 import porprezhas.Network.command.*;
+import porprezhas.control.ServerControllerInterface;
 import porprezhas.model.ProxyObserverSocket;
 
 import java.io.EOFException;
@@ -8,12 +9,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Observable;
 
 public class SocketServerClientHandler extends Observable implements Runnable {
     private ActionHandler serverController;
     private Socket socket;
-    private int state = 0;
+    private String username;
     private ProxyObserverSocket proxyObserverSocket;
     private final ObjectInputStream in;
     private final ObjectOutputStream out;
@@ -21,9 +23,7 @@ public class SocketServerClientHandler extends Observable implements Runnable {
     public static Object lock;
     private Boolean test = true;
 
-    public int getState() {
-        return state;
-    }
+
 
     public SocketServerClientHandler(Socket socket, ActionHandler serverController) throws IOException {
         this.socket = socket;
@@ -43,8 +43,10 @@ public class SocketServerClientHandler extends Observable implements Runnable {
                     ((LoginAction) action).setObjectOutputStream(out);
                 Answer answer = action.handle(serverController);
                 if (first)
-                    if (((LoginActionAnswer) answer).answer.equals(true))
+                    if (((LoginActionAnswer) answer).answer.equals(true)) {
                         first = false;
+                        this.username=((LoginActionAnswer) answer).username;
+                }
                 synchronized (lock) {
                     out.reset();
                     out.writeObject(answer);
@@ -55,6 +57,8 @@ public class SocketServerClientHandler extends Observable implements Runnable {
         } catch (IOException e) {
             if( e instanceof EOFException)
                 System.out.println("Invalid username");
+            else if(e instanceof SocketException)
+                System.out.println("Client closed the connection");
             else
                 e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -65,6 +69,7 @@ public class SocketServerClientHandler extends Observable implements Runnable {
                 out.close();
                 in.close();
                 socket.close();
+                ((ServerControllerInterface) serverController).closedConnection(username);
             } catch (IOException e) {
                 e.printStackTrace();
             }

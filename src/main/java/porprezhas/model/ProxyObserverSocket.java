@@ -5,6 +5,7 @@ import porprezhas.Network.command.UpdateAnswer;
 
 import java.io.ObjectOutputStream;
 
+import java.net.SocketException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,31 +17,39 @@ public class ProxyObserverSocket implements Observer {
     private ObjectOutputStream out ;
 
 
+
     public ProxyObserverSocket(ObjectOutputStream objectOutputStream) {
         this.out=objectOutputStream;
+
 
     }
 int i=0;
     public void update(Observable modelObs, Object arg)
     {
 
-        try
-        {
-            SerializableGameInterface serializableGameInterface= (SerializableGame) arg;
+        if(true){
+            try
+            {
+                SerializableGameInterface serializableGameInterface= (SerializableGame) arg;
 
-            UpdateAnswer updateAnswer= new UpdateAnswer(serializableGameInterface);
-            synchronized (lock){
+                UpdateAnswer updateAnswer= new UpdateAnswer(serializableGameInterface);
+                synchronized (lock){
 
-                out.reset();
-                out.writeObject(updateAnswer);
-                out.flush();
+                    out.reset();
+                    out.writeObject(updateAnswer);
+                    out.flush();
+                }
+
             }
+            catch(Exception re)
+            {
+                if(re instanceof SocketException)
 
-        }
-        catch(Exception re)
-        {
-            System.err.println("Observer error: " + re);
-            re.printStackTrace();
+                System.err.println("Observer error: " + re);
+                re.printStackTrace();
+            }
         }
     }
+
+
 }

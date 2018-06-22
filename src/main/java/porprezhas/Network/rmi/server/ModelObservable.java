@@ -11,13 +11,20 @@ import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.Observable;
+import java.util.Observer;
 
 public abstract class ModelObservable extends Observable
         implements RemoteObservable, Serializable {
 
+    HashMap observerMap;
+
+
     public ModelObservable() throws RemoteException {
         UnicastRemoteObject.exportObject(this, 0);
+        observerMap=new HashMap();
+
     }
 
     @Override
@@ -29,30 +36,29 @@ public abstract class ModelObservable extends Observable
         } catch (NotBoundException e) {
             e.printStackTrace();
         }
-
+        observerMap.put(username, po);
         super.addObserver(po);
         System.out.println("Added observer");
     }
 
-    public void addObserver(ObjectOutputStream objectOutputStream) {
+    public void addObserver(String username, ObjectOutputStream objectOutputStream) {
 
         ProxyObserverSocket po = null;
 
         po = new ProxyObserverSocket(objectOutputStream);
-
+        this.observerMap.put(username, po);
         super.addObserver(po);
         System.out.println("Added observer");
     }
 
-    @Override
-    public void printBoard() throws RemoteException {
-        System.out.println("AAAAAAAAAAA");
+    public void removeObserver(String username){
+        Observer observer=(Observer) this.observerMap.get(username);
+        super.deleteObserver(observer);
     }
 
-    @Override
-    public Game GetThisGame() throws RemoteException {
-        return null;
-    }
+
+
+
 
 
 }
