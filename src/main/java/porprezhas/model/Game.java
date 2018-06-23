@@ -67,6 +67,7 @@ public class Game extends ModelObservable implements GameInterface {
     // player list management attributes
     private List<Player> playerList;
     private Player currentPlayer;
+    private List<Player> frozenPlayer; // list of the players that had lost the connection
     private int iCurrentPlayer;     // keep currentPlayer always == playerList.get(iCurrentPlayer)
     private int iFirstPlayer;       // index of first player in current round -- or index of next round when this round has already finished
     private int iLastPlayer;        // index of player that play 2 consecutive times, on this player we'll turn the rotation direction, toggling bCounterClockwise
@@ -87,6 +88,7 @@ public class Game extends ModelObservable implements GameInterface {
         bSolitaire = true;
         solitaireDifficulty = difficulty;
         playerList = new ArrayList<>();    // TODO: generalization
+        frozenPlayer= new ArrayList<>();
         playerList.add(player);
         privateObjectiveCardFactory = new PrivateObjectiveCardFactory(1);
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(1);
@@ -523,5 +525,15 @@ public class Game extends ModelObservable implements GameInterface {
     @Override
     public ArrayList<Player> getPlayers() throws RemoteException {
         return new ArrayList<Player>(playerList);
+    }
+
+    public void freezePlayer(String username){
+        Player player;
+        for (Player playerByUsername:
+             this.playerList) {
+            if(playerByUsername.getName().equals(username)) {
+                this.frozenPlayer.add(playerByUsername);
+            }
+        }
     }
 }

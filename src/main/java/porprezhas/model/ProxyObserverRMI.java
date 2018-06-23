@@ -1,8 +1,10 @@
 package porprezhas.model;
 
 import porprezhas.Network.rmi.common.RemoteObserver;
+import porprezhas.control.ServerControllerInterface;
 import porprezhas.model.SerializableGameInterface;
 
+import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,9 +17,13 @@ public  class ProxyObserverRMI implements Observer
 
         private RemoteObserver remoteObserver;
         private Registry registry;
+        private ServerControllerInterface serverControllerInterface;
+        private String username;
 
-        public ProxyObserverRMI(String username) throws RemoteException, NotBoundException {
+        public ProxyObserverRMI(String username, ServerControllerInterface serverControllerInterface) throws RemoteException, NotBoundException {
             registry= LocateRegistry.getRegistry();
+            this.username=username;
+            this.serverControllerInterface=serverControllerInterface;
             this.remoteObserver = (RemoteObserver) registry.lookup(username);  ;
 
         }
@@ -31,8 +37,10 @@ public  class ProxyObserverRMI implements Observer
             }
             catch(Exception re)
             {
-                System.err.println("Remote Observer error: " + re);
-                re.printStackTrace();
+                if(re instanceof ConnectException)
+                    serverControllerInterface.closedConnection(username);
+                else
+                    re.printStackTrace();
             }
         }
 

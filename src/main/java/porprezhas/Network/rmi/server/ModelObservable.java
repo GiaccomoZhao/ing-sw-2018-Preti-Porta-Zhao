@@ -2,6 +2,7 @@ package porprezhas.Network.rmi.server;
 
 
 
+import porprezhas.control.ServerControllerInterface;
 import porprezhas.model.ProxyObserverRMI;
 import porprezhas.model.ProxyObserverSocket;
 import porprezhas.model.Game;
@@ -27,12 +28,12 @@ public abstract class ModelObservable extends Observable
 
     }
 
-    @Override
-    public void addObserver(String username) throws RemoteException {
+
+    public void addObserver(String username, ServerControllerInterface serverControllerInterface) throws RemoteException {
         ProxyObserverRMI po = null;
 
         try {
-            po = new ProxyObserverRMI(username);
+            po = new ProxyObserverRMI(username, serverControllerInterface);
         } catch (NotBoundException e) {
             e.printStackTrace();
         }

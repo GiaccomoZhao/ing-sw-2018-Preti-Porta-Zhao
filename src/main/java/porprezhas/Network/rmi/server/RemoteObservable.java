@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public interface RemoteObservable extends Remote {
-    void addObserver(String username)throws RemoteException ;
+
 
 
 

@@ -168,7 +168,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             }
             else
                 try {
-                    game.addObserver(readyPlayer.getName());
+                    game.addObserver(readyPlayer.getName(), this);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -214,7 +214,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             }
             else
                 try {
-                    game.addObserver(readyPlayer.getName());
+                    game.addObserver(readyPlayer.getName(), this);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -255,6 +255,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         if(this.socketUsers.containsKey(username))
            socketUsers.remove(username);
        game.removeObserver(username);
+       game.freezePlayer(username);
+        System.out.println(username + "lost the connection");
         this.inGameLostConnection.put(username,game);
     }
 
@@ -276,8 +278,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     public Boolean login(String username) throws RemoteException {
         for (Player findPlayer:
              loggedPlayer) {
-            if(findPlayer.getName().equals(username))
-                return false;
+            if(findPlayer.getName().equals(username)){
+                if(!this.inGameLostConnection.containsKey(username))
+                    return false;
+            }
         }
         loggedPlayer.add(new Player(username));
 
@@ -411,8 +415,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         String username= loginAction.username;
         for (Player findPlayer:
                 loggedPlayer) {
-            if(findPlayer.getName().equals(username))
-                return new LoginActionAnswer(false, username);
+            if(findPlayer.getName().equals(username)){
+                if(!this.inGameLostConnection.containsKey(username))
+                    return new LoginActionAnswer(false, username);
+            }
+
         }
         loggedPlayer.add(new Player(username));
         this.socketUsers.put(username, loginAction.getObjectOutputStream());

@@ -15,7 +15,7 @@ public interface GameInterface {
     Player getCurrentPlayer();
     Player rotatePlayer();  // modify current player, index to the list
     void orderPlayers();    // modify entire list
-
+    void freezePlayer(String username);
 
     DiceBag getDiceBag();
     DraftPool getDraftPool();
