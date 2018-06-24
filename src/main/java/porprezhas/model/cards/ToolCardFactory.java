@@ -14,6 +14,10 @@ public class ToolCardFactory implements CardFactory {
     ArrayList<Integer> numberList;
     private final int numberOfCard;
 
+    /**
+     * create the list of Tool Cards
+     * @param difficulty used to define the cases of singleplayer or multiplayer
+     */
 
     public ToolCardFactory(Game.SolitaireDifficulty difficulty) {
         numberList = new ArrayList<Integer>();
@@ -32,6 +36,12 @@ public class ToolCardFactory implements CardFactory {
 
         this.numberOfCard = 3;
     }
+
+
+    /**
+     * create the list of Tool cards
+     * @return the list of cards
+     */
 
     @Override
     public ArrayList<Card> createCard() {

@@ -53,6 +53,12 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 2;
 
+    /**
+     * apply the effect of the Tool Card 1
+     * @param param contains all the parameter used by the card
+     * @return the success of the operation
+     */
+
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -79,6 +85,14 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
     public boolean getReturn() {
         return savedReturn;
     }
+
+    /**
+     * auxiliary function for the Tool Card 1
+     * @param draftPool draftpool of the game
+     * @param indexChosenDice index to find the dice
+     * @param bIncDec true->increment, false->decrement
+     * @return the success of the operation
+     */
 
     private boolean use(DraftPool draftPool, int indexChosenDice, boolean bIncDec) {
         // safety Check
@@ -133,6 +147,15 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
     public ToolCard_Move() {
         this.savedReturn = false;
     }
+
+    /**
+     * apply the effect of the Tool Cards
+     * @param param contains all the parameter used by the card
+     * @return the success of the operation
+     * @throws IncorrectParamQuantityException
+     * @throws MoveToSelfException
+     * @throws NotRemovableDiceException
+     */
 
     @Override
     public boolean use(ToolCardParam param)
@@ -200,6 +223,17 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
         return savedReturn;
     }
 
+    /**
+     * auxiliary function used by Tool Card 2,3,4
+     * @param board board of the player
+     * @param fromRow index of the first row considered
+     * @param fromColumn index of the first column considered
+     * @param toRow index of the last row considered
+     * @param toColumn index of the last column considered
+     * @param restriction kind of restriction applied for the dice positioning
+     * @return the success of the operation
+     * @throws ToolCardParameterException
+     */
 
     // Effect of tool card N.2-3, used by card n.4 too
     private boolean use(Board board, int fromRow, int fromColumn, int toRow, int toColumn, Board.Restriction restriction)
@@ -231,6 +265,14 @@ class ToolCard2 extends ToolCard_Move {
         super();
     }
 
+    /**
+     * implementation of the effect of the Tool Card 2
+     * @param param contains all the parameter used by the card
+     * @return the success of the operation
+     * @throws IncorrectParamQuantityException
+     * @throws MoveToSelfException
+     * @throws NotRemovableDiceException
+     */
 
     @Override
     public boolean use(ToolCardParam param)
@@ -259,6 +301,15 @@ class ToolCard3 extends ToolCard_Move {
     public ToolCard3() {
         super();
     }
+
+    /**
+     * implementation of the effect of the Tool Card 3
+     * @param param contains all the parameter used by the card
+     * @return
+     * @throws IncorrectParamQuantityException
+     * @throws MoveToSelfException
+     * @throws NotRemovableDiceException
+     */
 
     @Override
     public boolean use(ToolCardParam param)
@@ -296,6 +347,12 @@ class ToolCard4 extends ToolCard_Move {
     public ToolCard4() {
         super();
     }
+
+    /**
+     * implementation of the effect of the Tool Card 4
+     * @param param contains all the parameter used by the card
+     * @return the success of the operation
+     */
 
     // Effect of tool card N.4: Lathekin
     // Move 2 dices
@@ -378,6 +435,12 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
     private final int parameterSize = 3;
 
 
+    /**
+     * implementation of the Tool Card 5
+     * @param param contains all the parameter used by the card
+     * @return the success of the operation
+     */
+
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -400,6 +463,16 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
         return savedReturn;
     }
 
+
+    /**
+     * effect of the Tool Card 5
+     * @param draftPool draftpool of the game
+     * @param idDiceDraftPool ID of the dice in the draftpool to swap
+     * @param roundTrack roundtrack of the game
+     * @param indexRound index of the round considered in the roundtrack
+     * @param indexDiceRoundTrack index of the dice in the roundtrack to swap
+     * @return the success of the operation
+     */
 
     // Effect of tool card N.5
     public boolean use(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  int indexDiceRoundTrack) {
@@ -425,6 +498,7 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 1;
 
+
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -446,6 +520,13 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
         return savedReturn;
     }
 
+    /**
+     * implementation of the effect of Tool Card 6
+     * @param draftPool draftpool of the game
+     * @param idDiceDraftPool Id of the dice in the draftpool to roll
+     * @param board board of the player
+     * @return
+     */
 
     // Effect of tool card N.6
     // rolls a chosen dice from the draftPool and,
@@ -482,6 +563,12 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 0;
 
+    /**
+     * Implementation of Tool Card 7
+     * @param param all the parameters used by the method
+     * @return the success of the operation
+     */
+
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -499,6 +586,12 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
         return savedReturn;
     }
 
+
+    /**
+     *implementation of the effect of Tool Card 7
+     * @param draftPool draftpool of the game
+     * @return the success of the operation
+     */
 
     // Effect of tool card N.7
     // this card can be used only on the second turn before drafting
@@ -522,6 +615,12 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
     private Board.Restriction restriction;
 
     private final int parameterSize = 4;
+
+    /**
+     * implementation of Tool Card 8 & 9
+     * @param param list of parameters used
+     * @return the success of the operation
+     */
 
     @Override
     public boolean use(ToolCardParam param) {
@@ -554,6 +653,16 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
     }
 
 
+    /**
+     * implementation of the effect of Tool Card 8 & 9
+     * @param draftPool draftpool of the game
+     * @param idDiceDraftPool ID of the dice of the draftpool considered
+     * @param board board of the player
+     * @param row index of the row considered
+     * @param col index of the column considered
+     * @param restriction kind of restrictions applied to dice positioning
+     * @return the success of the operation
+     */
 
     // Effect of tool card N.8
     // this card can be used only after the first turn's picking,
@@ -587,6 +696,12 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
 class ToolCard8 extends ToolCard8_9 {
     private final int parameterSize = 2;
 
+    /**
+     * application of Tool Card 8
+     * @param param list of parameters used
+     * @return the success of the operation
+     */
+
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -600,6 +715,12 @@ class ToolCard8 extends ToolCard8_9 {
 
 class ToolCard9 extends ToolCard8_9 {
     private final int parameterSize = 3;
+
+    /**
+     * application of Tool Card9
+     * @param param list of parameters used
+     * @return success of the operation
+     */
 
     @Override
     public boolean use(ToolCardParam param) {
@@ -623,6 +744,12 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 1;
 
+    /**
+     * implementation of Tool Card 10
+     * @param param list of parameters used by Tool Card 10
+     * @return the success of the operation
+     */
+
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -643,6 +770,13 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
         return savedReturn;
     }
 
+
+    /**
+     * implementation of the effect of Tool Card 10
+     * @param draftPool draftpool of the game
+     * @param id ID of the dice
+     * @return the success of the operation
+     */
 
     // Effect of tool card N.10
     // rotate a dice in draft pool, face up the bottom side
@@ -668,6 +802,12 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 1;
 
+    /**
+     * implementation of Tool Card 11
+     * @param param list of the parameters used by Tool Card 11
+     * @return the success of the operation
+     */
+
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -691,6 +831,14 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
     public Dice getReturn() {
         return savedReturn;
     }
+
+    /**
+     * implementation of the effect of Tool Card 11
+     * @param draftPool draftpool of the game
+     * @param idDiceDraftPool ID of the dice of the draftpool considered
+     * @param diceBag dicebag of the game
+     * @return the success of the operation
+     */
 
     // Effect of tool card N.11
     // discards a dice in draft pool for
@@ -727,6 +875,12 @@ class ToolCard12 extends ToolCard4 implements ToolCardStrategy, Serializable {
     private int toColumn2;
 
     private final int parameterSize = 8;
+
+    /**
+     * implementation of the effect of Tool Card 12
+     * @param param contains all the parameter used by the card
+     * @return the success of the operation
+     */
 
     @Override
     public boolean use(ToolCardParam param) {
