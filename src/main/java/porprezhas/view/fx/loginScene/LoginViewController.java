@@ -42,6 +42,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML Button joinViewButton;
     @FXML Button loginViewRMIButton;
     @FXML Button loginViewSocketButton;
+    @FXML Button singlePlayerViewButton;
     @FXML Text warningText;
     @FXML ImageView loginViewImage;
     @FXML StackPane backgroundPane;
@@ -49,6 +50,8 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML VBox loginScene;
     @FXML AnchorPane joinScene;
     @FXML AnchorPane loginView;
+    @FXML AnchorPane singlePlayerScene;
+
 
     private Pane rootLayout;
 
@@ -214,6 +217,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         connectionButtonsSetup();
         joinButtonSetup();
+        singlePlayerViewButtonSetup();
         setGameCursor();
 
 
@@ -241,6 +245,17 @@ public class LoginViewController implements Initializable, SceneController, Move
         );
     }
 
+    private void singlePlayerViewButtonSetup() {
+        singlePlayerScene.setVisible(false);
+        singlePlayerViewButton.setStyle(
+                "-fx-background-color: #FFF1C6; " +
+                        "-fx-background-radius: 45em; " +
+                        "-fx-min-width: 80px; " +
+                        "-fx-min-height: 80px; " +
+                        "-fx-max-width: 80px; " +
+                        "-fx-max-height: 80px;"
+        );
+    }
 
 
     private void setGameCursor() {
