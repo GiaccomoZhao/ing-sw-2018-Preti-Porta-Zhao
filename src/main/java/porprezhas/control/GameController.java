@@ -127,14 +127,16 @@ public class GameController  implements GameControllerInterface, Runnable {
         for (int i = 0; i < 2 * playerList.size(); i++) {
             player = game.getCurrentPlayer();
 
+
             Date dNow = new Date( );
             SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss:SS");
             System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition() + 1, player.getName(), ft.format(dNow));
 
-            // let player play
-            player.play();  // WARNING: this statement must be in the same synchronized block of wait()
+            // let player play if he is not freeze
 
-
+                player.play();  // WARNING: this statement must be in the same synchronized block of wait()
+            if (game.isfreeze(player))
+                player.passes(true);
             //wait everybody for a timeout then pass or player pass
             //possible other solution: Timer or while sleep nanoTime
             while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn

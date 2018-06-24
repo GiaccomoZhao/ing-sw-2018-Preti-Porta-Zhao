@@ -1,10 +1,11 @@
 package porprezhas.Network;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public interface ClientActionInterface {
     boolean isConnected();
-    boolean login(String username);
+    int login(String username);
     boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface);
 //    boolean moveDice(int idBoardFrom, long diceID, int idBoardTo, int toRow, int toCol);
 //    boolean moveDice(int indexDiceDraftPool, int idBoardTo, int toRow, int toCol);

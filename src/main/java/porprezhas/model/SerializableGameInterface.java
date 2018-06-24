@@ -15,7 +15,7 @@ public interface SerializableGameInterface extends Serializable {
     public List<Player> getPlayerList();
     public Player getCurrentPlayer();
     public Player getUsernamePlayer(String username);
-
+    public Player getQuitPlayer();
     public List<Card> getPublicObjectiveCardList();
     public List<Card> getToolCardList();
 

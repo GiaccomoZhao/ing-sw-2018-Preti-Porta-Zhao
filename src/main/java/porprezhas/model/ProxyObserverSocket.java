@@ -2,6 +2,8 @@ package porprezhas.model;
 
 
 import porprezhas.Network.command.UpdateAnswer;
+import porprezhas.control.ServerController;
+import porprezhas.control.ServerControllerInterface;
 
 import java.io.ObjectOutputStream;
 
@@ -14,13 +16,15 @@ import static porprezhas.Network.socket.SocketServerClientHandler.lock;
 
 public class ProxyObserverSocket implements Observer {
 
+    private String username;
     private ObjectOutputStream out ;
+    private ServerControllerInterface serverControllerInterface;
 
 
-
-    public ProxyObserverSocket(ObjectOutputStream objectOutputStream) {
+    public ProxyObserverSocket(String username, ObjectOutputStream objectOutputStream, ServerControllerInterface serverControllerInterface) {
         this.out=objectOutputStream;
-
+        this.serverControllerInterface=serverControllerInterface;
+        this.username=username;
 
     }
 int i=0;
@@ -44,9 +48,8 @@ int i=0;
             catch(Exception re)
             {
                 if(re instanceof SocketException)
+                    serverControllerInterface.closedConnection(username);
 
-                System.err.println("Observer error: " + re);
-                re.printStackTrace();
             }
         }
     }

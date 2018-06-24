@@ -296,6 +296,10 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println("Pattern inserted in the board");
                 break;
 
+            case PLAYER_QUIT:
+                System.out.println(game.getQuitPlayer().getName() + " quit the game");
+
+                break;
         }
     }
 

@@ -18,6 +18,7 @@ public class SerializableGame implements SerializableGameInterface {
     private List<Player> playerList;
     private Player currentPlayer;
     private Game.NotifyState gameNotifyState;
+    private Player quitPlayer;
 
     public SerializableGame(GameInterface game) {
         this.roundTrack=game.getRoundTrack() ;
@@ -27,6 +28,8 @@ public class SerializableGame implements SerializableGameInterface {
         this.playerList= game.getPlayerList();
         this.currentPlayer= game.getCurrentPlayer();
         this.gameNotifyState= game.getGameState();
+        if (game.getFrozenPlayer().size()>0)
+            this.quitPlayer= game.getFrozenPlayer().get(game.getFrozenPlayer().size()-1);
     }
 
     public RoundTrack getRoundTrack() {
@@ -57,6 +60,11 @@ public class SerializableGame implements SerializableGameInterface {
 
     public Player getCurrentPlayer(){
         return currentPlayer;
+    }
+
+
+    public Player getQuitPlayer() {
+        return quitPlayer;
     }
 
     @Override

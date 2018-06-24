@@ -42,11 +42,11 @@ public abstract class ModelObservable extends Observable
         System.out.println("Added observer");
     }
 
-    public void addObserver(String username, ObjectOutputStream objectOutputStream) {
+    public void addObserver(String username, ObjectOutputStream objectOutputStream, ServerControllerInterface serverControllerInterface) {
 
         ProxyObserverSocket po = null;
 
-        po = new ProxyObserverSocket(objectOutputStream);
+        po = new ProxyObserverSocket(username, objectOutputStream, serverControllerInterface);
         this.observerMap.put(username, po);
         super.addObserver(po);
         System.out.println("Added observer");

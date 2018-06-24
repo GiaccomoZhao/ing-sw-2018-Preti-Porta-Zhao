@@ -46,7 +46,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED}
+    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -101,6 +101,7 @@ public class Game extends ModelObservable implements GameInterface {
         gameID = new Random().nextLong();   // create a unique string or number
         bSolitaire = false;
         this.playerList = new ArrayList<>(playerList);
+        frozenPlayer= new ArrayList<>();
         privateObjectiveCardFactory = new PrivateObjectiveCardFactory(playerList.size());
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(playerList.size());
         toolCardFactory = new ToolCardFactory(playerList.size());
@@ -161,6 +162,10 @@ public class Game extends ModelObservable implements GameInterface {
         return this.playerList.get(iFirstPlayer);
     }
 
+
+    public List<Player> getFrozenPlayer() {
+        return frozenPlayer;
+    }
 
     public NotifyState getGameNotifyState() throws RemoteException {
         return gameNotifyState;
@@ -529,11 +534,22 @@ public class Game extends ModelObservable implements GameInterface {
 
     public void freezePlayer(String username){
         Player player;
-        for (Player playerByUsername:
-             this.playerList) {
-            if(playerByUsername.getName().equals(username)) {
-                this.frozenPlayer.add(playerByUsername);
-            }
-        }
+       for (int i=0; i< this.playerList.size(); i++)
+           if (playerList.get(i).getName().equals(username)) {
+               this.frozenPlayer.add(playerList.get(i));
+               gameNotifyState = NotifyState.PLAYER_QUIT;
+               setChanged();
+
+               notifyObservers(new SerializableGame(this));
+               return;
+           }
+    }
+
+    @Override
+    public Boolean isfreeze(Player player) {
+        if (this.frozenPlayer.contains(player))
+            return true;
+        else
+            return false;
     }
 }

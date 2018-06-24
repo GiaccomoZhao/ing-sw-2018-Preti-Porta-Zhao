@@ -1,6 +1,9 @@
-package porprezhas.Network;
+package porprezhas.Network.delete;
 
+import porprezhas.Network.ViewUpdateHandlerInterface;
 import porprezhas.Network.command.*;
+
+import static porprezhas.control.ServerController.USERNAME_AVAILABLE;
 
 public class ClientAnswerHandler implements AnswerHandler {
 
@@ -21,8 +24,9 @@ public class ClientAnswerHandler implements AnswerHandler {
 
     @Override
     public boolean handle(LoginActionAnswer loginActionAnswer) {
-
-    return loginActionAnswer.answer;
+    if (loginActionAnswer.answer == USERNAME_AVAILABLE)
+        return true;
+    return false;
 
     }
 

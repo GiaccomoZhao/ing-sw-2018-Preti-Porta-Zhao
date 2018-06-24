@@ -9,25 +9,21 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class SocketClientAction implements ClientActionInterface {
+import static porprezhas.control.ServerController.ALREADY_IN_GAME;
+import static porprezhas.control.ServerController.USERNAME_ALREADY_TAKEN;
+import static porprezhas.control.ServerController.USERNAME_AVAILABLE;
+
+public class SocketClientAction implements ClientActionInterface, AnswerHandler {
 
     private String username;
+    private int loginCase;
+    private Boolean joinCase;
     private Socket socket;
 
     private ObjectInputStream socketIn;
     private ObjectOutputStream socketOut ;
-    private ClientAnswerHandler clientAnswerHandler;
+    private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
 
-
-    //TO_DO DELETE THIS
-    public SocketClientAction(String username,ObjectOutputStream objectOutputStream) {
-        this.username = username;
-        try {
-            socketOut = new ObjectOutputStream(objectOutputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public SocketClientAction(InetAddress ip, int port) {
 
@@ -35,7 +31,7 @@ public class SocketClientAction implements ClientActionInterface {
             this.socket = new Socket(ip, port);
             socketOut = new ObjectOutputStream(socket.getOutputStream());
             socketIn = new ObjectInputStream(socket.getInputStream());
-            clientAnswerHandler = new ClientAnswerHandler();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,41 +47,42 @@ public class SocketClientAction implements ClientActionInterface {
     }
 
     @Override
-    public boolean login(String username) {
-
+    public int login(String username) {
+        this.username=username;
         try {
 
             socketOut.writeObject(new LoginAction(username));
             socketOut.flush();
-           if( ((Answer) socketIn.readObject()).handle(clientAnswerHandler)) {
-               this.username=username;
-
-               return true;
-           }
-
+            ((Answer) socketIn.readObject()).handle(this);
+            return loginCase;
         } catch (IOException e) {
             System.err.println("Exception on network: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    return false;
+    return USERNAME_ALREADY_TAKEN;
     }
 
     @Override
-    public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
-        this.clientAnswerHandler.setViewUpdateHandlerInterface(viewUpdateHandlerInterface);
+    public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface)   {
+        this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
+      
         try {
-
+            System.out.println(username);
             socketOut.writeObject(new JoinAction(username));
             socketOut.flush();
-            ((Answer) socketIn.readObject()).handle(clientAnswerHandler);
+            ((Answer) socketIn.readObject()).handle(this);
+            SocketClientAction socketClientAction=this;
            Thread thread = new Thread(){
                 public void run() {
                     Boolean bool=true;
                     while(bool){
                         try {
-                            ((Answer) socketIn.readObject()).handle(clientAnswerHandler);
+
+                            ((Answer) socketIn.readObject()).handle(socketClientAction);
                         } catch (IOException e) {
+                            System.out.println("BBBBBBBBBBB");
+                            bool=false;
                             e.printStackTrace();
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
@@ -117,24 +114,7 @@ public class SocketClientAction implements ClientActionInterface {
 
         return false;
     }
-/*
-    @Override
-    public boolean moveDice(int fromIdContainer, int fromRow, int fromCol, int toIdContainer, int toRow, int toCol) {
-        try {
-//             socketOut.writeObject(new InsertDiceGuiAction(username, diceID, row, col ));
-             socketOut.flush();
 
-
-        }  catch (Exception e) {
-
-            System.err.println(e.getMessage());     // print Invalid Move Message
-//            if(bDebug)
-//                e.printStackTrace();
-        }
-
-        return false;
-    }
-*/
     @Override
     public boolean pass() {
         try {
@@ -167,6 +147,53 @@ public class SocketClientAction implements ClientActionInterface {
             e.printStackTrace();
         }
 
+    }
+
+
+    public void setViewUpdateHandlerInterface(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+        this.viewUpdateHandlerInterface = viewUpdateHandlerInterface;
+    }
+
+
+    @Override
+    public void handle(UpdateAnswer updateAnswer) {
+
+        this.viewUpdateHandlerInterface.update(updateAnswer.serializableGameInterface);
+
+    }
+
+    @Override
+    public void handle(LoginActionAnswer loginActionAnswer) {
+
+        if (loginActionAnswer.answer == USERNAME_AVAILABLE )
+            this.loginCase = USERNAME_AVAILABLE;
+
+        else if (loginActionAnswer.answer == ALREADY_IN_GAME)
+            this.loginCase = ALREADY_IN_GAME;
+        else
+            this.loginCase=USERNAME_ALREADY_TAKEN;
+
+
+    }
+
+    @Override
+    public void handle(JoinActionAnswer joinActionAnswer) {
+
+        this.joinCase=joinActionAnswer.answer;
+
+    }
+
+    @Override
+    public void handle(PassActionAnswer passActionAnswer) {
+        if (!passActionAnswer.answer.equals(true))
+            System.out.println("It's not your turn!");
+
+    }
+
+    @Override
+    public void handle(DiceInsertedAnswer diceInsertedAnswer) {
+
+        System.out.println("Il tentativo è: " + diceInsertedAnswer.answer);
     }
 
 

@@ -34,17 +34,16 @@ public class RMIClientAction implements ClientActionInterface{
     }
 
     @Override
-    public boolean login(String username) {
+    public int login(String username) {
         try {
-            if (server.login(username)){
-                this.username=username;
-                return true;
-            }
+           this.username=username;
+           return server.login(username);
+
 
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return false;
+        return -1;
     }
 
     @Override

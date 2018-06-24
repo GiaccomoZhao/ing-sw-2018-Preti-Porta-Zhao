@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Observable;
 
+import static porprezhas.control.ServerController.USERNAME_ALREADY_TAKEN;
+
 public class SocketServerClientHandler extends Observable implements Runnable {
     private ActionHandler serverController;
     private Socket socket;
@@ -43,7 +45,7 @@ public class SocketServerClientHandler extends Observable implements Runnable {
                     ((LoginAction) action).setObjectOutputStream(out);
                 Answer answer = action.handle(serverController);
                 if (first)
-                    if (((LoginActionAnswer) answer).answer.equals(true)) {
+                    if (!(((LoginActionAnswer) answer).answer==USERNAME_ALREADY_TAKEN)) {
                         first = false;
                         this.username=((LoginActionAnswer) answer).username;
                 }
@@ -59,6 +61,8 @@ public class SocketServerClientHandler extends Observable implements Runnable {
                 System.out.println("Invalid username");
             else if(e instanceof SocketException)
                 System.out.println("Client closed the connection");
+
+
             else
                 e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -69,7 +73,7 @@ public class SocketServerClientHandler extends Observable implements Runnable {
                 out.close();
                 in.close();
                 socket.close();
-                ((ServerControllerInterface) serverController).closedConnection(username);
+              //  ((ServerControllerInterface) serverController).closedConnection(username);
             } catch (IOException e) {
                 e.printStackTrace();
             }

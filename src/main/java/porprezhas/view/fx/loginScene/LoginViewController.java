@@ -425,7 +425,7 @@ public class LoginViewController implements Initializable, SceneController, Move
             // Connected to server
             } else {
                 // Try to Login with given user name
-                if (ClientActionSingleton.getClientAction().login(userNameTextField.getText())) {
+                if (ClientActionSingleton.getClientAction().login(userNameTextField.getText()) != -1) {
                     // Logged In
                     this.username = userNameTextField.getText();
 

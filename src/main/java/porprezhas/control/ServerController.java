@@ -54,6 +54,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     Timer queueTimeOut;
 
+    public final static int ALREADY_IN_GAME = 1;
+    public final static int USERNAME_AVAILABLE = 0;
+    public final static int USERNAME_ALREADY_TAKEN = -1;
+
 
     public ServerController(int port) throws RemoteException {
         super(port);
@@ -163,7 +167,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 game.getPlayerList()) {
             if(socketUsers.containsKey(readyPlayer.getName())){
 
-                game.addObserver(readyPlayer.getName(), (ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
+                game.addObserver(readyPlayer.getName(), (ObjectOutputStream) socketUsers.get(readyPlayer.getName()), this);
 
             }
             else
@@ -209,7 +213,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 game.getPlayerList()) {
             if(socketUsers.containsKey(readyPlayer.getName())){
 
-                game.addObserver(readyPlayer.getName(), (ObjectOutputStream) socketUsers.get(readyPlayer.getName()));
+                game.addObserver(readyPlayer.getName(), (ObjectOutputStream) socketUsers.get(readyPlayer.getName()), this);
 
             }
             else
@@ -248,16 +252,22 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return null;    // NOTE: throw game not found ?
     }
 
+    //This method is called when an inGameUser close or lose his connection
+    //It save his username in inGameLostConnection and "freeze" the player in the game
     @Override
     public void closedConnection(String username) {
-
+        System.out.println(username + " lost the connection");
         Game game= (Game) getGameControllerByUsername(username).getGame();
         if(this.socketUsers.containsKey(username))
            socketUsers.remove(username);
+
        game.removeObserver(username);
+
        game.freezePlayer(username);
-        System.out.println(username + "lost the connection");
+
         this.inGameLostConnection.put(username,game);
+
+
     }
 
     @Override
@@ -275,18 +285,20 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
     @Override
-    public Boolean login(String username) throws RemoteException {
+    public int login(String username) throws RemoteException {
         for (Player findPlayer:
              loggedPlayer) {
             if(findPlayer.getName().equals(username)){
                 if(!this.inGameLostConnection.containsKey(username))
-                    return false;
+                    return USERNAME_ALREADY_TAKEN;
+                else
+                    return ALREADY_IN_GAME;
             }
         }
         loggedPlayer.add(new Player(username));
 
 
-        return true;
+        return USERNAME_AVAILABLE;
     }
 
     @Override
@@ -415,16 +427,20 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         String username= loginAction.username;
         for (Player findPlayer:
                 loggedPlayer) {
+
             if(findPlayer.getName().equals(username)){
+
                 if(!this.inGameLostConnection.containsKey(username))
-                    return new LoginActionAnswer(false, username);
+                    return new LoginActionAnswer(USERNAME_ALREADY_TAKEN, username);
+                else
+                    return new LoginActionAnswer(ALREADY_IN_GAME, username);
             }
 
         }
         loggedPlayer.add(new Player(username));
         this.socketUsers.put(username, loginAction.getObjectOutputStream());
 
-        return  new LoginActionAnswer(true, username);
+        return  new LoginActionAnswer(USERNAME_AVAILABLE, username);
     }
 
     @Override

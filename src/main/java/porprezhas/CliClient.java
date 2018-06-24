@@ -27,7 +27,7 @@ public class CliClient {
     private final Scanner in;
     private ClientObserver clientObserver;
     private String typeConnection;
-    private int port=1457;
+    private int port;
     private InetAddress ip;
 
 
@@ -40,8 +40,10 @@ public class CliClient {
     public static final String SOCKET = "s";
     public static final String RMI = "r";
 
-    public CliClient() {
+    public CliClient(InetAddress ip, int port) {
         this.in = new Scanner(System.in);
+        this.ip=ip;
+        this.port=port;
     }
 
     private void printHelp() {
@@ -156,12 +158,9 @@ public class CliClient {
                    System.err.println(e.getMessage());
                }
            } else if (this.typeConnection.equals(SOCKET)) {
-               try {
-                   ip = InetAddress.getLocalHost();
+
                    ClientActionSingleton.setClientActionInstance(new SocketClientAction(ip, port));
-               } catch (UnknownHostException e) {
-                   System.err.println(e.getMessage());
-               }
+
            }
 
            // Error cached
@@ -172,13 +171,21 @@ public class CliClient {
                // Connected to server
            } else {
                // Try to Login with given user name
-               if (ClientActionSingleton.getClientAction().login(username)) {
+               int resultLogin=ClientActionSingleton.getClientAction().login(username);
+               if (resultLogin == 0) {
                    // Logged In
                    bLog=true;
                    System.out.println("Logged in!\n");
 
                    // Login Failed!!!
-               } else {
+               }
+               else if (resultLogin == 1){
+                   bLog=true;
+                   System.out.println("Logged in!");
+                   System.out.println("There is an active game with this username");
+                   System.out.println("Type 'join' to resume the active game or 'new' to start a new game");
+               }
+               else {
                    System.out.println("Invalid username");
                    //if there is an active Socket connection we close it
                    if (this.typeConnection.equals(SOCKET) && ClientActionSingleton.getClientAction() != null)
@@ -213,8 +220,8 @@ public class CliClient {
 
     }
 
-    public static void main(String[] args) {
-        CliClient cliClient = new CliClient();
+    public static void main(String[] args) throws UnknownHostException {
+        CliClient cliClient = new CliClient(InetAddress.getLocalHost(),1457);
         try {
             cliClient.runSagrada();
         } catch (RemoteException e) {

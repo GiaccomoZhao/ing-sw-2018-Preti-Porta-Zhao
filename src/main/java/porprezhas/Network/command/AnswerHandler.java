@@ -2,13 +2,13 @@ package porprezhas.Network.command;
 
 public interface AnswerHandler {
 
-    boolean handle(UpdateAnswer updateAnswer);
+    void handle(UpdateAnswer updateAnswer);
 
-    boolean handle(LoginActionAnswer loginActionAnswer);
+    void handle(LoginActionAnswer loginActionAnswer);
 
-    boolean handle(JoinActionAnswer joinActionAnswer);
+    void handle(JoinActionAnswer joinActionAnswer);
 
-    boolean handle(PassActionAnswer passActionAnswer);
+    void handle(PassActionAnswer passActionAnswer);
 
-    boolean handle(DiceInsertedAnswer diceInsertedAnswer);
+    void handle(DiceInsertedAnswer diceInsertedAnswer);
 }

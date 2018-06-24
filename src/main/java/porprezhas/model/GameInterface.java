@@ -16,12 +16,14 @@ public interface GameInterface {
     Player rotatePlayer();  // modify current player, index to the list
     void orderPlayers();    // modify entire list
     void freezePlayer(String username);
+    Boolean isfreeze(Player player);
 
     DiceBag getDiceBag();
     DraftPool getDraftPool();
     RoundTrack getRoundTrack();
     List<Card> getToolCardList();
     List<Card> getPublicObjectiveCardList();
+    List<Player> getFrozenPlayer();
 //    List<Card> getPrivateCards(Player player);
 
     boolean isSolitaire();

@@ -8,7 +8,7 @@ public class JoinActionAnswer implements Answer {
         this.answer = answer;
     }
     @Override
-    public boolean handle(AnswerHandler answerHandler) {
-      return   answerHandler.handle(this);
+    public void handle(AnswerHandler answerHandler) {
+         answerHandler.handle(this);
     }
 }

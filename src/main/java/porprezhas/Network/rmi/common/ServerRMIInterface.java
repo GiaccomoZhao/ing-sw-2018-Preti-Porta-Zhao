@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface ServerRMIInterface extends Remote {
     Boolean joinGame(String username) throws RemoteException;
-    Boolean login(String username) throws  RemoteException;
+    int login(String username) throws  RemoteException;
     Boolean logout(String username) throws RemoteException;
     Boolean insertedDice(long diceID, int rowBoard, int colBoard, String username)
 //    Boolean insertedDice(int index, int rowBoard, int colBoard, String username)
