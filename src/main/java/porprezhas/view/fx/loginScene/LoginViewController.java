@@ -143,19 +143,23 @@ public class LoginViewController implements Initializable, SceneController, Move
         // set Show Component transition Animation
         timeline.setOnFinished((actionEvent) -> {
             if(null == username  ||  voidString.equals(username)) {
+                // show loginScene
                 loginScene.setVisible(true);
                 joinScene.setVisible(false);
 
-            Timeline sceneFading = new Timeline();
+                // Add the transition animation
+                Timeline sceneFading = new Timeline();
+                // Using Opacity Fading
+                KeyFrame sceneFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN * 0.3),
+                        new KeyValue(loginScene.opacityProperty(), 1));
 
-            // Add the transition animation
-            // Using Opacity Fading
-            KeyFrame sceneFadeIn = new KeyFrame(Duration.millis(STAGE_FADE_IN * 0.3),
-                    new KeyValue(loginScene.opacityProperty(), 1));
+                sceneFading.getKeyFrames().add(sceneFadeIn);
 
-            sceneFading.getKeyFrames().add(sceneFadeIn);
+                loginScene.setOpacity(0.1f);
+                sceneFading.play();
 
-            sceneFading.play();
+            } else {
+                // remain to show joinScene
             }
         });
 
@@ -163,6 +167,10 @@ public class LoginViewController implements Initializable, SceneController, Move
         stageManager.getStage(stageName).setOnShowing(event -> {
             // add gaming BackGround Music
             BackgroundMusicPlayer.playRandomMusic(pathToLoginMusic);
+
+            // hide scenes
+            loginScene.setVisible(false);
+            loginScene.setVisible(false);
 
             // setup transition animation
             rootLayout.setOpacity(1);    // Set starting Opacity value
@@ -364,7 +372,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     @FXML
     public void onJoinButton(ActionEvent event) {
-        System.out.println("Click Join");
+        System.out.println("Join button Clicked");
 
         GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
         ViewUpdateHandlerInterface viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);

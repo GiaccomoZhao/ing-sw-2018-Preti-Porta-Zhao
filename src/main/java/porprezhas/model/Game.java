@@ -407,6 +407,12 @@ public class Game extends ModelObservable implements GameInterface {
                 player.setFavorTokenByDifficulty( pattern.getDifficulty() );
             }
             System.out.println();
+
+            // Notify Clients that Board are initialized
+            gameNotifyState = BOARD_CREATED;
+            setChanged();
+
+            notifyObservers(new SerializableGame(this));
         }
     }
 
@@ -508,14 +514,18 @@ public class Game extends ModelObservable implements GameInterface {
         return false;   // not valid
     }
 
+    /**
+     * Initialize the board with the give pattern type
+     * return false if the board has already be set
+     *
+     * @param p the player that chooses the pattern
+     * @param indexPatternType  the index of pattern in the pattern's list of this player can choose
+     * @return  boolean of success operation
+     */
     public boolean setPattern(Player p, int indexPatternType) {
         if (p.getBoard() == null) {    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
             boolean bChosen = p.choosePatternCard(indexPatternType);   // here we create a new board associating it to the passed pattern
             if(bChosen) {
-                gameNotifyState = BOARD_CREATED;
-                setChanged();
-
-                notifyObservers(new SerializableGame(this));
                 return bChosen;
             }
         }

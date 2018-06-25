@@ -298,6 +298,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             case BOARD_CREATED:
                 System.out.println("Pattern inserted in the board");
+                for (Player player : players) {
+                    if (player.getName().equals(username)) {
+                        System.out.println(player.getBoard().getPattern());
+                    }
+                }
                 break;
 
             case PLAYER_QUIT:

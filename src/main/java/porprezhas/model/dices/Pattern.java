@@ -583,6 +583,13 @@ public class Pattern implements Serializable {
 
     }
 
+    @Override
+    public String toString() {
+        return "Pattern{" +
+                "name='" + namePattern + '\'' +
+                ", difficulty=" + difficulty +
+                '}';
+    }
 
     public void print() {
         print3();

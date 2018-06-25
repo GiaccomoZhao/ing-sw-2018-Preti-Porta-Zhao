@@ -349,12 +349,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     @Override
     public Boolean choosePattern(int indexPattern, String username) throws RemoteException {
-        Player player=this.getGameControllerByUsername(username).getGame().getCurrentPlayer();
-        if(username.equals(player.getName())){
-            this.getGameControllerByUsername(username).choosePattern(player, indexPattern);
-            return true;
+        for (Player player :
+                this.getGameControllerByUsername(username).getGame().getPlayerList()) {
+
+            if(username.equals(player.getName())) {
+                this.getGameControllerByUsername(username).choosePattern(player, indexPattern);
+                return true;
+            }
         }
-        else
             return false;
     }
 
@@ -469,11 +471,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
         String username= insertDiceAction.username;
         if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
-            try{
-            if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceAction.diceId, insertDiceAction.row, insertDiceAction.col))
-                return new DiceInsertedAnswer(true);}
-                catch (Exception e){
-        return new DiceInsertedAnswer(false, e);
+            try {
+                if (this.getGameControllerByUsername(username).getGame().insertDice(insertDiceAction.diceId, insertDiceAction.row, insertDiceAction.col))
+                    return new DiceInsertedAnswer(true);
+            } catch (Exception e) {
+                return new DiceInsertedAnswer(false, e);
         }
         return new DiceInsertedAnswer(false);
     }
@@ -482,13 +484,16 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     public synchronized Answer handle(ChoosePatternAction choosePatternAction) {
         String username= choosePatternAction.username;
         int indexPattern=choosePatternAction.choosenPattern;
-        Player player=this.getGameControllerByUsername(username).getGame().getCurrentPlayer();
-        if(username.equals(player.getName())){
-            this.getGameControllerByUsername(username).choosePattern(player, indexPattern);
-            return new PatternAnswer(true);
+
+        for (Player player :
+                this.getGameControllerByUsername(username).getGame().getPlayerList()) {
+
+            if(username.equals(player.getName())) {
+                this.getGameControllerByUsername(username).choosePattern(player, indexPattern);
+                return new PatternAnswer(true);
+            }
         }
-        else
-            return new PatternAnswer(false);
+        return new PatternAnswer(false);
     }
 
     @Override
