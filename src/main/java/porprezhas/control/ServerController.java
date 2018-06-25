@@ -463,8 +463,12 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
         String username= insertDiceAction.username;
         if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
+            try{
             if(this.getGameControllerByUsername(username).getGame().insertDice(insertDiceAction.diceId, insertDiceAction.row, insertDiceAction.col))
-                return new DiceInsertedAnswer(true);
+                return new DiceInsertedAnswer(true);}
+                catch (Exception e){
+        return new DiceInsertedAnswer(false, e);
+        }
         return new DiceInsertedAnswer(false);
     }
 

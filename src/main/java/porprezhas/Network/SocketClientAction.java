@@ -191,9 +191,16 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     }
 
     @Override
-    public void handle(DiceInsertedAnswer diceInsertedAnswer) {
+    public void handle(DiceInsertedAnswer diceInsertedAnswer)  {
 
         System.out.println("Il tentativo è: " + diceInsertedAnswer.answer);
+        if (diceInsertedAnswer.answer.equals(false))
+            try {
+                throw diceInsertedAnswer.exception;
+            } catch (Exception e) {
+                System.out.println( e.getMessage());
+            }
+
     }
 
 
