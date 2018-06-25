@@ -432,6 +432,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                     // Open next Scene - Join Scene
                     loginScene.setVisible(false);
                     joinScene.setVisible(true);
+                    singlePlayerScene.setVisible(true);
 //                    joinScene.toFront();
 
 
