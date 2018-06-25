@@ -11,4 +11,6 @@ public interface AnswerHandler {
     void handle(PassActionAnswer passActionAnswer);
 
     void handle(DiceInsertedAnswer diceInsertedAnswer);
+
+    void handle(PatternAnswer patternAnswer);
 }

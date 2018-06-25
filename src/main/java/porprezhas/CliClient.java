@@ -68,7 +68,8 @@ public class CliClient {
         }
         this.loginPashe();
         this.joinphase();
-
+        System.out.println("Wait until the game is ready to start");
+        this.choosePatternPhase();
 
         String command;
         do {
@@ -217,6 +218,15 @@ public class CliClient {
                System.out.println("Joined in the game successfully!\n");
            }
        }
+
+    }
+
+    public void choosePatternPhase(){
+        in.reset();
+        int i= in.nextInt();
+        while (!(i<5 && i>0))
+            i=in.nextInt();
+        ClientActionSingleton.getClientAction().choosePattern(i-1, username);
 
     }
 

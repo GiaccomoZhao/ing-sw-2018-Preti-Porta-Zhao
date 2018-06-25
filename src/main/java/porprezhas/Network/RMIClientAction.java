@@ -117,5 +117,14 @@ public class RMIClientAction implements ClientActionInterface{
         return true;
     }
 
+    @Override
+    public void choosePattern(int patternIndex, String username) {
+        try {
+            server.choosePattern(patternIndex, username);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

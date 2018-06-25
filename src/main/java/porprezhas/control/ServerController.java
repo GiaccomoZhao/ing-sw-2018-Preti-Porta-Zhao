@@ -348,8 +348,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
     @Override
-    public Boolean choosePattern(String namePattern) throws RemoteException {
-        return null;
+    public Boolean choosePattern(int indexPattern, String username) throws RemoteException {
+        Player player=this.getGameControllerByUsername(username).getGame().getCurrentPlayer();
+        if(username.equals(player.getName())){
+            this.getGameControllerByUsername(username).choosePattern(player, indexPattern);
+            return true;
+        }
+        else
+            return false;
     }
 
     @Override
@@ -474,7 +480,15 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     @Override
     public synchronized Answer handle(ChoosePatternAction choosePatternAction) {
-        return null;
+        String username= choosePatternAction.username;
+        int indexPattern=choosePatternAction.choosenPattern;
+        Player player=this.getGameControllerByUsername(username).getGame().getCurrentPlayer();
+        if(username.equals(player.getName())){
+            this.getGameControllerByUsername(username).choosePattern(player, indexPattern);
+            return new PatternAnswer(true);
+        }
+        else
+            return new PatternAnswer(false);
     }
 
     @Override
@@ -509,4 +523,6 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             return new PassActionAnswer(false) ;
         return new PassActionAnswer(true);
     }
+
+
 }

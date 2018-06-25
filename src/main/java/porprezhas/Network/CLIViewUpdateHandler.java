@@ -263,9 +263,13 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             case CHOOSE_PATTERN:
 
                 System.out.println("You have to choose your pattern");
-                Pattern.TypePattern pattern1 = game.getUsernamePlayer(username).getPatternsToChoose().get(0);
-                Pattern.TypePattern pattern2 = game.getUsernamePlayer(username).getPatternsToChoose().get(1);
-                System.out.println(pattern1.name() + "    o    " + pattern2.name());
+
+                for (Pattern.TypePattern pattern:
+                        game.getUsernamePlayer(username).getPatternsToChoose()) {
+                    System.out.println(pattern.name());
+
+                }
+                System.out.println("Type the number of the pattern");
                 break;
 
             case GAME_STARTED:

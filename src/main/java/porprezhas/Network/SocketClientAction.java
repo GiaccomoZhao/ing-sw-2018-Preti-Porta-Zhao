@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 import static porprezhas.control.ServerController.ALREADY_IN_GAME;
@@ -81,9 +82,8 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
                             ((Answer) socketIn.readObject()).handle(socketClientAction);
                         } catch (IOException e) {
-                            System.out.println("BBBBBBBBBBB");
-                            bool=false;
-                            e.printStackTrace();
+                            if (e instanceof SocketException)
+                                bool=false;
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -135,6 +135,16 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public void choosePattern(int patternIndex, String username) {
+        try {
+            socketOut.writeObject(new ChoosePatternAction(patternIndex, username));
+            socketOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -193,7 +203,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     @Override
     public void handle(DiceInsertedAnswer diceInsertedAnswer)  {
 
-        System.out.println("Il tentativo è: " + diceInsertedAnswer.answer);
+
         if (diceInsertedAnswer.answer.equals(false))
             try {
                 throw diceInsertedAnswer.exception;
@@ -201,6 +211,11 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
                 System.out.println( e.getMessage());
             }
 
+    }
+
+    @Override
+    public void handle(PatternAnswer patternAnswer) {
+        System.out.println("Pattern ok");
     }
 
 
