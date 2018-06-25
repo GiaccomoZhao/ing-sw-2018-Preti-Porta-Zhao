@@ -249,11 +249,10 @@ public class LoginViewController implements Initializable, SceneController, Move
         singlePlayerScene.setVisible(false);
         singlePlayerViewButton.setStyle(
                 "-fx-background-color: #FFF1C6; " +
-                        "-fx-background-radius: 45em; " +
-                        "-fx-min-width: 80px; " +
-                        "-fx-min-height: 80px; " +
-                        "-fx-max-width: 80px; " +
-                        "-fx-max-height: 80px;"
+                        "-fx-min-width: 120px; " +
+                        "-fx-min-height: 50px; " +
+                        "-fx-max-width: 120px; " +
+                        "-fx-max-height: 50px;"
         );
     }
 
