@@ -792,6 +792,13 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
     }
 }
 
+
+
+// Effect of tool card N.11
+// discards a dice in draft pool for
+// pick a new dice from diceBag and
+// choose it's value to
+// place in board   // NOTE: this is caller job and must be done
 class ToolCard11 implements ToolCardStrategy, Serializable {
     private Dice savedReturn = null;
 
@@ -839,12 +846,6 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
      * @param diceBag dicebag of the game
      * @return the success of the operation
      */
-
-    // Effect of tool card N.11
-    // discards a dice in draft pool for
-    // pick a new dice from diceBag and
-    // choose it's value to
-    // place in board   // NOTE: this is caller job and must be done
     private Dice use(DraftPool draftPool, long idDiceDraftPool, DiceBag diceBag) {
 //    private Dice use(DraftPool draftPool, int indexDiceDraftPool, DiceBag diceBag) {
         diceBag.addDice(

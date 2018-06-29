@@ -24,8 +24,8 @@ public class GameController  implements GameControllerInterface, Runnable {
 	private DatabaseInterface databaseInt;
     private StateMachine state;
 
-    private Object playTimeOut;
-    private Object chooseTimeOut;
+    private final Object playTimeOut;
+    private final Object chooseTimeOut;
 
 
     // *********************************
@@ -132,11 +132,11 @@ public class GameController  implements GameControllerInterface, Runnable {
             SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss:SS");
             System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition() + 1, player.getName(), ft.format(dNow));
 
-            // let player play if he is not freeze
-
-                player.play();  // WARNING: this statement must be in the same synchronized block of wait()
+            // let player play if the player isn't frozen
+                player.play();  // NOTE: this statement must be in the same synchronized block of wait()
             if (game.isfreeze(player))
                 player.passes(true);
+
             //wait everybody for a timeout then pass or player pass
             //possible other solution: Timer or while sleep nanoTime
             while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
@@ -277,6 +277,12 @@ public class GameController  implements GameControllerInterface, Runnable {
         }
     }
 
+    /**
+     *
+     * @param player    the player who chooses the pattern
+     * @param indexPatternType  the index of pattern's list that this player can choose
+     * @return  bSuccess
+     */
     public boolean choosePattern(Player player, int indexPatternType) {      //NOTE: pattern or indexPattern?
 	                                                                 // for anti-cheat we must use indexPattern and verify the player is true
         boolean bSet = false;
@@ -286,7 +292,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         }
         // unlock timeout when all player has chosen
         for (Player p : game.getPlayerList()) {
-            if(null == p.getBoard()) {
+            if(null == p.getBoard()) {      // when pattern hasn't be chosen, the board is created together the pattern
                 bAllSet = false;
             }
         }
@@ -302,12 +308,23 @@ public class GameController  implements GameControllerInterface, Runnable {
         return game.insertDice(diceID, row, column);
     }
 
+    //With resumeGame a player that has lost his connection can resume the game only
+    // if the game isn't in the end state
+    @Override
+    public boolean resumeGame(String username) {
+
+        //Here we check if the game state is admissible
+        if (state.equals(StateMachine.PLAYER_PREPARING) || state.equals(StateMachine.PLAYING) || state.equals(StateMachine.GAME_PREPARING)){
+            game.resumePlayer(username);
+            return true;
+        }
+        return false;
+    }
+
     public boolean useToolCard(int cardIndex, ToolCardParam param){
         ToolCard toolCard = (ToolCard) game.getToolCardList().get(cardIndex);
-        if(toolCard.getStrategy().use(param))
-            return true;
+        return toolCard.getStrategy().use(param);
 //       game.useToolCard();
-        return false;
     }
 
 

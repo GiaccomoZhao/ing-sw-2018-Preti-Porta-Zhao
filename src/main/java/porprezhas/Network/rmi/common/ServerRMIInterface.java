@@ -15,8 +15,8 @@ public interface ServerRMIInterface extends Remote {
             throws RemoteException,
             IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
-    Boolean choosePattern(String namePattern) throws RemoteException;
+    Boolean choosePattern(int patternIndex, String username) throws RemoteException;
     Boolean passUser(String username) throws RemoteException;
     Boolean usedToolCard(String username, int toolCardID, ArrayList<Integer> paramList) throws RemoteException;
-
+    Boolean resumeGame(String username) throws RemoteException;
 }

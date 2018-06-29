@@ -3,5 +3,6 @@ package porprezhas.Network;
 import porprezhas.model.SerializableGameInterface;
 
 public interface ViewUpdateHandlerInterface {
-    public void update(SerializableGameInterface game);
+    void update(SerializableGameInterface game);
+    void setGameStarted(Boolean gameStarted);
 }

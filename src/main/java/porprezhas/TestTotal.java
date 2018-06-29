@@ -73,10 +73,10 @@ public class TestTotal {
 
         // Wait until Game ask for a choose to player
         while(!newGameController.getState().equals(GameControllerInterface.StateMachine.PLAYER_PREPARING))
-            Thread.sleep(10);
+            Thread.sleep(30);
 
         // simulate all player choose a pattern, We'll see Game skip ChooseTimeOut
-        for (Player player : game.getPlayerList()) {
+        /*for (Player player : game.getPlayerList()) {
             int choose = 3;
 //            if(player.getName().toUpperCase().contains("ZX"))   // test use
 //                choose = -666;
@@ -85,11 +85,11 @@ public class TestTotal {
             } else {
                 System.out.printf("Player: %-12s\tCan not choose %s!!!\n", player.getPatternsToChoose().get(choose).toString());
             }
-        }
+        }*/
 
         // Wait Game finish the Setup
         while(!newGameController.getState().equals(GameControllerInterface.StateMachine.PLAYING) ) {
-            Thread.sleep(10);
+            Thread.sleep(30);
         }
 
         // Give Game Controller Actions, We'll see Game skip all round timeout

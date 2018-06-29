@@ -11,6 +11,7 @@ import porprezhas.model.cards.*;
 
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import static porprezhas.model.Game.NotifyState.BOARD_CREATED;
@@ -46,7 +47,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT}
+    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -67,7 +68,7 @@ public class Game extends ModelObservable implements GameInterface {
     // player list management attributes
     private List<Player> playerList;
     private Player currentPlayer;
-    private List<Player> frozenPlayer; // list of the players that had lost the connection
+    private CopyOnWriteArrayList<Player> frozenPlayer; // list of the players that had lost the connection
     private int iCurrentPlayer;     // keep currentPlayer always == playerList.get(iCurrentPlayer)
     private int iFirstPlayer;       // index of first player in current round -- or index of next round when this round has already finished
     private int iLastPlayer;        // index of player that play 2 consecutive times, on this player we'll turn the rotation direction, toggling bCounterClockwise
@@ -88,7 +89,7 @@ public class Game extends ModelObservable implements GameInterface {
         bSolitaire = true;
         solitaireDifficulty = difficulty;
         playerList = new ArrayList<>();    // TODO: generalization
-        frozenPlayer= new ArrayList<>();
+        frozenPlayer= new CopyOnWriteArrayList();
         playerList.add(player);
         privateObjectiveCardFactory = new PrivateObjectiveCardFactory(1);
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(1);
@@ -101,7 +102,7 @@ public class Game extends ModelObservable implements GameInterface {
         gameID = new Random().nextLong();   // create a unique string or number
         bSolitaire = false;
         this.playerList = new ArrayList<>(playerList);
-        frozenPlayer= new ArrayList<>();
+        frozenPlayer= new CopyOnWriteArrayList();
         privateObjectiveCardFactory = new PrivateObjectiveCardFactory(playerList.size());
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(playerList.size());
         toolCardFactory = new ToolCardFactory(playerList.size());
@@ -407,6 +408,12 @@ public class Game extends ModelObservable implements GameInterface {
                 player.setFavorTokenByDifficulty( pattern.getDifficulty() );
             }
             System.out.println();
+
+            // Notify Clients that Board are initialized
+            gameNotifyState = BOARD_CREATED;
+            setChanged();
+
+            notifyObservers(new SerializableGame(this));
         }
     }
 
@@ -508,14 +515,18 @@ public class Game extends ModelObservable implements GameInterface {
         return false;   // not valid
     }
 
+    /**
+     * Initialize the board with the give pattern type
+     * return false if the board has already be set
+     *
+     * @param p the player that chooses the pattern
+     * @param indexPatternType  the index of pattern in the pattern's list of this player can choose
+     * @return  boolean of success operation
+     */
     public boolean setPattern(Player p, int indexPatternType) {
         if (p.getBoard() == null) {    // A board is always associate with a pattern, if pattern hasn't be chosen it should be nul (not yet created)
             boolean bChosen = p.choosePatternCard(indexPatternType);   // here we create a new board associating it to the passed pattern
             if(bChosen) {
-                gameNotifyState = BOARD_CREATED;
-                setChanged();
-
-                notifyObservers(new SerializableGame(this));
                 return bChosen;
             }
         }
@@ -551,5 +562,18 @@ public class Game extends ModelObservable implements GameInterface {
             return true;
         else
             return false;
+    }
+
+    public  void  resumePlayer(String username){
+
+        for (Player player:
+             this.frozenPlayer) {
+            if (player.getName().equals(username))
+                this.frozenPlayer.remove(player);
+        }
+        gameNotifyState = NotifyState.PLAYER_BACK;
+        setChanged();
+        notifyObservers(new SerializableGame(this));
+
     }
 }

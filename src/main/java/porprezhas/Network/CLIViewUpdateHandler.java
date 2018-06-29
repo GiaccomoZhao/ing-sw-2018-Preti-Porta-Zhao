@@ -38,6 +38,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     }
 
 
+    public void setGameStarted(Boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
+
+
     public boolean printAll(boolean bFixedFont, int numberOfPlayer, List<Player> players, Player currentPlayer) {
 
         Pattern pattern;
@@ -263,9 +268,13 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             case CHOOSE_PATTERN:
 
                 System.out.println("You have to choose your pattern");
-                Pattern.TypePattern pattern1 = game.getUsernamePlayer(username).getPatternsToChoose().get(0);
-                Pattern.TypePattern pattern2 = game.getUsernamePlayer(username).getPatternsToChoose().get(1);
-                System.out.println(pattern1.name() + "    o    " + pattern2.name());
+
+                for (Pattern.TypePattern pattern:
+                        game.getUsernamePlayer(username).getPatternsToChoose()) {
+                    System.out.println(pattern.name());
+
+                }
+                System.out.println("Type the number of the pattern");
                 break;
 
             case GAME_STARTED:
@@ -273,6 +282,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println("Game started!");
                 this.gameStarted=true;
                 this.printAll(bFixedFont, 4, game.getPlayerList(), game.getCurrentPlayer());
+
                 break;
 
             case NEXT_ROUND:
@@ -294,6 +304,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             case BOARD_CREATED:
                 System.out.println("Pattern inserted in the board");
+                for (Player player : players) {
+                    if (player.getName().equals(username)) {
+                        System.out.println(player.getBoard().getPattern());
+                    }
+                }
                 break;
 
             case PLAYER_QUIT:
