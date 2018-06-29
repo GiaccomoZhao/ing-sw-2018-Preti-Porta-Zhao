@@ -437,6 +437,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                 showWarningText("404: server NOT Found");
 
 
+
             // Connected to server
             } else {
                 // Try to Login with given user name
