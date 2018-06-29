@@ -38,7 +38,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 	private GameControllerFactory gameControllerFactory;
 
-	private volatile List<Player> playerBuffer;
+	private  List<Player> playerBuffer;
 
 	private List<Player> loggedPlayer;
 
@@ -256,6 +256,16 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     //It save his username in inGameLostConnection and "freeze" the player in the game
     @Override
     public void closedConnection(String username) {
+        //If the player isn't in game but he did join, he is removed from the buffer
+        for (Player player:
+             this.playerBuffer) {
+            if (player.getName().equals(username)) {
+                playerBuffer.remove(player);
+                this.loggedPlayer.remove(player);
+                return;
+            }
+        }
+        //If the player was in game, he is freeze;
         System.out.println(username + " lost the connection");
         GameControllerInterface gameControllerInterface= getGameControllerByUsername(username);
         Game game= (Game) gameControllerInterface.getGame();
@@ -473,7 +483,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                     return new LoginActionAnswer(USERNAME_ALREADY_TAKEN, username);
                 else{
                      if (!((GameControllerInterface)this.inGameLostConnection.get(username)).getState().hasGameFinished()) {
-                         this.socketUsers.remove(username);
+
                          this.socketUsers.put(username, loginAction.getObjectOutputStream());
                          return new LoginActionAnswer(ALREADY_IN_GAME, username);
                      }

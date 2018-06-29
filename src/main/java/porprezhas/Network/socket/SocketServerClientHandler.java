@@ -1,6 +1,7 @@
 package porprezhas.Network.socket;
 
 import porprezhas.Network.command.*;
+import porprezhas.control.ServerController;
 import porprezhas.control.ServerControllerInterface;
 import porprezhas.model.ProxyObserverSocket;
 
@@ -59,10 +60,10 @@ public class SocketServerClientHandler extends Observable implements Runnable {
         } catch (IOException e) {
             if( e instanceof EOFException)
                 System.out.println("Invalid username");
-            else if(e instanceof SocketException)
+            else if(e instanceof SocketException) {
                 System.out.println("Client closed the connection");
-
-
+                ((ServerController) serverController).closedConnection(username);
+            }
             else
                 e.printStackTrace();
         } catch (ClassNotFoundException e) {
