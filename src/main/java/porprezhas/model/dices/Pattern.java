@@ -295,7 +295,7 @@ public class Pattern implements Serializable {
                pattern[1][4]= new Box(Dice.ColorDice.WHITE, 3);
                pattern[2][0]= new Box(Dice.ColorDice.WHITE, 6);
                pattern[2][3]= new Box(Dice.ColorDice.BLUE, 0);
-               pattern[3][1]= new Box(Dice.ColorDice.YELLOW, 1);
+               pattern[3][1]= new Box(Dice.ColorDice.YELLOW, 0);
                pattern[3][2]= new Box(Dice.ColorDice.WHITE, 2);
 
                break;

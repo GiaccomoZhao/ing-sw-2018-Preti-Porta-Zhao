@@ -124,4 +124,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         // foreach player: update board
         //
     }
+
+    @Override
+    public void setGameStarted(Boolean gameStarted) {
+
+    }
 }

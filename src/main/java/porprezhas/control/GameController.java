@@ -132,9 +132,10 @@ public class GameController  implements GameControllerInterface, Runnable {
             SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss:SS");
             System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition() + 1, player.getName(), ft.format(dNow));
 
-            // let player play
-            player.play();  // NOTE: this statement must be in the same synchronized block of wait()
-
+            // let player play if the player isn't frozen
+                player.play();  // NOTE: this statement must be in the same synchronized block of wait()
+            if (game.isfreeze(player))
+                player.passes(true);
 
             //wait everybody for a timeout then pass or player pass
             //possible other solution: Timer or while sleep nanoTime
@@ -305,6 +306,19 @@ public class GameController  implements GameControllerInterface, Runnable {
 
     public boolean insertDice(long diceID, Integer row, Integer column) {
         return game.insertDice(diceID, row, column);
+    }
+
+    //With resumeGame a player that has lost his connection can resume the game only
+    // if the game isn't in the end state
+    @Override
+    public boolean resumeGame(String username) {
+
+        //Here we check if the game state is admissible
+        if (state.equals(StateMachine.PLAYER_PREPARING) || state.equals(StateMachine.PLAYING) || state.equals(StateMachine.GAME_PREPARING)){
+            game.resumePlayer(username);
+            return true;
+        }
+        return false;
     }
 
     public boolean useToolCard(int cardIndex, ToolCardParam param){

@@ -38,6 +38,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     }
 
 
+    public void setGameStarted(Boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
+
+
     public boolean printAll(boolean bFixedFont, int numberOfPlayer, List<Player> players, Player currentPlayer) {
 
         Pattern pattern;
@@ -277,6 +282,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println("Game started!");
                 this.gameStarted=true;
                 this.printAll(bFixedFont, 4, game.getPlayerList(), game.getCurrentPlayer());
+
                 break;
 
             case NEXT_ROUND:

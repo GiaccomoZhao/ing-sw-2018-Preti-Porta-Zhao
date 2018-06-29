@@ -70,6 +70,7 @@ public class SocketServerClientHandler extends Observable implements Runnable {
         }
         finally {
             try {
+
                 out.close();
                 in.close();
                 socket.close();

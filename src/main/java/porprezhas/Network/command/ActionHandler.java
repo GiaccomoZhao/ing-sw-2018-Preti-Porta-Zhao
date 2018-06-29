@@ -14,4 +14,6 @@ public interface ActionHandler {
     Answer handle(UseToolCardAction useToolCardAction);
 
     Answer handle(PassAction passAction);
+
+    Answer handle(ResumeGameAction resumeGameAction);
 }

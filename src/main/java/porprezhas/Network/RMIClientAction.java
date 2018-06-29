@@ -62,6 +62,18 @@ public class RMIClientAction implements ClientActionInterface{
     }
 
     @Override
+    public boolean resumeGame(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+       viewUpdateHandlerInterface.setGameStarted(true);
+        try {
+            return server.resumeGame(username);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
 //    public boolean moveDice(int idBoardFrom, long diceID, int idBoardTo, int toRow, int toCol) {
 //    public boolean moveDice(int indexDiceDraftPool, int idBoardTo, int toRow, int toCol) {
     public boolean insertDice(long diceID, int toRow, int toCol) {

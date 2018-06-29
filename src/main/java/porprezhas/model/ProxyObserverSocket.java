@@ -47,9 +47,9 @@ int i=0;
             }
             catch(Exception re)
             {
-                if(re instanceof SocketException)
+                if(re instanceof SocketException) {
                     serverControllerInterface.closedConnection(username);
-
+                }
             }
         }
     }

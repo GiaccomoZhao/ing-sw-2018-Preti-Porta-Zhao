@@ -257,7 +257,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     @Override
     public void closedConnection(String username) {
         System.out.println(username + " lost the connection");
-        Game game= (Game) getGameControllerByUsername(username).getGame();
+        GameControllerInterface gameControllerInterface= getGameControllerByUsername(username);
+        Game game= (Game) gameControllerInterface.getGame();
         if(this.socketUsers.containsKey(username))
            socketUsers.remove(username);
 
@@ -265,11 +266,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
        game.freezePlayer(username);
 
-        this.inGameLostConnection.put(username,game);
+        this.inGameLostConnection.put(username, gameControllerInterface);
 
 
     }
-
+    //This method handles RMI join action.
     @Override
     public Boolean joinGame(String username) throws RemoteException {
 
@@ -283,7 +284,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         return false;
     }
-
+    //This method handles RMI login action. It return 3 possible states:
+    // 1) USERNAME_ALREADY_TAKEN
+    // 2) ALREADY_IN_GAME if the username is frozen in a game and the game isn't finished yet
+    // 3) USERNAME_AVAILABLE
     @Override
     public int login(String username) throws RemoteException {
         for (Player findPlayer:
@@ -292,6 +296,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 if(!this.inGameLostConnection.containsKey(username))
                     return USERNAME_ALREADY_TAKEN;
                 else
+                if (!((GameControllerInterface)this.inGameLostConnection.get(username)).getState().hasGameFinished())
                     return ALREADY_IN_GAME;
             }
         }
@@ -301,6 +306,26 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return USERNAME_AVAILABLE;
     }
 
+    @Override
+    public Boolean resumeGame(String username) {
+       Boolean answer=false;
+        if (this.inGameLostConnection.containsKey(username)) {
+            answer = ((GameControllerInterface)this.inGameLostConnection.get(username)).resumeGame(username);
+            if (answer){
+                GameInterface game =((GameControllerInterface)this.inGameLostConnection.get(username)).getGame();
+                try {
+                    ((Game)game).addObserver(username,  this);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            this.inGameLostConnection.remove(username);
+        }
+        return answer;
+    }
+
+    //This method handles RMI logout action.
     @Override
     public Boolean logout(String username) throws RemoteException {
         for (Player findPlayer:
@@ -369,6 +394,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return true;
     }
 
+
     @Override
     public Boolean usedToolCard(String username, int toolCardID, ArrayList<Integer> paramList) throws RemoteException {
         GameInterface playerGame= this.getGameControllerByUsername(username).getGame();
@@ -418,7 +444,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             return;
         }
         System.out.println("server socket ready");
-        while (true) {
+        Boolean ready=true;
+        while (ready) {
             try {
                 Socket socket = serverSocket.accept();
                 executor.submit(new
@@ -430,6 +457,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         executor.shutdown();
     }
 
+    //This method handles socket login action. It creates a new Answer with 3 possible state:
+    // 1) USERNAME_ALREADY_TAKEN
+    // 2) ALREADY_IN_GAME if the username is frozen in a game and the game isn't finished yet
+    // 3) USERNAME_AVAILABLE
     @Override
     public synchronized Answer handle(LoginAction loginAction) {
         String username= loginAction.username;
@@ -440,8 +471,13 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
                 if(!this.inGameLostConnection.containsKey(username))
                     return new LoginActionAnswer(USERNAME_ALREADY_TAKEN, username);
-                else
-                    return new LoginActionAnswer(ALREADY_IN_GAME, username);
+                else{
+                     if (!((GameControllerInterface)this.inGameLostConnection.get(username)).getState().hasGameFinished()) {
+                         this.socketUsers.remove(username);
+                         this.socketUsers.put(username, loginAction.getObjectOutputStream());
+                         return new LoginActionAnswer(ALREADY_IN_GAME, username);
+                     }
+                }
             }
 
         }
@@ -527,6 +563,24 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         else
             return new PassActionAnswer(false) ;
         return new PassActionAnswer(true);
+    }
+
+    @Override
+    public synchronized Answer handle(ResumeGameAction resumeGameAction) {
+        String username= resumeGameAction.username;
+        Boolean answer=false;
+
+        if (this.inGameLostConnection.containsKey(username)) {
+            answer = ((GameControllerInterface)this.inGameLostConnection.get(username)).resumeGame(username);
+            if (answer){
+                GameInterface game =((GameControllerInterface)this.inGameLostConnection.get(username)).getGame();
+                ((Game)game).addObserver(username, (ObjectOutputStream) socketUsers.get(username), this);
+
+            }
+            this.inGameLostConnection.remove(username);
+        }
+
+        return new JoinActionAnswer(answer);
     }
 
 

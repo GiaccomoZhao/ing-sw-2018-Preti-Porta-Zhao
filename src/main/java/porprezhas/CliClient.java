@@ -32,6 +32,7 @@ public class CliClient {
 
 
     public static final String JOIN_COMMAND = "join";
+    public static final String RESUME_COMMAND = "resume";
     public static final String LOGOUT_COMMAND = "logout";
     public static final String INSERT_DICE_COMMAND = "dice";
     public static final String CHOOSE_PATTERN = "choosePattern";
@@ -69,10 +70,11 @@ public class CliClient {
         this.loginPashe();
         this.joinphase();
         System.out.println("Wait until the game is ready to start");
-        this.choosePatternPhase();
+
 
         String command;
         do {
+            in.reset();
             command =  in.nextLine();
 
             String[] splittedStrings = command.split(" ");
@@ -177,16 +179,16 @@ public class CliClient {
                    // Logged In
                    bLog=true;
                    System.out.println("Logged in!\n");
+                   System.out.println("Type 'join' to start a new game");
 
-                   // Login Failed!!!
                }
                else if (resultLogin == 1){
                    bLog=true;
                    System.out.println("Logged in!");
                    System.out.println("There is an active game with this username");
-                   System.out.println("Type 'join' to resume the active game or 'new' to start a new game");
+                   System.out.println("Type 'resume' to resume the active game or 'join' to start a new game");
                }
-               else {
+               else {// Login Failed!!!
                    System.out.println("Invalid username");
                    //if there is an active Socket connection we close it
                    if (this.typeConnection.equals(SOCKET) && ClientActionSingleton.getClientAction() != null)
@@ -198,13 +200,11 @@ public class CliClient {
 
     public void joinphase(){
 
-        System.out.println("Type 'join' to start a new game");
         String command = in.nextLine();
 
-       if(command.equals(JOIN_COMMAND)){
-        viewUpdateHandlerInterface = new CLIViewUpdateHandler(username);
 
-
+        if(command.equals(JOIN_COMMAND)){
+            viewUpdateHandlerInterface = new CLIViewUpdateHandler(username);
         if(this.typeConnection.equals(RMI)) {
             try {
                 ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
@@ -217,7 +217,25 @@ public class CliClient {
            if (ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface)) {
                System.out.println("Joined in the game successfully!\n");
            }
-       }
+            this.choosePatternPhase();
+        }
+
+        if(command.equals(RESUME_COMMAND)){
+            viewUpdateHandlerInterface = new CLIViewUpdateHandler(username);
+
+            if(this.typeConnection.equals(RMI)) {
+                try {
+                    ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ClientActionSingleton.getClientAction().resumeGame(viewUpdateHandlerInterface)) {
+                System.out.println("Resume the game successfully!\n");
+            }
+        }
 
     }
 

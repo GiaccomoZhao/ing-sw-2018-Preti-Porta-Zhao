@@ -2,6 +2,7 @@ package porprezhas.Network;
 
 import porprezhas.Network.command.*;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -69,7 +70,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
       
         try {
-            System.out.println(username);
+
             socketOut.writeObject(new JoinAction(username));
             socketOut.flush();
             ((Answer) socketIn.readObject()).handle(this);
@@ -96,6 +97,41 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
             e.printStackTrace();
         }
     return true;
+    }
+
+    @Override
+    public boolean resumeGame(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+        this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
+        viewUpdateHandlerInterface.setGameStarted(true);
+        try {
+
+            socketOut.writeObject(new ResumeGameAction(username));
+            socketOut.flush();
+            ((Answer) socketIn.readObject()).handle(this);
+
+            SocketClientAction socketClientAction=this;
+            Thread thread = new Thread(){
+                public void run() {
+                    Boolean bool=true;
+                    while(bool){
+                        try {
+
+                            ((Answer) socketIn.readObject()).handle(socketClientAction);
+                        } catch (IOException e) {
+                            if (e instanceof SocketException)
+                                bool=false;
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }}
+            };
+            thread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override

@@ -15,6 +15,7 @@ public interface GameControllerInterface  {
 
    boolean choosePattern(Player player, int indexPatternType) ;
     boolean insertDice(long diceID, Integer row, Integer column) ;
+    boolean resumeGame(String username);
     boolean useToolCard(int cardIndex, ToolCardParam param) throws RemoteException;  // TODO:
 
 
