@@ -43,6 +43,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML Button loginViewRMIButton;
     @FXML Button loginViewSocketButton;
     @FXML Button singlePlayerViewButton;
+    @FXML Button returnViewButton;
     @FXML Text warningText;
     @FXML ImageView loginViewImage;
     @FXML StackPane backgroundPane;
@@ -51,6 +52,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML AnchorPane joinScene;
     @FXML AnchorPane loginView;
     @FXML AnchorPane singlePlayerScene;
+    @FXML AnchorPane returnGameScene;
 
 
     private Pane rootLayout;
@@ -218,6 +220,7 @@ public class LoginViewController implements Initializable, SceneController, Move
         connectionButtonsSetup();
         joinButtonSetup();
         singlePlayerViewButtonSetup();
+        returnViewButtonSetup();
         setGameCursor();
 
 
@@ -254,6 +257,10 @@ public class LoginViewController implements Initializable, SceneController, Move
                         "-fx-max-width: 120px; " +
                         "-fx-max-height: 50px;"
         );
+    }
+
+    private void returnViewButtonSetup() {
+        returnGameScene.setVisible(false);
     }
 
 
@@ -421,6 +428,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                     !ClientActionSingleton.getClientAction().isConnected() ) {
                 showWarningText("404: server NOT Found");
 
+
             // Connected to server
             } else {
                 // Try to Login with given user name
@@ -432,6 +440,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                     loginScene.setVisible(false);
                     joinScene.setVisible(true);
                     singlePlayerScene.setVisible(true);
+                    returnGameScene.setVisible(true);
 //                    joinScene.toFront();
 
 
