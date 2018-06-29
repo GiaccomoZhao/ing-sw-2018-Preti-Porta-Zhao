@@ -92,6 +92,22 @@
             </VBox>
             <AnchorPane fx:id="joinScene" prefHeight="200.0" prefWidth="200.0">
                <children>
+                  <Button fx:id="singlePlayerViewButton" layoutX="218.0" layoutY="417.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: #FFF1C6;" text="SinglePlayer Mode" textFill="#390f01" AnchorPane.bottomAnchor="144.0">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="returnViewButton" layoutX="218.0" layoutY="372.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="165.0" style="-fx-background-color: #FFF1C6;" text="Return to Game" textFill="#390f01" AnchorPane.bottomAnchor="195.0">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="16.0" />
+                     </font>
+                  </Button>
                   <Button fx:id="joinViewButton" layoutX="256.0" layoutY="256.0" mnemonicParsing="false" onAction="#onJoinButton" prefHeight="13.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Join" textFill="#390f01">
                      <font>
                         <Font name="Book Antiqua" size="20.0" />
@@ -110,30 +126,6 @@
                   <Insets bottom="96.0" />
                </StackPane.margin>
             </Text>
-            <AnchorPane fx:id="returnGameScene" prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <Button fx:id="returnViewButton" layoutX="214.0" layoutY="339.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="172.0" style="-fx-background-color: #FFF1C6;" text="Return to Game" textFill="#390f01" AnchorPane.bottomAnchor="205.0">
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                     <font>
-                        <Font name="Book Antiqua" size="16.0" />
-                     </font>
-                  </Button>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="singlePlayerScene" prefHeight="600.0" prefWidth="606.0">
-               <children>
-                  <Button fx:id="singlePlayerViewButton" layoutX="243.0" layoutY="376.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="165.0" style="-fx-background-color: #FFF1C6;" text="SinglePlayer Mode" textFill="#390f01" AnchorPane.bottomAnchor="120.0">
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                     <font>
-                        <Font name="Book Antiqua" size="12.0" />
-                     </font>
-                  </Button>
-               </children>
-            </AnchorPane>
          </children>
       </StackPane>
    </children>

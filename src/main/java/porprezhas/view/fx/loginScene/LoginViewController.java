@@ -51,8 +51,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML VBox loginScene;
     @FXML AnchorPane joinScene;
     @FXML AnchorPane loginView;
-    @FXML AnchorPane singlePlayerScene;
-    @FXML AnchorPane returnGameScene;
+
 
 
     private Pane rootLayout;
@@ -227,8 +226,6 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         connectionButtonsSetup();
         joinButtonSetup();
-        singlePlayerViewButtonSetup();
-        returnViewButtonSetup();
         setGameCursor();
 
 
@@ -256,20 +253,7 @@ public class LoginViewController implements Initializable, SceneController, Move
         );
     }
 
-    private void singlePlayerViewButtonSetup() {
-        singlePlayerScene.setVisible(false);
-        singlePlayerViewButton.setStyle(
-                "-fx-background-color: #FFF1C6; " +
-                        "-fx-min-width: 120px; " +
-                        "-fx-min-height: 50px; " +
-                        "-fx-max-width: 120px; " +
-                        "-fx-max-height: 50px;"
-        );
-    }
 
-    private void returnViewButtonSetup() {
-        returnGameScene.setVisible(false);
-    }
 
 
     private void setGameCursor() {
@@ -437,7 +421,6 @@ public class LoginViewController implements Initializable, SceneController, Move
                 showWarningText("404: server NOT Found");
 
 
-
             // Connected to server
             } else {
                 // Try to Login with given user name
@@ -448,8 +431,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                     // Open next Scene - Join Scene
                     loginScene.setVisible(false);
                     joinScene.setVisible(true);
-                    singlePlayerScene.setVisible(true);
-                    returnGameScene.setVisible(true);
+
 //                    joinScene.toFront();
 
 
