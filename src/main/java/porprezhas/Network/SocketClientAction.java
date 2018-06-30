@@ -135,7 +135,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     }
 
     @Override
-    public boolean insertDice(long diceID, int row, int col) {
+    public void insertDice(long diceID, int row, int col) {
         try {
              socketOut.writeObject(new InsertDiceAction(username, diceID, row, col ));
              socketOut.flush();
@@ -148,18 +148,18 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 //                e.printStackTrace();
         }
 
-        return false;
+
     }
 
     @Override
-    public boolean pass() {
+    public void pass() {
         try {
             socketOut.writeObject(new PassAction(username));
             socketOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
+
     }
 
     @Override
@@ -232,7 +232,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     @Override
     public void handle(PassActionAnswer passActionAnswer) {
         if (!passActionAnswer.answer.equals(true))
-            System.out.println("It's not your turn!");
+          viewUpdateHandlerInterface.invalidAction();
 
     }
 
@@ -244,14 +244,14 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
             try {
                 throw diceInsertedAnswer.exception;
             } catch (Exception e) {
-                System.out.println( e.getMessage());
+               this.viewUpdateHandlerInterface.invalidDiceInsert(e);
             }
 
     }
 
     @Override
     public void handle(PatternAnswer patternAnswer) {
-        System.out.println("Pattern ok");
+
     }
 
 

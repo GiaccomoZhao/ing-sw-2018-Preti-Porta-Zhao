@@ -4,6 +4,7 @@ package porprezhas.Network;
 import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.SerializableGameInterface;
+import porprezhas.model.cards.Card;
 import porprezhas.model.dices.Box;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DraftPool;
@@ -40,6 +41,16 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     public void setGameStarted(Boolean gameStarted) {
         this.gameStarted = gameStarted;
+    }
+
+    @Override
+    public void invalidAction() {
+        System.out.println("It's not your turn");
+    }
+
+    @Override
+    public void invalidDiceInsert(Exception e) {
+        System.out.println(e.getMessage());
     }
 
 
@@ -224,13 +235,29 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
         if(gameStarted) {
             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+            for (Player player:
+                 game.getPlayerList()) {
+                if (player.getName().equals(username)){
+                    System.out.println("Your favor tokens are" + player.getFavorToken());
+                    System.out.println("Private card: " + player.getPrivateObjectiveCardList().get(0));
+                }
+            }
+           System.out.println("Public cards:");
+            for (Card card:
+                 game.getPublicObjectiveCardList()) {
+                System.out.println(card.toString());
+            }
+            System.out.println("Tool cards:");
+            for (Card card:
+                    game.getToolCardList()) {
+                System.out.println(card.toString());
+            }
+            System.out.println();
+            System.out.println();
             if (game.getCurrentPlayer().getName().equals(this.username))
                 System.out.println("This is your turn!");
             else
                 System.out.println("Now is playing: " + game.getCurrentPlayer().getName());
-
-
-            System.out.println();
 //            System.out.println("Round Track: ");
             System.out.println(game.getRoundTrack());
 

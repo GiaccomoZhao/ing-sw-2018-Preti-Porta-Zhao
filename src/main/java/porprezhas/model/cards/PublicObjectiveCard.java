@@ -33,6 +33,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
       switch(this.effect){
 
+          //Row with different colors
           case PUC1:
 
               for(i=0; i < ROW; i++) {
@@ -50,7 +51,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
 
           case PUC2:
-
+              //Column with different colors
               for(j=0; j <COLUMN; j++) {
                   for (i = 0; i < ROW; i++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
@@ -66,7 +67,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
 
           case PUC3:
-
+            //Row with different numbers
               for(i=0; i < ROW; i++) {
                   for (j = 0; j <COLUMN; j++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
@@ -84,7 +85,7 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
 
 
           case PUC4:
-
+              //Column with different numbers
               for(j=0; j <COLUMN; j++) {
                   for (i = 0; i< ROW; i++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))

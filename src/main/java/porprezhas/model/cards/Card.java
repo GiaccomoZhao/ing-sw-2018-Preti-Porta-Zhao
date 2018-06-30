@@ -26,18 +26,18 @@ public abstract class Card implements Serializable {
         PRC3(  3,  "Sfumature Verdi - Privata",     "Somma dei valori su tutti i dadi verdi"),
         PRC4(  4,  "Sfumature Blu - Privata",       "Somma dei valori su tutti i dadi blu"),
         PRC5(  5,  "Sfumature Viola - Privata",     "Somma dei valori su tutti i dadi viola"),
-        TC1(   1,  "Pinza Sgrossatrice",            "Dopo aver scelto un dado,\naumenta o dominuisci il valore\ndel dado scelto di 1\nNon puoi cambiare\nun 6 in 1 o un 1 in 6 "),
-        TC2(   2,  "Pennello per Eglomise",         "Muovi un qualsiasi dado nella tua\nvetrata ignorando le restrizioni\ndi colore\nDevi rispettare tutte le altre\nrestrizioni di piazzamento"),
-        TC3(   3,  "Alesatore per lamina di rame",  "Muovi un qualsiasi dado nella tua\nvetrata ignorando le restrizioni\ndi valore\nDevi rispettare tutte le altre\nrestrizioni di piazzamento"),
-        TC4(   4,  "Lathekin",                      "Muovi esattamente due dadi,\nrispettando tutte le restrizioni di\npiazzamento"),
-        TC5(   5,  "Taglierina circolare",          "Dopo aver scelto un dado,\nscambia quel dado con un dado\nsul Tracciato dei Round"),
-        TC6(   6,  "Pennello per Pasta Salda",      "Dopo aver scelto un dado, tira\nnuovamente quel dado\nSe non puoi piazzarlo, riponilo\nnella Riserva"),
-        TC7(   7,  "Martelletto",                   "Tira nuovamente\ntutti i dadi della Riserva\nQuesta carta può essera usata\nsolo durante il tuo secondo turno,\nprima di scegliere il secondo dado"),
-        TC8(   8,  "Tenaglia a Rotelle",            "Dopo il tuo primo turno scegli\nimmediatamente un altro dado\nSalta il tuo secondo turno in\nquesto round"),
-        TC9(   9,  "Riga in Sughero",               "Dopo aver scelto un dado,\npiazzalo in una casella che non\nsia adiacente a un altro dado\nDevi rispettare tutte le restrizioni\ndi piazzamento"),
-        TC10( 10,  "Tampone Diamantato",            "Dopo aver scelto un dado, giralo\nsulla faccia opposta\n6 diventa 1, 5 diventa 2, 4\ndiventa 3 ecc."),
-        TC11( 11,  "Diluente per Pasta Salda",      "Dopo aver scelto un dado, riponilo nel\nSacchetto, poi pescane uno dal Sacchetto\nScegli il valore del nuovo dado e\npiazzalo, rispettando tutte le restrizioni di\npiazzamento"),
-        TC12( 12,  "Taglierina Manuale",            "Muovi fino a due dadi dello\nstesso colore di un solo dado sul\nTracciato dei Round\nDevi rispettare tutte le restrizioni\ndi piazzamento");
+        TC1(   1,  "Pinza Sgrossatrice",            "Dopo aver scelto un dado, aumenta o dominuisci il valore del dado scelto di 1 Non puoi cambiare un 6 in 1 o un 1 in 6 "),
+        TC2(   2,  "Pennello per Eglomise",         "Muovi un qualsiasi dado nella tua vetrata ignorando le restrizioni di colore Devi rispettare tutte le altre restrizioni di piazzamento"),
+        TC3(   3,  "Alesatore per lamina di rame",  "Muovi un qualsiasi dado nella tua vetrata ignorando le restrizioni di valore Devi rispettare tutte le altre restrizioni di piazzamento"),
+        TC4(   4,  "Lathekin",                      "Muovi esattamente due dadi, rispettando tutte le restrizioni di piazzamento"),
+        TC5(   5,  "Taglierina circolare",          "Dopo aver scelto un dado, scambia quel dado con un dado sul Tracciato dei Round"),
+        TC6(   6,  "Pennello per Pasta Salda",      "Dopo aver scelto un dado, tira nuovamente quel dado Se non puoi piazzarlo, riponilo nella Riserva"),
+        TC7(   7,  "Martelletto",                   "Tira nuovamente tutti i dadi della Riserva Questa carta può essera usata solo durante il tuo secondo turno, prima di scegliere il secondo dado"),
+        TC8(   8,  "Tenaglia a Rotelle",            "Dopo il tuo primo turno scegli immediatamente un altro dado Salta il tuo secondo turno in questo round"),
+        TC9(   9,  "Riga in Sughero",               "Dopo aver scelto un dado, piazzalo in una casella che non sia adiacente a un altro dado Devi rispettare tutte le restrizioni di piazzamento"),
+        TC10( 10,  "Tampone Diamantato",            "Dopo aver scelto un dado, giralo sulla faccia opposta 6 diventa 1, 5 diventa 2, 4 diventa 3 ecc."),
+        TC11( 11,  "Diluente per Pasta Salda",      "Dopo aver scelto un dado, riponilo nel Sacchetto, poi pescane uno dal Sacchetto Scegli il valore del nuovo dado e piazzalo, rispettando tutte le restrizioni di piazzamento"),
+        TC12( 12,  "Taglierina Manuale",            "Muovi fino a due dadi dello stesso colore di un solo dado sul Tracciato dei Round Devi rispettare tutte le restrizioni di piazzamento");
 
 
         public final int ID;
@@ -63,12 +63,8 @@ public abstract class Card implements Serializable {
 
     @Override
     public String toString() {
-        return effect.name;
+        return effect.name.concat(":  " + effect.description);
     }
 
 
-//    public abstract int apply(Board board);
-/*
-    public abstract void use(Board board, DraftPool draftPool, int xStart1, int yStart1, int xDestination1, int yDestination1, int xStart2, int yStart2, int xDestination2, int yDestination2, Dice dice1, int  number, boolean operation, RoundTrack roundTrack, DiceBag diceBag);
-    */
 }

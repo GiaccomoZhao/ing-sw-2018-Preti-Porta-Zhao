@@ -622,8 +622,9 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     // ********** <<< Send Message to Server >>> **********
     private boolean insertDice(long diceID, int idBoardTo, int row, int col) {
         if(idBoardTo == DiceContainer.fromPlayer(playerPosition).toInt()) {
-            return ClientActionSingleton.getClientAction().
+            /*return*/ ClientActionSingleton.getClientAction().
                     insertDice(diceID, row, col);
+            return true;
         } else
             return false;
     }
@@ -700,7 +701,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
             );
         }
         draftPoolView.reroll(diceList);*/
-        if (!bDebug)
+        //Mif (!bDebug)
             ClientActionSingleton.getClientAction().pass();
     }
 

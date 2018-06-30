@@ -97,6 +97,8 @@ public class Board implements Serializable {
         return COLUMN;
     }
 
+
+
     public Boolean isBoxOccupied(int row, int col) {
 
         if (board[row][col] == null)

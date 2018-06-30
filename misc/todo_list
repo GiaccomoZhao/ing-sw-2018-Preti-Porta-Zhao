@@ -1,12 +1,13 @@
 GUI: single player preparation scene
 GUI: ToolCard
-Network: Reconnecting
+RMI 2 PC
+JAR!
 
 ------------------------------  for 17/06 zx die...
 
 ...
 
-fix score calculate
+
 fix single player
 UML
 

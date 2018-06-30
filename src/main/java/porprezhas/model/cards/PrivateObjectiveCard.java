@@ -19,9 +19,6 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
     }
 
 
-    public void use(Board board, DraftPool draftPool, int xStart1, int yStart1, int xDestination1, int yDestination1, int xStart2, int yStart2, int xDestination2, int yDestination2, Dice dice1, int number, boolean operation, RoundTrack roundTrack, DiceBag diceBag) {
-    }
-
     /**
      * Apply the private Objective card to the player's board and return the point gained
      *
@@ -37,6 +34,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
 
         switch(this.effect){
 
+            //Shadow of RED
             case PRC1:
 
                 for(i=0; i < ROW; i++) {
@@ -48,7 +46,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
                 }
                 return point;
 
-
+            //Shadow of YELLOW
             case PRC2:
 
                 for(i=0; i <ROW; i++) {
@@ -60,7 +58,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
                 }
                 return point;
 
-
+            //Shadow of GREEN
             case PRC3:
 
                 for(i=0; i <ROW; i++) {
@@ -72,7 +70,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
                 }
                 return point;
 
-
+            //Shadow of BLUE
             case PRC4:
 
                 for(i=0; i <ROW; i++) {
@@ -84,7 +82,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
                 }
                 return point;
 
-
+            //Shadow of PURPLE
             case PRC5:
 
                 for(i=0; i <ROW; i++) {

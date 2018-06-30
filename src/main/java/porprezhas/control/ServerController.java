@@ -268,7 +268,23 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
 
-    //This method handles RMI join action.
+    // ******************************************************************************
+    //
+    // --------------------------------- RMI handler --------------------------------
+    //
+    //*******************************************************************************
+
+
+
+
+    /**
+     *  This method handles RMI join action.
+     *
+     * @param username username of the player that asks to join a game
+     * @return true if the operation works right
+     *
+     * @throws RemoteException
+     */
     @Override
     public Boolean joinGame(String username) throws RemoteException {
 
@@ -277,16 +293,20 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             if(findPlayer.getName().equals(username)) {
                 this.join(findPlayer);
                 return true;
-
             }
         }
         return false;
     }
 
-    /**This method handles RMI login action. It return 3 possible states:
-     *  1) USERNAME_ALREADY_TAKEN
-     *  2) ALREADY_IN_GAME if the username is frozen in a game and the game isn't finished yet
-     *  3) USERNAME_AVAILABLE
+    /** This method handles the login request of a player
+     *
+     * @param username username of the player
+     * @return three possible states:
+     *          1) USERNAME_AVAIABLE
+     *          2)USERNAME_ALREADY_TAKEN
+     *          3)ALREADY_IN_GAME if the username is a username of a client that lost or close connection
+     *
+     * @throws RemoteException
      */
     @Override
     public int login(String username) throws RemoteException {
@@ -308,7 +328,12 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 
 
-    //This method handles RMI logout action.
+    /**This method handles RMI logout action.
+     *
+     * @param username username of the player
+     * @return the boolean answer of the operation
+     * @throws RemoteException
+     */
     @Override
     public Boolean logout(String username) throws RemoteException {
         for (Player findPlayer:
@@ -322,18 +347,6 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return false;
     }
 
-    /*@Override
-    public int getGameControllerIndex(String username) throws RemoteException {
-        for (Player findPlayer:
-                loggedPlayer) {
-            if(findPlayer.getName().equals(username)){
-                GameController  gameController=(GameController) this.getGameControllerByPlayer(findPlayer);
-                return gameControllerList.indexOf(gameController);
-            }
-
-        }
-        return -1;
-    }*/
 
     /**insertedDice tries to insert a dice. This method throws an exception if the insert not valid
      * with the cause of the error
@@ -363,16 +376,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         if (gameControllerInterface.insertDice(username, diceID, rowBoard, columnBoard))
             return true;
         else
-            return false;/*
-        String currentPlayerName = this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName();
-        if(!username.equals(currentPlayerName)) {
-            throw new NotYourTurnException(
-                    "\n" +
-                    "This is not your turn!\n" +
-                    "Current player is: " + currentPlayerName);
-        } else {
+            return false;
 
-        }*/
     }
 
     /** choosePattern allows the user to choose the pattern
@@ -408,7 +413,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return gameControllerInterface.passUser(username);
     }
 
-
+    /** This method handles RMI request to use a toolcard
+     *
+     * @param username username of the player that asks to use a card
+     * @param toolCardID ID of the ToolCard that the player wants to use
+     * @param paramList  List of params that are needed for the use of the toolcard
+     * @return the boolean result of the use of the card
+     * @throws RemoteException
+     */
     @Override
     public Boolean usedToolCard(String username, int toolCardID, ArrayList<Integer> paramList) throws RemoteException {
 
@@ -565,6 +577,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return new PatternAnswer(false);
     }
 
+    /** This method handles SOCKET request to use a toolcard
+     *
+     * @param useToolCardAction action with all the data for use the toolcard
+     * @return an Answer with the result of the use of the card
+     */
     @Override
     public synchronized Answer handle(UseToolCardAction useToolCardAction) {
 

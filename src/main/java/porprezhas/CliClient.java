@@ -48,11 +48,9 @@ public class CliClient {
     }
 
     private void printHelp() {
-        System.out.println(">>> Available commands:");
-        System.out.println("\t" + LOGOUT_COMMAND + ":\t\t logout");
-        System.out.println("\t" + JOIN_COMMAND + ":\t\t join a new Game");
+        System.out.println(">>> Available game commands:");
+
         System.out.println("\t" + INSERT_DICE_COMMAND + "[index] [row] [column]: \t insert a new Dice");
-        System.out.println("\t" + CHOOSE_PATTERN + ":\t\t choose a pattern");
         System.out.println("\t" + PASS + ":\t\t end your turn");
         System.out.println("\t" + USE_TOOL_CARD + ":\t\t use a tool card");
     }
@@ -99,9 +97,7 @@ public class CliClient {
                                     Integer.parseInt(splittedStrings[2]) -1 , Integer.parseInt(splittedStrings[3])-1);
 
                         break;
-                    case CHOOSE_PATTERN:
 
-                        break;
                     case PASS:
 
                         ClientActionSingleton.getClientAction().pass();
@@ -112,23 +108,8 @@ public class CliClient {
                         for (int i=2; i < splittedStrings.length; i ++)
                             paramList.add(Integer.parseInt(splittedStrings[i])-1);
 
-                        try {
+                            ClientActionSingleton.getClientAction().useToolCard(username,Integer.parseInt(splittedStrings[1])-1 , paramList);
 
-
-
-                            if(server.usedToolCard(username,Integer.parseInt(splittedStrings[1])-1 , paramList)) {
-
-                                System.out.println("ToolCardUsed!");
-
-
-                            } else {
-                                System.out.println("Param error");
-                            }
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            System.err.println(e.getMessage());     // print Invalid Move Message
-                        }
                         break;
                     default:
                         printHelp();

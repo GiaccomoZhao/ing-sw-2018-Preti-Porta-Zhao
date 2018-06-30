@@ -4,6 +4,7 @@ import porprezhas.model.cards.Card;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //This class is a serializable class that contains all the informations
@@ -20,6 +21,7 @@ public class SerializableGame implements SerializableGameInterface {
     private Game.NotifyState gameNotifyState;
     private Player quitPlayer;
 
+
     public SerializableGame(GameInterface game) {
         this.roundTrack=game.getRoundTrack() ;
         this.draftPool= game.getDraftPool();
@@ -30,6 +32,7 @@ public class SerializableGame implements SerializableGameInterface {
         this.gameNotifyState= game.getGameState();
         if (game.getFrozenPlayer().size()>0)
             this.quitPlayer= game.getFrozenPlayer().get(game.getFrozenPlayer().size()-1);
+
     }
 
     public RoundTrack getRoundTrack() {

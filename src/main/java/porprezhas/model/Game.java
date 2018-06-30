@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import static porprezhas.model.Game.NotifyState.BOARD_CREATED;
 import static porprezhas.model.Game.NotifyState.DICE_INSERTED;
+import static porprezhas.model.GameConstants.BOARD_BOXES;
 
 public class Game extends ModelObservable implements GameInterface {
     static Logger logger = Logger.getLogger(GameController.class.getName());
@@ -444,7 +445,17 @@ public class Game extends ModelObservable implements GameInterface {
     public int calcScore(Player player) {
         int scorePublic = 0;
         int scorePrivate = 0;
+        int holesNumber;
+        int nFavorToken;
+        int finalscore;
         Board board = player.getBoard();
+
+
+        //Number of free spaces on the board
+        holesNumber= BOARD_BOXES - board.getDiceQuantity();
+
+        //Number of remaining favor token
+        nFavorToken = player.getFavorToken();
 
         // sum of private objectives
         List<Card> privateObjectiveCardList = player.getPrivateObjectiveCardList();
@@ -470,7 +481,12 @@ public class Game extends ModelObservable implements GameInterface {
 //        System.out.println(this + ": sum of public objectives = " + scorePublic);
 //        logger.info("" + Player.getName() + "\tSum of public objectives = " + scorePublic);
 
-        return scorePrivate + scorePublic;
+        finalscore = scorePrivate + scorePublic - holesNumber + nFavorToken;
+
+        if (finalscore<0)
+            finalscore=0;
+
+        return finalscore;
     }
 
 

@@ -14,7 +14,7 @@ public class RMIClientAction implements ClientActionInterface{
     private ServerRMIInterface server;
     private String username;
     private Registry registry;
-
+    private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
 
     public RMIClientAction() throws RemoteException, NotBoundException {
         registry = LocateRegistry.getRegistry();
@@ -22,10 +22,8 @@ public class RMIClientAction implements ClientActionInterface{
     }
 
 
-    //TO_DO DELETE THIS
-    public RMIClientAction(ServerRMIInterface server, String username) {
-        this.server = server;
-        this.username = username;
+    public void setViewUpdateHandlerInterface(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+        this.viewUpdateHandlerInterface = viewUpdateHandlerInterface;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class RMIClientAction implements ClientActionInterface{
 
     @Override
     public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
-
+        this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
         try {
            if(server.joinGame(username)){
 
@@ -63,6 +61,7 @@ public class RMIClientAction implements ClientActionInterface{
 
     @Override
     public boolean resumeGame(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+        this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
        viewUpdateHandlerInterface.setGameStarted(true);
         try {
             return server.resumeGame(username);
@@ -74,40 +73,30 @@ public class RMIClientAction implements ClientActionInterface{
     }
 
     @Override
-//    public boolean moveDice(int idBoardFrom, long diceID, int idBoardTo, int toRow, int toCol) {
-//    public boolean moveDice(int indexDiceDraftPool, int idBoardTo, int toRow, int toCol) {
-    public boolean insertDice(long diceID, int toRow, int toCol) {
 
-//        if(DiceContainer.fromPlayer(username)DiceContainer.fromInt(idBoardTo))
+    public void insertDice(long diceID, int toRow, int toCol) {
+
         try {
-            if( server.insertedDice(diceID, toRow, toCol, username)){
-//                if( server.insertedDice(indexDiceDraftPool, toRow, toCol, username)){
-                System.out.println("Dice inserted");
-                return true;
-            }
-            else{
-                System.out.println("Not valid move");
-                return false;
-            }
+            server.insertedDice(diceID, toRow, toCol, username);
+
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (Exception e) {
-
-            System.err.println(e.getMessage());     // print Invalid Move Message
-
+            viewUpdateHandlerInterface.invalidDiceInsert(e);
         }
 
-        return false;
+
     }
 
     @Override
-    public boolean pass() {
+    public void pass() {
         try {
-           return server.passUser(username);
+           if (!server.passUser(username))
+               viewUpdateHandlerInterface.invalidAction();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        return false;
+
     }
 
     @Override

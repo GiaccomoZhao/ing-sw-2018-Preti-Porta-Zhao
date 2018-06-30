@@ -9,6 +9,7 @@ public class GameConstants {
     public static final int MAX_DICE_PER_ROUND = 2*MAX_PLAYER_QUANTITY +1;
     public static final int DICE_PICK_PER_TURN = 1;
     public static final int ROUND_NUM = 10;
+    public static final int BOARD_BOXES = 20;
     //        public static final int FAVOR_TOKEN_QUANTITY = 3;
     public static final double TIMEOUT_QUEUE_SEC = 20;   //60;
     public static final double TIMEOUT_PREPARING_SEC = 10;   //60;

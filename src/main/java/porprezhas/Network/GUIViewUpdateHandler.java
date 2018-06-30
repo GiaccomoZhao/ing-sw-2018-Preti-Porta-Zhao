@@ -129,4 +129,14 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
     public void setGameStarted(Boolean gameStarted) {
 
     }
+
+    @Override
+    public void invalidAction() {
+
+    }
+
+    @Override
+    public void invalidDiceInsert(Exception e) {
+
+    }
 }
