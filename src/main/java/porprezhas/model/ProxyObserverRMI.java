@@ -1,6 +1,8 @@
 package porprezhas.model;
 
 import porprezhas.Network.rmi.common.RemoteObserver;
+import porprezhas.Network.rmi.common.ServerRMIInterface;
+import porprezhas.control.ServerController;
 import porprezhas.control.ServerControllerInterface;
 import porprezhas.model.SerializableGameInterface;
 
@@ -55,9 +57,10 @@ public  class ProxyObserverRMI extends TimerTask implements Observer
 
                 remoteObserver.checkState();
             } catch (RemoteException e) {
-                if(e instanceof ConnectException){
+                if(e instanceof ConnectException) {
                     serverControllerInterface.closedConnection(username);
-                    this.timer.cancel();}
+                    this.timer.cancel();
+                }
                 else
                     e.printStackTrace();
             }

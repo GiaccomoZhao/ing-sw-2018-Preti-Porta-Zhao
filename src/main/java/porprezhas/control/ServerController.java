@@ -252,34 +252,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return null;    // NOTE: throw game not found ?
     }
 
-    //This method is called when an inGameUser close or lose his connection
-    //It save his username in inGameLostConnection and "freeze" the player in the game
-    @Override
-    public void closedConnection(String username) {
-        //If the player isn't in game but he did join, he is removed from the buffer
-        for (Player player:
-             this.playerBuffer) {
-            if (player.getName().equals(username)) {
-                playerBuffer.remove(player);
-                this.loggedPlayer.remove(player);
-                return;
-            }
-        }
-        //If the player was in game, he is freeze;
-        System.out.println(username + " lost the connection");
-        GameControllerInterface gameControllerInterface= getGameControllerByUsername(username);
-        Game game= (Game) gameControllerInterface.getGame();
-        if(this.socketUsers.containsKey(username))
-           socketUsers.remove(username);
 
-       game.removeObserver(username);
-
-       game.freezePlayer(username);
-
-        this.inGameLostConnection.put(username, gameControllerInterface);
-
-
-    }
     //This method handles RMI join action.
     @Override
     public Boolean joinGame(String username) throws RemoteException {
@@ -316,24 +289,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return USERNAME_AVAILABLE;
     }
 
-    @Override
-    public Boolean resumeGame(String username) {
-       Boolean answer=false;
-        if (this.inGameLostConnection.containsKey(username)) {
-            answer = ((GameControllerInterface)this.inGameLostConnection.get(username)).resumeGame(username);
-            if (answer){
-                GameInterface game =((GameControllerInterface)this.inGameLostConnection.get(username)).getGame();
-                try {
-                    ((Game)game).addObserver(username,  this);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
 
-            }
-            this.inGameLostConnection.remove(username);
-        }
-        return answer;
-    }
 
     //This method handles RMI logout action.
     @Override
@@ -443,6 +399,18 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return null;    // throw game not found ?
     }
 
+    // ******************************************************************************
+    //
+    // -------------------------------- SOCKET handler ------------------------------
+    //
+    //*******************************************************************************
+
+
+    /*This method accepts new connections and pass those connections to SocketServerClientHandler
+    *
+    * @see SocketServerClientHandler
+    *
+    */
     @Override
     public void run() {
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -461,16 +429,22 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 executor.submit(new
                         SocketServerClientHandler(socket, this));
             } catch(IOException e) {
-                break; // entrerei qui se serverSocket venisse chiuso
+                break;
             }
         }
         executor.shutdown();
     }
 
-    //This method handles socket login action. It creates a new Answer with 3 possible state:
-    // 1) USERNAME_ALREADY_TAKEN
-    // 2) ALREADY_IN_GAME if the username is frozen in a game and the game isn't finished yet
-    // 3) USERNAME_AVAILABLE
+    /* This method handles socket login action. It creates a new Answer with 3 possible state.
+    *  It saves for every correct login the ObjectOutputStream of the user
+    *
+    * @param loginAction  a request of login from the socket client that asks the login
+    *
+    * @return the LoginActionanswer with 3 possible answers of Login request:
+    *                                       1) USERNAME_ALREADY_TAKEN
+    *                                       2) ALREADY_IN_GAME if the username is frozen in a game and the game isn't finished yet
+    *                                       3) USERNAME_AVAILABLE
+    */
     @Override
     public synchronized Answer handle(LoginAction loginAction) {
         String username= loginAction.username;
@@ -497,6 +471,13 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return  new LoginActionAnswer(USERNAME_AVAILABLE, username);
     }
 
+    /* This method handles socket Join action.
+     *  It calls join method if the user is logged.
+     *
+     * @param joinAction  a request of join from the socket client that asks the join
+     * @return the JoinActionAnswer with the boolean answer of the operation
+     *
+     */
     @Override
     public synchronized Answer handle(JoinAction joinAction) {
 
@@ -512,6 +493,16 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return new JoinActionAnswer(false);
     }
 
+    /* This method handles socket InsertDiceAction action.
+     *
+     *
+     * @param insertDiceAction  a request of insertDice from a socket client
+     *
+     * @return the DiceInsertedAnswer with the answer of the operation:
+     *         True if the insert dice is operation was right.
+     *         The exception with the details of the wrong move.
+     *
+     */
     @Override
     public synchronized Answer handle(InsertDiceAction insertDiceAction) {
 
@@ -526,6 +517,15 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return new DiceInsertedAnswer(false);
     }
 
+
+
+    /* This method handles socket ChoosePattern action.
+     *  It calls choosePattern of gameController
+     *
+     * @param choosePatternAction contains the id of the pattern choosen by the user
+     * @return the PatternAnswer with the boolean answer of the operation
+     *
+     */
     @Override
     public synchronized Answer handle(ChoosePatternAction choosePatternAction) {
         String username= choosePatternAction.username;
@@ -564,6 +564,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return new DiceInsertedAnswer(true);
     }
 
+
+    /* This method handles socket Pass action.
+     *  It calls pass of gameController
+     *
+     * @param PassAction a request of pass from a socket client
+     * @return the answer of pass request
+     *
+     */
     @Override
     public synchronized Answer handle(PassAction passAction) {
 
@@ -574,6 +582,98 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             return new PassActionAnswer(false) ;
         return new PassActionAnswer(true);
     }
+
+
+    // ******************************************************************************
+    //
+    // ----------------- Lost connection and resume game handler --------------------
+    //
+    //*******************************************************************************
+
+
+
+    /* This method is called when an inGameUser close or lose his connection (both RMI and Socket).
+    *  If the game isn't started yet, the player is removed from buffer list (UN-JOIN).
+    *  If there is a current gameController related to username the method saves his username
+    *  in inGameLostConnection and "freezes" the player in the game.
+    *  Closedconnection calls also passUser() so if the player is the current player other players don't have to wait.
+    *
+    * @param username   The username of the player that closed the connection.
+    */
+    @Override
+    public void closedConnection(String username) {
+
+        //If the player isn't in game but he did join, he is removed from the buffer
+        for (Player player:
+                this.playerBuffer) {
+            if (player.getName().equals(username)) {
+                playerBuffer.remove(player);
+                this.loggedPlayer.remove(player);
+                return;
+            }
+        }
+
+        //If the player was in game, he is freeze;
+        System.out.println(username + " lost the connection");
+        try {
+            this.passUser(username);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        GameControllerInterface gameControllerInterface= getGameControllerByUsername(username);
+        Game game= (Game) gameControllerInterface.getGame();
+
+        //If the user was using socket, he is removed from the map(username - ObjectOutputStream)
+        if(this.socketUsers.containsKey(username))
+            socketUsers.remove(username);
+
+
+        //Remove the player from the list of Observer
+        game.removeObserver(username);
+
+        game.freezePlayer(username);
+
+        this.inGameLostConnection.put(username, gameControllerInterface);
+
+
+    }
+
+    /*resumeGame() method handles return in game for a user that lost his connection
+    * and chooses to use RMI as new type of connection.
+    * if the answer is true, this method re-adds to the list of observers this player.
+    * The username is removed from the map of the player that lost the connection.
+    *
+    * @param username  The username of the player that wants to resume the game.
+    * @return          The boolean answer of the attempt to reconnect.
+    */
+    @Override
+    public Boolean resumeGame(String username) {
+        Boolean answer=false;
+        if (this.inGameLostConnection.containsKey(username)) {
+            answer = ((GameControllerInterface)this.inGameLostConnection.get(username)).resumeGame(username);
+            if (answer){
+                GameInterface game =((GameControllerInterface)this.inGameLostConnection.get(username)).getGame();
+                try {
+                    ((Game)game).addObserver(username,  this);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            this.inGameLostConnection.remove(username);
+        }
+        return answer;
+    }
+
+    /*resumeGame() method handles return in game for a user that lost his connection
+     * and chooses to use SOCKET as new type of connection.
+     * if the answer is true, this method re-adds to the list of observers this player.
+     * The username is removed from the map of the player that lost the connection.
+     *
+     * @param username  The username of the player that wants to resume the game.
+     * @return          The JoinActionanswer with the answer of the attempt to reconnect.
+     */
 
     @Override
     public synchronized Answer handle(ResumeGameAction resumeGameAction) {
@@ -592,6 +692,4 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
         return new JoinActionAnswer(answer);
     }
-
-
 }
