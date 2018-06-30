@@ -18,6 +18,7 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
 
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
     private String username;
+    private Boolean state = true;
 
     public ClientObserver( ViewUpdateHandlerInterface viewUpdateHandlerInterface, String username) throws RemoteException, NotBoundException {
         super();
@@ -35,7 +36,10 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
 
         }
 
-
+    @Override
+    public boolean checkState() throws RemoteException {
+        return state;
+    }
 
 
 }

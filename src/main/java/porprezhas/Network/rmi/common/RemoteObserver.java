@@ -7,4 +7,5 @@ import java.rmi.RemoteException;
 
 public interface RemoteObserver extends Remote {
     void update( SerializableGameInterface arg) throws RemoteException;
+    boolean checkState() throws RemoteException;
 }
