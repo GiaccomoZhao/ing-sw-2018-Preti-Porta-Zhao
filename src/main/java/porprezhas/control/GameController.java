@@ -1,5 +1,6 @@
 package porprezhas.control;
 
+import porprezhas.exceptions.diceMove.NotYourTurnException;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
@@ -9,6 +10,7 @@ import porprezhas.model.database.DatabaseInterface;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -304,8 +306,14 @@ public class GameController  implements GameControllerInterface, Runnable {
         return bSet;
     }
 
-    public boolean insertDice(long diceID, Integer row, Integer column) {
-        return game.insertDice(diceID, row, column);
+    public boolean insertDice(String username, long diceID, Integer row, Integer column)  throws NotYourTurnException{
+        if (!this.game.getCurrentPlayer().getName().equals(username))
+            throw new NotYourTurnException(
+                    "\n" +
+                            "This is not your turn!\n" +
+                            "Current player is: " + game.getCurrentPlayer().getName());
+        else
+            return game.insertDice(diceID, row, column);
     }
 
     //With resumeGame a player that has lost his connection can resume the game only
@@ -321,10 +329,31 @@ public class GameController  implements GameControllerInterface, Runnable {
         return false;
     }
 
-    public boolean useToolCard(int cardIndex, ToolCardParam param){
+    public boolean useToolCard(String username, int cardIndex,  ArrayList<Integer> paramList){
+        if (!this.game.getCurrentPlayer().getName().equals(username))
+            return false;
+
+        ToolCardParam param = new ToolCardParam(
+                game.getRoundTrack(),
+                game.getDraftPool(),
+                game.getDiceBag(),
+                game.getCurrentPlayer().getBoard(),
+                paramList
+        );
+
         ToolCard toolCard = (ToolCard) game.getToolCardList().get(cardIndex);
         return toolCard.getStrategy().use(param);
 //       game.useToolCard();
+    }
+
+    @Override
+    public boolean passUser(String username) {
+        if (this.game.getCurrentPlayer().getName().equals(username)){
+            this.pass();
+            return true;
+        }
+        else
+            return false;
     }
 
 

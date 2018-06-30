@@ -1,11 +1,13 @@
 package porprezhas.control;
 
+import porprezhas.exceptions.diceMove.NotYourTurnException;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 import porprezhas.model.cards.ToolCardParam;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public interface GameControllerInterface  {
     void pass() ;      // unblock thread
@@ -14,9 +16,10 @@ public interface GameControllerInterface  {
     GameInterface getGame();
 
    boolean choosePattern(Player player, int indexPatternType) ;
-    boolean insertDice(long diceID, Integer row, Integer column) ;
+    boolean insertDice(String username, long diceID, Integer row, Integer column) throws NotYourTurnException;
     boolean resumeGame(String username);
-    boolean useToolCard(int cardIndex, ToolCardParam param) throws RemoteException;  // TODO:
+    boolean useToolCard(String username, int cardIndex,  ArrayList<Integer> paramList) ;  // TODO:
+    boolean passUser(String username);
 
 
     // do i put this in concrete class or in interface? depends by getState method

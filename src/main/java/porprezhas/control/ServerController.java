@@ -238,6 +238,21 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     	    return false;   // throw game not found ?
 	}
 
+
+    private GameControllerInterface getGameControllerByUsername (String username)  {
+
+        for (GameControllerInterface gameController :
+                gameControllerList) {
+            List<Player> players = gameController.getGame().getPlayerList();
+            for (Player p : players) {
+                if(p.getName().equals(username)) {
+                    return  gameController;
+                }
+            }
+        }
+        return null;    // throw game not found ?
+    }
+
     @Override
     public GameControllerInterface getGameController(Player player) throws RemoteException {
 	    // A reverted counter duo to the players usually call this when a new game has just started
@@ -267,10 +282,12 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         return false;
     }
-    //This method handles RMI login action. It return 3 possible states:
-    // 1) USERNAME_ALREADY_TAKEN
-    // 2) ALREADY_IN_GAME if the username is frozen in a game and the game isn't finished yet
-    // 3) USERNAME_AVAILABLE
+
+    /**This method handles RMI login action. It return 3 possible states:
+     *  1) USERNAME_ALREADY_TAKEN
+     *  2) ALREADY_IN_GAME if the username is frozen in a game and the game isn't finished yet
+     *  3) USERNAME_AVAILABLE
+     */
     @Override
     public int login(String username) throws RemoteException {
         for (Player findPlayer:
@@ -317,12 +334,36 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         return -1;
     }*/
+
+    /**insertedDice tries to insert a dice. This method throws an exception if the insert not valid
+     * with the cause of the error
+     *
+     * @param diceID      ID of the dice that the player asks to insert
+     * @param rowBoard    number of the row(-1) where the player asks to insert the dice
+     * @param columnBoard number of the column(-1) where the player asks to insert the dice
+     * @param username    username of the player
+     * @return
+     * @throws RemoteException
+     * @throws IndexOutOfBoundsException
+     * @throws NotYourTurnException
+     * @throws AlreadyPickedException
+     * @throws BoardCellOccupiedException
+     * @throws EdgeRestrictionException
+     * @throws PatternColorRestrictionException
+     * @throws PatternNumericRestrictionException
+     * @throws AdjacentRestrictionException
+     */
     @Override
     public Boolean insertedDice(long diceID, int rowBoard, int columnBoard, String username)
             throws RemoteException,
             IndexOutOfBoundsException, NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException
     {
+        GameControllerInterface gameControllerInterface=this.getGameControllerByUsername(username);
+        if (gameControllerInterface.insertDice(username, diceID, rowBoard, columnBoard))
+            return true;
+        else
+            return false;/*
         String currentPlayerName = this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName();
         if(!username.equals(currentPlayerName)) {
             throw new NotYourTurnException(
@@ -330,14 +371,16 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                     "This is not your turn!\n" +
                     "Current player is: " + currentPlayerName);
         } else {
-            if (this.getGameControllerByUsername(username).getGame().
-                    insertDice(diceID, rowBoard, columnBoard))
-                return true;
-            else
-                return false;
-        }
+
+        }*/
     }
 
+    /** choosePattern allows the user to choose the pattern
+     *
+     * @param indexPattern index of the pattern choosed by the player
+     * @param username     username of the player
+     * @throws RemoteException
+     */
     @Override
     public Boolean choosePattern(int indexPattern, String username) throws RemoteException {
         for (Player player :
@@ -351,53 +394,32 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             return false;
     }
 
+    /**
+     * passUser finds the gameController of the game of player and calls gameController's passUser
+     *
+     * @param username The username of the player that asks to pass
+     * @return True if the pass action is correct, false if the player isn't the current player
+     * @throws RemoteException
+     */
     @Override
     public Boolean passUser(String username) throws RemoteException {
-        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
-            this.getGameControllerByUsername(username).pass();
-        else
-            return false;
-        return true;
+        GameControllerInterface gameControllerInterface=this.getGameControllerByUsername(username);
+
+        return gameControllerInterface.passUser(username);
     }
 
 
     @Override
     public Boolean usedToolCard(String username, int toolCardID, ArrayList<Integer> paramList) throws RemoteException {
-        GameInterface playerGame= this.getGameControllerByUsername(username).getGame();
-        if(username.equals(playerGame.getCurrentPlayer().getName())){
-           ToolCardParam toolCardParam = new ToolCardParam(
-                   playerGame.getRoundTrack(),
-                    playerGame.getDraftPool(),
-                    playerGame.getDiceBag(),
-                    playerGame.getCurrentPlayer().getBoard(),
-                    paramList
-            );
-           if( this.getGameControllerByUsername(username).useToolCard(toolCardID, toolCardParam))
-               return true;
-           else
-               return false;
-        }
-        else
-            return false;
+
+        GameControllerInterface gameControllerInterface= this.getGameControllerByUsername(username);
+
+        return gameControllerInterface.useToolCard(username, toolCardID, paramList);
 
     }
 
 
 
-    private GameControllerInterface getGameControllerByUsername (String username)  {
-/*
-*/
-        for (GameControllerInterface gameController :
-                gameControllerList) {
-            List<Player> players = gameController.getGame().getPlayerList();
-            for (Player p : players) {
-                if(p.getName().equals(username)) {
-                    return  gameController;
-                }
-            }
-        }
-        return null;    // throw game not found ?
-    }
 
     // ******************************************************************************
     //
@@ -406,7 +428,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     //*******************************************************************************
 
 
-    /*This method accepts new connections and pass those connections to SocketServerClientHandler
+    /**This method accepts new connections and pass those connections to SocketServerClientHandler
     *
     * @see SocketServerClientHandler
     *
@@ -435,7 +457,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         executor.shutdown();
     }
 
-    /* This method handles socket login action. It creates a new Answer with 3 possible state.
+    /** This method handles socket login action. It creates a new Answer with 3 possible state.
     *  It saves for every correct login the ObjectOutputStream of the user
     *
     * @param loginAction  a request of login from the socket client that asks the login
@@ -471,7 +493,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return  new LoginActionAnswer(USERNAME_AVAILABLE, username);
     }
 
-    /* This method handles socket Join action.
+    /** This method handles socket Join action.
      *  It calls join method if the user is logged.
      *
      * @param joinAction  a request of join from the socket client that asks the join
@@ -493,7 +515,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return new JoinActionAnswer(false);
     }
 
-    /* This method handles socket InsertDiceAction action.
+    /** This method handles socket InsertDiceAction action.
      *
      *
      * @param insertDiceAction  a request of insertDice from a socket client
@@ -502,14 +524,15 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
      *         True if the insert dice is operation was right.
      *         The exception with the details of the wrong move.
      *
+     *
      */
     @Override
     public synchronized Answer handle(InsertDiceAction insertDiceAction) {
-
         String username= insertDiceAction.username;
-        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
+        GameControllerInterface gameControllerInterface=this.getGameControllerByUsername(username);
+
             try {
-                if (this.getGameControllerByUsername(username).getGame().insertDice(insertDiceAction.diceId, insertDiceAction.row, insertDiceAction.col))
+                if (gameControllerInterface.insertDice(username, insertDiceAction.diceId, insertDiceAction.row, insertDiceAction.col))
                     return new DiceInsertedAnswer(true);
             } catch (Exception e) {
                 return new DiceInsertedAnswer(false, e);
@@ -519,7 +542,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 
 
-    /* This method handles socket ChoosePattern action.
+    /** This method handles socket ChoosePattern action.
      *  It calls choosePattern of gameController
      *
      * @param choosePatternAction contains the id of the pattern choosen by the user
@@ -546,41 +569,31 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     public synchronized Answer handle(UseToolCardAction useToolCardAction) {
 
         String username= useToolCardAction.username;
-        GameInterface playerGame=this.getGameControllerByUsername(username).getGame();
-        if(username.equals(playerGame.getCurrentPlayer().getName())){
-            ToolCardParam toolCardParam = new ToolCardParam(
-                    playerGame.getRoundTrack(),
-                    playerGame.getDraftPool(),
-                    playerGame.getDiceBag(),
-                    playerGame.getCurrentPlayer().getBoard(),
-                    useToolCardAction.paramList
-            );
-            try {
-                if( this.getGameControllerByUsername(username).useToolCard(useToolCardAction.toolCardID, toolCardParam));
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        return new DiceInsertedAnswer(true);
+        GameControllerInterface gameControllerInterface= this.getGameControllerByUsername(username);
+
+        if( this.getGameControllerByUsername(username).useToolCard(username, useToolCardAction.toolCardID, useToolCardAction.paramList))
+            return  new DiceInsertedAnswer(true);
+        else
+            return new DiceInsertedAnswer(false);
     }
 
 
-    /* This method handles socket Pass action.
+    /** This method handles socket Pass action.
      *  It calls pass of gameController
      *
-     * @param PassAction a request of pass from a socket client
+     * @param passAction a request of pass from a socket client
      * @return the answer of pass request
      *
      */
     @Override
     public synchronized Answer handle(PassAction passAction) {
-
         String username= passAction.username;
-        if(username.equals(this.getGameControllerByUsername(username).getGame().getCurrentPlayer().getName()))
-            this.getGameControllerByUsername(username).pass();
+        GameControllerInterface gameControllerInterface=this.getGameControllerByUsername(username);
+
+        if (gameControllerInterface.passUser(username))
+            return new PassActionAnswer(true) ;
         else
-            return new PassActionAnswer(false) ;
-        return new PassActionAnswer(true);
+            return new PassActionAnswer(false);
     }
 
 
@@ -592,7 +605,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 
 
-    /* This method is called when an inGameUser close or lose his connection (both RMI and Socket).
+    /** This method is called when an inGameUser close or lose his connection (both RMI and Socket).
     *  If the game isn't started yet, the player is removed from buffer list (UN-JOIN).
     *  If there is a current gameController related to username the method saves his username
     *  in inGameLostConnection and "freezes" the player in the game.
@@ -639,7 +652,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     }
 
-    /*resumeGame() method handles return in game for a user that lost his connection
+    /**resumeGame() method handles return in game for a user that lost his connection
     * and chooses to use RMI as new type of connection.
     * if the answer is true, this method re-adds to the list of observers this player.
     * The username is removed from the map of the player that lost the connection.
@@ -666,13 +679,13 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return answer;
     }
 
-    /*resumeGame() method handles return in game for a user that lost his connection
+    /**resumeGame() method handles return in game for a user that lost his connection
      * and chooses to use SOCKET as new type of connection.
      * if the answer is true, this method re-adds to the list of observers this player.
      * The username is removed from the map of the player that lost the connection.
      *
-     * @param username  The username of the player that wants to resume the game.
-     * @return          The JoinActionanswer with the answer of the attempt to reconnect.
+     * @param resumeGameAction  The username of the player that wants to resume the game.
+     * @return                  The JoinActionAnswer with the answer of the attempt to reconnect.
      */
 
     @Override
