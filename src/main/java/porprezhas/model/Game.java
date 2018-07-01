@@ -480,6 +480,7 @@ public class Game extends ModelObservable implements GameInterface {
                 scorePrivate += privateObjectiveCard.apply(board);
             }
         }
+        player.setPrivateScore(scorePrivate);
 //        System.out.println(player.getName() + ": sum of private objectives = " + scorePrivate);
 //        logger.info("" + Player.getName() + "\tSum of private objectives = " + scorePrivate);
 
@@ -609,22 +610,47 @@ public class Game extends ModelObservable implements GameInterface {
 
     public HashMap calcAllScore(){
         int points=0;
-        int max=0;
+        int max=-1;
+
 
         for (Player player:
              this.playerList) {
             points = calcScore(player);
-            if (points >= max){
+            if (points > max){
                 max=points;
                 winner=player;
+
+            }
+            if (points==max) {
+                handleDraw(player);
             }
             ranking.put(player, points);
 
         }
+
         gameNotifyState = NotifyState.RANKING;
         setChanged();
         notifyObservers(new SerializableGame(this));
         return ranking;
+    }
+
+    public void handleDraw(Player player){
+       if (player.getPrivateScore()>winner.getPrivateScore()) {
+           winner = player;
+           return;
+       }
+       else
+           if (winner.getPrivateScore()>player.getPrivateScore())
+                return;
+
+       if (player.getFavorToken()>winner.getFavorToken()){
+           winner = player;
+           return;
+       }
+       else
+           if(winner.getFavorToken()>player.getFavorToken())
+                return;
+       //To-do the winner is the last who picked the dice in the first turn in the last round
     }
 
 }

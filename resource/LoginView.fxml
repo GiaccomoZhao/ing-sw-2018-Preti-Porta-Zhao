@@ -100,7 +100,7 @@
                         <Font name="Book Antiqua" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="returnViewButton" layoutX="218.0" layoutY="372.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="165.0" style="-fx-background-color: #FFF1C6;" text="Return to Game" textFill="#390f01" AnchorPane.bottomAnchor="195.0">
+                  <Button fx:id="returnViewButton" layoutX="218.0" layoutY="372.0" mnemonicParsing="false" onAction="#onReturnViewButton" prefHeight="26.0" prefWidth="165.0" style="-fx-background-color: #FFF1C6;" text="Return to Game" textFill="#390f01" AnchorPane.bottomAnchor="195.0">
                      <effect>
                         <DropShadow />
                      </effect>

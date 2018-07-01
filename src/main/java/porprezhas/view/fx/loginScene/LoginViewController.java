@@ -31,6 +31,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 
+import static porprezhas.control.ServerController.USERNAME_ALREADY_TAKEN;
+import static porprezhas.control.ServerController.USERNAME_AVAILABLE;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 import static porprezhas.view.fx.loginScene.LoginViewController.ConnectionType.RMI;
 import static porprezhas.view.fx.loginScene.LoginViewController.ConnectionType.SOCKET;
@@ -390,6 +392,38 @@ public class LoginViewController implements Initializable, SceneController, Move
         });
     }
 
+
+
+    @FXML
+    public void  onReturnViewButton(ActionEvent event) {
+        System.out.println("Return in game button Clicked");
+
+        GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
+        ViewUpdateHandlerInterface viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);
+
+        gameViewController.setUserName(username);
+
+        System.out.println(viewUpdateHandlerInterface);
+        System.out.println(username);
+
+        if(this.connectionType==RMI) {
+            try {
+                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+            } catch (RemoteException | NotBoundException e) {
+                e.printStackTrace();
+                showWarningText("Could not Join");
+            }
+        }
+        ClientActionSingleton.getClientAction().resumeGame(viewUpdateHandlerInterface);
+
+        System.out.println("Goto next");
+
+        Platform.runLater(() -> {
+            // Switch the Stage
+            stageManager.setStage(GuiSettings.stageGameID, this.stageName);
+        });
+    }
+
     @FXML
     public void loginDone(ActionEvent event) {
 
@@ -424,10 +458,13 @@ public class LoginViewController implements Initializable, SceneController, Move
             // Connected to server
             } else {
                 // Try to Login with given user name
-                if (ClientActionSingleton.getClientAction().login(userNameTextField.getText()) != -1) {
+                int result=ClientActionSingleton.getClientAction().login(userNameTextField.getText());
+                if (result != USERNAME_ALREADY_TAKEN) {
                     // Logged In
                     this.username = userNameTextField.getText();
 
+                    if (result == USERNAME_AVAILABLE)
+                        returnViewButton.setVisible(false);
                     // Open next Scene - Join Scene
                     loginScene.setVisible(false);
                     joinScene.setVisible(true);

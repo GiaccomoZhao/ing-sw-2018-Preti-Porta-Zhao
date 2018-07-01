@@ -13,6 +13,7 @@ import java.util.List;
 public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
     private GameViewController gameViewController;
     private Boolean gameStarted = false;
+    private Boolean updateGui=false;
 
     public GUIViewUpdateHandler(GameViewController gameViewController) {
         this.gameViewController = gameViewController;
@@ -26,9 +27,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         if(gameStarted) {
             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             if (game.getCurrentPlayer().getPosition() == this.gameViewController.getPlayerPosition())
-                System.out.println("Questo è il tuo turno!");
+                System.out.println("This is your turn!");
             else
-                System.out.println("Ora sta giocando: " + game.getCurrentPlayer().getName());
+                System.out.println("Now is playing: " + game.getCurrentPlayer().getName());
 
             System.out.println(" ");
 
@@ -47,7 +48,13 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             System.out.println("\n");
 //            printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
-
+            if (updateGui) {
+                Platform.runLater(() -> {
+                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList());
+                });
+                gameViewController.updateDraftPool(game.getDraftPool());
+            updateGui=false;
+            }
         }
 //①②③④⑤⑥⑦⑧⑨⑩
         switch(state){
@@ -127,7 +134,8 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     @Override
     public void setGameStarted(Boolean gameStarted) {
-
+        this.gameStarted=gameStarted;
+        this.updateGui=true;
     }
 
     @Override

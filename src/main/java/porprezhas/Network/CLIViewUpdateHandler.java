@@ -244,7 +244,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println(player.getName() + ":   " + ranking.get(player));
             }
             System.out.println(" ");
-            System.out.println("THE WINNER IS " + game.getWinner() );
+            System.out.println("THE WINNER IS " + game.getWinner().getName() );
             return;
         }
         if(gameStarted) {
@@ -317,7 +317,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                 for (Pattern.TypePattern pattern:
                         game.getUsernamePlayer(username).getPatternsToChoose()) {
-                    System.out.println(pattern.name());
+                    System.out.println(pattern.name() );
 
                 }
                 System.out.println("Type the number of the pattern");
