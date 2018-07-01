@@ -5,7 +5,9 @@ import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //This class is a serializable class that contains all the informations
 // and the classes that the model has to send to the view
@@ -20,6 +22,8 @@ public class SerializableGame implements SerializableGameInterface {
     private Player currentPlayer;
     private Game.NotifyState gameNotifyState;
     private Player quitPlayer;
+    private HashMap ranking;
+    private Player winner;
 
 
     public SerializableGame(GameInterface game) {
@@ -32,6 +36,10 @@ public class SerializableGame implements SerializableGameInterface {
         this.gameNotifyState= game.getGameState();
         if (game.getFrozenPlayer().size()>0)
             this.quitPlayer= game.getFrozenPlayer().get(game.getFrozenPlayer().size()-1);
+        if(this.gameNotifyState.equals(Game.NotifyState.RANKING)){
+            this.winner= game.getWinner();
+            this.ranking=game.getRanking();
+        }
 
     }
 
@@ -80,4 +88,12 @@ public class SerializableGame implements SerializableGameInterface {
     return null;
     }
 
+
+    public HashMap getRanking() {
+        return ranking;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
 }

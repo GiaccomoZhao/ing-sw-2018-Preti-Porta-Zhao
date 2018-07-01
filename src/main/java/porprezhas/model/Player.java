@@ -24,6 +24,7 @@ public class Player implements Serializable {
     private List<Card> privateObjectiveCardList;
     private List<Card.Effect> toolCardEffect;   // what effect is active on the player
     private int nFavorToken;
+    private int privateScore;
 
     // Game control attribute
     private boolean bPass;
@@ -95,7 +96,15 @@ public class Player implements Serializable {
         this.nFavorToken = favorToken;
     }
 
-// converts from pattern difficulty to nFavorToken quantity
+    public int getPrivateScore() {
+        return privateScore;
+    }
+
+    public void setPrivateScore(int privateScore) {
+        this.privateScore = privateScore;
+    }
+
+    // converts from pattern difficulty to nFavorToken quantity
     public void setFavorTokenByDifficulty(int difficulty) {
         int nFavorToken = difficulty;
         setFavorToken(nFavorToken);

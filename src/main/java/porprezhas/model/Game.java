@@ -48,7 +48,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK}
+    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK , RANKING}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -74,6 +74,8 @@ public class Game extends ModelObservable implements GameInterface {
     private int iFirstPlayer;       // index of first player in current round -- or index of next round when this round has already finished
     private int iLastPlayer;        // index of player that play 2 consecutive times, on this player we'll turn the rotation direction, toggling bCounterClockwise
     private boolean bCountClockwise;
+    private HashMap ranking;
+    private Player winner;
 
     private boolean bSolitaire;
     private SolitaireDifficulty solitaireDifficulty;    // in Multi-player we have Player.Pattern.Difficulty
@@ -95,6 +97,7 @@ public class Game extends ModelObservable implements GameInterface {
         privateObjectiveCardFactory = new PrivateObjectiveCardFactory(1);
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(1);
         toolCardFactory = new ToolCardFactory(difficulty);
+        ranking=new HashMap();
         reset();
     }
 
@@ -107,6 +110,7 @@ public class Game extends ModelObservable implements GameInterface {
         privateObjectiveCardFactory = new PrivateObjectiveCardFactory(playerList.size());
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(playerList.size());
         toolCardFactory = new ToolCardFactory(playerList.size());
+        ranking=new HashMap();
         reset();
     }
 
@@ -185,6 +189,16 @@ public class Game extends ModelObservable implements GameInterface {
     public List<Card> getToolCardList() {
         return toolCardList;
     }
+
+    public HashMap getRanking() {
+        return ranking;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
+
+
 
     public long getRoundTimeOut() {
         return GameConstants.secondsToMillis(
@@ -592,4 +606,25 @@ public class Game extends ModelObservable implements GameInterface {
         notifyObservers(new SerializableGame(this));
 
     }
+
+    public HashMap calcAllScore(){
+        int points=0;
+        int max=0;
+
+        for (Player player:
+             this.playerList) {
+            points = calcScore(player);
+            if (points >= max){
+                max=points;
+                winner=player;
+            }
+            ranking.put(player, points);
+
+        }
+        gameNotifyState = NotifyState.RANKING;
+        setChanged();
+        notifyObservers(new SerializableGame(this));
+        return ranking;
+    }
+
 }

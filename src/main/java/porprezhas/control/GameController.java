@@ -174,7 +174,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         List<Player> playerList = game.getPlayerList();
 
         state = StateMachine.ENDING;
-
+        game.calcAllScore();
         // print Board!
         System.out.println("" +  "\n\n");
         for (Player player : playerList) {

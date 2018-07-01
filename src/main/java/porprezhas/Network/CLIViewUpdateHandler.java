@@ -12,6 +12,7 @@ import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
@@ -230,9 +231,22 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     public void update(SerializableGameInterface game){
 
+
         List<Player> players = game.getPlayerList();
         Game.NotifyState state = game.getGameNotifyState();
 
+        if (state.equals(Game.NotifyState.RANKING)){
+            System.out.println("***** >>> GAME OVER <<< *****");
+            System.out.println("********** RANKING **********");
+            HashMap ranking= game.getRanking();
+            for (Player player:
+                   players ) {
+                System.out.println(player.getName() + ":   " + ranking.get(player));
+            }
+            System.out.println(" ");
+            System.out.println("THE WINNER IS " + game.getWinner() );
+            return;
+        }
         if(gameStarted) {
             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             for (Player player:
@@ -242,6 +256,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     System.out.println("Private card: " + player.getPrivateObjectiveCardList().get(0));
                 }
             }
+            for (Player player:
+                 players) {
+                System.out.printf(player.getName() + " has " + player.getFavorToken() + " token  ");
+            }
+            System.out.println(" ");
            System.out.println("Public cards:");
             for (Card card:
                  game.getPublicObjectiveCardList()) {

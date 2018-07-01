@@ -5,20 +5,22 @@ import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 public interface SerializableGameInterface extends Serializable {
 
-    public RoundTrack getRoundTrack();
-    public DraftPool getDraftPool();
-    public Game.NotifyState getGameNotifyState();
-    public List<Player> getPlayerList();
-    public Player getCurrentPlayer();
-    public Player getUsernamePlayer(String username);
-    public Player getQuitPlayer();
-    public List<Card> getPublicObjectiveCardList();
-    public List<Card> getToolCardList();
-
+     RoundTrack getRoundTrack();
+     DraftPool getDraftPool();
+     Game.NotifyState getGameNotifyState();
+     List<Player> getPlayerList();
+     Player getCurrentPlayer();
+     Player getUsernamePlayer(String username);
+     Player getQuitPlayer();
+     List<Card> getPublicObjectiveCardList();
+     List<Card> getToolCardList();
+     HashMap getRanking();
+     Player getWinner();
 //    public Player getFirstPlayer();
 
 }

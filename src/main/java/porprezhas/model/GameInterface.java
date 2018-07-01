@@ -6,6 +6,7 @@ import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
 
+import java.util.HashMap;
 import java.util.List;
 
 // To create a new Game needs a PlayerList as parameter for construction method
@@ -44,6 +45,11 @@ public interface GameInterface {
     void playerPrePrepare();
     void playerPostPrepare();
     void gamePrepare();
+    HashMap getRanking();
+    Player getWinner();
+    HashMap calcAllScore();
+
+
 
 
 
