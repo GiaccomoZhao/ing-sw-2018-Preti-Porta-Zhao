@@ -74,7 +74,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     private final String voidString = "";
 
 
-    private int port=1457;
+    private int port=58091;
     private InetAddress ip;
 
     enum ConnectionType{

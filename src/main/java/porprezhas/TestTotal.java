@@ -36,7 +36,7 @@ public class TestTotal {
         final int NUM_PLAYER = 0;
 
 
-            server = new ServerController(1456);
+            server = new ServerController(58090);
 
         Registry registry= LocateRegistry.getRegistry();
         registry.rebind("serverController", server);

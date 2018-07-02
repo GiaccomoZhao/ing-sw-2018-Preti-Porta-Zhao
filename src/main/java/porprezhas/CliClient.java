@@ -232,7 +232,7 @@ public class CliClient {
     }
 
     public static void main(String[] args) throws UnknownHostException {
-        CliClient cliClient = new CliClient(InetAddress.getLocalHost(),1457);
+        CliClient cliClient = new CliClient(InetAddress.getLocalHost(),58091);
         try {
             cliClient.runSagrada();
         } catch (RemoteException e) {
