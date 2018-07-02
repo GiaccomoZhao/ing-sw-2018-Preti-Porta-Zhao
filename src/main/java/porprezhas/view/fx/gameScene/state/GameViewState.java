@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
+import static porprezhas.view.fx.gameScene.state.DiceContainerType.DRAFT;
 
 public class GameViewState implements SubController {
     GameViewController gameViewController;
@@ -67,7 +68,7 @@ public class GameViewState implements SubController {
 
     @Override
     public void activate() {
-        diceContainers.get(DiceContainerType.DRAFT.toInt())
+        diceContainers.get(DRAFT.toInt())
                 .activate();
         diceContainers.get(DiceContainerType.BOARD1.toInt())
                 .activate();
@@ -112,7 +113,7 @@ public class GameViewState implements SubController {
             disable();
             switch (usingCard) {
                 case TC1:
-                    diceContainers.get(DiceContainerType.DRAFT.toInt())
+                    diceContainers.get(DRAFT.toInt())
                             .activate();
                     break;
                 case TC2:
@@ -132,13 +133,13 @@ public class GameViewState implements SubController {
                     // exchange between round track and draft pool
                     diceContainers.get(DiceContainerType.TRACK.toInt())
                             .activate();
-                    diceContainers.get(DiceContainerType.DRAFT.toInt())
+                    diceContainers.get(DRAFT.toInt())
                             .activate();
                     break;
                 case TC6:
                     // chosen dice from the draftPool
                     // if can be placed, place it in board
-                    diceContainers.get(DiceContainerType.DRAFT.toInt())
+                    diceContainers.get(DRAFT.toInt())
                             .activate();
                     break;
                 case TC7:
@@ -149,7 +150,7 @@ public class GameViewState implements SubController {
                 case TC8:
                 case TC9:
                     // move a dice from draft pool to board
-                    diceContainers.get(DiceContainerType.DRAFT.toInt())
+                    diceContainers.get(DRAFT.toInt())
                             .activate();
                     diceContainers.get(DiceContainerType.BOARD1.toInt())
                             .activate();
@@ -166,7 +167,7 @@ public class GameViewState implements SubController {
                     // 3. place in board
 
                     if(iProcess == 1 -1)
-                        diceContainers.get(DiceContainerType.DRAFT.toInt())
+                        diceContainers.get(DRAFT.toInt())
                                 .activate();
                     if(iProcess == 2 -1)
                         ;// dialog box
@@ -181,11 +182,17 @@ public class GameViewState implements SubController {
 
     public boolean clickDice(int idBoard, DiceView diceView) {
         if( null != this.hasUsingCard() ) {
-            if(idBoard == DiceContainerType.DRAFT.toInt()) {
-                params.build(idBoard, diceView.getDiceID(), -1, -1, -1);
+            if(idBoard == DRAFT.toInt()) {
+                int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
+                params.build(idBoard, indexDice, -1, -1, -1, -1);
                 if(usingCard.ID == Card.Effect.TC1.ID) {
-                    boolean incDec = new IncDecBox().display();
-                    params.add(incDec ? 1 : 0);
+                    Boolean incDec = new IncDecBox().display();
+                    if(null != incDec) {
+                        params.add(incDec ? 1 : 0);
+                    } else {
+                        useToolCard(null);  // reset the view, as not used tool card
+                        return false;
+                    }
                 }
             }
             return this.action();
@@ -196,11 +203,6 @@ public class GameViewState implements SubController {
 
     public boolean moveDice(int idBoardFrom, DiceView diceView, int idBoardTo, int toRow, int toCol) {
         boolean bSuccess = false;
-        int fromRow = diceView.getRow();
-        int fromCol = diceView.getColumn();
-        long diceID = diceView.getDiceID();
-
-        params.build(idBoardFrom, diceView.getDiceID(), idBoardTo, toRow, toCol);
 /*
         fromContainers.add(DiceContainerType.fromInt(idBoardFrom));
         savedDiceViews.add(diceView);
@@ -211,28 +213,51 @@ public class GameViewState implements SubController {
 
 //        bSuccess = this.action();
         if( null != this.hasUsingCard() ) {
+
+            // build the params
+            int fromRow = diceView.getRow();
+            int fromCol = diceView.getColumn();
+
+            if(idBoardFrom == DRAFT.toInt()) {
+                int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
+                params.add(indexDice);
+            }
+            if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
+                params.add(fromRow);
+                params.add(fromCol);
+            }
+            if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
+                params.add( fromRow );
+                params.add( fromCol );
+            } else if ( idBoardTo == DiceContainerType.TRACK.toInt()) {
+                params.add( fromRow );
+                params.add( fromCol );
+            }
+
+            if(idBoardFrom == DRAFT.toInt()) {
+                int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
+                params.add(indexDice);
+            }
+            if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
+                params.add(fromRow);
+                params.add(fromCol);
+            }
+            if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
+                params.add( toRow );
+                params.add( toCol );
+            } else if ( idBoardTo == DiceContainerType.TRACK.toInt()) {
+                params.add( toRow );
+                params.add( toCol );
+            }
+
             bSuccess = this.action();
         } else {
 
-            switch (DiceContainerType.fromInt(idBoardFrom)) {
-                case DRAFT:
+            // not using tool card: we can only insert dice
+            if (DiceContainerType.fromInt(idBoardFrom) == DRAFT  &&
+                    idBoardTo >=  DiceContainerType.BOARD1.ordinal()) {
 //                int index = draftPoolView.getIndexByDiceID(diceID);
-                    if(idBoardTo >=  DiceContainerType.BOARD1.ordinal())
-                    bSuccess = gameViewController.insertDice(diceID, toRow, toCol);
-                    break;
-                case BAG:
-                    break;
-                case TRACK:
-                    // TODO: save the action for tool card?
-                    break;
-                case BOARD1:
-                case BOARD2:
-                case BOARD3:
-                case BOARD4:
-                    // todo
-                    break;
-                default:
-                    throw new GameAbnormalException("Abnormal Error in moveDice with dice container id = " + DiceContainerType.fromInt(idBoardFrom));
+                bSuccess = gameViewController.insertDice(diceView.getDiceID(), toRow, toCol);
             }
         }
         return bSuccess;
@@ -268,7 +293,7 @@ public class GameViewState implements SubController {
         }
         else {
             // insert dice normally when we are using any tool card
-            if(fromContainers.equals(DiceContainerType.DRAFT)  &&  toContainers.get(0).equals(DiceContainerType.BOARD1)) {
+            if(fromContainers.equals(DRAFT)  &&  toContainers.get(0).equals(DiceContainerType.BOARD1)) {
                 if(savedDiceViews.size() > 0)
                     bResult = gameViewController.insertDice(savedDiceViews.get(0).getDiceID(), param1.get(0), param2.get(0) );
             }

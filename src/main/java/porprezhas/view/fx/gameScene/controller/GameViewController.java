@@ -28,6 +28,7 @@ import porprezhas.view.fx.SceneController;
 import porprezhas.view.fx.StageManager;
 import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.component.*;
+import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.view.fx.gameScene.state.DiceContainerType;
 import porprezhas.view.fx.gameScene.state.GameViewState;
 import porprezhas.view.fx.gameScene.state.PlayerInfo;
@@ -149,7 +150,10 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         cardPanes = new CardPane[CardTab.values().length];
 
         state = new GameViewState();
-        diceContainers = new ArrayList<>();
+//        diceContainers = new ArrayList<>(DiceContainerType.values().length);
+//        for (int i = 0; i < DiceContainerType.values().length; i++) {
+//            diceContainers;
+//        }
 
         if(bDebug)
             System.out.println("GameView Constructed");
@@ -864,5 +868,9 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
                 boardView.showTimer(false);
             }
         }
+    }
+
+    public DraftPoolView getDraftPoolView() {
+        return draftPoolView;
     }
 }

@@ -46,7 +46,7 @@ public abstract class GenericBoardView implements DiceContainer{
     }
 
     @Override
-    public DiceContainerType getDiceContainer() {
+    public DiceContainerType getDiceContainerID() {
         return idBoard;
     }
 
@@ -247,12 +247,12 @@ public abstract class GenericBoardView implements DiceContainer{
 //                if (null != addDice(diceView.getDice(), row, col)) {
                     if (bDebug) {
                         System.out.println("move dice: \tfrom " + idBoardFrom + " \tid=" + diceView.getDiceID()
-                                + " \tto " + this.getDiceContainer().toInt() + " \trow=" + row + " \tcol=" + col);
+                                + " \tto " + this.getDiceContainerID().toInt() + " \trow=" + row + " \tcol=" + col);
                     }
 
                     success = parentController.moveDice(
                             idBoardFrom, diceView,
-                            this.getDiceContainer().toInt(), row, col);
+                            this.getDiceContainerID().toInt(), row, col);
 //                }
                 }
             }

@@ -54,7 +54,7 @@ public class DraftPoolView implements DiceContainer {
     }
 
     @Override
-    public DiceContainerType getDiceContainer() {
+    public DiceContainerType getDiceContainerID() {
         return idBoard;
     }
 

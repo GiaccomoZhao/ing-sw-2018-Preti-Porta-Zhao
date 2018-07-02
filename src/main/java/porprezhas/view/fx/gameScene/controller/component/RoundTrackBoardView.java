@@ -241,7 +241,7 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 //                        System.out.println("round number = " + iRound);
                             success = getParentController().moveDice(
                                     idBoardFrom, diceView,
-                                    this.getDiceContainer().toInt(), iRound, 666);      // we don't care about the column value
+                                    this.getDiceContainerID().toInt(), iRound, 666);      // we don't care about the column value
 //                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
 //                            success = true;
 //                        }
