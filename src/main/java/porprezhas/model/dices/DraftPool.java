@@ -111,13 +111,14 @@ public class DraftPool implements Serializable {
 
     public List<Dice> diceList(){
 
+        /*
         List<Dice> listDice = new ArrayList<>(draftPool.size());
 
         for (Dice dice : draftPool) {
             listDice.add(new Dice(dice));
-        }
+        }*/
 
-        return listDice;
+        return draftPool;
     }
 
     // return old.dice or throw notFound Exception

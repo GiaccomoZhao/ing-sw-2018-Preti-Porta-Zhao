@@ -182,6 +182,24 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     }
                 } );
              break;
+            case TOOL_CARD:
+
+
+                Platform.runLater(() -> {
+                            gameViewController.updateDraftPool(game.getDraftPool().diceList());
+
+                            gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+
+                            for (Player player :
+                                    game.getPlayerList()) {
+
+                                gameViewController.updateBoard(
+                                        player.getPosition(),
+                                        player.getBoard().getBoard());
+                            }
+                        });
+                //TO_do token
+                break;
         }
 
         // foreach player: update board

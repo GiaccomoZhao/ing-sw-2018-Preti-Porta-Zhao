@@ -363,7 +363,7 @@ public class GameController  implements GameControllerInterface, Runnable {
             if (card.effect.ID == cardIndex)
                 toolCard=(ToolCard) card;
         }
-        return toolCard.getStrategy().use(param);
+        return game.useToolCard(toolCard, param);
 //       game.useToolCard();
     }
 

@@ -2,6 +2,7 @@ package porprezhas.model;
 
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.cards.Card;
+import porprezhas.model.cards.ToolCard;
 import porprezhas.model.cards.ToolCardParam;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
@@ -40,6 +41,7 @@ public interface GameInterface {
             throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
     boolean useToolCard(int cardIndex, ToolCardParam param);
+    Boolean useToolCard(ToolCard toolcard, ToolCardParam toolCardParam);
     boolean setPattern(Player player, int indexPatternType);
 
     void newRound(int indexRound);

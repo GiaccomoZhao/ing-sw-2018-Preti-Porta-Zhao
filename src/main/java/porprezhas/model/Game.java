@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import static porprezhas.model.Game.NotifyState.BOARD_CREATED;
 import static porprezhas.model.Game.NotifyState.DICE_INSERTED;
+import static porprezhas.model.Game.NotifyState.TOOL_CARD;
 import static porprezhas.model.cards.Card.Effect.TC8;
 import static porprezhas.model.GameConstants.BOARD_BOXES;
 
@@ -49,7 +50,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK , RANKING}
+    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK , RANKING, TOOL_CARD}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -690,5 +691,14 @@ public class Game extends ModelObservable implements GameInterface {
         return bSuccess;
     }
 
+    public Boolean useToolCard(ToolCard toolCard, ToolCardParam toolCardParam){
+        Boolean result = toolCard.getStrategy().use(toolCardParam);
+        if (result){
+            this.gameNotifyState=  TOOL_CARD;
+            setChanged();
+            notifyObservers(new SerializableGame(this));
+        }
+        return result;
+    }
 
 }
