@@ -361,6 +361,13 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println(game.getQuitPlayer().getName() + " quit the game");
 
                 break;
+
+            case PLAYER_BACK:
+                if (!this.username.equals(game.getResumePlayer()))
+                    System.out.println(game.getResumePlayer() + " is now back in game");
+                else
+                    saveDiceID(game.getDraftPool().diceList());
+                break;
         }
     }
 

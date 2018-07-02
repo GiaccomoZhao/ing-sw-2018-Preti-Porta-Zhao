@@ -67,7 +67,7 @@ public class CliClient {
         }
         this.loginPashe();
         this.joinphase();
-        System.out.println("Wait until the game is ready to start");
+
 
 
         String command;
@@ -197,6 +197,8 @@ public class CliClient {
         }
            if (ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface)) {
                System.out.println("Joined in the game successfully!\n");
+               System.out.println("Wait until the game is ready to start");
+
            }
             this.choosePatternPhase();
         }

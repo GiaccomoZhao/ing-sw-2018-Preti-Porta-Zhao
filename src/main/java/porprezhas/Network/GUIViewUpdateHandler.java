@@ -33,7 +33,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             System.out.println(" ");
 
-            System.out.println("Riserva:");
+            System.out.println("Draftpool:");
             for(int i=0; i< game.getDraftPool().diceList().size(); i++){
                 System.out.printf("    (%d)      ", i+1);
 
@@ -48,15 +48,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             System.out.println("\n");
 //            printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
-            if (updateGui) {
-                Platform.runLater(() -> {
-                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList());
-                });
-                gameViewController.updateDraftPool(game.getDraftPool());
-            updateGui=false;
-            }
+
         }
-//①②③④⑤⑥⑦⑧⑨⑩
+
         switch(state){
 
             case CHOOSE_PATTERN:
@@ -91,6 +85,8 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     gameViewController.updateDraftPool(game.getDraftPool().diceList());
 
                     gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+
+
                 });
 
                 // after next_round, update current player too
@@ -126,6 +122,31 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println("Pattern inserted in the board");
                 break;
 
+            case PLAYER_BACK:
+
+                Platform.runLater(() -> {
+                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList());
+
+
+                });
+                Platform.runLater(() -> {
+                    // change the bag position
+                    gameViewController.updateFirstPlayer(game.getCurrentPlayer());
+
+                    // re-roll dices of Draft pool
+                    gameViewController.updateDraftPool(game.getDraftPool().diceList());
+
+                    gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+                    gameViewController.updateTimer(game.getCurrentPlayer());
+                    for (Player player:
+                            game.getPlayerList()) {
+
+                        gameViewController.updateBoard(
+                                player.getPosition(),
+                                player.getBoard().getBoard());
+                    }
+                } );
+             break;
         }
 
         // foreach player: update board
@@ -134,8 +155,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     @Override
     public void setGameStarted(Boolean gameStarted) {
-        this.gameStarted=gameStarted;
-        this.updateGui=true;
+
     }
 
     @Override

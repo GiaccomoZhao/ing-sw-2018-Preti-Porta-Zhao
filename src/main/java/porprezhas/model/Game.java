@@ -578,11 +578,14 @@ public class Game extends ModelObservable implements GameInterface {
         Player player;
        for (int i=0; i< this.playerList.size(); i++)
            if (playerList.get(i).getName().equals(username)) {
-               this.frozenPlayer.add(playerList.get(i));
-               gameNotifyState = NotifyState.PLAYER_QUIT;
-               setChanged();
+                player=playerList.get(i);
+                this.frozenPlayer.add(player);
+                gameNotifyState = NotifyState.PLAYER_QUIT;
+                setChanged();
 
                notifyObservers(new SerializableGame(this));
+               if (currentPlayer.equals(player))
+                   player.passes(true);
                return;
            }
     }
@@ -599,12 +602,18 @@ public class Game extends ModelObservable implements GameInterface {
 
         for (Player player:
              this.frozenPlayer) {
-            if (player.getName().equals(username))
+            if (player.getName().equals(username)) {
                 this.frozenPlayer.remove(player);
+            }
         }
+
+
+    }
+    public void updateAfterResumePlayer(String username){
+
         gameNotifyState = NotifyState.PLAYER_BACK;
         setChanged();
-        notifyObservers(new SerializableGame(this));
+        notifyObservers(new SerializableGame(this, username));
 
     }
 

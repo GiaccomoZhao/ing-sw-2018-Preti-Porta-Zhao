@@ -24,6 +24,7 @@ public class SerializableGame implements SerializableGameInterface {
     private Player quitPlayer;
     private HashMap ranking;
     private Player winner;
+    private String resumePlayer;
 
 
     public SerializableGame(GameInterface game) {
@@ -43,6 +44,18 @@ public class SerializableGame implements SerializableGameInterface {
 
     }
 
+    public SerializableGame(GameInterface game, String username) {
+        this.roundTrack=game.getRoundTrack() ;
+        this.draftPool= game.getDraftPool();
+        this.toolCards = game.getToolCardList();
+        this.publicCards = game.getPublicObjectiveCardList();
+        this.playerList= game.getPlayerList();
+        this.currentPlayer= game.getCurrentPlayer();
+        this.gameNotifyState= game.getGameState();
+        this.resumePlayer=username;
+
+
+    }
     public RoundTrack getRoundTrack() {
         return roundTrack;
     }
@@ -76,6 +89,10 @@ public class SerializableGame implements SerializableGameInterface {
 
     public Player getQuitPlayer() {
         return quitPlayer;
+    }
+
+    public String getResumePlayer() {
+        return resumePlayer;
     }
 
     @Override

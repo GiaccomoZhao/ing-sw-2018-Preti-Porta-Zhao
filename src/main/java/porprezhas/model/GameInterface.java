@@ -19,6 +19,7 @@ public interface GameInterface {
     void freezePlayer(String username);
     Boolean isfreeze(Player player);
     void resumePlayer(String username);
+    void updateAfterResumePlayer(String username);
     DiceBag getDiceBag();
     DraftPool getDraftPool();
     RoundTrack getRoundTrack();

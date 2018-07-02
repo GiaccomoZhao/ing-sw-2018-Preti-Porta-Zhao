@@ -686,10 +686,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 GameInterface game =((GameControllerInterface)this.inGameLostConnection.get(username)).getGame();
                 try {
                     ((Game)game).addObserver(username,  this);
+
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-
+                game.updateAfterResumePlayer(username);
             }
             this.inGameLostConnection.remove(username);
         }
@@ -715,7 +716,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             if (answer){
                 GameInterface game =((GameControllerInterface)this.inGameLostConnection.get(username)).getGame();
                 ((Game)game).addObserver(username, (ObjectOutputStream) socketUsers.get(username), this);
-
+                game.updateAfterResumePlayer(username);
             }
             this.inGameLostConnection.remove(username);
         }
