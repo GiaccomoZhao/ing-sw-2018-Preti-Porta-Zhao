@@ -6,6 +6,7 @@ import porprezhas.model.cards.ToolCardParamBuilder;
 import porprezhas.model.cards.ToolCardStrategy;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.controller.component.*;
+import porprezhas.view.fx.gameScene.controller.dialogBox.IncDecBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,6 +183,10 @@ public class GameViewState implements SubController {
         if( null != this.hasUsingCard() ) {
             if(idBoard == DiceContainerType.DRAFT.toInt()) {
                 params.build(idBoard, diceView.getDiceID(), -1, -1, -1);
+                if(usingCard.ID == Card.Effect.TC1.ID) {
+                    boolean incDec = new IncDecBox().display();
+                    params.add(incDec ? 1 : 0);
+                }
             }
             return this.action();
         }
@@ -244,8 +249,13 @@ public class GameViewState implements SubController {
             if(params.getParams().size() == ToolCardStrategy.parameterSizes[ usingCard.ID ]) {
                 if (bDebug) {
                     System.out.print("\nparams:");
-                    for (int p : params.getParams()) {
-                        System.out.print(" \t" + p);
+                    if(params.getParams().size() == 0)
+                        System.out.println("null");
+                    else {
+                        for (int p : params.getParams()) {
+                            System.out.print(" \t" + p);
+                        }
+                        System.out.println();
                     }
                 }
                 bResult = gameViewController.useToolCard(usingCard.ID, params.getParams());

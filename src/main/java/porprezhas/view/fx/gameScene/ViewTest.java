@@ -16,6 +16,7 @@ import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.gameScene.controller.dialogBox.ConfirmBox;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 

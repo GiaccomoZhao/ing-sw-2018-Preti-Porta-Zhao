@@ -31,7 +31,7 @@ public class ToolCardParamBuilder {
      * @param idBoardTo
      * @param param1    for board is row,   for track is indexRound
      * @param param2    for board is col    for track is indexDice
-     * @return
+     * @return the builder
      */
     public ToolCardParamBuilder build(int idBoardFrom, long iDice, int idBoardTo, int param1, int param2) {
         Integer firstParam = null;
@@ -48,8 +48,16 @@ public class ToolCardParamBuilder {
             params.add( param1 );
             params.add( param2 );
         }
+        return this;
+    }
 
-
+    /**
+     * add one parameter manually to the builder
+     * @param param the parameter to add
+     * @return the builder
+     */
+    public ToolCardParamBuilder add(int param) {
+        params.add(param);
         return this;
     }
 

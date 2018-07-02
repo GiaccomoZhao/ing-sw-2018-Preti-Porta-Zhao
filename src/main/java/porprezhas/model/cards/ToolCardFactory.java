@@ -9,6 +9,7 @@ import static porprezhas.model.cards.Card.Effect.*;
 
 
 public class ToolCardFactory implements CardFactory {
+    private final int TOOL_CARD_PER_GAME = 12;
 
     ArrayList<Card> cards;
     ArrayList<Integer> numberList;
@@ -34,7 +35,7 @@ public class ToolCardFactory implements CardFactory {
             numberList.add(i);
         }
 
-        this.numberOfCard = 3;
+        this.numberOfCard = TOOL_CARD_PER_GAME;
     }
 
 

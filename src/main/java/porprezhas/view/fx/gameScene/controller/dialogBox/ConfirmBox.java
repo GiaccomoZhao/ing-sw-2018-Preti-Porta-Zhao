@@ -1,4 +1,4 @@
-package porprezhas.view.fx.gameScene;
+package porprezhas.view.fx.gameScene.controller.dialogBox;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -44,7 +44,7 @@ public class ConfirmBox {
 
         VBox layout = new VBox(12);
         layout.getChildren().addAll(label, bottomLayout);
-        layout.setAlignment(Pos.CENTER);
+//        layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(10, 12, 16, 12));
 
         Scene scene = new Scene(layout);

@@ -2,12 +2,10 @@ package porprezhas.view.fx.gameScene.controller.component;
 
 import javafx.animation.FadeTransition;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import porprezhas.model.cards.Card;
-import porprezhas.view.fx.gameScene.ConfirmBox;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.gameScene.controller.dialogBox.ConfirmBox;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
