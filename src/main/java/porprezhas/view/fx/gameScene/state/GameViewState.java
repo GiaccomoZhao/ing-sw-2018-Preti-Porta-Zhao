@@ -101,10 +101,10 @@ public class GameViewState implements SubController {
 
     public void useToolCard(Card.Effect usingCard) {
         this.usingCard = usingCard;
+        clear();
 
         if(usingCard == null) {
             iProcess = 0;
-            clear();
             activate();
 
         } else {
@@ -243,10 +243,17 @@ public class GameViewState implements SubController {
 //            }
             if(params.getParams().size() == ToolCardStrategy.parameterSizes[ usingCard.ID ]) {
                 if (bDebug) {
-                    System.out.println(params);
+                    System.out.print("\nparams:");
+                    for (int p : params.getParams()) {
+                        System.out.print(" \t" + p);
+                    }
                 }
                 bResult = gameViewController.useToolCard(usingCard.ID, params.getParams());
                 clear();
+            } else {
+                if (bDebug) {
+                    System.err.println("required param quantity = " + ToolCardStrategy.parameterSizes[ usingCard.ID ] + "\t inputed = " + params.getParams().size());
+                }
             }
         }
         else {

@@ -96,9 +96,9 @@ public class DiceView extends ImageView implements SubController {
         diceID = scanner.nextInt();
         if(bDebug) System.out.println("\tid=" + diceID);
 
-        scanner.findInLine("board=");
-        boardID = scanner.nextInt();
-        if(bDebug) System.out.println("\tboard=" + DiceContainerType.fromInt(boardID));
+//        scanner.findInLine("board=");
+//        boardID = scanner.nextInt();
+//        if(bDebug) System.out.println("\tboard=" + DiceContainerType.fromInt(boardID));
 
 /*        scanner.findInLine("color=(\\w+)");
         String szColor = scanner.match().group(1);
@@ -109,7 +109,7 @@ public class DiceView extends ImageView implements SubController {
 //        Dice.ColorDice color = Dice.ColorDice.getByString( szColor );
 //        dice = new Dice(number, color);
 
-        return new DiceView(column, row, diceID, boardID);
+        return new DiceView(column, row, diceID, -1);
     }
 
     public int getColumn() {

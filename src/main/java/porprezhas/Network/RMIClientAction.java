@@ -1,6 +1,7 @@
 package porprezhas.Network;
 
 import porprezhas.Network.rmi.common.ServerRMIInterface;
+import porprezhas.exceptions.toolCard.ToolCardParameterException;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 
 import java.rmi.NotBoundException;
@@ -112,7 +113,7 @@ public class RMIClientAction implements ClientActionInterface{
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-        } catch (Exception e) {
+        } catch (ToolCardParameterException e) {
             System.err.println(e.getMessage());     // print Invalid Move Message
         }
         return true;
