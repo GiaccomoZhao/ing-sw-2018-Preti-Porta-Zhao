@@ -356,7 +356,13 @@ public class GameController  implements GameControllerInterface, Runnable {
                 paramList
         );
 
-        ToolCard toolCard = (ToolCard) game.getToolCardList().get(cardIndex);
+        ToolCard toolCard=null;
+
+        for (Card card:
+             game.getToolCardList()) {
+            if (card.effect.ID == cardIndex)
+                toolCard=(ToolCard) card;
+        }
         return toolCard.getStrategy().use(param);
 //       game.useToolCard();
     }
