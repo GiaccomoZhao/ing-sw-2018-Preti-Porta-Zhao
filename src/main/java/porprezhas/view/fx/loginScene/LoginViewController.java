@@ -362,6 +362,14 @@ public class LoginViewController implements Initializable, SceneController, Move
         timeline.play();
     }
 
+    public void showText(String text) {
+        warningText.setText(text);
+        warningText.setFill(Color.rgb(0x6B, 0xD7, 0xA1));
+        warningText.setStyle("-fx-stroke:black;"+
+                "-fx-stroke-width:1.5;");
+        warningText.setOpacity(1);
+    }
+
 
 
 
@@ -390,11 +398,13 @@ public class LoginViewController implements Initializable, SceneController, Move
         }
         ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface);
 
-        System.out.println("Goto next");
-
         ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
         ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
         singlePlayerViewButton.setVisible(false);
+        joinViewButton.setVisible(false);
+
+//        System.out.println("waiting for players");
+        showText("Waiting for players...");
     }
 
 

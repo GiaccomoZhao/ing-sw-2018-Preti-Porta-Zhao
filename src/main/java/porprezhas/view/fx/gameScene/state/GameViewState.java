@@ -10,6 +10,8 @@ import porprezhas.view.fx.gameScene.controller.component.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
+
 public class GameViewState implements SubController {
     GameViewController gameViewController;
     List<DiceContainer> diceContainers; // used to activate or disable
@@ -102,8 +104,10 @@ public class GameViewState implements SubController {
 
         if(usingCard == null) {
             iProcess = 0;
-        } else {
+            clear();
+            activate();
 
+        } else {
             disable();
             switch (usingCard) {
                 case TC1:
@@ -139,6 +143,7 @@ public class GameViewState implements SubController {
                 case TC7:
                     // no constraint
                     activate();
+                    action();
                     break;
                 case TC8:
                 case TC9:
@@ -151,6 +156,7 @@ public class GameViewState implements SubController {
                 case TC10:
                     // no constraint
                     activate();
+                    action();
                     break;
                 case TC11:
                     // 1. discards a dice in draft pool for
@@ -236,6 +242,9 @@ public class GameViewState implements SubController {
 //                params.build(fromContainers.get(i).toInt(), savedDiceViews.get(i).getDiceID(), toContainers.get(i).toInt(), param1.get(i), param2.get(i));
 //            }
             if(params.getParams().size() == ToolCardStrategy.parameterSizes[ usingCard.ID ]) {
+                if (bDebug) {
+                    System.out.println(params);
+                }
                 bResult = gameViewController.useToolCard(usingCard.ID, params.getParams());
                 clear();
             }
