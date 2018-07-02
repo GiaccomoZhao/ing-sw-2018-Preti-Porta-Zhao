@@ -115,6 +115,8 @@ public class RMIClientAction implements ClientActionInterface{
             e.printStackTrace();
         } catch (ToolCardParameterException e) {
             System.err.println(e.getMessage());     // print Invalid Move Message
+        } catch (Exception e) { // catch all to avoid missing exception
+            e.printStackTrace();
         }
         return true;
     }
