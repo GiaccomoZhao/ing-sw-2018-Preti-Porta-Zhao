@@ -45,7 +45,7 @@ public class PublicObjectiveCardFactory implements CardFactory {
 
                 cardId = random.nextInt(numberList.size());
 
-                cards.add(new PublicObjectiveCard(Card.Effect.values()[Card.Effect.PUC1.ordinal() + cardId]));
+                cards.add(new PublicObjectiveCard(Card.Effect.values()[Card.Effect.PUC1.ordinal() + numberList.get(cardId)]));
 
                 numberList.remove(cardId);
             }

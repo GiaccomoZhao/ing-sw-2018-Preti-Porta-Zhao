@@ -43,7 +43,7 @@ public class PrivateObjectiveCardFactory implements CardFactory {
 
             cardId = random.nextInt(numberList.size()); // from 0 to PRIVATE_OBJECTIVE_CARD_NUMBER -1
 
-            cards.add(new PrivateObjectiveCard( Card.Effect.values() [Card.Effect.PRC1.ordinal() + cardId] ));
+            cards.add(new PrivateObjectiveCard( Card.Effect.values() [Card.Effect.PRC1.ordinal() + numberList.get(cardId)] ));
 
             numberList.remove(cardId);
         }
