@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.mockito.Mock;
+import porprezhas.Network.ClientActionSingleton;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.MovebleWindow;
 import porprezhas.view.fx.MovebleWindowInterface;
@@ -204,7 +205,14 @@ public class ChoosePatternViewController implements Initializable, SceneControll
 
     @FXML
     private void onMouseClickedPattern(MouseEvent event){
-        goToNextStage();
+        Label label= (Label)event.getSource();
+        String choosen = label.getId().substring(29, 30);
+        ClientActionSingleton.getClientAction().choosePattern(Integer.parseInt(choosen)-1);
+        for (Label labelDisable:
+             labelList) {
+            if (!labelDisable.equals(label))
+                labelDisable.setVisible(false);
+        }
     }
 
     @FXML
@@ -227,5 +235,7 @@ public class ChoosePatternViewController implements Initializable, SceneControll
             }
         }
     }
+
+
 
 }

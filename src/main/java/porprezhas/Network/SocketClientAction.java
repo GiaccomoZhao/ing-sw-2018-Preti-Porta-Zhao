@@ -174,7 +174,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     }
 
     @Override
-    public void choosePattern(int patternIndex, String username) {
+    public void choosePattern(int patternIndex) {
         try {
             socketOut.writeObject(new ChoosePatternAction(patternIndex, username));
             socketOut.flush();

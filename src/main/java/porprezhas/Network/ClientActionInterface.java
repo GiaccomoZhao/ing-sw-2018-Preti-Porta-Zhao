@@ -14,5 +14,5 @@ public interface ClientActionInterface {
 //    boolean moveDice(int idBoardFrom, int fromRow, int fromCol, int idBoardTo, int toRow, int toCol);
     void pass();
     boolean useToolCard(String username, int toolCardID, ArrayList<Integer> paramList);
-    void choosePattern(int patternIndex, String username);
+    void choosePattern(int patternIndex);
 }

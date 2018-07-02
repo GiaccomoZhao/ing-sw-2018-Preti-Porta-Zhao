@@ -92,6 +92,7 @@ public class StageManager {
         try {
             // Load .FXML resource
             FXMLLoader loader = new FXMLLoader(getClass().getResource(pathToFxml + resources + ".fxml"));
+            System.out.println(loader);
             Pane tempPane = loader.load();
 
 

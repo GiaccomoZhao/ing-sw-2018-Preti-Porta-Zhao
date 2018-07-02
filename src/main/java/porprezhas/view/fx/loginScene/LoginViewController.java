@@ -21,6 +21,7 @@ import porprezhas.Network.*;
 import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.Useful;
 import porprezhas.view.fx.*;
+import porprezhas.view.fx.choosePatternScene.ChoosePatternViewController;
 import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 
@@ -77,6 +78,8 @@ public class LoginViewController implements Initializable, SceneController, Move
     private int port=58091;
     private InetAddress ip;
 
+    private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
+
     enum ConnectionType{
         RMI,SOCKET
     }
@@ -110,6 +113,7 @@ public class LoginViewController implements Initializable, SceneController, Move
         timeline.setOnFinished((ae) -> {
             // Switch the Stage
             stageManager.setStage(GuiSettings.stagePatternID, this.stageName);
+
         });
 
         timeline.play();
@@ -368,7 +372,9 @@ public class LoginViewController implements Initializable, SceneController, Move
         System.out.println("Join button Clicked");
 
         GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
-        ViewUpdateHandlerInterface viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);
+
+
+         viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
 
         gameViewController.setUserName(username);
 
@@ -387,9 +393,9 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         System.out.println("Goto next");
 
-        Platform.runLater(() -> {
-            goToNextStage();
-        });
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
+        singlePlayerViewButton.setVisible(false);
     }
 
 
@@ -399,7 +405,8 @@ public class LoginViewController implements Initializable, SceneController, Move
         System.out.println("Return in game button Clicked");
 
         GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
-        ViewUpdateHandlerInterface viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController);
+
+         viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
 
         gameViewController.setUserName(username);
 
@@ -443,6 +450,7 @@ public class LoginViewController implements Initializable, SceneController, Move
             else if(this.connectionType == SOCKET){
                 try {
                     ip = InetAddress.getLocalHost();
+                    ip= InetAddress.getLocalHost();
                     ClientActionSingleton.setClientActionInstance(new SocketClientAction(ip, port));
                 } catch (UnknownHostException e) {
                     System.err.println(e.getMessage());

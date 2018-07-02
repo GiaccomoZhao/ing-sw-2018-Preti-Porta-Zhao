@@ -227,7 +227,7 @@ public class CliClient {
         int i= in.nextInt();
         while (!(i<5 && i>0))
             i=in.nextInt();
-        ClientActionSingleton.getClientAction().choosePattern(i-1, username);
+        ClientActionSingleton.getClientAction().choosePattern(i-1);
 
     }
 

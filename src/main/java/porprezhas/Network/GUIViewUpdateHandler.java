@@ -5,19 +5,36 @@ import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.dices.Dice;
+import porprezhas.view.fx.SceneController;
+import porprezhas.view.fx.choosePatternScene.ChoosePatternViewController;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.loginScene.LoginViewController;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
     private GameViewController gameViewController;
+    private LoginViewController loginViewController;
+    private String username;
+    private ChoosePatternViewController patternViewController;
     private Boolean gameStarted = false;
     private Boolean updateGui=false;
 
-    public GUIViewUpdateHandler(GameViewController gameViewController) {
+    public GUIViewUpdateHandler(GameViewController gameViewController, String username) {
         this.gameViewController = gameViewController;
+        this.username=username;
     }
+
+    public void setPatternViewController(ChoosePatternViewController patternViewController) {
+        this.patternViewController = patternViewController;
+    }
+
+    public void setLoginViewController(LoginViewController loginViewController) {
+        this.loginViewController = loginViewController;
+    }
+
+
 
     @Override
     public void update(SerializableGameInterface game) {
@@ -59,6 +76,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 //                Pattern.TypePattern pattern1 = game.getUsernamePlayer(username).getPatternsToChoose().get(0);
 //                Pattern.TypePattern pattern2 = game.getUsernamePlayer(username).getPatternsToChoose().get(1);
 //                System.out.println(pattern1.name() + "    o    " + pattern2.name());
+                //JACK qui devi fare PatternviewController.update()
+
+                    loginViewController.goToNextStage();
                 break;
 
 
@@ -68,7 +88,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 this.gameStarted=true;
 //                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
 //                System.out.println(gameViewController);
+
                 Platform.runLater(() -> {
+                    patternViewController.goToNextStage();
                     gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList());
                 } );
                 break;
