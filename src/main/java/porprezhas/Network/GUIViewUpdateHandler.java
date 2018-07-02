@@ -41,6 +41,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         List<Player> players = game.getPlayerList();
         Game.NotifyState state = game.getGameNotifyState();
 
+
         if(gameStarted) {
             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             if (game.getCurrentPlayer().getPosition() == this.gameViewController.getPlayerPosition())
@@ -88,10 +89,16 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 this.gameStarted=true;
 //                this.printAll(false, 4, game.getPlayerList(), game.getCurrentPlayer());
 //                System.out.println(gameViewController);
-
+                    Player myPlayer=null;
+                for (Player player:
+                     game.getPlayerList()) {
+                    if (player.getName().equals(username))
+                        myPlayer=player;
+                }
+                final Player myPlayerFinal=myPlayer;
                 Platform.runLater(() -> {
                     patternViewController.goToNextStage();
-                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList());
+                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), myPlayerFinal.getPrivateObjectiveCardList());
                 } );
                 break;
 
@@ -145,9 +152,15 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 break;
 
             case PLAYER_BACK:
-
+                Player myPlayer2=null;
+                for (Player player:
+                        game.getPlayerList()) {
+                    if (player.getName().equals(username))
+                        myPlayer=player;
+                }
+                final Player myPlayerFinal2=myPlayer2;
                 Platform.runLater(() -> {
-                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), players.get(0).getPrivateObjectiveCardList());
+                    gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), myPlayerFinal2.getPrivateObjectiveCardList());
 
 
                 });
