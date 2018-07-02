@@ -559,9 +559,10 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
         boolean canBePlaced = false;
         for (int row = 0; row < ROW  &&  !canBePlaced; row++) {
             for (int col = 0; col < COLUMN  &&  !canBePlaced; col++) {
-                if (board.validMove(rolledDice, row, col)) {
-                    canBePlaced = true;
-                }
+                try{
+                    if (board.validMove(rolledDice, row, col)) {
+                    canBePlaced = true; }
+                }catch (Exception ignored){}
             }
         }
         if(!canBePlaced)
