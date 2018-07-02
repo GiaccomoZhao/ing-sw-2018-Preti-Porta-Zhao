@@ -64,7 +64,7 @@ public class EnemyViewController {
         this.fx_name.setText(playerInfo.name);
         this.fx_icon.setImage(new Image(pathToHeadIcon + "head_" + (playerInfo.iconId+1) + ".png"));        // the name of heads start from 1
 
-//        boardView.setIdBoard(DiceContainer.fromPlayer(playerInfo.position));
+//        boardView.setIdBoard(DiceContainerType.fromPlayer(playerInfo.position));
     }
 /*
     public void setPattern(Pattern.TypePattern patternType) {

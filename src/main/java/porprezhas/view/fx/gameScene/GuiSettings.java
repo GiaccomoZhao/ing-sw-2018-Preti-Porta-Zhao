@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GuiSettings {
-    public static final boolean bFixedFont = false;
+    public static final boolean bFixedFont = true;
 
     // ***** Game GUI attributes *****
     // path
@@ -20,7 +20,7 @@ public class GuiSettings {
     public static final String pathToFxml = pathToRoot;
     public static final String pathToBackground = "background/";
     public static final String pathToBorder = "border/";
-    public static final String pathToToolCard = "cards/templateFolder/";
+    public static final String pathToToolCard = "cards/toolCard/";
     public static final String pathToPrivateCard = "cards/privateCard/";
     public static final String pathToPublicCard = "cards/publicCard/";
     public static final String pathToPattern = "pattern/";

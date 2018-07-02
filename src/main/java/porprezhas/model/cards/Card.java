@@ -53,6 +53,10 @@ public abstract class Card implements Serializable {
             this.ID = ID;
             this.description = description;
         }
+
+        public static Effect getToolCardEffect(int index) {
+            return values()[TC1.ordinal() + index];
+        }
     }
 
 

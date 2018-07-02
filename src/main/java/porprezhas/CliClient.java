@@ -232,7 +232,8 @@ public class CliClient {
     }
 
     public static void main(String[] args) throws UnknownHostException {
-        CliClient cliClient = new CliClient(InetAddress.getLocalHost(),58091);
+        final int port = 58090+1;
+        CliClient cliClient = new CliClient(InetAddress.getLocalHost(), port);
         try {
             cliClient.runSagrada();
         } catch (RemoteException e) {

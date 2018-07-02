@@ -4,17 +4,17 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import porprezhas.Network.ClientActionSingleton;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.gameScene.GuiSettings;
+import porprezhas.view.fx.gameScene.state.DiceContainerType;
 
 import java.util.Scanner;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
 
-public abstract class GenericBoardView implements SubController{
+public abstract class GenericBoardView implements DiceContainer{
     private final int COLUMN;   // default value
     private final int ROW;      // we don't assign the value here because no generic board can have different value
     private double DICE_ZOOM = GuiSettings.BOARD_DICE_ZOOM;
@@ -23,23 +23,36 @@ public abstract class GenericBoardView implements SubController{
 
     private boolean bDragging = false;
 
-    private DiceContainer idBoard;
+    private DiceContainerType idBoard;
     private int nDice;
 
 
     private GameViewController parentController;
 
+    public GameViewController getParentController() {
+        return parentController;
+    }
     @Override
     public void setupSubController(GameViewController parentController) {
         this.parentController = parentController;
     }
-    public GameViewController getParentController() {
-        return parentController;
+    @Override
+    public void activate() {
+        board.setDisable(false);
+    }
+    @Override
+    public void disable() {
+        board.setDisable(true);
+    }
+
+    @Override
+    public DiceContainerType getDiceContainer() {
+        return idBoard;
     }
 
 
     // create a BoardView by passing a configured(may in FXML) GridPane
-    public GenericBoardView(GridPane board, DiceContainer idBoard) {
+    public GenericBoardView(GridPane board, DiceContainerType idBoard) {
         this.idBoard = idBoard;
         this.COLUMN = 5;
         this.ROW = 4;
@@ -51,7 +64,7 @@ public abstract class GenericBoardView implements SubController{
     }
 
     // Create a new BoardView by ... for RoundTrack, can be used for different
-    public GenericBoardView(DiceContainer idBoard, int ROW, int COLUMN) {
+    public GenericBoardView(DiceContainerType idBoard, int ROW, int COLUMN) {
         this.idBoard = idBoard;
         this.COLUMN = COLUMN;
         this.ROW = ROW;
@@ -93,16 +106,12 @@ public abstract class GenericBoardView implements SubController{
         return DICE_ZOOM;
     }
 
-    public DiceContainer getBoardId() {
-        return idBoard;
-    }
-
     // **** Setter methods ****
     public void setDiceZoom(double DICE_ZOOM) {
         this.DICE_ZOOM = DICE_ZOOM;
     }
 
-    public void setIdBoard(DiceContainer idBoard) {
+    public void setIdBoard(DiceContainerType idBoard) {
         this.idBoard = idBoard;
     }
 
@@ -149,13 +158,13 @@ public abstract class GenericBoardView implements SubController{
     // requires col < 5 && col > 0 &&
     //          row < 4 && row > 0
     public DiceView addDice(Dice dice, int row, int col) { //int num, char color){
-        DiceView diceImage = new DiceView(dice, row, col);
-        diceImage.setSmooth(true);
-        diceImage.setCache(true);
+        DiceView diceView = new DiceView(dice, row, col, idBoard.toInt());
+        diceView.setSmooth(true);
+        diceView.setCache(true);
 //        diceImage.setFitHeight(32);
-        diceImage.fitHeightProperty().bind(
+        diceView.fitHeightProperty().bind(
                 getBoard().heightProperty().divide(getBoard().getRowConstraints().size()).multiply(getDICE_ZOOM()));
-        diceImage.fitWidthProperty().bind(
+        diceView.fitWidthProperty().bind(
                 getBoard().widthProperty().divide(getBoard().getColumnConstraints().size()).multiply(getDICE_ZOOM()));
 //                board.getRowConstraints().get(row).prefHeightProperty().multiply(1));
 //        diceImage.fitWidthProperty().bind(
@@ -163,11 +172,13 @@ public abstract class GenericBoardView implements SubController{
 //        diceImage.setPreserveRatio(true);
 
         // Action
-        addDiceDragListener(diceImage);
+        diceView.setupSubController(parentController);
+        diceView.addClickListener();
+        addDiceDragListener(diceView);
 
-        getBoard().add(diceImage, col, row);    // add(Node, column, row)
+        getBoard().add(diceView, col, row);    // add(Node, column, row)
         increaseDice();
-        return diceImage;
+        return diceView;
     }
 
     // **** Drag Listeners ****
@@ -202,7 +213,7 @@ public abstract class GenericBoardView implements SubController{
     }
 
     protected void addBoardDragListener() {
-        board.setOnDragDropped(event -> {
+            board.setOnDragDropped(event -> {
             // data dropped
             // if there is a string data on dragBoard, read it and use it
             Dragboard dragboard = event.getDragboard();
@@ -235,13 +246,13 @@ public abstract class GenericBoardView implements SubController{
                     // place down
 //                if (null != addDice(diceView.getDice(), row, col)) {
                     if (bDebug) {
-                        System.out.println("insertDice: \tfrom " + idBoardFrom + " \tid=" + diceView.getDiceID()
-                                + " \tto " + this.getBoardId().toInt() + " \trow=" + row + " \tcol=" + col);
+                        System.out.println("move dice: \tfrom " + idBoardFrom + " \tid=" + diceView.getDiceID()
+                                + " \tto " + this.getDiceContainer().toInt() + " \trow=" + row + " \tcol=" + col);
                     }
 
                     success = parentController.moveDice(
                             idBoardFrom, diceView,
-                            this.getBoardId().toInt(), row, col);
+                            this.getDiceContainer().toInt(), row, col);
 //                }
                 }
             }

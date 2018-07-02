@@ -8,6 +8,7 @@ import porprezhas.exceptions.toolCard.*;
 import porprezhas.model.dices.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static porprezhas.model.cards.ToolCardParam.IncDec.DECREMENT;
@@ -19,6 +20,7 @@ import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
 import static porprezhas.model.dices.Dice.MIN_DICE_NUMBER;
 
 public interface ToolCardStrategy {
+    public static final int[] parameterSizes = {-1, 2, 4, 4, 8, 3, 1, 0, 2 ,3, 1, 1, 8};   // skip first for better using index
     ToolCardStrategy[] list = {
             new ToolCard1(),
             new ToolCard2(),
@@ -39,11 +41,6 @@ public interface ToolCardStrategy {
 
 
 
-// Effect of tool card N.1
-// @Param bIncDec   bIncDec == true → increment,
-//                  bIncDec == false → decrement the number of dice
-// @Return true     means the tool card effect has verified, uses token
-//         false    means this operation is invalid, refund or not use tokens
 class ToolCard1 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;        // NOTE: this may be not need to be saved; savedReturn is used to return 2 times: a boolean and an other type
 
@@ -51,7 +48,7 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
     private Integer indexChosenDice;
     private Boolean bIncDec;
 
-    private final int parameterSize = 2;
+    private final int parameterSize = parameterSizes[1];
 
     /**
      * apply the effect of the Tool Card 1
@@ -88,10 +85,15 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
 
     /**
      * auxiliary function for the Tool Card 1
-     * @param draftPool draftpool of the game
+     * Effect of tool card N.1:
+     *      Increase or Decrease the Number of a Dice in Draft pool
+     *
+     * @param draftPool draft pool of the game
      * @param indexChosenDice index to find the dice
-     * @param bIncDec true->increment, false->decrement
-     * @return the success of the operation
+     * @Param bIncDec   bIncDec == true → increment,
+     *                  bIncDec == false → decrement the number of dice
+     * @Return true     means the tool card effect has verified, uses token
+     *         false    means this operation is invalid, refund or not use tokens
      */
 
     private boolean use(DraftPool draftPool, int indexChosenDice, boolean bIncDec) {
@@ -259,7 +261,7 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
 }
 
 class ToolCard2 extends ToolCard_Move {
-    private final int parameterSize = 4;
+    private final int parameterSize = parameterSizes[2];
 
     public ToolCard2() {
         super();
@@ -267,6 +269,8 @@ class ToolCard2 extends ToolCard_Move {
 
     /**
      * implementation of the effect of the Tool Card 2
+     * move a dice without color constraint
+     *
      * @param param contains all the parameter used by the card
      * @return the success of the operation
      * @throws IncorrectParamQuantityException
@@ -296,7 +300,7 @@ class ToolCard2 extends ToolCard_Move {
 }
 
 class ToolCard3 extends ToolCard_Move {
-    private final int parameterSize = 4;
+    private final int parameterSize = parameterSizes[3];
 
     public ToolCard3() {
         super();
@@ -304,6 +308,8 @@ class ToolCard3 extends ToolCard_Move {
 
     /**
      * implementation of the effect of the Tool Card 3
+     * move a dice without the number constraint
+     *
      * @param param contains all the parameter used by the card
      * @return
      * @throws IncorrectParamQuantityException
@@ -342,7 +348,7 @@ class ToolCard4 extends ToolCard_Move {
     private int toRow2;
     private int toColumn2;
 
-    private final int parameterSize = 8;
+    private final int parameterSize = parameterSizes[4];
 
     public ToolCard4() {
         super();
@@ -350,12 +356,13 @@ class ToolCard4 extends ToolCard_Move {
 
     /**
      * implementation of the effect of the Tool Card 4
+     * Effect of tool card N.4: Lathekin
+     *      Move 2 dices inside the board
+     *
      * @param param contains all the parameter used by the card
      * @return the success of the operation
      */
 
-    // Effect of tool card N.4: Lathekin
-    // Move 2 dices
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -379,8 +386,8 @@ class ToolCard4 extends ToolCard_Move {
         this.toColumn2  = param.getParams().get(iParam++);
 
         // Create 2 new ToolCardParam to recall super -parent- class use() method
-        ToolCardParam param1 = new ToolCardParam(param, 0, 4);
-        ToolCardParam param2 = new ToolCardParam(param, 4, 8);
+        ToolCardParam param1 = new ToolCardParam(param, 0, 4);  // from 0 to 3
+        ToolCardParam param2 = new ToolCardParam(param, 4, 8);  // includes from 4 to 7
 
 
         // Save the dice of first action for Undo
@@ -432,7 +439,7 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
     private int indexRound;
     private int indexDiceRoundTrack;    // the dice to be removed from round track
 
-    private final int parameterSize = 3;
+    private final int parameterSize = parameterSizes[5];
 
 
     /**
@@ -444,8 +451,12 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         int iParam = 0;
         this.draftPool      = param.getDraftPool();
@@ -465,7 +476,9 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
 
 
     /**
-     * effect of the Tool Card 5
+     * Effect of the Tool Card 5:
+     * Exchange a dice of draft pool with a dice in round track
+     *
      * @param draftPool draftpool of the game
      * @param idDiceDraftPool ID of the dice in the draftpool to swap
      * @param roundTrack roundtrack of the game
@@ -473,8 +486,6 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
      * @param indexDiceRoundTrack index of the dice in the roundtrack to swap
      * @return the success of the operation
      */
-
-    // Effect of tool card N.5
     public boolean use(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  int indexDiceRoundTrack) {
 
         //remove the dice from the roundTrack
@@ -496,14 +507,18 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
 //    private int indexDiceDraftPool;
     private Board board;
 
-    private final int parameterSize = 1;
+    private final int parameterSize = parameterSizes[6];
 
 
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(0).longValue();
@@ -522,16 +537,17 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
 
     /**
      * implementation of the effect of Tool Card 6
+     * Effect of tool card N.6
+     *      rolls a chosen dice from the draftPool and
+     *      if it cannot be placed in the board, add it to the draftPool
+     *      otherwise the player is constrained to place it in his board
+     *
      * @param draftPool draftpool of the game
      * @param idDiceDraftPool Id of the dice in the draftpool to roll
      * @param board board of the player
-     * @return
+     * @Return mustBePlaced, true means the Caller MUST insert this dice in board
+     *                       false means this dice will be put in draft pool
      */
-
-    // Effect of tool card N.6
-    // rolls a chosen dice from the draftPool and,
-    // if it cannot be placed in the board, re-adds it to the draftPool
-    // @Return mustBePlaced true means the Caller MUST insert this dice in board
     private boolean use (DraftPool draftPool, long idDiceDraftPool, Board board) {
 //    private boolean use (DraftPool draftPool, int indexDiceDraftPool, Board board) {
 
@@ -561,7 +577,7 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
 
     private DraftPool draftPool;
 
-    private final int parameterSize = 0;
+    private final int parameterSize = parameterSizes[7];
 
     /**
      * Implementation of Tool Card 7
@@ -572,8 +588,12 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         this.draftPool = param.getDraftPool();
 
@@ -589,13 +609,15 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
 
     /**
      *implementation of the effect of Tool Card 7
+     * Effect of tool card N.7:
+     *      re-roll all dices in the draft pool
+     * NOTE:
+     *      this card can be used only on the second turn before drafting
+     *      This constraint is Caller job
+     *
      * @param draftPool draftpool of the game
      * @return the success of the operation
      */
-
-    // Effect of tool card N.7
-    // this card can be used only on the second turn before drafting
-    // NOTE: This constraint is Caller job
     private boolean use(DraftPool draftPool) {
         draftPool.diceList().forEach(Dice::roll);
         return true;
@@ -625,8 +647,12 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         int iParam = 0;
         this.draftPool      = param.getDraftPool();
@@ -664,15 +690,11 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
      * @return the success of the operation
      */
 
-    // Effect of tool card N.8
-    // this card can be used only after the first turn's picking,
-    // NOTE: the Player MUST skip the second turn of the round
-    // Effect of tool card N.9
-    // place dice from draft pool to board anywhere
     private boolean use(DraftPool draftPool, long idDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
 //    private boolean use(DraftPool draftPool, int indexDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
 
         try {
+            // call validMove before insertDice to avoid undo in case of insertDice fails
             if (board.validMove(draftPool.getDiceByID(idDiceDraftPool), row, col, restriction)) {
 //            if (board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction)) {
 
@@ -694,10 +716,16 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
 }
 
 class ToolCard8 extends ToolCard8_9 {
-    private final int parameterSize = 2;
+    private final int parameterSize = parameterSizes[8];
 
     /**
      * application of Tool Card 8
+     * Effect of tool card N.8:
+     *      place an other dice from draft pool to board
+     * Note:
+     *      this card can be used only during first turn and the player has already picked
+     *      and then the Player MUST skip the picking of second turn of the round
+     *
      * @param param list of parameters used
      * @return the success of the operation
      */
@@ -705,8 +733,14 @@ class ToolCard8 extends ToolCard8_9 {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
+        if(!param.getbFirstTurn())
+            throw new NotFirstTurnException();
 
         param.getParams().add(Board.Restriction.ALL.ordinal());
         return super.use(param);
@@ -714,10 +748,13 @@ class ToolCard8 extends ToolCard8_9 {
 }
 
 class ToolCard9 extends ToolCard8_9 {
-    private final int parameterSize = 3;
+    private final int parameterSize = parameterSizes[9];
 
     /**
-     * application of Tool Card9
+     * application of Tool Card 9
+     * Effect of tool card N.9:
+     *      move a dice from draft pool to board, anywhere, without adjacent constraint
+     *
      * @param param list of parameters used
      * @return success of the operation
      */
@@ -742,7 +779,7 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
     private long idDiceDraftPool;
 //    private int indexDiceDraftPool;
 
-    private final int parameterSize = 1;
+    private final int parameterSize = parameterSizes[10];
 
     /**
      * implementation of Tool Card 10
@@ -753,8 +790,12 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(0).longValue();
@@ -773,13 +814,14 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
 
     /**
      * implementation of the effect of Tool Card 10
+     * Effect of tool card N.10:
+     *      rotate a dice in draft pool, face up the bottom side
+     *
      * @param draftPool draftpool of the game
      * @param id ID of the dice
      * @return the success of the operation
      */
 
-    // Effect of tool card N.10
-    // rotate a dice in draft pool, face up the bottom side
     private boolean use(DraftPool draftPool, long id) {
         int index = draftPool.getDiceIndexByID(id);
         Dice dice = draftPool.diceList().get(index);
@@ -794,11 +836,6 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
 
 
 
-// Effect of tool card N.11
-// discards a dice in draft pool for
-// pick a new dice from diceBag and
-// choose it's value to
-// place in board   // NOTE: this is caller job and must be done
 class ToolCard11 implements ToolCardStrategy, Serializable {
     private Dice savedReturn = null;
 
@@ -807,7 +844,7 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 //    private int indexDiceDraftPool;
     private DiceBag diceBag;
 
-    private final int parameterSize = 1;
+    private final int parameterSize = parameterSizes[11];
 
     /**
      * implementation of Tool Card 11
@@ -818,8 +855,12 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
-        if(null == param  ||  !param.safetyCheck(parameterSize))
-            return false;
+        if(null == param) {
+            throw new IncorrectParamQuantityException();
+        }
+        else if(!param.safetyCheck(parameterSize)) {
+            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        }
 
         this.draftPool      = param.getDraftPool();
         this.idDiceDraftPool= param.getParams().get(0).longValue();
@@ -841,6 +882,14 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 
     /**
      * implementation of the effect of Tool Card 11
+     * Effect of tool card N.11:
+     *      1. discards a dice in draft pool for
+     *          pick a new dice from diceBag and
+     *      2. choose it's value to
+     *      3. place in board
+     * NOTE:
+     *      this is caller job and must be done
+     *
      * @param draftPool draftpool of the game
      * @param idDiceDraftPool ID of the dice of the draftpool considered
      * @param diceBag dicebag of the game
@@ -857,10 +906,6 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
 
 
 
-// Effect of tool card N.12
-// Move 2 dice in the board, respecting ALL constraints
-// These dices must have the same color and this color's dice exists in the round track
-
 class ToolCard12 extends ToolCard4 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
 
@@ -875,10 +920,14 @@ class ToolCard12 extends ToolCard4 implements ToolCardStrategy, Serializable {
     private int toRow2;
     private int toColumn2;
 
-    private final int parameterSize = 8;
+    private final int parameterSize = parameterSizes[12];
 
     /**
      * implementation of the effect of Tool Card 12
+     * Effect of tool card N.12:
+     *      Move 2 dice in the board, respecting ALL constraints
+     *      These dices must have the same color and this color's dice exists in the round track
+     *
      * @param param contains all the parameter used by the card
      * @return the success of the operation
      */

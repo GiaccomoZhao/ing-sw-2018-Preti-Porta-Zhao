@@ -1,6 +1,7 @@
 package porprezhas.model.cards;
 
 import porprezhas.model.dices.*;
+import porprezhas.view.fx.gameScene.state.DiceContainerType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class ToolCardParam {
     private final DraftPool draftPool;
     private final DiceBag diceBag;
     private final Board board;
+    private final Boolean bFirstTurn;
     private final List<Integer> params;
 
     enum IncDec {
@@ -39,22 +41,67 @@ public class ToolCardParam {
     }
 
 
+    /**
+     * this is used by ServerController
+     *
+     * @param roundTrack current game's round track, given by server
+     * @param draftPool  current game's draft pool
+     * @param diceBag    current game's dice bag
+     * @param board      current player's board
+     * @param bFirstTurn current game's turn
+     * @param params     parameters given by client
+     */
+    public ToolCardParam(RoundTrack roundTrack, DraftPool draftPool, DiceBag diceBag, Board board, Boolean bFirstTurn, List<Integer> params) {
+        this.roundTrack = roundTrack;
+        this.draftPool  = draftPool;
+        this.diceBag    = diceBag;
+        this.board      = board;
+        this.bFirstTurn = bFirstTurn;
+        this.params     = params;
+    }
+
+
+    /**
+     * initialize a new tool card Param
+     * this is used only by tests, to avoid modification in the completed tests
+     *
+     * @param roundTrack current game's round track, given by server
+     * @param draftPool  current game's draft pool
+     * @param diceBag    current game's dice bag
+     * @param board      current player's board
+     * @param params     parameters given by client
+     */
     public ToolCardParam(RoundTrack roundTrack, DraftPool draftPool, DiceBag diceBag, Board board, List<Integer> params) {
         this.roundTrack = roundTrack;
         this.draftPool  = draftPool;
         this.diceBag    = diceBag;
-        this.board     = board;
+        this.board      = board;
+        this.bFirstTurn = false;
         this.params     = params;
     }
 
+    /**
+     * used for ToolCard 4 that has 2 sub parameters
+     *
+     * @param param  the old param to copy
+     * @param fromIndex   copy from index
+     * @param toIndex   copy until index
+     */
     public ToolCardParam(ToolCardParam param, int fromIndex, int toIndex) {
         this.roundTrack = param.getRoundTrack();
         this.draftPool  = param.getDraftPool();
         this.diceBag    = param.getDiceBag();
-        this.board     = param.getBoard();
+        this.board      = param.getBoard();
+        this.bFirstTurn = param.getbFirstTurn();
         this.params     = param.getParams().subList(fromIndex, toIndex);
     }
 
+    /**
+     * used for ToolCard that has need to add some integer parameter
+     *
+     * @param param  the old param to copy
+     * @param addIntegerParam   the new integer to add
+     */
     public ToolCardParam(ToolCardParam param, Integer addIntegerParam) {
         // NB: Arrays.asList() returns AbstractList that hasn't implemented a correct add method
         // So: to avoid adding on a AbstractList, we must create a new Concrete List, like ArrayList
@@ -66,6 +113,7 @@ public class ToolCardParam {
         this.draftPool  = param.getDraftPool();
         this.diceBag    = param.getDiceBag();
         this.board      = param.getBoard();
+        this.bFirstTurn = param.getbFirstTurn();
     }
 
     public RoundTrack getRoundTrack() {
@@ -84,6 +132,10 @@ public class ToolCardParam {
         return board;
     }
 
+    public Boolean getbFirstTurn() {
+        return bFirstTurn;
+    }
+
     public List<Integer> getParams() {
         return params;
     }
@@ -95,4 +147,5 @@ public class ToolCardParam {
             return false;
         return true;
     }
+
 }

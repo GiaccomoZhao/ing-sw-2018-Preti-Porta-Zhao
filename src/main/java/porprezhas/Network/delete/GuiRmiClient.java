@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import porprezhas.Network.delete.RMIClient;
+import porprezhas.Network.delete.RMIClientInterface;
 import porprezhas.model.Player;
 import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.gameScene.ConfirmBox;

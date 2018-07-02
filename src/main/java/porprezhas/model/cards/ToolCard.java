@@ -16,7 +16,8 @@ import static porprezhas.model.dices.Dice.ColorDice.*;
 
 
 public class ToolCard extends Card implements Serializable {
-    private Dice.ColorDice[] cardColors={PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE};
+    public static final Dice.ColorDice[] cardColors={PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE,RED,YELLOW,GREEN,PURPLE,BLUE};
+    public static final boolean[] hasEffect = {false, false, false, false, false, true, false, true, false, false, true, false};
 
     private ToolCardStrategy strategy;
 
@@ -44,8 +45,11 @@ public class ToolCard extends Card implements Serializable {
     }
 
 
-    public void addTokens(){
+    public int getTokensQuantity() {
+        return tokensQuantity;
+    }
 
+    public void addTokens(){
         tokensQuantity = tokensQuantity + 1;
     }
 

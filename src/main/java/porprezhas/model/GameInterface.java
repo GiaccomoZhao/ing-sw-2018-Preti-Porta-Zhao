@@ -2,6 +2,7 @@ package porprezhas.model;
 
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.model.cards.Card;
+import porprezhas.model.cards.ToolCardParam;
 import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
@@ -29,6 +30,7 @@ public interface GameInterface {
 //    List<Card> getPrivateCards(Player player);
 
     boolean isSolitaire();
+    boolean isFirstTurn();
     long getRoundTimeOut();
 
     Game.NotifyState getGameState();
@@ -37,8 +39,9 @@ public interface GameInterface {
     boolean insertDice(long diceID, int toRow, int toColumn)
             throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
-
+    boolean useToolCard(int cardIndex, ToolCardParam param);
     boolean setPattern(Player player, int indexPatternType);
+
     void newRound(int indexRound);
     int calcScore(Player player);
     void newTurn();

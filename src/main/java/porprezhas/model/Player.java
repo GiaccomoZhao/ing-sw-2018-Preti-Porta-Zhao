@@ -134,6 +134,10 @@ public class Player implements Serializable {
         this.bPass = bPass;
     }
 
+    public void play() {
+        bPass = false;
+    }
+
     public boolean hasUsedToolCard() {
         return bUsedToolCard;
     }
@@ -172,16 +176,22 @@ public class Player implements Serializable {
         if(this.getName().toUpperCase().contains("ZX"))
             return;           // test-use player zx can place infinity time dices
         pickableDice--;
-        }
-
-    /* 3 optional actions:
-     *   1. choose a Dice from Draft Pool
-     *   2. use a Tool Card
-     *   3. pass/finish
-     */
-    public void play() {
-        bPass = false;
-        // set flag to unlock view actions
     }
 
+
+    public boolean hasSkipTurnEffect() {
+        return toolCardEffect.contains( Card.Effect.TC8 );
+    }
+
+    public boolean removeSkipTurnEffect() {
+        return removeEffect( Card.Effect.TC8 );
+    }
+
+    public boolean addEffect(Card.Effect effect) {
+        return toolCardEffect.add(effect);
+    }
+
+    public boolean removeEffect(Card.Effect effect) {
+        return toolCardEffect.remove(effect);
+    }
 }

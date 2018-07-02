@@ -24,58 +24,68 @@ import java.util.List;
  * 4. run clients
  */
 public class TestTotal {
+    private static final int port = 58090;
+
     public static void main(String[] args) throws RemoteException, InterruptedException {
 
 
-        ServerController server ;
+        ServerController server;
         GameControllerInterface newGameController;
-        List<Player> players;
         Thread gameThread;
+        boolean bTearDown = false;   // this variable should be changed to true when the server has to be shut down
 
         // test parameter
-        final int NUM_PLAYER = 0;
+        boolean bSimulation = false; // set to true for simulation
+        List<Player> players;
+        final int NUM_PLAYER = 0;          // set to >0 for simulation
 
+        server = new ServerController(port);
 
-            server = new ServerController(58090);
-
-        Registry registry= LocateRegistry.getRegistry();
+        Registry registry = LocateRegistry.getRegistry();
         registry.rebind("serverController", server);
-        Thread myThread = new Thread(server);
-        myThread.start();
-        players = new ArrayList<>();
-
-        for (int i = 0; i < NUM_PLAYER; i++) {
-            Faker faker = new Faker();
+        Thread serverThread = new Thread(server);
+        serverThread.start();
 
 
-            String firstName = faker.name().firstName();
+        while (!bTearDown) {
+
+            if(!bSimulation) {
+                serverThread.join();
+                bTearDown = true;  // shut down server when the thread has terminated
+
+            } else {
+                // fake players for simulation
+                players = new ArrayList<>();
+                for (int i = 0; i < NUM_PLAYER; i++) {
+                    Faker faker = new Faker();
+
+                    String firstName = faker.name().firstName();
 
 
-            String playerName = firstName; //"P" + i;
-            players.add(new Player(playerName));
-            server.join(players.get(i));
-        }
-        while(server.getGameControllers().size()<=0)
-            Thread.sleep(2000);
+                    String playerName = firstName; //"P" + i;
+                    players.add(new Player(playerName));
+                    server.join(players.get(i));
+                }
 
-        newGameController = (GameController) server.getGameControllers().get(0);
-        Game game = (Game) newGameController.getGame();
+                while (server.getGameControllers().size() <= 0)
+                    Thread.sleep(1000);
 
-        (gameThread = new Thread((Runnable) newGameController)).start();
+                newGameController = (GameController) server.getGameControllers().get(0);
+                Game game = (Game) newGameController.getGame();
 
 //        Thread.sleep((long) Game.GameConstants.secondsToMillis(
 //                Game.GameConstants.TIMEOUT_PREPARING_SEC));  // this solves "main" java.lang.NullPointerException because thread of new game controller hasn't setup yet
 
-        // Wait Game Controller be created
-        while(newGameController.getState() == null)
-            Thread.sleep(10);
-        System.out.println("-- server start to receive commands");  // NOTE: we simulate to receive command from client
+                // Wait Game Controller be created
+                while (newGameController.getState() == null)
+                    Thread.sleep(10);
+                System.out.println("-- server start to receive commands");  // NOTE: we simulate to receive command from client
 
-        // Wait until Game ask for a choose to player
-        while(!newGameController.getState().equals(GameControllerInterface.StateMachine.PLAYER_PREPARING))
-            Thread.sleep(30);
+                // Wait until Game ask for a choose to player
+                while (!newGameController.getState().equals(GameControllerInterface.StateMachine.PLAYER_PREPARING))
+                    Thread.sleep(30);
 
-        // simulate all player choose a pattern, We'll see Game skip ChooseTimeOut
+                // simulate all player choose a pattern, We'll see Game skip ChooseTimeOut
         /*for (Player player : game.getPlayerList()) {
             int choose = 3;
 //            if(player.getName().toUpperCase().contains("ZX"))   // test use
@@ -87,12 +97,12 @@ public class TestTotal {
             }
         }*/
 
-        // Wait Game finish the Setup
-        while(!newGameController.getState().equals(GameControllerInterface.StateMachine.PLAYING) ) {
-            Thread.sleep(30);
-        }
+                // Wait Game finish the Setup
+                while (!newGameController.getState().equals(GameControllerInterface.StateMachine.PLAYING)) {
+                    Thread.sleep(30);
+                }
 
-        // Give Game Controller Actions, We'll see Game skip all round timeout
+                // Give Game Controller Actions, We'll see Game skip all round timeout
         /*while(newGameController.getState().isGameRunning()) {
 
 
@@ -115,7 +125,10 @@ public class TestTotal {
             Thread.sleep(1000);
             newGameController.pass();
         }*/
-        gameThread.join(1000000);
+                server.getGameThreads().get(0).join(1000000);
+                bTearDown = true;  // shut down server when the simulation has finished
+            }
+        }
         System.out.println("\n\n\n-- server tear down.");
     }
 }

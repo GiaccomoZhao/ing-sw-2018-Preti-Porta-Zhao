@@ -22,16 +22,13 @@ import porprezhas.Network.ClientActionSingleton;
 import porprezhas.exceptions.GameAbnormalException;
 import porprezhas.model.*;
 import porprezhas.model.cards.Card;
-import porprezhas.model.cards.PrivateObjectiveCard;
-import porprezhas.model.cards.PublicObjectiveCard;
-import porprezhas.model.cards.ToolCard;
 import porprezhas.model.dices.*;
 import porprezhas.view.fx.BackgroundMusicPlayer;
 import porprezhas.view.fx.SceneController;
 import porprezhas.view.fx.StageManager;
 import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.component.*;
-import porprezhas.view.fx.gameScene.state.DiceContainer;
+import porprezhas.view.fx.gameScene.state.DiceContainerType;
 import porprezhas.view.fx.gameScene.state.GameViewState;
 import porprezhas.view.fx.gameScene.state.PlayerInfo;
 
@@ -40,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
+import static porprezhas.view.fx.gameScene.state.DiceContainer.*;
 
 public class GameViewController implements SceneController, GameViewUpdaterInterface {
 
@@ -108,6 +106,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     // auxiliary controller
     private GameViewState state;
 
+    private List<Object> diceContainers;
 
 
     //  ***** Player attributes *****
@@ -149,11 +148,15 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
         cardPanes = new CardPane[CardTab.values().length];
 
+        state = new GameViewState();
+        diceContainers = new ArrayList<>();
+
         if(bDebug)
             System.out.println("GameView Constructed");
 
     }
 
+    // Test use, invoked by ViewTest.java
     // @requires playersInfo.size >= 1
     // @Param playersInfo.get(0).typePattern == player.typePattern &&
     //        forall( 1 <= i < playersInfo.size(); playersInfo.get(i).typePattern == enemies[i-1].typePattern
@@ -188,6 +191,9 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         draftPoolView = new DraftPoolView();
 
         cardPanes = new CardPane[CardTab.values().length];
+
+        state = new GameViewState();
+        diceContainers = new ArrayList<>();
 
         if(bDebug)
             System.out.println("GameView Constructed");
@@ -317,18 +323,18 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         cardPanes[CardTab.PRIVATE_CARD.ordinal()] = new CardPane( fx_privateCardPane,   CardTab.PRIVATE_CARD,   pathToPrivateCard);
 
 
-        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupCardPane(publicObjectiveCards);
         cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupSubController(this);
+        cardPanes[CardTab.PUBLIC_CARD.ordinal()].setupCardPane(publicObjectiveCards);
         if(bDebug)
             System.out.println("Public Objective Cards set up done");
 
-        cardPanes[CardTab.TOOL_CARD.ordinal()].setupCardPane(toolCards);
         cardPanes[CardTab.TOOL_CARD.ordinal()].setupSubController(this);
+        cardPanes[CardTab.TOOL_CARD.ordinal()].setupCardPane(toolCards);
         if(bDebug)
             System.out.println("Tool Cards set up done");
 
-        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupCardPane(privateObjectiveCards);
         cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupSubController(this);
+        cardPanes[CardTab.PRIVATE_CARD.ordinal()].setupCardPane(privateObjectiveCards);
         if(bDebug)
             System.out.println("Private Objective Cards set up done");
     }
@@ -404,12 +410,12 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
     private void setupRoundTrack() {
-        roundTrackBoard.setup(fx_roundTrack);
         roundTrackBoard.setupSubController(this);
+        roundTrackBoard.setup(fx_roundTrack);
     }
     private void setupDraftPool() {
-        draftPoolView.setup(fx_draftPoolParent);
         draftPoolView.setupSubController(this);
+        draftPoolView.setup(fx_draftPoolParent);
     }
 
 
@@ -620,41 +626,27 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
 
     // ********** <<< Send Message to Server >>> **********
-    private boolean insertDice(long diceID, int idBoardTo, int row, int col) {
-        if(idBoardTo == DiceContainer.fromPlayer(playerPosition).toInt()) {
+    public boolean insertDice(long diceID, int row, int col) {
+//        if(idBoardTo == DiceContainerType.fromPlayer(playerPosition).toInt()) {
             /*return*/ ClientActionSingleton.getClientAction().
                     insertDice(diceID, row, col);
             return true;
-        } else
-            return false;
+//        } else
+//            return false;
+    }
+
+    public boolean useToolCard(int cardID, ArrayList<Integer> params) {
+        return ClientActionSingleton.getClientAction().useToolCard(userName, cardID, params);
+    }
+
+
+    // decide what send to server
+    public boolean clickDice(int idBoard, DiceView diceView) {
+        return state.clickDice(idBoard, diceView);
     }
 
     public boolean moveDice(int idBoardFrom, DiceView diceView, int idBoardTo, int toRow, int toCol) {
-        boolean bSuccess = false;
-        int fromRow = diceView.getRow();
-        int fromCol = diceView.getColumn();
-        long diceID = diceView.getDiceID();
-
-        switch (DiceContainer.fromInt(idBoardFrom)) {
-            case DRAFT:
-//                int index = draftPoolView.getIndexByDiceID(diceID);
-                bSuccess = insertDice(diceID, idBoardTo, toRow, toCol);
-                break;
-            case BAG:
-                break;
-            case TRACK:
-                // TODO: save the action for tool card?
-                break;
-            case BOARD1:
-            case BOARD2:
-            case BOARD3:
-            case BOARD4:
-                // todo
-                break;
-            default:
-                throw new GameAbnormalException("Abnormal Error in moveDice with dice container id = " + DiceContainer.fromInt(idBoardFrom));
-        }
-        return bSuccess;
+        return state.moveDice(idBoardFrom, diceView, idBoardTo, toRow, toCol);
     }
 
 
@@ -701,8 +693,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
             );
         }
         draftPoolView.reroll(diceList);*/
-        //Mif (!bDebug)
-            ClientActionSingleton.getClientAction().pass();
+       ClientActionSingleton.getClientAction().pass();
     }
 
     @FXML
@@ -763,6 +754,12 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
 
+
+    public void usingToolCard(Card.Effect effect) {
+        state.useToolCard(effect);
+    }
+
+
     // MVC interface methods
 
     public void updatePlayerInfo(List<Player> players) {
@@ -791,6 +788,8 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         SetupView();
 
         setupCards(toolCards, publicObjectiveCards, privateObjectiveCards);
+
+        setupState();
     }
 
 
@@ -812,6 +811,12 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         if (bDebug) {
             System.out.println("\nSetup Game View -Dice Containers- Done!\n\n");
         }
+    }
+
+    public void setupState() {
+        state.setupSubController(this);
+        state.setup(draftPoolView, roundTrackBoard, boardList.get(playerPosition));
+        state.activate();
     }
 
     public void updateBoard(int idBoard, Dice[][] dices) {

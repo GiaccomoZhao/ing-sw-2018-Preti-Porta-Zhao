@@ -8,18 +8,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import porprezhas.Network.ClientActionSingleton;
-import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
-import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
+import porprezhas.view.fx.gameScene.state.DiceContainerType;
 
 import java.util.List;
 import java.util.Scanner;
 
 import static porprezhas.Useful.isValueBetween;
 import static porprezhas.Useful.isValueBetweenInclusive;
-import static porprezhas.model.GameConstants.*;
 import static porprezhas.model.GameConstants.ROUND_NUM;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
@@ -39,7 +36,7 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 
     // Create a new BoardView by ... for RoundTrack, can be used for different
     public RoundTrackBoardView(int ROW, int COLUMN) {
-        super(DiceContainer.TRACK, ROW, COLUMN);
+        super(DiceContainerType.TRACK, ROW, COLUMN);
 
         setDiceZoom(TRACK_DICE_ZOOM);
         MAX_DICE_PER_ROUND = ROW;
@@ -244,7 +241,7 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
 //                        System.out.println("round number = " + iRound);
                             success = getParentController().moveDice(
                                     idBoardFrom, diceView,
-                                    this.getBoardId().toInt(), iRound, 666);      // we don't care about the column value
+                                    this.getDiceContainer().toInt(), iRound, 666);      // we don't care about the column value
 //                        if (null != addDiceToRoundTrack(diceView.getDice(), iRound-1)) {
 //                            success = true;
 //                        }

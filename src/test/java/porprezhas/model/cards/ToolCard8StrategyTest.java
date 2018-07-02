@@ -46,8 +46,7 @@ public class ToolCard8StrategyTest {
 
         toolCard8 = new ToolCard(Card.Effect.TC8);
         param = new ToolCardParam(roundTrack, draftPool, diceBag, board, params);
-
-        ;
     }
+
 
 }

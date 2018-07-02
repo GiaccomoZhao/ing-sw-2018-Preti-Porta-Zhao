@@ -32,6 +32,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     private ServerSocket serverSocket;
 
+    private List<Thread> gameThreads;
+
     private List<GameControllerInterface> gameControllerList;
 
 	private DatabaseInterface databaseInterface;
@@ -63,13 +65,12 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         super(port);
 		this.port=port;
         playerBuffer = new LinkedList<>();
+        gameThreads = new LinkedList<>();
 		gameControllerList = new LinkedList<>();
 		loggedPlayer = new ArrayList<>();
 		socketUsers = new HashMap();
         registry= LocateRegistry.getRegistry();
         inGameLostConnection=new HashMap();
-
-
 	}
 
 
@@ -96,8 +97,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return gameControllerList;
     }
 
+    public List<Thread> getGameThreads() {
+        return gameThreads;
+    }
 
-	@Override
+    @Override
 	public synchronized void join(Player newPlayer) {
         System.out.println("A new player has joined.  ID = " + newPlayer.getPlayerID() + "\t Name = " + newPlayer.getName());
         GameControllerInterface gameController = getGameControllerByPlayer(newPlayer);
@@ -161,24 +165,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         // NOTE: make player leave from the queue before creating single game
         playerBuffer.remove(player);    // if player has joined but want play single game
 
-        //send to clients gameController
-        Game game = (Game) gameController.getGame();
-        for (Player readyPlayer:
-                game.getPlayerList()) {
-            if(socketUsers.containsKey(readyPlayer.getName())){
-
-                game.addObserver(readyPlayer.getName(), (ObjectOutputStream) socketUsers.get(readyPlayer.getName()), this);
-
-            }
-            else
-                try {
-                    game.addObserver(readyPlayer.getName(), this);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-
-        }
-
+        notifyClient(gameController);
+        startThread(gameController);
         return gameController;
 	}
 
@@ -207,6 +195,12 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         gameControllerList.add( gameController );
         playerBuffer.removeAll(subBuffer);
 
+        notifyClient(gameController);
+        startThread(gameController);
+        return gameController;
+	}
+
+	private void notifyClient(GameControllerInterface gameController){
         //send to clients gameController
         Game game = (Game) gameController.getGame();
         for (Player readyPlayer:
@@ -224,10 +218,12 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 }
 
         }
-
-        return gameController;
-	}
-
+    }
+    private void startThread(GameControllerInterface gameController) {
+        Thread gameThread = new Thread((Runnable) gameController);
+        gameThread.start();
+        gameThreads.add(gameThread);
+    }
 
 	@Override
 	public boolean isAlreadyInGame(Player player) throws RemoteException {

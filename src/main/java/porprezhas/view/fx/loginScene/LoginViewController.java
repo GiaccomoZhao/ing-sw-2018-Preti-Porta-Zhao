@@ -75,7 +75,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     private final String voidString = "";
 
 
-    private int port=58091;
+    private final int port = 58090+1;
     private InetAddress ip;
 
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
@@ -113,7 +113,6 @@ public class LoginViewController implements Initializable, SceneController, Move
         timeline.setOnFinished((ae) -> {
             // Switch the Stage
             stageManager.setStage(GuiSettings.stagePatternID, this.stageName);
-
         });
 
         timeline.play();
@@ -450,7 +449,6 @@ public class LoginViewController implements Initializable, SceneController, Move
             else if(this.connectionType == SOCKET){
                 try {
                     ip = InetAddress.getLocalHost();
-                    ip= InetAddress.getLocalHost();
                     ClientActionSingleton.setClientActionInstance(new SocketClientAction(ip, port));
                 } catch (UnknownHostException e) {
                     System.err.println(e.getMessage());

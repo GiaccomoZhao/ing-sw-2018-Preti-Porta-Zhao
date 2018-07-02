@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import static porprezhas.model.Game.NotifyState.BOARD_CREATED;
 import static porprezhas.model.Game.NotifyState.DICE_INSERTED;
+import static porprezhas.model.cards.Card.Effect.TC8;
 import static porprezhas.model.GameConstants.BOARD_BOXES;
 
 public class Game extends ModelObservable implements GameInterface {
@@ -245,6 +246,7 @@ public class Game extends ModelObservable implements GameInterface {
      */
     public Player rotatePlayer() {
         // case anti clock
+        // second turn of round
         if (bCountClockwise) {
             if (iCurrentPlayer == iFirstPlayer) {
                 // when first player has already played for second time
@@ -259,6 +261,7 @@ public class Game extends ModelObservable implements GameInterface {
             }
         } else {
             // case clock wise
+            // first turn of round
             if (iCurrentPlayer == iLastPlayer) {
                 // arrived at last player he'll play 2 time consecutively
                 // so we do not call nextPlayer and just change rotation direction (clockwise)
@@ -267,11 +270,6 @@ public class Game extends ModelObservable implements GameInterface {
                 nextPlayer();
             }
         }
-        gameNotifyState = NotifyState.NEW_TURN;
-        setChanged();
-
-        notifyObservers(new SerializableGame(this));
-
 //        logger.info("It is turn of player n." + iCurrentPlayer);
         return currentPlayer;   // nextPlayer() method changes this attribute
     }
@@ -279,6 +277,11 @@ public class Game extends ModelObservable implements GameInterface {
     public void newTurn() {
         currentPlayer.resetPickableDice();
         currentPlayer.setUsedToolCard(false);
+
+        gameNotifyState = NotifyState.NEW_TURN;
+        setChanged();
+
+        notifyObservers(new SerializableGame(this));
     }
 
 
@@ -661,5 +664,31 @@ public class Game extends ModelObservable implements GameInterface {
                 return;
        //To-do the winner is the last who picked the dice in the first turn in the last round
     }
+
+
+    public boolean isFirstTurn() {
+        // during the first turn the rotation is clock wise
+        return !bCountClockwise;
+    }
+
+
+    public boolean useToolCard(int cardIndex, ToolCardParam param) {
+        ToolCard toolCard = (ToolCard) toolCardList.get(cardIndex);
+        boolean bSuccess;
+
+        bSuccess = toolCard.getStrategy().use(param);
+
+        if(bSuccess) {
+
+            toolCard.addTokens();
+
+            if (ToolCard.hasEffect[cardIndex]) {
+                currentPlayer.addEffect(Card.Effect.getToolCardEffect(cardIndex));
+            }
+        }
+
+        return bSuccess;
+    }
+
 
 }

@@ -8,6 +8,7 @@ import javafx.scene.paint.ImagePattern;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
+import porprezhas.view.fx.gameScene.state.DiceContainerType;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
@@ -18,7 +19,7 @@ public class BoardView extends GenericBoardView {// extends GridPane {
 
     // create a BoardView by passing a configured(may in FXML) GridPane
     public BoardView(int playerPosition, GridPane board, ImageView bag, FlowPane tokens, ImageView timer) {
-        super(board, DiceContainer.fromPlayer(playerPosition));
+        super(board, DiceContainerType.fromPlayer(playerPosition));
         this.bag = bag;
         this.tokens = tokens;
         this.timer = timer;
@@ -77,6 +78,5 @@ public class BoardView extends GenericBoardView {// extends GridPane {
     public DiceView addDice(Dice dice, int row, int col) { //int num, char color){
         return super.addDice(dice, row, col);
     }
-
 
 }

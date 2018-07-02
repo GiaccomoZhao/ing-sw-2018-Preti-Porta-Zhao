@@ -4,6 +4,7 @@ import porprezhas.exceptions.diceMove.NotYourTurnException;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
+import porprezhas.model.cards.Card;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.cards.ToolCardParam;
 import porprezhas.model.database.DatabaseInterface;
@@ -129,44 +130,58 @@ public class GameController  implements GameControllerInterface, Runnable {
         for (int i = 0; i < 2 * playerList.size(); i++) {
             player = game.getCurrentPlayer();
 
-
-            Date dNow = new Date( );
-            SimpleDateFormat ft = new SimpleDateFormat ("hh:mm:ss:SS");
-            System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition() + 1, player.getName(), ft.format(dNow));
-
             // let player play if the player isn't frozen
-                player.play();  // NOTE: this statement must be in the same synchronized block of wait()
-            if (game.isfreeze(player))
-                player.passes(true);
+            // and hasn't used tool card that causes player skip the turn
+            if (!game.isfreeze(player) &&
+                    !player.hasSkipTurnEffect()) {
 
-            //wait everybody for a timeout then pass or player pass
-            //possible other solution: Timer or while sleep nanoTime
-            while(false == player.hasPassed()) {    // wait player passes or timeout make him pass the turn
-                try {
-                    synchronized(playTimeOut) {
-                        if(game.getCurrentPlayer().getName().toUpperCase().contains("ZX"))      // NOTE: test use, remove this
-                            playTimeOut.wait( game.getRoundTimeOut() );
-                        else  {
-                            for (Player p : playerList) {
-                                if(p.getName().toUpperCase().contains("ZX")) {
-                                    playTimeOut.wait(game.getRoundTimeOut()/50);
-                                    player.passes(true);
-                                    break;
-                                }
-                            }
-                            if (!player.hasPassed())
+                // PRINT in server console actual turn
+                Date dNow = new Date();
+                SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss:SS");
+                System.out.format("\tTurn of player n.%-2d  %-14s \t%s\n", player.getPosition() + 1, player.getName(), ft.format(dNow));
+
+                // initialize for a new game
+                game.newTurn();
+
+                player.play();  // set player hasn't passed
+                // wait player passes or timeout make him pass the turn
+                //possible other solution: Timer or while sleep nanoTime
+                while (false == player.hasPassed()) {    // this would be useless, because we have only one "consumer"
+                    try {
+                        synchronized (playTimeOut) {
+                            // suspend this thread for a max of round time out
+                            if (game.getCurrentPlayer().getName().toUpperCase().contains("ZX"))      // NOTE: test use, remove this
                                 playTimeOut.wait(game.getRoundTimeOut());
-                        }
+                            else {
+                                for (Player p : playerList) {
+                                    if (p.getName().toUpperCase().contains("ZX")) {
+                                        playTimeOut.wait(game.getRoundTimeOut() / 50);
+                                        player.passes(true);
+                                        break;
+                                    }
+                                }
+                                // this is the original, not debug use, codes
+                                if (!player.hasPassed())
+                                    playTimeOut.wait(game.getRoundTimeOut());
+                            }
 
-                        pass();
-                        player.passes(true);
+                            // set passed when it is timeout to break the suspension
+                            // to exit from the while cycle
+                            pass();
+                            player.passes(true);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
+            // at end of the turn
+
+            // reset skip turn effect
+            player.removeSkipTurnEffect();
+
+            // pass to next player
             game.rotatePlayer();
-            game.newTurn();
         }
     }
 

@@ -43,61 +43,49 @@ public class CardPane implements SubController{
         cardPane.setBorder(new Border(new BorderStroke( Color.rgb(200, 200, 200),
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 
-        List<Label> labels = new ArrayList<>();
         for (int i = 0; i < cards.size(); i++) {
             if(bDebug) {
                 System.out.println("loading: " + cards.get(i) + ".jpg"); }
-            ImageView imageView = new ImageView(new Image(pathToCards + cards.get(i) + ".jpg"));
+
+            // add image to card
+            // setup vector graphic: image dimension
+            ImageView imageView = null;
+            try {
+                imageView = new ImageView(new Image(pathToCards + cards.get(i).effect.name + ".jpg"));
+            } catch (IllegalArgumentException e) {
+                System.err.println("The file with path+name = " + pathToCards + cards.get(i).effect.name + ".jpg" + " \t has not been found");
+                e.printStackTrace();
+            }
             imageView.fitWidthProperty().bind(cardPane.widthProperty().multiply(CARD_FIT_RATIO));
             imageView.fitHeightProperty().bind(cardPane.heightProperty().multiply(CARD_FIT_RATIO));
             imageView.setPreserveRatio(true);
 
-            labels.add(new Label());
-            labels.get(i).setGraphic(imageView);
+            // attach image to card view
+            CardView cardView =  new CardView(cards.get(i));
+            cardView.setGraphic(imageView);
 
+            // setup vector graphic: image offset
             if(cards.size() == 1) {
-                labels.get(i).translateXProperty().bind( cardPane.widthProperty().subtract(labels.get(i).widthProperty()).subtract(CARD_PANE_PADDING).multiply(0.5) );
-                labels.get(i).translateYProperty().bind( cardPane.heightProperty().subtract(labels.get(i).heightProperty()).subtract(CARD_PANE_PADDING).multiply(0.5) );
+                cardView.translateXProperty().bind( cardPane.widthProperty().subtract(cardView.widthProperty()).subtract(CARD_PANE_PADDING).multiply(0.5) );
+                cardView.translateYProperty().bind( cardPane.heightProperty().subtract(cardView.heightProperty()).subtract(CARD_PANE_PADDING).multiply(0.5) );
             } else {
-                labels.get(i).translateXProperty().bind(cardPane.widthProperty().subtract(labels.get(i).widthProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cards.size() - 1)));
-                labels.get(i).translateYProperty().bind(cardPane.heightProperty().subtract(labels.get(i).heightProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cards.size() - 1)));
+                cardView.translateXProperty().bind(cardPane.widthProperty().subtract(cardView.widthProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cards.size() - 1)));
+                cardView.translateYProperty().bind(cardPane.heightProperty().subtract(cardView.heightProperty()).subtract(CARD_PANE_PADDING).multiply((double) (i) / (cards.size() - 1)));
             }
-            labels.get(i).setBorder(cardBorder);
-            labels.get(i).setOpacity(cardOpacity);
+            // setup board and default opacity
+            cardView.setBorder(cardBorder);
+            cardView.setOpacity(cardOpacity);
 
-            // add transition animation
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(CARD_FADE_IN), labels.get(i));
-            fadeIn.setFromValue(cardOpacity);
-            fadeIn.setToValue(1.0f);
+            // setup Card View
+            cardView.setupSubController(parentController);
+            cardView.setup();
 
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(CARD_FADE_OUT), labels.get(i));
-            fadeOut.setFromValue(1.0f);
-            fadeOut.setToValue(cardOpacity);
-
-            labels.get(i).setOnMouseEntered(event -> {
-                Label source = ((Label)event.getSource());
-                source.toFront();
-                fadeIn.play();
-            });
-
-            labels.get(i).setOnMouseExited(event -> {
-                Label source = ((Label)event.getSource());
-                source.setOpacity(cardOpacity);
-                fadeIn.stop();
-                fadeOut.play();
-            });
-
-            labels.get(i).setOnMouseClicked(event -> {
-                Label source = (Label) event.getSource();
-                System.out.println(source.toString());
-//                System.out.println(source.effect);
-            });
+            // add card view to the card pane
+            cardPane.getChildren().add(cardView);
         }
 
-        cardPane.getChildren().addAll(labels);
-
         cardPane.setOnSwipeLeft(event -> {
-            // change tab to next one
+            // change tab to next one, NOT printing...
             System.out.println("Swipe to left");
         });
     }
@@ -109,5 +97,15 @@ public class CardPane implements SubController{
     @Override
     public void setupSubController(GameViewController parentController) {
         this.parentController = parentController;
+    }
+
+    @Override
+    public void activate() {
+        cardPane.setDisable(false);
+    }
+
+    @Override
+    public void disable() {
+        cardPane.setDisable(true);
     }
 }

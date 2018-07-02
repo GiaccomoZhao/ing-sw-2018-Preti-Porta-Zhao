@@ -16,6 +16,7 @@ import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
+import porprezhas.view.fx.gameScene.state.DiceContainerType;
 
 import java.util.List;
 import java.util.Random;
@@ -24,11 +25,11 @@ import java.util.Scanner;
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 import static porprezhas.view.fx.gameScene.controller.component.GenericBoardView.getDragDiceString;
 
-public class DraftPoolView implements SubController{
+public class DraftPoolView implements DiceContainer {
     private StackPane stackPane;
 //    private List<DiceView> diceList;
 
-    private DiceContainer idBoard = DiceContainer.DRAFT;
+    private DiceContainerType idBoard = DiceContainerType.DRAFT;
 
     public DraftPoolView() {
         stackPane = new StackPane();
@@ -43,10 +44,22 @@ public class DraftPoolView implements SubController{
         this.parentController = parentController;
     }
 
+    @Override
+    public void activate() {
+        stackPane.setDisable(false);
+    }
+    @Override
+    public void disable() {
+        stackPane.setDisable(true);
+    }
+
+    @Override
+    public DiceContainerType getDiceContainer() {
+        return idBoard;
+    }
 
 
-
-    // Remote Call Methods
+    // Remote Called Methods
 
     public void setup(Pane parent) {
         parent.getChildren().add( this.get() ); // add this.stackPane to parent.pane
@@ -160,7 +173,7 @@ public class DraftPoolView implements SubController{
         if(bFound)
             return i;
         else
-            throw new DiceNotFoundInDraftPoolException("Dice with id = " + diceID + " NOT FOUND in " + DiceContainer.fromInt(idBoard.toInt()) );
+            throw new DiceNotFoundInDraftPoolException("Dice with id = " + diceID + " NOT FOUND in " + DiceContainerType.fromInt(idBoard.toInt()) );
     }
 
 
@@ -288,8 +301,9 @@ public class DraftPoolView implements SubController{
         if(bDebug) {
             System.out.println("DraftPool: add dice to x = " + x + " \ty = " + y);
         }
-        DiceView diceView= new DiceView(dice, (int) x, (int) y); // Create a new Dice Image View
+        DiceView diceView= new DiceView(dice, (int) x, (int) y, idBoard.toInt()); // Create a new Dice Image View
         stackPane.getChildren().add(diceView);
+
 
         diceView.fitWidthProperty().bind(stackPane.widthProperty().divide(8).multiply(DRAFT_DICE_ZOOM));
         diceView.fitHeightProperty().bind(stackPane.heightProperty().divide(8).multiply(DRAFT_DICE_ZOOM));
@@ -297,30 +311,9 @@ public class DraftPoolView implements SubController{
 
         translateDice(diceView, x, y);
 
-        diceView.setOnDragDetected(event -> {
-            Dragboard dragboard = diceView.startDragAndDrop(TransferMode.MOVE);
-
-            // Put the Dice information on a dragBoard
-            ClipboardContent content = new ClipboardContent();
-            content.putString(getDragDiceString(this.idBoard.toInt(), diceView.toString()));
-            dragboard.setContent(content);
-
-            dragboard.setDragView(diceView.getImage(), diceView.getFitWidth()/2, diceView.getFitHeight()/2);
-
-            event.consume();
-        });
-        diceView.setOnDragDone(event -> {
-            // the drag and drop gesture ended
-            // if the data was successfully moved, clear it
-            if (event.getTransferMode() == TransferMode.MOVE) {
-                int index = getIndexByDiceID(diceView.getDiceID());
-                if(index >= 0) {
-                    // controller.chooseDice(index)
-//                    chooseDice(index); //clear()
-                    event.consume();
-                }
-            }
-        });
+        diceView.setupSubController(parentController);
+        diceView.addClickListener();
+        diceView.addDragListener();
         return diceView;
     }
 
