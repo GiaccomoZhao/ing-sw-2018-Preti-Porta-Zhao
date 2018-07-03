@@ -54,6 +54,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
         System.out.println(e.getMessage());
     }
 
+    @Override
+    public void invalidUseToolCard(Exception e) {
+        System.out.println(e.getMessage());
+    }
+
 
     public boolean printAll(boolean bFixedFont, int numberOfPlayer, List<Player> players, Player currentPlayer) {
 

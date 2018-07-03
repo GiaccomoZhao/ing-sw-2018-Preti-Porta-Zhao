@@ -43,6 +43,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
 
         if(gameStarted) {
+            Platform.runLater(() -> {
+                gameViewController.updateMessage("");
+                    });
             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             if (game.getCurrentPlayer().getPosition() == this.gameViewController.getPlayerPosition())
                 System.out.println("This is your turn!");
@@ -99,6 +102,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 Platform.runLater(() -> {
                     patternViewController.goToNextStage();
                     gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), myPlayerFinal.getPrivateObjectiveCardList());
+                    gameViewController.updateTokens(game.getPlayerList());
                 } );
                 break;
 
@@ -141,6 +145,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                         // check different with new draft pool
                         // add / remove different dice
                         gameViewController.updateDraftPool(game.getDraftPool());
+
                     }
 
                 });
@@ -197,12 +202,17 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                                         player.getPosition(),
                                         player.getBoard().getBoard());
                             }
+                    //TO_do token
+                       gameViewController.updateTokens(game.getPlayerList());
+
                         });
-                //TO_do token
+
                 break;
 
             case RANKING:
                 System.out.println("Game finished");
+                break;
+
         }
 
         // foreach player: update board
@@ -216,11 +226,16 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     @Override
     public void invalidAction() {
-
+        gameViewController.updateMessage("It's not your turn!");
     }
 
     @Override
     public void invalidDiceInsert(Exception e) {
+        gameViewController.updateMessage(e.getMessage());
+    }
 
+    @Override
+    public void invalidUseToolCard(Exception e) {
+      gameViewController.updateMessage(e.getMessage());
     }
 }

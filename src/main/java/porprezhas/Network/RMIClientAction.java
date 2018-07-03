@@ -129,7 +129,7 @@ public class RMIClientAction implements ClientActionInterface{
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (GenericInvalidActionException e) {
-            System.err.println(e.getMessage());     // print Invalid Move Message
+            viewUpdateHandlerInterface.invalidUseToolCard(e);     // print Invalid Move Message
         } catch (Exception e) { // catch all to avoid missing exception
             e.printStackTrace();
         }

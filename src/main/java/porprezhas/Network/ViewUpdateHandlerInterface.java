@@ -7,4 +7,5 @@ public interface ViewUpdateHandlerInterface {
     void setGameStarted(Boolean gameStarted);
     void invalidAction();
     void invalidDiceInsert(Exception e);
+    void invalidUseToolCard(Exception e);
 }
