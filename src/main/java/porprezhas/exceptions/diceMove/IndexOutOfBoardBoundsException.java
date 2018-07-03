@@ -1,8 +1,10 @@
 package porprezhas.exceptions.diceMove;
 
+import porprezhas.exceptions.GenericInvalidActionException;
+
 import static porprezhas.model.dices.CellPosition.*;
 
-public class IndexOutOfBoardBoundsException extends RuntimeException {
+public class IndexOutOfBoardBoundsException extends GenericInvalidActionException {
     public IndexOutOfBoardBoundsException(String message) {
         super(message);
     }

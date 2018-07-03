@@ -109,7 +109,7 @@ public class DiceView extends ImageView implements SubController {
 //        Dice.ColorDice color = Dice.ColorDice.getByString( szColor );
 //        dice = new Dice(number, color);
 
-        return new DiceView(column, row, diceID, -1);
+        return new DiceView(row, column, diceID, -1);
     }
 
     public int getColumn() {

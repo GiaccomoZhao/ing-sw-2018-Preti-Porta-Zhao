@@ -87,7 +87,6 @@ public class GameViewState implements SubController {
     public void clear() {
         params = new ToolCardParamBuilder();
 
-
         fromContainers.clear();
         savedDiceViews.clear();
         toContainers.clear();
@@ -189,7 +188,7 @@ public class GameViewState implements SubController {
                     Boolean incDec = new IncDecBox().display();
                     if(null != incDec) {
                         params.add(incDec ? 1 : 0);
-                    } else {
+                    } else {    // when user click X to close the dialog box
                         useToolCard(null);  // reset the view, as not used tool card
                         return false;
                     }
@@ -222,11 +221,7 @@ public class GameViewState implements SubController {
                 int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
                 params.add(indexDice);
             }
-            if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
-                params.add(fromRow);
-                params.add(fromCol);
-            }
-            if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
+            if(idBoardFrom == DiceContainerType.BOARD1.toInt()) {
                 params.add( fromRow );
                 params.add( fromCol );
             } else if ( idBoardTo == DiceContainerType.TRACK.toInt()) {
@@ -237,10 +232,6 @@ public class GameViewState implements SubController {
             if(idBoardFrom == DRAFT.toInt()) {
                 int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
                 params.add(indexDice);
-            }
-            if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
-                params.add(fromRow);
-                params.add(fromCol);
             }
             if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
                 params.add( toRow );
@@ -284,7 +275,7 @@ public class GameViewState implements SubController {
                     }
                 }
                 bResult = gameViewController.useToolCard(usingCard.ID, params.getParams());
-                clear();
+                useToolCard(null);
             } else {
                 if (bDebug) {
                     System.err.println("required param quantity = " + ToolCardStrategy.parameterSizes[ usingCard.ID ] + "\t inputed = " + params.getParams().size());

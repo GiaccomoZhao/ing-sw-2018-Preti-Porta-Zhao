@@ -35,9 +35,6 @@ public class ToolCardParamBuilder {
      * @return the builder
      */
     public ToolCardParamBuilder build(int idBoardFrom, int fromParam1, int fromParam2, int idBoardTo, int toParam1, int toParam2) {
-        Integer firstParam = null;
-        Integer paramOne = null;
-        Integer paramTwo = null;
 
         if(idBoardFrom == DiceContainerType.DRAFT.toInt()) {
             params.add(fromParam1);

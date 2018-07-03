@@ -1,6 +1,8 @@
 package porprezhas.exceptions.diceMove;
 
-public class DiceNotFoundInDraftPoolException extends RuntimeException {
+import porprezhas.exceptions.GenericInvalidActionException;
+
+public class DiceNotFoundInDraftPoolException extends GenericInvalidActionException {
     public DiceNotFoundInDraftPoolException(String message) {
         super(message);
     }
