@@ -16,4 +16,6 @@ public interface GameViewUpdaterInterface {
 
     void updateTimer(Player player);
     void updateTokens(List<Player> players);
+
+    void updateMessage(String message);
 }

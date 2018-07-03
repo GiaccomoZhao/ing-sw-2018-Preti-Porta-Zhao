@@ -126,7 +126,7 @@ public class Player implements Serializable {
         this.privateObjectiveCardList = privateObjectiveCardList;
     }
 
-    public boolean hasPassed() {    // TODO: can someone help me to make a better name for this method?
+    public boolean hasPassed() {
         return bPass;
     }
 

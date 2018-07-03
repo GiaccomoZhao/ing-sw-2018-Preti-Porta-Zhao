@@ -69,6 +69,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     @FXML private StackPane fx_privateCardPane;
     @FXML private StackPane fx_publicCardPane;
 
+    @FXML private Label fx_message;
 
     //  ***** VIDEO Setting attributes *****
     // TODO: this can be imported in the VIDEO settings
@@ -124,7 +125,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     public GameViewController() {
 
-        num_player = 4; // TODO: Remove this Fake
+        num_player = 4; // TODO: Remove this Fake -- actually server will reset this
 //        updatePlayerInfo(player);
 //        if(this.num_player > 1)
         enemyPanes = new ArrayList<>();     // Pane[this.num_player-1];
@@ -872,5 +873,9 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     public DraftPoolView getDraftPoolView() {
         return draftPoolView;
+    }
+
+    public void updateMessage(String message) {
+        fx_message.setText(message);
     }
 }

@@ -339,7 +339,7 @@
                                                 </Tab>
                                             </tabs>
                                           </TabPane>
-                                          <Label minHeight="0.0" minWidth="0.0" prefHeight="150.0" text="此乃神卡也，不亦乐乎。使用此卡，即可立即胜利！我信你为人君子，是喜爱公平斗争之人。不可使用此卡危害他人。" textAlignment="JUSTIFY" wrapText="true" VBox.vgrow="SOMETIMES" />
+                                          <Label fx:id="fx_message" minHeight="0.0" minWidth="0.0" prefHeight="150.0" text="此乃神卡也，不亦乐乎。使用此卡，即可立即胜利！我信你为人君子，是喜爱公平斗争之人。不可使用此卡危害他人。" textAlignment="JUSTIFY" wrapText="true" VBox.vgrow="SOMETIMES" />
                                                     </children>
                                                 </VBox>
                                             </children>

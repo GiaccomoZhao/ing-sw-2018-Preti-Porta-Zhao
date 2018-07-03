@@ -11,8 +11,10 @@ import porprezhas.view.fx.gameScene.controller.dialogBox.IncDecBox;
 import java.util.ArrayList;
 import java.util.List;
 
+import static porprezhas.view.fx.gameScene.GuiSettings.TRACK_DICE_ZOOM;
 import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
 import static porprezhas.view.fx.gameScene.state.DiceContainerType.DRAFT;
+import static porprezhas.view.fx.gameScene.state.DiceContainerType.TRACK;
 
 public class GameViewState implements SubController {
     GameViewController gameViewController;
@@ -183,7 +185,7 @@ public class GameViewState implements SubController {
         if( null != this.hasUsingCard() ) {
             if(idBoard == DRAFT.toInt()) {
                 int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
-                params.build(idBoard, indexDice, -1, -1, -1, -1);
+                params.build(idBoard, indexDice, -1);
                 if(usingCard.ID == Card.Effect.TC1.ID) {
                     Boolean incDec = new IncDecBox().display();
                     if(null != incDec) {
@@ -193,7 +195,11 @@ public class GameViewState implements SubController {
                         return false;
                     }
                 }
+
+            } else if(idBoard == TRACK.toInt()) {
+                params.build(idBoard, diceView.getRow(), diceView.getColumn());
             }
+
             return this.action();
         }
         return false;

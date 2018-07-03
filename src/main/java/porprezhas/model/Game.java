@@ -313,7 +313,7 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
 
-    // TODO: this block of code should be transferred in serverController
+    // TODO: this block of code should be transferred in serverController -- check that server controller has this
     /* @ensures playerList.contains(player)
        @signals (GamePlayerFullException e) \old(playerList).size >= max
        @signals (InvalidPlayerException e) param == null

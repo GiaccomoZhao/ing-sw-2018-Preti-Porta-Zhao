@@ -26,29 +26,22 @@ public class ToolCardParamBuilder {
     /**
      * Build a Tool Card Parameter
      *
-     * @param idBoardFrom
-     * @param fromParam1 dice identifier, for board is int row, for draft pool is int index
-     * @param fromParam2                  for board is int col
-     * @param idBoardTo
-     * @param toParam1    for board is row,   for track is indexRound
-     * @param toParam2    for board is col    for track is indexDice
+     * @param idBoard
+     * @param param1 dice identifier, for board is int row, for track is indexRound, for draft pool is int index
+     * @param param2                  for board is int col, for track is indexDice,  for draft pool is nothing
      * @return the builder
      */
-    public ToolCardParamBuilder build(int idBoardFrom, int fromParam1, int fromParam2, int idBoardTo, int toParam1, int toParam2) {
+    public ToolCardParamBuilder build(int idBoard, int param1, int param2) {
 
-        if(idBoardFrom == DiceContainerType.DRAFT.toInt()) {
-            params.add(fromParam1);
+        if(idBoard == DiceContainerType.DRAFT.toInt()) {
+            params.add(param1);
         }
-        if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
-            params.add(fromParam1);
-            params.add(fromParam2);
-        }
-        if(idBoardTo == DiceContainerType.BOARD1.toInt()) {
-            params.add( toParam1 );
-            params.add( toParam2 );
-        } else if ( idBoardTo == DiceContainerType.TRACK.toInt()) {
-            params.add( toParam1 );
-            params.add( toParam2 );
+        if(idBoard == DiceContainerType.BOARD1.toInt()) {
+            params.add( param1 );
+            params.add( param2 );
+        } else if ( idBoard == DiceContainerType.TRACK.toInt()) {
+            params.add( param1 );
+            params.add( param2 );
         }
         return this;
     }

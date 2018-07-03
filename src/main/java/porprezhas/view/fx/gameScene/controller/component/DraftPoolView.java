@@ -230,6 +230,7 @@ public class DraftPoolView implements DiceContainer {
                         int x = (int) (event.getX() - stackPane.getWidth() / 2);
                         int y = (int) (event.getY() - stackPane.getHeight() / 2);
 
+                        // translate the dice inside the draft pool
                         if (idBoardFrom == this.idBoard.toInt()) {
                             for (int i = 0, indexDiceView = 0; i < stackPane.getChildren().size(); i++) {
                                 Node node = stackPane.getChildren().get(i);
