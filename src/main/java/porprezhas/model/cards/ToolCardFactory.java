@@ -17,7 +17,7 @@ public class ToolCardFactory implements CardFactory {
 
     /**
      * create the list of Tool Cards
-     * @param difficulty used to define the cases of singleplayer or multiplayer
+     * @param difficulty used to define the case of singleplayer
      */
 
     public ToolCardFactory(Game.SolitaireDifficulty difficulty) {
@@ -28,6 +28,11 @@ public class ToolCardFactory implements CardFactory {
 
         this.numberOfCard = difficulty.toToolCardsQuantity();
     }
+
+    /**
+     * create the list of Tool Cards
+     * @param numberOfPlayer used to define the difference between singleplayer and multiplayer
+     */
 
     public ToolCardFactory(int numberOfPlayer) {
         numberList = new ArrayList<Integer>();
