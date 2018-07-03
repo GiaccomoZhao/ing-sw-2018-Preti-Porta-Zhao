@@ -55,6 +55,13 @@ public class CellPosition {
         return this;
     }
 
+    /**
+     * it tells if a certain position is on a border of the board
+     * @param row position's row
+     * @param col position's column
+     * @return true if it's a border position, false if it is not
+     */
+
     public static boolean isBorderPosition(int row, int col){
         if(     row == MIN_ROW    ||  row == MAX_ROW  ||
                 col == MIN_COLUMN ||  col == MAX_COLUMN )
@@ -63,6 +70,12 @@ public class CellPosition {
             return false;
     }
 
+    /**
+     * returns a random inner position of the board
+     * @param seed used to create a random position
+     * @return the generated position
+     */
+
     public static CellPosition getRandomInnerValue(long seed) {
         Random seededRandom = new Random(seed);
         CellPosition position = new CellPosition(
@@ -70,6 +83,12 @@ public class CellPosition {
                 seededRandom.nextInt(MAX_COLUMN - MIN_COLUMN - 2) + 1);
         return position;
     }
+
+    /**
+     * returns a random border position of the board
+     * @param seed used to create a random position
+     * @return the generated position
+     */
 
     public static CellPosition getRandomBorderValue(long seed) {
         Random seededRandom = new Random(seed);
@@ -81,6 +100,14 @@ public class CellPosition {
     public static CellPosition getRandomBorderValue(long seed, Bound bound) {
         return getRandomBorderValue(seed, bound, false);
     }
+
+    /**
+     * implementation of the effect fot getRandomBorderValue
+     * @param seed used to generate the position
+     * @param bound used to choose a border
+     * @param bOnlyInner
+     * @return the generated position
+     */
     public static CellPosition getRandomBorderValue(long seed, Bound bound, boolean bOnlyInner) {
         Random seededRandom = new Random(seed);
         int row = MIN_ROW;      // initialize with a default value, this will be changed for 100%
@@ -92,23 +119,23 @@ public class CellPosition {
         switch (bound) {
             // TOP
             case TOP:
-                row = seededRandom.nextInt(ROW - anchorNumber) + anchorOffset;
-                col = MIN_COLUMN;
-                break;
-            // BOTTOM
-            case BOTTOM:
-                row = seededRandom.nextInt(ROW - anchorNumber) + anchorOffset;
-                col = MAX_COLUMN;
-                break;
-            // LEFT
-            case LEFT:
                 row = MIN_ROW;
                 col = seededRandom.nextInt(COLUMN - anchorNumber) + anchorOffset;
                 break;
-            // RIGHT
-            case RIGHT:
+            // BOTTOM
+            case BOTTOM:
                 row = MAX_ROW;
                 col = seededRandom.nextInt(COLUMN - anchorNumber) + anchorOffset;
+                break;
+            // LEFT
+            case LEFT:
+                row = seededRandom.nextInt(ROW - anchorNumber) + anchorOffset;
+                col = MIN_COLUMN;
+                break;
+            // RIGHT
+            case RIGHT:
+                row = seededRandom.nextInt(ROW - anchorNumber) + anchorOffset;
+                col = MAX_COLUMN;
                 break;
         }
         return new CellPosition(row, col);
