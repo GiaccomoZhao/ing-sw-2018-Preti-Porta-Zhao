@@ -1,6 +1,7 @@
 package porprezhas.Network;
 
 import porprezhas.Network.rmi.common.ServerRMIInterface;
+import porprezhas.exceptions.GenericInvalidActionException;
 import porprezhas.exceptions.toolCard.ToolCardParameterException;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 
@@ -113,7 +114,7 @@ public class RMIClientAction implements ClientActionInterface{
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-        } catch (ToolCardParameterException e) {
+        } catch (GenericInvalidActionException e) {
             System.err.println(e.getMessage());     // print Invalid Move Message
         } catch (Exception e) { // catch all to avoid missing exception
             e.printStackTrace();

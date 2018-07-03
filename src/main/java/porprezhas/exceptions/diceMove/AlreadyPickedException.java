@@ -1,6 +1,8 @@
 package porprezhas.exceptions.diceMove;
 
-public class AlreadyPickedException extends RuntimeException {
+import porprezhas.exceptions.GenericInvalidActionException;
+
+public class AlreadyPickedException extends GenericInvalidActionException {
     public AlreadyPickedException(String message) {
         super(message);
     }

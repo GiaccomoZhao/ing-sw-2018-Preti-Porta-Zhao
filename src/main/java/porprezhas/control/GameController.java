@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
+
 public class GameController  implements GameControllerInterface, Runnable {
     static Logger logger = Logger.getLogger(GameController.class.getName());
 
@@ -305,6 +307,13 @@ public class GameController  implements GameControllerInterface, Runnable {
         boolean bSet = false;
         boolean bAllSet = true;
 	    if(state.equals(StateMachine.PLAYER_PREPARING)) {
+
+	        if(bDebug) {
+                if (player.getName().toUpperCase().contains("ZX")) {   // test use
+                    indexPatternType = -666;
+                }
+            }
+
 	        bSet = game.setPattern(player, indexPatternType);
         }
         // unlock timeout when all player has chosen

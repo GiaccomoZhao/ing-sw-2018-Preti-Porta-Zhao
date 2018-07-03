@@ -832,7 +832,7 @@ public class Board implements Serializable {
 //        String exampleDiceString = new Dice(1, Dice.ColorDice.PURPLE).toString();   // take the longest dice string, at moment are all the same
         String exampleDiceString = "  Dice{empty}  ";   // take the longest dice string
         String strDice;
-        StringBuilder  sbBoard = new StringBuilder("Board[" + dimensionRow + "x" + dimensionColumn + "] from (row:col)=(" + row + ":" + col + "): \n" );
+        StringBuilder  sbBoard = new StringBuilder("Board[" + dimensionRow + "x" + dimensionColumn + "] at (row:col)=(" + row + ":" + col + "): \n" );
 
         for (int r = row - 1; r <= row + 1; r++) {
             for (int c = col - 1; c <= col + 1; c++) {
