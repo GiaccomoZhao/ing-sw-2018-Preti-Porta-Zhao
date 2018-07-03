@@ -117,7 +117,7 @@ public class ToolCardTest {
 
         when(draftPoolTest.diceList()).thenReturn(diceListTest);
 
-        when(draftPoolTest.diceSubstitute(draftPoolSubDice,1)).thenReturn(draftPoolDice1);
+        when(draftPoolTest.diceSubstitute(draftPoolSubDice, 1 -1)).thenReturn(draftPoolDice1);
 
         diceBagAux = mock(DiceBag.class);
         when(diceBagAux.GetRandomDices(4)).thenReturn(diceListTest);

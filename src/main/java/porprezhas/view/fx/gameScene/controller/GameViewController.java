@@ -205,42 +205,18 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
 
-    // this will be called by JavaFX
-    public void initialize() {
-        if(bDebug)
-            System.out.println("Initializing GameView");
-
-        // assign the rootLayout the top most parent pane, now that it is initialized
-        rootLayout = fx_gameScene;
-
-        Platform.runLater(() -> {
-            // Add Window Appear Animation
-            setCurrentStageTransition();
-        });
 
 
-        // setup our game GUI with following methods
-        // Images
-        setGameCursor();
-        setBackground();
 
-        // Listeners
-        setResizeListener();        // add Resize Listener for GamePane(including all players panel, round track, etc)
-//        setupRoundTrackListener();  // add action listener for round track's dice list dropping
 
-/*
-        for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
-            VBox vBox = new VBox();
-            vBox.setAlignment(Pos.TOP_CENTER);
-            vBox.setBorder(new Border(new BorderStroke(Color.RED,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-            roundTrackLists.add(vBox);
-            roundTrackDiceTable.add(vBox, i, 1, 1, 8);
-        }
-*/
-
+    // getters
+    public DraftPoolView getDraftPoolView() {
+        return draftPoolView;
     }
 
+    public List<BoardView> getBoardList() {
+        return boardList;
+    }
 
 
 
@@ -312,10 +288,45 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
 
 
+    // VIEW SETUPs
 
-    public List<BoardView> getBoardList() {
-        return boardList;
+    // this will be called by JavaFX
+    public void initialize() {
+        if(bDebug)
+            System.out.println("Initializing GameView");
+
+        // assign the rootLayout the top most parent pane, now that it is initialized
+        rootLayout = fx_gameScene;
+
+        Platform.runLater(() -> {
+            // Add Window Appear Animation
+            setCurrentStageTransition();
+        });
+
+
+        // setup our game GUI with following methods
+        // Images
+        setGameCursor();
+        setBackground();
+
+        // Listeners
+        setResizeListener();        // add Resize Listener for GamePane(including all players panel, round track, etc)
+//        setupRoundTrackListener();  // add action listener for round track's dice list dropping
+
+/*
+        for (int i = 0; i < Game.GameConstants.ROUND_NUM; i++) {
+            VBox vBox = new VBox();
+            vBox.setAlignment(Pos.TOP_CENTER);
+            vBox.setBorder(new Border(new BorderStroke(Color.RED,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            roundTrackLists.add(vBox);
+            roundTrackDiceTable.add(vBox, i, 1, 1, 8);
+        }
+*/
+
     }
+
+
 
 
     private void setupCards(List<Card> toolCards, List<Card> publicObjectiveCards, List<Card> privateObjectiveCards) {
@@ -871,11 +882,8 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         }
     }
 
-    public DraftPoolView getDraftPoolView() {
-        return draftPoolView;
-    }
-
     public void updateMessage(String message) {
         fx_message.setText(message);
     }
+
 }

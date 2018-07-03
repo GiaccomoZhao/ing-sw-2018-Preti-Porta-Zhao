@@ -1,20 +1,18 @@
-GUI: single player preparation scene
-GUI: ToolCard
-RMI 2 PC
-JAR!
-FIX LAST DRAW CALSCORE
-FIX TOKENS TOOL CARD
-------------------------------  for 17/06 zx die...
+View: test ToolCard in Gui and Cli
 
-...
+GUI, to fix:
+1. Pattern falsa
+2. use non immediata per card n.4
+3. messaggio di exception
+4. favor tokens
+5. result view transition
+6. draft pool con dadi che ritornano sul gui
+7. tool card n.6 and n.11 to finish
 
 
-fix single player
+Control:
+- fix single player
+- favor tokens
+
+
 UML
-
-
-User Action list
-Animation
-
-JavaDoc
-Tests

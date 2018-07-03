@@ -83,7 +83,7 @@ public class ToolCard9StrategyTest {
        int col=4;
 
 
-       params.add(idDiceDraftPool);
+       params.add(draftPool.getDiceIndexByID(idDiceDraftPool));
        params.add(row);
        params.add(col);
 

@@ -122,6 +122,16 @@ public class DraftPool implements Serializable {
     }
 
     // return old.dice or throw notFound Exception
+    public Dice diceSubstitute(Dice newDice, int indexDiceDraftPool){
+        int index = indexDiceDraftPool;
+        Dice oldDice;
+
+        oldDice = draftPool.get(index);
+        draftPool.set(index,newDice);
+        return oldDice;
+    }
+
+/*
     public Dice diceSubstitute(Dice newDice, long idDiceDraftPool){
         int index = getDiceIndexByID(idDiceDraftPool);
         Dice oldDice;
@@ -130,6 +140,7 @@ public class DraftPool implements Serializable {
         draftPool.set(index,newDice);
         return oldDice;
     }
+*/
 
 
     public void addDice(Dice dice){

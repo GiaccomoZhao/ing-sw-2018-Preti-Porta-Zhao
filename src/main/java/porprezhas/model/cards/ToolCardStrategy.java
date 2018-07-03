@@ -20,7 +20,7 @@ import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
 import static porprezhas.model.dices.Dice.MIN_DICE_NUMBER;
 
 public interface ToolCardStrategy {
-    public static final int[] parameterSizes = {-1, 2, 4, 4, 8, 3, 1, 0, 2 ,3, 1, 1, 8};   // skip first for better using index
+    public static final int[][] parameterSizes = {{-1}, {2}, {4}, {4}, {8}, {3}, {1,2}, {0}, {2} ,{3}, {1}, {1,3}, {8}};   // skip first for better using index
     ToolCardStrategy[] list = {
             new ToolCard1(),
             new ToolCard2(),
@@ -37,6 +37,8 @@ public interface ToolCardStrategy {
     };
 
     boolean use(ToolCardParam param);
+    Object getReturn();
+    void reset();
 }
 
 
@@ -48,7 +50,18 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
     private Integer indexChosenDice;
     private Boolean bIncDec;
 
-    private final int parameterSize = parameterSizes[1];
+    private final int parameterSize = parameterSizes[1][0];
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
+
 
     /**
      * apply the effect of the Tool Card 1
@@ -76,10 +89,6 @@ class ToolCard1 implements ToolCardStrategy, Serializable {
 
         // Use Tool Card
         savedReturn = use(draftPool, indexChosenDice, bIncDec);
-        return savedReturn;
-    }
-
-    public boolean getReturn() {
         return savedReturn;
     }
 
@@ -150,6 +159,17 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
         this.savedReturn = false;
     }
 
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
+
     /**
      * apply the effect of the Tool Cards
      * @param param contains all the parameter used by the card
@@ -158,13 +178,12 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
      * @throws MoveToSelfException
      * @throws NotRemovableDiceException
      */
-
     @Override
     public boolean use(ToolCardParam param)
             throws IncorrectParamQuantityException, MoveToSelfException, NotRemovableDiceException {
 
         // reset the return
-        resetReturn();      // TODO: reset this at NEW_TURN
+        reset();      // TODO: reset this at NEW_TURN
 
         // safety Check parameter quantity
         if(null == param  ||  !param.safetyCheck(parameterSize)) {
@@ -217,14 +236,6 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
     }
 
 
-    public void resetReturn() {
-        savedReturn = false;
-    }
-
-    public boolean getReturn() {
-        return savedReturn;
-    }
-
     /**
      * auxiliary function used by Tool Card 2,3,4
      * @param board board of the player
@@ -250,8 +261,7 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
             try {
                 board.insertDice(removedDice, fromRow, fromColumn, Board.Restriction.NONE);
             } catch (Exception e1) {
-                System.err.println("Abnormal error: Can NOT undo the effect of tool card " + this + "");
-                e1.printStackTrace();
+                throw new GameAbnormalException("Can NOT undo the effect of tool card " + this + "");
             }
 
             throw e; // new ToolCardParameterException(e.getMessage());
@@ -261,7 +271,7 @@ class ToolCard_Move implements ToolCardStrategy, Serializable {
 }
 
 class ToolCard2 extends ToolCard_Move {
-    private final int parameterSize = parameterSizes[2];
+    private final int parameterSize = parameterSizes[2][0];
 
     public ToolCard2() {
         super();
@@ -277,7 +287,6 @@ class ToolCard2 extends ToolCard_Move {
      * @throws MoveToSelfException
      * @throws NotRemovableDiceException
      */
-
     @Override
     public boolean use(ToolCardParam param)
             throws IncorrectParamQuantityException, MoveToSelfException, NotRemovableDiceException {
@@ -300,7 +309,7 @@ class ToolCard2 extends ToolCard_Move {
 }
 
 class ToolCard3 extends ToolCard_Move {
-    private final int parameterSize = parameterSizes[3];
+    private final int parameterSize = parameterSizes[3][0];
 
     public ToolCard3() {
         super();
@@ -348,7 +357,7 @@ class ToolCard4 extends ToolCard_Move {
     private int toRow2;
     private int toColumn2;
 
-    private final int parameterSize = parameterSizes[4];
+    private final int parameterSize = parameterSizes[4][0];
 
     public ToolCard4() {
         super();
@@ -434,12 +443,23 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
 
     private DraftPool draftPool;
-    private long idDiceDraftPool;
+    private int iDiceDraftPool;
     private RoundTrack roundTrack;
     private int indexRound;
     private int indexDiceRoundTrack;    // the dice to be removed from round track
 
-    private final int parameterSize = parameterSizes[5];
+    private final int parameterSize = parameterSizes[5][0];
+
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
 
 
     /**
@@ -447,7 +467,6 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
      * @param param contains all the parameter used by the card
      * @return the success of the operation
      */
-
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -460,55 +479,63 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
 
         int iParam = 0;
         this.draftPool      = param.getDraftPool();
-        this.idDiceDraftPool= param.getParams().get(iParam++).longValue();
+        this.iDiceDraftPool= param.getParams().get(iParam++);
         this.roundTrack     = param.getRoundTrack();
         this.indexRound     = param.getParams().get(iParam++);
         this.indexDiceRoundTrack = param.getParams().get(iParam++);
 
-        savedReturn = use(draftPool, idDiceDraftPool, roundTrack, indexRound, indexDiceRoundTrack);
+        savedReturn = use(draftPool, iDiceDraftPool, roundTrack, indexRound, indexDiceRoundTrack);
         return savedReturn;
     }
-
-
-    public boolean getReturn() {
-        return savedReturn;
-    }
-
 
     /**
      * Effect of the Tool Card 5:
      * Exchange a dice of draft pool with a dice in round track
      *
      * @param draftPool draftpool of the game
-     * @param idDiceDraftPool ID of the dice in the draftpool to swap
+     * @param iDiceDraftPool Index of the dice in the draftpool to swap
      * @param roundTrack roundtrack of the game
      * @param indexRound index of the round considered in the roundtrack
      * @param indexDiceRoundTrack index of the dice in the roundtrack to swap
      * @return the success of the operation
      */
-    public boolean use(DraftPool draftPool, long idDiceDraftPool, RoundTrack roundTrack, int indexRound,  int indexDiceRoundTrack) {
+    public boolean use(DraftPool draftPool, int iDiceDraftPool, RoundTrack roundTrack, int indexRound,  int indexDiceRoundTrack) {
 
         //remove the dice from the roundTrack
         Dice diceRoundTrack = roundTrack.removeDice(indexRound, indexDiceRoundTrack);
         //add the dice removed from the roundTrack to the draftPool and replace the old dice in the roundTrack
         // with the dice in the chosen position
         roundTrack.addDice(indexRound,
-                draftPool.diceSubstitute(diceRoundTrack, idDiceDraftPool));
+                draftPool.diceSubstitute(diceRoundTrack, iDiceDraftPool));
         return true;
     }
 }
 
 
 class ToolCard6 implements ToolCardStrategy, Serializable {
-    private boolean savedReturn = false;
+    private Object savedReturn;
+    Dice rolledDice;        // the saved return of first use
 
     private DraftPool draftPool;
-    private long idDiceDraftPool;
+    private int iDiceDraftPool;
 //    private int indexDiceDraftPool;
     private Board board;
+    private int toRow;
+    private int toColumn;
 
-    private final int parameterSize = parameterSizes[6];
+    private int iProcess = 0;
+//    private final int parameterSize = parameterSizes[6]
 
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
 
     @Override
     public boolean use(ToolCardParam param) {
@@ -516,23 +543,41 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
         if(null == param) {
             throw new IncorrectParamQuantityException();
         }
-        else if(!param.safetyCheck(parameterSize)) {
-            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        else if(!param.safetyCheck(parameterSizes[6][iProcess])) {
+            throw new IncorrectParamQuantityException(parameterSizes[6][iProcess], param.getParams());
         }
 
-        this.draftPool      = param.getDraftPool();
-        this.idDiceDraftPool= param.getParams().get(0).longValue();
+        if(iProcess == 0) {
+            this.draftPool = param.getDraftPool();
+            this.iDiceDraftPool = param.getParams().get(0);
 //        this.indexDiceDraftPool= param.getParams().get(0);
-        this.board          = param.getBoard();
+            this.board = param.getBoard();
 
-        savedReturn = use(draftPool, idDiceDraftPool, board);
+            savedReturn = use1();
 //        savedReturn = use(draftPool, indexDiceDraftPool, board);
-        return savedReturn;
-    }
+            if(null== savedReturn) {
+                reset();
+                return false;
+            }
+            else {
+                iProcess ++;
+                return true;
+            }
+        }
+        else if(iProcess == 1){
+            this.board = param.getBoard();
+            this.toRow = param.getParams().get(0);
+            this.toColumn = param.getParams().get(1);
 
+            savedReturn = use2();
+            if(savedReturn.equals(true)) {
+                reset();
+                return true;
+            } else
+                return false;
+        }
 
-    public boolean getReturn() {
-        return savedReturn;
+        throw new GameAbnormalException("TC6 may be not reset before being used an other time");
     }
 
     /**
@@ -542,17 +587,17 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
      *      if it cannot be placed in the board, add it to the draftPool
      *      otherwise the player is constrained to place it in his board
      *
-     * @param draftPool draftpool of the game
-     * @param idDiceDraftPool Id of the dice in the draftpool to roll
-     * @param board board of the player
+//     * @param draftPool draftpool of the game
+//     * @param iDiceDraftPool Index of the dice in the draftpool to roll
+//     * @param board board of the player
      * @Return mustBePlaced, true means the Caller MUST insert this dice in board
      *                       false means this dice will be put in draft pool
      */
-    private boolean use (DraftPool draftPool, long idDiceDraftPool, Board board) {
+    private Dice use1() { //(DraftPool draftPool, int iDiceDraftPool, Board board) {
 //    private boolean use (DraftPool draftPool, int indexDiceDraftPool, Board board) {
 
-        Dice rolledDice;
-        rolledDice = draftPool.chooseDice(idDiceDraftPool);
+//        rolledDice = draftPool.chooseDice(idDiceDraftPool);
+        rolledDice = draftPool.chooseDice(iDiceDraftPool);
 //        rolledDice = draftPool.chooseDice(indexDiceDraftPool);
         rolledDice.roll();
 
@@ -568,7 +613,13 @@ class ToolCard6 implements ToolCardStrategy, Serializable {
         if(!canBePlaced)
             draftPool.addDice(rolledDice);
 
-        return canBePlaced;
+        return canBePlaced ?
+                rolledDice :
+                null;
+    }
+
+    private Boolean use2() {
+        return board.insertDice(rolledDice, toRow, toColumn, Board.Restriction.ALL);
     }
 }
 
@@ -578,14 +629,25 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
 
     private DraftPool draftPool;
 
-    private final int parameterSize = parameterSizes[7];
+    private final int parameterSize = parameterSizes[7][0];
+
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
+
 
     /**
      * Implementation of Tool Card 7
      * @param param all the parameters used by the method
      * @return the success of the operation
      */
-
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -601,12 +663,6 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
         savedReturn = use(draftPool);
         return savedReturn;
     }
-
-
-    public boolean getReturn() {
-        return savedReturn;
-    }
-
 
     /**
      *implementation of the effect of Tool Card 7
@@ -630,7 +686,7 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
 
     private DraftPool draftPool;
-    private long idDiceDraftPool;
+    private int iDiceDraftPool;
 //    private int indexDiceDraftPool;
     private Board board;
     private int row;
@@ -639,12 +695,23 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
 
     private final int parameterSize = 4;
 
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
+
+
     /**
      * implementation of Tool Card 8 & 9
      * @param param list of parameters used
      * @return the success of the operation
      */
-
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -657,33 +724,27 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
 
         int iParam = 0;
         this.draftPool      = param.getDraftPool();
-        this.idDiceDraftPool= param.getParams().get(iParam++).longValue();
+        this.iDiceDraftPool= param.getParams().get(iParam++);
 //        this.indexDiceDraftPool= param.getParams().get(iParam++);
         this.board          = param.getBoard();
         this.row            = param.getParams().get(iParam++);
         this.col            = param.getParams().get(iParam++);
         this.restriction    = Board.Restriction.values()[ param.getParams().get(iParam++) ];
 
-        savedReturn = use(draftPool, idDiceDraftPool, board, row, col, restriction);
+        savedReturn = use(draftPool, iDiceDraftPool, board, row, col, restriction);
 //        savedReturn = use(draftPool, indexDiceDraftPool, board, row, col, restriction);
         return savedReturn;
     }
 
     protected boolean use(Board.Restriction restriction) {
-        return use(draftPool, idDiceDraftPool, board, row, col, restriction);
+        return use(draftPool, iDiceDraftPool, board, row, col, restriction);
 //        return use(draftPool, indexDiceDraftPool, board, row, col, restriction);
     }
-
-
-    public boolean getReturn() {
-        return savedReturn;
-    }
-
 
     /**
      * implementation of the effect of Tool Card 8 & 9
      * @param draftPool draftpool of the game
-     * @param idDiceDraftPool ID of the dice of the draftpool considered
+     * @param iDiceDraftPool index of the dice of the draftpool
      * @param board board of the player
      * @param row index of the row considered
      * @param col index of the column considered
@@ -691,17 +752,16 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
      * @return the success of the operation
      */
 
-    private boolean use(DraftPool draftPool, long idDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
+    private boolean use(DraftPool draftPool, int iDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
 //    private boolean use(DraftPool draftPool, int indexDiceDraftPool, Board board, int row, int col, Board.Restriction restriction) {
 
         try {
             // call validMove before insertDice to avoid undo in case of insertDice fails
-            if (board.validMove(draftPool.getDiceByID(idDiceDraftPool), row, col, restriction)) {
+            if (board.validMove(draftPool.diceList().get(iDiceDraftPool), row, col, restriction)) {
 //            if (board.validMove(draftPool.diceList().get(indexDiceDraftPool), row, col, restriction)) {
 
                 board.insertDice(
-                        draftPool.chooseDice(idDiceDraftPool),
-//                        draftPool.chooseDice(indexDiceDraftPool),
+                        draftPool.chooseDice(iDiceDraftPool),       // removes from draft pool
                         row, col,
                         restriction);   // note: insertDice does not need check valid move
                 return true;
@@ -717,7 +777,7 @@ class ToolCard8_9 implements ToolCardStrategy, Serializable {
 }
 
 class ToolCard8 extends ToolCard8_9 {
-    private final int parameterSize = parameterSizes[8];
+    private final int parameterSize = parameterSizes[8][0];
 
     /**
      * application of Tool Card 8
@@ -730,7 +790,6 @@ class ToolCard8 extends ToolCard8_9 {
      * @param param list of parameters used
      * @return the success of the operation
      */
-
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -749,7 +808,7 @@ class ToolCard8 extends ToolCard8_9 {
 }
 
 class ToolCard9 extends ToolCard8_9 {
-    private final int parameterSize = parameterSizes[9];
+    private final int parameterSize = parameterSizes[9][0];
 
     /**
      * application of Tool Card 9
@@ -777,17 +836,28 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
     private boolean savedReturn = false;
 
     private DraftPool draftPool;
-    private long idDiceDraftPool;
+    private int iDiceDraftPool;
 //    private int indexDiceDraftPool;
 
-    private final int parameterSize = parameterSizes[10];
+    private final int parameterSize = parameterSizes[10][0];
+
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
+
 
     /**
      * implementation of Tool Card 10
      * @param param list of parameters used by Tool Card 10
      * @return the success of the operation
      */
-
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -799,19 +869,13 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
         }
 
         this.draftPool      = param.getDraftPool();
-        this.idDiceDraftPool= param.getParams().get(0).longValue();
+        this.iDiceDraftPool= param.getParams().get(0);
 //        this.indexDiceDraftPool= param.getParams().get(0);
 
-        savedReturn = use(draftPool, idDiceDraftPool);
+        savedReturn = use(draftPool, iDiceDraftPool);
 //        savedReturn = use(draftPool, indexDiceDraftPool);
         return savedReturn;
     }
-
-
-    public boolean getReturn() {
-        return savedReturn;
-    }
-
 
     /**
      * implementation of the effect of Tool Card 10
@@ -819,12 +883,13 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
      *      rotate a dice in draft pool, face up the bottom side
      *
      * @param draftPool draftpool of the game
-     * @param id ID of the dice
+     * @param iDiceDraftPool index of the dice in the draft pool's dice list
      * @return the success of the operation
      */
 
-    private boolean use(DraftPool draftPool, long id) {
-        int index = draftPool.getDiceIndexByID(id);
+    private boolean use(DraftPool draftPool, int iDiceDraftPool) {
+//        int index = draftPool.getDiceIndexByID(id);
+        int index = iDiceDraftPool;
         Dice dice = draftPool.diceList().get(index);
 
         // rotate the selected dice
@@ -838,70 +903,111 @@ class ToolCard10 implements ToolCardStrategy, Serializable {
 
 
 class ToolCard11 implements ToolCardStrategy, Serializable {
-    private Dice savedReturn = null;
+    private Object savedReturn = null;
+    private List<Dice> savedDiceList = null;
 
     private DraftPool draftPool;
-    private long idDiceDraftPool;
-//    private int indexDiceDraftPool;
+    private int iDiceDraftPool;
     private DiceBag diceBag;
 
-    private final int parameterSize = parameterSizes[11];
+    private Board board;
+    private int indexList;
+    private int toRow;
+    private int toCol;
+
+    private int iProcess = 0;
+
+//    private final int parameterSize = parameterSizes[6]
+
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
+
 
     /**
      * implementation of Tool Card 11
      * @param param list of the parameters used by Tool Card 11
      * @return the success of the operation
      */
-
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
         if(null == param) {
             throw new IncorrectParamQuantityException();
         }
-        else if(!param.safetyCheck(parameterSize)) {
-            throw new IncorrectParamQuantityException(parameterSize, param.getParams());
+        else if(!param.safetyCheck(parameterSizes[11][iProcess])) {
+            throw new IncorrectParamQuantityException(parameterSizes[11][iProcess], param.getParams());
         }
 
-        this.draftPool      = param.getDraftPool();
-        this.idDiceDraftPool= param.getParams().get(0).longValue();
+        if(0 == iProcess) {
+            this.draftPool = param.getDraftPool();
+            this.iDiceDraftPool = param.getParams().get(0);
 //        this.indexDiceDraftPool= param.getParams().get(0);
-        this.diceBag        = param.getDiceBag();
+            this.diceBag = param.getDiceBag();
 
-        savedReturn = use(draftPool, idDiceDraftPool, diceBag);
+            savedReturn = use1();
 //        savedReturn = use(draftPool, indexDiceDraftPool, diceBag);
-        if(null != savedReturn)
-            return true;
-        else
-            return false;
-    }
+            if (null != savedReturn) {
+                iProcess++;
+                return true;
+            }
+            else {
+                reset();        // this is not called
+                return false;
+            }
 
+        } else if(1 == iProcess) {
+            this.board = param.getBoard();
+            this.indexList = param.getParams().get(0);
+            this.toRow = param.getParams().get(1);
+            this.toCol = param.getParams().get(2);
 
-    public Dice getReturn() {
-        return savedReturn;
+             if( use2().equals(true) ) {
+                 reset();
+                 return true;
+             } else {
+                 return false;
+             }
+        }
+
+        return false;
     }
 
     /**
      * implementation of the effect of Tool Card 11
      * Effect of tool card N.11:
      *      1. discards a dice in draft pool for
-     *          pick a new dice from diceBag and
-     *      2. choose it's value to
-     *      3. place in board
+     *         pick a new dice from diceBag and
+     *         choose it's value to
+     *      2. place the chosen dice in board
      * NOTE:
      *      this is caller job and must be done
      *
-     * @param draftPool draftpool of the game
-     * @param idDiceDraftPool ID of the dice of the draftpool considered
-     * @param diceBag dicebag of the game
+//     * @param draftPool draftpool of the game
+//     * @param iDiceDraftPool index of the dice of the draftpool
+//     * @param diceBag dicebag of the game
      * @return the success of the operation
      */
-    private Dice use(DraftPool draftPool, long idDiceDraftPool, DiceBag diceBag) {
-//    private Dice use(DraftPool draftPool, int indexDiceDraftPool, DiceBag diceBag) {
+    private List<Dice> use1 () { //(DraftPool draftPool, int iDiceDraftPool, DiceBag diceBag) {
         diceBag.addDice(
-                draftPool.chooseDice(idDiceDraftPool));
-//                draftPool.chooseDice(indexDiceDraftPool));
-        return diceBag.extractDice();
+                draftPool.chooseDice(iDiceDraftPool));
+        Dice extracted = diceBag.extractDice();
+        savedDiceList = new ArrayList<>();
+        for (int i = 1; i <= MAX_DICE_NUMBER; i++) {
+            savedDiceList.add(new Dice(i, extracted.getColorDice(), extracted.getId()));
+        }
+        return savedDiceList;
+    }
+
+    private Boolean use2() {
+        return board.insertDice(savedDiceList.get(indexList), toRow, toCol, Board.Restriction.ALL);
     }
 }
 
@@ -921,7 +1027,19 @@ class ToolCard12 extends ToolCard4 implements ToolCardStrategy, Serializable {
     private int toRow2;
     private int toColumn2;
 
-    private final int parameterSize = parameterSizes[12];
+    private final int parameterSize = parameterSizes[12][0];
+
+
+    @Override
+    public void reset() {
+        savedReturn = false;
+    }
+
+    @Override
+    public Object getReturn() {
+        return savedReturn;
+    }
+
 
     /**
      * implementation of the effect of Tool Card 12
@@ -932,7 +1050,6 @@ class ToolCard12 extends ToolCard4 implements ToolCardStrategy, Serializable {
      * @param param contains all the parameter used by the card
      * @return the success of the operation
      */
-
     @Override
     public boolean use(ToolCardParam param) {
         // safety Check
@@ -1005,10 +1122,6 @@ class ToolCard12 extends ToolCard4 implements ToolCardStrategy, Serializable {
 
         // MOVE dices using the same strategy of tool card n.4
         return super.use(param);
-    }
-
-    public boolean getReturn() {
-        return savedReturn;
     }
 
 }

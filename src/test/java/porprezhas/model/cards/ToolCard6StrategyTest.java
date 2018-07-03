@@ -100,8 +100,8 @@ public class ToolCard6StrategyTest {
     @Test
     public void reRollAndPlaceSuccessTest(){
 
-        int idDiceDraftPoolTest = 20;
-        params.add(idDiceDraftPoolTest);
+        int iDiceDraftPoolTest = draftPool.getDiceIndexByID(20);
+        params.add(iDiceDraftPoolTest);
         assertTrue(toolCard6.getStrategy().use(param));
 
     }
@@ -109,8 +109,8 @@ public class ToolCard6StrategyTest {
     @Test
     public void reRollAndPlaceFailureTest(){
 
-        int idDiceDraftPoolTest = 21;
-        params.add(idDiceDraftPoolTest);
+        int iDiceDraftPoolTest = draftPool.getDiceIndexByID(21);
+        params.add(iDiceDraftPoolTest);
         assertTrue(toolCard6.getStrategy().use(param));
 
 

@@ -75,7 +75,7 @@ public class DraftPoolTest {
 
     @Test
     public void diceSubstituteTest(){
-      assertEquals(draftPool.diceSubstitute(testDie,1),die1);
+      assertEquals(draftPool.diceSubstitute(testDie,1 -1),die1);
       assertEquals(draftPool.diceList().size(),9);
       assertEquals(draftPool.diceList().get(0).getDiceNumber(),testDie.getDiceNumber());
       assertEquals(draftPool.diceList().get(0).getColorDice(),testDie.getColorDice());
