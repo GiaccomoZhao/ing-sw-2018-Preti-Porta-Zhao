@@ -188,7 +188,7 @@ public class GameViewState implements SubController {
                     Boolean incDec = new IncDecBox().display();
                     if(null != incDec) {
                         params.add(incDec ? 1 : 0);
-                    } else {
+                    } else {    // when user click X to close the dialog box
                         useToolCard(null);  // reset the view, as not used tool card
                         return false;
                     }
@@ -275,8 +275,7 @@ public class GameViewState implements SubController {
                     }
                 }
                 bResult = gameViewController.useToolCard(usingCard.ID, params.getParams());
-                clear();
-                activate();
+                useToolCard(null);
             } else {
                 if (bDebug) {
                     System.err.println("required param quantity = " + ToolCardStrategy.parameterSizes[ usingCard.ID ] + "\t inputed = " + params.getParams().size());
