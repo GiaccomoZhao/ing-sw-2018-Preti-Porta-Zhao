@@ -50,6 +50,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     private HashMap socketUsers;
 
+    private HashMap rmiUsers;
+
     private  Registry registry;
 
     private HashMap inGameLostConnection;
@@ -69,6 +71,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 		gameControllerList = new LinkedList<>();
 		loggedPlayer = new ArrayList<>();
 		socketUsers = new HashMap();
+		rmiUsers = new HashMap();
         registry= LocateRegistry.getRegistry();
         inGameLostConnection=new HashMap();
 	}
@@ -148,6 +151,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     @Override
     public synchronized void leave(Player player) throws RemoteException {
         playerBuffer.remove(player);
+    }
+
+    @Override
+    public List getClientRmiAddress(String username) {
+        return (List) this.rmiUsers.get(username);
     }
 
     // TODO: a test
@@ -282,15 +290,20 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
      * @throws RemoteException
      */
     @Override
-    public Boolean joinGame(String username) throws RemoteException {
+    public Boolean joinGame(String username, String ipClient, int portClient) throws RemoteException {
 
         for (Player findPlayer:
                 loggedPlayer) {
             if(findPlayer.getName().equals(username)) {
+                List<String> paramList=new ArrayList<>(2);
+                paramList.add(ipClient);
+                paramList.add( String.valueOf(portClient));
+                rmiUsers.put(username, paramList);
                 this.join(findPlayer);
                 return true;
             }
         }
+
         return false;
     }
 

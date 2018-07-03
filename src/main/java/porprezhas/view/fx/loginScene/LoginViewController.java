@@ -77,7 +77,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     private final int port = 58090+1;
     private InetAddress ip;
-
+    private int myPort= 33333;
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
 
     enum ConnectionType{
@@ -390,7 +390,8 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         if(this.connectionType==RMI) {
             try {
-                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
+                ((RMIClientAction) ClientActionSingleton.getClientAction()).setMyport(myPort);
             } catch (RemoteException | NotBoundException e) {
                 e.printStackTrace();
                 showWarningText("Could not Join");
@@ -424,7 +425,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         if(this.connectionType==RMI) {
             try {
-                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
             } catch (RemoteException | NotBoundException e) {
                 e.printStackTrace();
                 showWarningText("Could not Join");
@@ -449,11 +450,14 @@ public class LoginViewController implements Initializable, SceneController, Move
             // Start the Connection to the server
             if (this.connectionType == RMI) {
                 try {
-                    ClientActionSingleton.setClientActionInstance(new RMIClientAction());
+                    ip = InetAddress.getLocalHost();
+                    ClientActionSingleton.setClientActionInstance(new RMIClientAction(ip.getHostAddress(), port-2 ));
                 } catch (RemoteException e) {
                     System.err.println(e.getMessage());
                 } catch (NotBoundException e) {
                     System.err.println(e.getMessage());
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
                 }
             }
             else if(this.connectionType == SOCKET){

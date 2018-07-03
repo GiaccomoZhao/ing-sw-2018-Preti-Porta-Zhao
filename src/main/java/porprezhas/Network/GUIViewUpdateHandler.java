@@ -156,7 +156,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 for (Player player:
                         game.getPlayerList()) {
                     if (player.getName().equals(username))
-                        myPlayer=player;
+                        myPlayer2=player;
                 }
                 final Player myPlayerFinal2=myPlayer2;
                 Platform.runLater(() -> {
@@ -200,6 +200,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                         });
                 //TO_do token
                 break;
+
+            case RANKING:
+                System.out.println("Game finished");
         }
 
         // foreach player: update board

@@ -19,10 +19,12 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
     private String username;
     private Boolean state = true;
+    private int port;
 
-    public ClientObserver( ViewUpdateHandlerInterface viewUpdateHandlerInterface, String username) throws RemoteException, NotBoundException {
+    public ClientObserver( ViewUpdateHandlerInterface viewUpdateHandlerInterface, String username, int port) throws RemoteException, NotBoundException {
         super();
-        Registry registry = LocateRegistry.getRegistry();
+        this.port=port;
+        Registry registry = LocateRegistry.createRegistry( port);
         registry.rebind(username,this );
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
 

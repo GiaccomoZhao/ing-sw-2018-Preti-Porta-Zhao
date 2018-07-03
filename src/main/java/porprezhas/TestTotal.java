@@ -39,9 +39,11 @@ public class TestTotal {
         List<Player> players;
         final int NUM_PLAYER = 0;          // set to >0 for simulation
 
-        server = new ServerController(port);
 
-        Registry registry = LocateRegistry.getRegistry();
+
+      //  Registry registry = LocateRegistry.getRegistry();
+        Registry registry= LocateRegistry.createRegistry(port-1);
+        server = new ServerController(port);
         registry.rebind("serverController", server);
         Thread serverThread = new Thread(server);
         serverThread.start();

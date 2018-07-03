@@ -4,6 +4,8 @@ import porprezhas.Network.rmi.common.ServerRMIInterface;
 import porprezhas.exceptions.toolCard.ToolCardParameterException;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -16,12 +18,22 @@ public class RMIClientAction implements ClientActionInterface{
     private String username;
     private Registry registry;
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
+    private String ip;
+    private int port;
+    private int myport;
 
     public RMIClientAction() throws RemoteException, NotBoundException {
         registry = LocateRegistry.getRegistry();
         server = (ServerRMIInterface) registry.lookup("serverController");
     }
+    public RMIClientAction(String ip, int port) throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry(ip, port);
+        server = (ServerRMIInterface) registry.lookup("serverController");
+    }
 
+    public void setMyport(int myport) {
+        this.myport = myport;
+    }
 
     public void setViewUpdateHandlerInterface(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
         this.viewUpdateHandlerInterface = viewUpdateHandlerInterface;
@@ -49,12 +61,14 @@ public class RMIClientAction implements ClientActionInterface{
     public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
         try {
-           if(server.joinGame(username)){
+           if(server.joinGame(username, InetAddress.getLocalHost().getHostAddress(), myport)){
 
                    return true;
 
            }
         } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         return false;

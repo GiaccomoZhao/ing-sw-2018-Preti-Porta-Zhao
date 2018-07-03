@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public interface ServerRMIInterface extends Remote {
-    Boolean joinGame(String username) throws RemoteException;
+    Boolean joinGame(String username, String ipClient, int portClient) throws RemoteException;
     int login(String username) throws  RemoteException;
     Boolean logout(String username) throws RemoteException;
     Boolean insertedDice(long diceID, int rowBoard, int colBoard, String username)

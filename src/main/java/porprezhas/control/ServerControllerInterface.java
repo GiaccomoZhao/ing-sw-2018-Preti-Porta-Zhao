@@ -10,6 +10,7 @@ import java.util.List;
 public interface ServerControllerInterface  {
     void join(Player newPlayer) throws RemoteException;
     void leave(Player player) throws RemoteException;
+    List getClientRmiAddress(String username);
     GameControllerInterface createNewGame() throws RemoteException;
     GameControllerInterface createNewGame(Player player, Game.SolitaireDifficulty difficulty) throws RemoteException;
     boolean isAlreadyInGame(Player player) throws RemoteException;

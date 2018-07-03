@@ -30,12 +30,13 @@ public class CliClient {
     private int port;
     private InetAddress ip;
 
+    private int myPort=5000;
+
 
     public static final String JOIN_COMMAND = "join";
     public static final String RESUME_COMMAND = "resume";
     public static final String LOGOUT_COMMAND = "logout";
     public static final String INSERT_DICE_COMMAND = "dice";
-    public static final String CHOOSE_PATTERN = "choosePattern";
     public static final String PASS = "pass";
     public static final String USE_TOOL_CARD = "card";
     public static final String SOCKET = "s";
@@ -45,6 +46,7 @@ public class CliClient {
         this.in = new Scanner(System.in);
         this.ip=ip;
         this.port=port;
+
     }
 
     private void printHelp() {
@@ -135,7 +137,8 @@ public class CliClient {
            // Start the Connection to the server
            if (this.typeConnection.equals(RMI)) {
                try {
-                   ClientActionSingleton.setClientActionInstance(new RMIClientAction());
+                   System.out.println(ip.getHostAddress());
+                   ClientActionSingleton.setClientActionInstance(new RMIClientAction(ip.getHostAddress(), port-2));
                } catch (RemoteException e) {
                    System.err.println(e.getMessage());
                } catch (NotBoundException e) {
@@ -188,7 +191,7 @@ public class CliClient {
             viewUpdateHandlerInterface = new CLIViewUpdateHandler(username);
         if(this.typeConnection.equals(RMI)) {
             try {
-                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
             } catch (RemoteException e) {
                 e.printStackTrace();
             } catch (NotBoundException e) {
@@ -208,7 +211,7 @@ public class CliClient {
 
             if(this.typeConnection.equals(RMI)) {
                 try {
-                    ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username);
+                    ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (NotBoundException e) {
