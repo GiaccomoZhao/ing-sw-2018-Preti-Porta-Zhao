@@ -252,7 +252,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             for (Player player:
                  game.getPlayerList()) {
                 if (player.getName().equals(username)){
-                    System.out.println("Your favor tokens are" + player.getFavorToken());
+                    System.out.println("Your favor tokens are " + player.getFavorToken());
                     System.out.println("Private card: " + player.getPrivateObjectiveCardList().get(0));
                 }
             }

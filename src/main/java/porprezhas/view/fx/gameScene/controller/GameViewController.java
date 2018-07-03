@@ -840,8 +840,8 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         draftPoolView.update(draftPool);
     }
 
-    public void updateRoundTrack(List<Dice>[] dices) {
-        roundTrackBoard.update(dices);
+    public void updateRoundTrack(int actualRound, List<Dice>[] dices) {
+        roundTrackBoard.update(actualRound, dices);
     }
 
     public void updateFirstPlayer(Player player) {

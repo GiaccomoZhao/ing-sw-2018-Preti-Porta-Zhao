@@ -113,7 +113,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     // re-roll dices of Draft pool
                     gameViewController.updateDraftPool(game.getDraftPool().diceList());
 
-                    gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+                    gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
 
 
                 });
@@ -171,7 +171,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     // re-roll dices of Draft pool
                     gameViewController.updateDraftPool(game.getDraftPool().diceList());
 
-                    gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+                    gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
                     gameViewController.updateTimer(game.getCurrentPlayer());
                     for (Player player:
                             game.getPlayerList()) {
@@ -188,7 +188,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 Platform.runLater(() -> {
                             gameViewController.updateDraftPool(game.getDraftPool().diceList());
 
-                            gameViewController.updateRoundTrack(game.getRoundTrack().getTrack());
+                            gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
 
                             for (Player player :
                                     game.getPlayerList()) {

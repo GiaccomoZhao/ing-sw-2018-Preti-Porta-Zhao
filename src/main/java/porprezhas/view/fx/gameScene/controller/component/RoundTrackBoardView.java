@@ -412,11 +412,11 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
         show(-1, true);         // Show all rounds
     }
 
-    public void update(List<Dice>[] dices) {
+    public void update(int actualRound, List<Dice>[] dices) {
 //        Dice[][] diceMatrix = new Dice[getROW()][ROUND_QUANTITY];
 
         getBoard().getChildren().clear();
-        for (int round = 0; round < ROUND_QUANTITY; round++) {
+        for (int round = 0; round < actualRound; round++) {
             if(null != dices[round]) {
                 for (int row = 0; row < MAX_DICE_PER_ROUND && row < dices[round].size(); row++) {
                     Dice dice = dices[round].get(row);
@@ -427,6 +427,14 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
                     } } }
         }
         show(-1, true);
+
+        // update actual round image
+        if(actualRound >= 2) {
+            ((ImageView)roundTrackNumbers.getChildren().get(actualRound-2)).setTranslateY(0.0);
+        }
+        if(actualRound <= ROUND_QUANTITY) {
+            ((ImageView) roundTrackNumbers.getChildren().get(actualRound - 1)).setTranslateY(6.0);
+        }
     }
 
     @Override

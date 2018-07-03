@@ -399,7 +399,7 @@ class ToolCard4 extends ToolCard_Move {
         param1 = new ToolCardParam(param1, Board.Restriction.ALL.ordinal());
 
         if( !super.use(param1) ) {
-            return false;
+            return false;   // this statement is never called, because use throws exceptions or return true only
         }
 
         // add parameter

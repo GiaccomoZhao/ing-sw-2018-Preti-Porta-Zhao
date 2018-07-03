@@ -12,7 +12,7 @@ public interface GameViewUpdaterInterface {
 
     void updateBoard(int idBoard, Dice[][] dices);
     void updateDraftPool(List<Dice> dices);
-    void updateRoundTrack(List<Dice>[] dices);
+    void updateRoundTrack(int actualRound, List<Dice>[] dices);
 
     void updateTimer(Player player);
     void updateTokens(List<Player> players);
