@@ -79,10 +79,10 @@ public class Dice implements Serializable {
     }
 
 
-    public void roll(){
+    public Dice roll(){
         Random random = new Random();
         this.number=random.nextInt(MAX_DICE_NUMBER)+1;
-
+        return this;
     }
 
 /*

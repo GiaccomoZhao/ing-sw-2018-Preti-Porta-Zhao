@@ -198,14 +198,14 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                             gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
 
+                            gameViewController.updateTokens(game.getPlayerList());
+
                             for (Player player : game.getPlayerList()) {
 
                                 gameViewController.updateBoard(
                                         player.getPosition(),
                                         player.getBoard().getBoard());
                             }
-
-                       gameViewController.updateTokens(game.getPlayerList());
 
                         });
 

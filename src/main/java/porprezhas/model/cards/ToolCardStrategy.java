@@ -676,7 +676,14 @@ class ToolCard7 implements ToolCardStrategy, Serializable {
      * @return the success of the operation
      */
     private boolean use(DraftPool draftPool) {
-        draftPool.diceList().forEach(Dice::roll);
+        List<Dice> diceList = draftPool.diceList();
+        int nDice = diceList.size();
+        for (int i = 0; i < nDice; i++) {
+
+            draftPool.setDice(
+                    i,
+                    diceList.get(i).roll() );
+        }
         return true;
     }
 }

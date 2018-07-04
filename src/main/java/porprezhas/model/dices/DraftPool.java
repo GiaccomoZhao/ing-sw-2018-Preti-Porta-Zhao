@@ -103,12 +103,6 @@ public class DraftPool implements Serializable {
         return chosenDice;
     }
 */
-
-    // Only server can do this operation
-    public void setDice(int indexDice, Dice dice) {
-        draftPool.set(indexDice, dice);
-    }
-
     public List<Dice> diceList(){
 
         /*
@@ -118,8 +112,15 @@ public class DraftPool implements Serializable {
             listDice.add(new Dice(dice));
         }*/
 
-        return draftPool;
+        return new ArrayList<>( draftPool );
     }
+
+
+    // Only server can do this operation
+    public void setDice(int indexDice, Dice dice) {
+        draftPool.set(indexDice, dice);
+    }
+
 
     // return old.dice or throw notFound Exception
     public Dice diceSubstitute(Dice newDice, int indexDiceDraftPool){
