@@ -1,13 +1,15 @@
 View: test ToolCard in Gui and Cli
 
 GUI, to fix:
-1. Pattern falsa
+1. Pattern falsa -------------------    FIXED
 2. use non immediata per card n.4
 3. messaggio di exception
 4. favor tokens
 5. result view transition
-6. draft pool con dadi che ritornano sul gui
+6. draftpool ------------------------   FIXED
 7. tool card n.6 and n.11 to finish
+8. tc: 8-6-5-11
+9. non mi ricordo più, ma c'era un'altra
 
 
 Control:

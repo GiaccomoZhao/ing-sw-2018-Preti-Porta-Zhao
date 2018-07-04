@@ -143,23 +143,6 @@ public class ChoosePatternViewController implements Initializable, SceneControll
         });
 
 
-        List<Pattern.TypePattern> patternList = new ArrayList<>();
-        patternList.add(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
-        patternList.add(Pattern.TypePattern.WATER_OF_LIFE);
-        patternList.add(Pattern.TypePattern.VIRTUS);
-        patternList.add(Pattern.TypePattern.SUNS_GLORY);
-
-        patternSetup(patternList);
-
-        setGameCursor();
-    }
-
-
-
-
-
-    public  void patternSetup(List<Pattern.TypePattern> typePatternList){
-
         imageViewpatternList = new ArrayList<>();
         imageViewpatternList.add(choosePatternViewPattern1);
         imageViewpatternList.add(choosePatternViewPattern2);
@@ -172,6 +155,23 @@ public class ChoosePatternViewController implements Initializable, SceneControll
         labelList.add(choosePatternViewPatternLabel3);
         labelList.add(choosePatternViewPatternLabel4);
 
+        // comment these fake pattern, used for testing
+//        List<Pattern.TypePattern> patternList = new ArrayList<>();
+//        patternList.add(Pattern.TypePattern.KALEIDOSCOPIC_DREAM);
+//        patternList.add(Pattern.TypePattern.WATER_OF_LIFE);
+//        patternList.add(Pattern.TypePattern.VIRTUS);
+//        patternList.add(Pattern.TypePattern.SUNS_GLORY);
+
+//        patternSetup(patternList);
+
+        setGameCursor();
+    }
+
+
+
+
+
+    public  void patternSetup(List<Pattern.TypePattern> typePatternList){
         int i=0;
         for (Pattern.TypePattern patternType: typePatternList) {
             System.out.println(pathToPattern + patternType.name().toLowerCase() + ".png");
@@ -181,8 +181,6 @@ public class ChoosePatternViewController implements Initializable, SceneControll
             ));
             i++;
         }
-
-
 
 /*       String filePath = getPathToFileIgnoreExt(pathToBorder, "pattern");
         if(filePath != null) {

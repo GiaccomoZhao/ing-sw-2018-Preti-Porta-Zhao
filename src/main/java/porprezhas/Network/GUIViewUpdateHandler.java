@@ -80,9 +80,11 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 //                Pattern.TypePattern pattern1 = game.getUsernamePlayer(username).getPatternsToChoose().get(0);
 //                Pattern.TypePattern pattern2 = game.getUsernamePlayer(username).getPatternsToChoose().get(1);
 //                System.out.println(pattern1.name() + "    o    " + pattern2.name());
-                //JACK qui devi fare PatternviewController.update()
 
-                    loginViewController.goToNextStage();
+                Platform.runLater(() -> {
+                    patternViewController.patternSetup(game.getUsernamePlayer(username).getPatternsToChoose());
+                });
+                loginViewController.goToNextStage();
                 break;
 
 
