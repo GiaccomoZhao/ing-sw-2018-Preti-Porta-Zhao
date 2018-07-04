@@ -69,6 +69,8 @@ public class Game extends ModelObservable implements GameInterface {
     private List<Card> publicObjectiveCardList;
     private List<Card> toolCardList;
 
+
+
     // player list management attributes
     private List<Player> playerList;
     private Player currentPlayer;
@@ -79,6 +81,7 @@ public class Game extends ModelObservable implements GameInterface {
     private boolean bCountClockwise;
     private HashMap ranking;
     private Player winner;
+    private List<Player> lastRoundPlayers;
 
     private boolean bSolitaire;
     private SolitaireDifficulty solitaireDifficulty;    // in Multi-player we have Player.Pattern.Difficulty
@@ -101,6 +104,7 @@ public class Game extends ModelObservable implements GameInterface {
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(1);
         toolCardFactory = new ToolCardFactory(difficulty);
         ranking=new HashMap();
+        lastRoundPlayers=new ArrayList<>();
         reset();
     }
 
@@ -114,6 +118,7 @@ public class Game extends ModelObservable implements GameInterface {
         publicObjectiveCardFactory = new PublicObjectiveCardFactory(playerList.size());
         toolCardFactory = new ToolCardFactory(playerList.size());
         ranking=new HashMap();
+        lastRoundPlayers=new ArrayList<>();
         reset();
     }
 
@@ -247,6 +252,8 @@ public class Game extends ModelObservable implements GameInterface {
      * ensure currentPlayer = playerList(iCurrentPlayer)
      */
     public Player rotatePlayer() {
+        if (this.getRoundTrack().getActualRound()==10 && lastRoundPlayers.size()<playerList.size())
+            lastRoundPlayers.add(playerList.get(iCurrentPlayer));
         // case anti clock
         // second turn of round
         if (bCountClockwise) {
@@ -302,6 +309,7 @@ public class Game extends ModelObservable implements GameInterface {
                 iCurrentPlayer--;
             }
         } else {
+
             // case clock wise: index increases
             if (iCurrentPlayer == playerList.size() - 1) {
                 iCurrentPlayer = 0;
@@ -642,7 +650,8 @@ public class Game extends ModelObservable implements GameInterface {
                 winner=player;
 
             }
-            if (points==max) {
+            else if (points==max) {
+
                 handleDraw(player);
             }
             ranking.put(player, points);
@@ -656,7 +665,8 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public void handleDraw(Player player){
-       if (player.getPrivateScore()>winner.getPrivateScore()) {
+
+        if (player.getPrivateScore()>winner.getPrivateScore()) {
            winner = player;
            return;
        }
@@ -672,6 +682,25 @@ public class Game extends ModelObservable implements GameInterface {
            if(winner.getFavorToken()>player.getFavorToken())
                 return;
        //To-do the winner is the last who picked the dice in the first turn in the last round
+        int  winnerPosition=0;
+        int  playerPosition=0;
+        for (int i=0; i< this.playerList.size(); i++){
+            if (lastRoundPlayers.get(i).getName().equals(winner.getName())) {
+                winnerPosition = i;
+                break;
+            }
+
+        }
+        for (int i=0; i< this.playerList.size(); i++) {
+            if (lastRoundPlayers.get(i).getName().equals(player.getName())){
+                playerPosition=i;
+                break;
+            }
+        }
+
+        if (playerPosition>winnerPosition)
+            winner=player;
+
     }
 
 

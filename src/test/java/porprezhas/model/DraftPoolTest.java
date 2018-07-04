@@ -60,7 +60,7 @@ public class DraftPoolTest {
 
         assertEquals(draftPool.diceList().size(), 8);
 
-        assertEquals(draftPool.chooseDice(1).getDiceNumber(), die2.getDiceNumber());
+        assertEquals(draftPool.chooseDice(0).getDiceNumber(), die2.getDiceNumber());
 
         assertEquals(draftPool.diceList().size(), 7);
 
