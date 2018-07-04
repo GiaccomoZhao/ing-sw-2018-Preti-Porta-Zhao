@@ -1016,7 +1016,10 @@ class ToolCard11 implements ToolCardStrategy, Serializable {
     }
 
     private Boolean use2() {
+        if(board.validMove(savedDiceList.get(indexList),toRow,toCol, Board.Restriction.ALL)){
         return board.insertDice(savedDiceList.get(indexList), toRow, toCol, Board.Restriction.ALL);
+        }
+        return false;
     }
 }
 
