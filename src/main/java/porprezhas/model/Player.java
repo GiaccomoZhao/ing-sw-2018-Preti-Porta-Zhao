@@ -92,7 +92,7 @@ public class Player implements Serializable {
         return nFavorToken;
     }
 
-    private void setFavorToken(int favorToken) {
+    public void setFavorToken(int favorToken) {
         this.nFavorToken = favorToken;
     }
 

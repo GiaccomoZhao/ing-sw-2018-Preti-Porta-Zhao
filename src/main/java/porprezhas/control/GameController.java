@@ -359,7 +359,7 @@ public class GameController  implements GameControllerInterface, Runnable {
 
     public boolean useToolCard(String username, int cardIndex,  ArrayList<Integer> paramList){
         if (!this.game.getCurrentPlayer().getName().equals(username))
-            return false;
+            throw new NotYourTurnException("It's not your turn");
 
         ToolCardParam param = new ToolCardParam(
                 game.getRoundTrack(),
