@@ -59,7 +59,11 @@ public class ChoosePatternViewController implements Initializable, SceneControll
     private MovebleWindowInterface movable;
 
 
-
+    /**
+     * set the stageManager
+     * @param stageManager the Object that creates this Scene Controller and manages all Stages
+     * @param stageName    name of the Stage that contains this Scene
+     */
 
     // Stage management
     @Override
@@ -69,6 +73,10 @@ public class ChoosePatternViewController implements Initializable, SceneControll
         this.stageManager = stageManager;
         this.stageName = stageName;
     }
+
+    /**
+     * Create the fade out transition of the current stage
+     */
 
     @Override
     public void goToNextStage() {
@@ -86,6 +94,10 @@ public class ChoosePatternViewController implements Initializable, SceneControll
         timeline.play();
 
     }
+
+    /**
+     * Create the fade in transition for the next stage
+     */
 
     @Override
     public void setCurrentStageTransition() {
@@ -123,7 +135,11 @@ public class ChoosePatternViewController implements Initializable, SceneControll
     }
 
 
-
+    /**
+     * Initialize the stage for patternView
+     * @param location path to the resources
+     * @param resources fonts for the patterns
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if(bDebug)
@@ -168,8 +184,10 @@ public class ChoosePatternViewController implements Initializable, SceneControll
     }
 
 
-
-
+    /**
+     *  create the list of path to the resources
+     * @param typePatternList list of pattern
+     */
 
     public  void patternSetup(List<Pattern.TypePattern> typePatternList){
         int i=0;
