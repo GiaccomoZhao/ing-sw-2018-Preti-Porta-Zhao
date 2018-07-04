@@ -183,6 +183,13 @@ public class GameController  implements GameControllerInterface, Runnable {
 
             // reset skip turn effect
             player.removeSkipTurnEffect();
+
+            // pass to next player
+            // only if this is not the last round, actualRound == ROUND_NUM == 10th
+            // NOTE: at ending we have the same order of player in the game.PlayerList() during last round
+            if(game.getRoundTrack().getActualRound() == ROUND_NUM) {
+                game.rotatePlayer();
+            }
         }
     }
 
@@ -256,14 +263,8 @@ public class GameController  implements GameControllerInterface, Runnable {
         for (int iRound = 0; iRound < ROUND_NUM; iRound++) {
 //            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
             System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
-            game.newRound(iRound);      // Prepare for the new round and Setup a new DraftPool
-            playRound();
-            // pass to next player
-            // only if this is not the last round, actualRound == ROUND_NUM == 10th
-            // NOTE: at ending we have the same order of player in the game.PlayerList() during last round
-            if(iRound == ROUND_NUM-1) {
-                game.rotatePlayer();
-            }
+            game.newRound(iRound);      // Prepare for the new round: Setup a new DraftPool
+            playRound();        // rotate player at end of round, if it is not last one
             System.out.println("}");
         }
 
