@@ -97,35 +97,39 @@ public class DraftPoolView implements DiceContainer {
         if(bDebug)
             System.out.println("refresh draft pool dices");
 
-        // check not present dices in view,
-        // to add them later
-        List<Dice> draftPoolDices = draftPool.diceList();
+        // check missing dices of view to add them later
+        List<Dice> diceToAdd = draftPool.diceList();
 
-        for (int index = 0; index < stackPane.getChildren().size(); index++) {
+//        int offset = 0;     // offset is quantity of not DiceView instance found.
+                            // 2018-7-4 actually it should be always 0, until we add view like border, color mask, image mask...
+        final int size = stackPane.getChildren().size();
+        for (int index = 0; index < size; index++) {
             Node node = stackPane.getChildren().get(index);
 
             if(node instanceof DiceView) {
                 DiceView diceView = (DiceView) node;
 
                 try {
-                    // check the present of dice in Model
-
+                    // check the present of dice in View
+                    // Remove already existent dice from add list
                     boolean bTrue =
-                            draftPoolDices.remove(
-                                    DraftPool.getDiceByID( draftPoolDices, diceView.getDiceID() )   // this throws runtime exception
+                            diceToAdd.remove(
+                                    DraftPool.getDiceByID( diceToAdd, diceView.getDiceID() )   // this throws runtime exception
                     );    // remain dices will be added in View
                     if(!bTrue) {
-                        System.err.println("Can not Remove dice: " + diceView);
+                        System.err.println("Can not Remove dice: " + diceView + " \tfrom draftPoolDices in DraftPoolView");
+                    } else {
+//                        offset++;
                     }
 
                 } catch (DiceNotFoundInDraftPoolException e) {
-                    // Remove not found dice from View
+                    // Remove dice views that is not present in server.model.draftPool
                     stackPane.getChildren().remove(index);
                 } }
         }
 
         // Add missed dices in View
-        for (Dice dice : draftPoolDices) {
+        for (Dice dice : diceToAdd) {
             addDice(dice);  // this does animations
         }
     }

@@ -2,6 +2,8 @@ package porprezhas.model.cards;
 
 import javax.naming.ldap.PagedResultsControl;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static porprezhas.model.cards.ToolCardParamType.*;
 
@@ -28,22 +30,28 @@ public class ToolCardParamBuilder {
 
     int tc;
     int step;
+    List<HashMap<ToolCardParamType, ArrayList<Integer>>> paramMap;      // Want to use this instead of ArrayList<Integer>
     ArrayList<Integer> params;
 
     public ToolCardParamBuilder(int toolCard, int step) {
         this.tc = toolCard;
         params = new ArrayList<>();
+        paramMap = new ArrayList<>();
+
         for (int i = 0; i < parameterType[tc][step].length; i++) {
+            HashMap<ToolCardParamType, ArrayList<Integer>> newHashMap = new HashMap<>();
+            newHashMap.put(parameterType[tc][step][i], new ArrayList<>());
+            paramMap.add(newHashMap);
             for (int j = 0; j < parameterType[tc][step][i].getParamQuantity(); j++) {
                 params.add(NOT_DEFINED);
             }
         }
     }
 
-    public ToolCardParamBuilder(int toolCard, ArrayList<Integer> params) {
-        this.tc = toolCard;
-        this.params = params;
-    }
+//    public ToolCardParamBuilder(int toolCard, ArrayList<Integer> params) {
+//        this.tc = toolCard;
+//        this.params = params;
+//    }
 
     /**
      * Build a Tool Card Parameter

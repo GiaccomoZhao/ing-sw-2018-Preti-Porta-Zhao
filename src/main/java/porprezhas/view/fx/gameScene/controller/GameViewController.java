@@ -847,7 +847,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         });
     }
 
-    // do not active animation
+    // active roll animation only for missing dices
     public void updateDraftPool(DraftPool draftPool) {
         draftPoolView.update(draftPool);
     }
