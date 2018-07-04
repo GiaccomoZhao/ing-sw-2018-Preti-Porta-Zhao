@@ -21,6 +21,10 @@ public abstract class ModelObservable extends Observable
 
     HashMap observerMap;
 
+    public HashMap getObserverMap() {
+        return observerMap;
+    }
+
 
     public ModelObservable() throws RemoteException {
         UnicastRemoteObject.exportObject(this, 0);

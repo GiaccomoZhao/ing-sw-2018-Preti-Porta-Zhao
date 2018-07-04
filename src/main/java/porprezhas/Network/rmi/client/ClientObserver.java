@@ -6,7 +6,6 @@ import porprezhas.Network.ViewUpdateHandlerInterface;
 import porprezhas.Network.rmi.common.RemoteObserver;
 import porprezhas.model.SerializableGameInterface;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -44,5 +43,8 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
         return state;
     }
 
-
+    @Override
+    public void updateCardEffect(Object object) throws RemoteException {
+        viewUpdateHandlerInterface.handleCardEffect(object);
+    }
 }

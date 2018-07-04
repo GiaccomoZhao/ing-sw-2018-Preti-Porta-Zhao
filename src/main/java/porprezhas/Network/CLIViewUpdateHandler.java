@@ -75,6 +75,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     }
 
     @Override
+    public void handleCardEffect(Object object) {
+
+    }
+
+    @Override
     public void toolCardUsed() {
 
     }

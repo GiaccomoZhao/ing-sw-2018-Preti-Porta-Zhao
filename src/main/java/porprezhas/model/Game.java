@@ -1,5 +1,6 @@
 package porprezhas.model;
 
+import porprezhas.Network.rmi.common.RemoteObserver;
 import porprezhas.Network.rmi.server.ModelObservable;
 import porprezhas.Useful;
 import porprezhas.control.GameController;
@@ -11,6 +12,8 @@ import porprezhas.model.dices.RoundTrack;
 
 import porprezhas.model.cards.*;
 
+import java.rmi.ConnectException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -732,11 +735,22 @@ public class Game extends ModelObservable implements GameInterface {
         if (currentPlayer.isbUsedToolCard()) {  // check that there is only one insert at turn
             throw new AlreadyUsedExceptions();
         }
+
         if (toolCard.getTokensQuantity()+1> currentPlayer.getFavorToken())
             throw new NotEnoughTokenException();
         Boolean result = toolCard.getStrategy().use(toolCardParam);
+            //jack
+            Observer currentObserver =(Observer) super.getObserverMap().get(currentPlayer.getName());
+            if (currentObserver instanceof ProxyObserverSocket){
+                ;
+            }
+            if (currentObserver instanceof ProxyObserverRMI){
+                //QUESTO METODO FA ARRIVARE OBJECT A GUI E A CLI
+                Object object=null;
+               ((ProxyObserverRMI) currentObserver).handleCardUpdate(object);
+            }
 
-            if (result){
+        if (result){
                 int tokenToRemove=1+toolCard.getTokensQuantity();
                 int currentToken =currentPlayer.getFavorToken();
 

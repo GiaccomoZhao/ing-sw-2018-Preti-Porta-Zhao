@@ -279,4 +279,8 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     }
 
+    @Override
+    public void handleCardEffect(Object object) {
+
+    }
 }
