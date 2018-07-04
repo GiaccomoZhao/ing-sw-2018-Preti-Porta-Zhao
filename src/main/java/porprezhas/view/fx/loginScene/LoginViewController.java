@@ -173,8 +173,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                 // show loginScene
 
                 setScene();
-
-                showJoinScene();
+                warningText.setVisible(false);
 
                 // Add the transition animation
                 Timeline sceneFading = new Timeline();
@@ -188,6 +187,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                 sceneFading.play();
 
             } else {
+                showJoinScene();
                 // remain to show joinScene
             }
         });
