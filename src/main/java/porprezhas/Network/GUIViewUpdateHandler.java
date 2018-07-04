@@ -227,6 +227,8 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     gameViewController.setNextStageAble();
                 });
                 break;
+            case ALT_GAME:
+                gameViewController.goToNextStage();
 
         }
 

@@ -25,7 +25,7 @@ import static porprezhas.model.cards.Card.Effect.TC8;
 import static porprezhas.model.GameConstants.BOARD_BOXES;
 
 public class Game extends ModelObservable implements GameInterface {
-    static Logger logger = Logger.getLogger(GameController.class.getName());
+   // static Logger logger = Logger.getLogger(GameController.class.getName());
 
     public DiceBag getDiceBag() {
         return diceBag;

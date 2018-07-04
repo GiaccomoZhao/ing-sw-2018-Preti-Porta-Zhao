@@ -37,7 +37,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
 
 
-	private GameControllerFactory gameControllerFactory;
+
 
 	private  List<Player> playerBuffer;
 
@@ -93,6 +93,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             }
         }
         return null;    // throw game not found ?
+    }
+
+    public void removeGameController(GameControllerInterface gameControllerInterface){
+        this.gameControllerList.remove(gameControllerInterface);
+
     }
 
     public List<GameControllerInterface> getGameControllers() {
@@ -168,7 +173,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         // cut and past the Players to factory
         gameController =
                 new GameController(
-                        new Game(player, difficulty));
+                        new Game(player, difficulty), this);
         gameControllerList.add( gameController );
         // NOTE: make player leave from the queue before creating single game
         playerBuffer.remove(player);    // if player has joined but want play single game
@@ -194,7 +199,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         // cut and past the Players to factory
             gameController =
                     new GameController(
-                            new Game(subBuffer));
+                            new Game(subBuffer), this);
 
 /*                gameControllerFactory.create(
                         subBuffer,
@@ -305,6 +310,22 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
 
         return false;
+    }
+
+    @Override
+    public Boolean joinSinglePlayer(String username, String ipClient, int portClient) throws RemoteException {
+        for (Player findPlayer :
+                loggedPlayer) {
+            if (findPlayer.getName().equals(username)) {
+                List<String> paramList = new ArrayList<>(2);
+                paramList.add(ipClient);
+                paramList.add(String.valueOf(portClient));
+                rmiUsers.put(username, paramList);
+                this.join(findPlayer);
+                return true;
+            }
+        }
+        return true;
     }
 
     /** This method handles the login request of a player

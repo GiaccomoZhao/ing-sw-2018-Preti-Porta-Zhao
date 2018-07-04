@@ -276,6 +276,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
         Game.NotifyState state = game.getGameNotifyState();
 
         if (state.equals(Game.NotifyState.RANKING)){
+            System.out.println("");
             System.out.println("***** >>> GAME OVER <<< *****");
             System.out.println("********** RANKING **********");
             HashMap ranking= game.getRanking();
@@ -285,12 +286,17 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             }
             System.out.println(" ");
             System.out.println("THE WINNER IS " + game.getWinner().getName() );
+            System.out.println("");
+            System.out.println("Type 'return' to return to the first menu");
             return;
         }
         if (state.equals(ALT_GAME)){
+            System.out.println("");
             System.out.println("****** >>> GAME OVER <<< ******");
             System.out.println("You are the only player in game");
             System.out.println("*********** YOU WON! **********");
+            System.out.println("");
+            System.out.println("Type 'return' to return to the first menu");
             return;
         }
         if(gameStarted) {

@@ -27,7 +27,9 @@ public class GameController  implements GameControllerInterface, Runnable {
     // *********************************
     // ---------- Attributes -----------
 
+    private ServerControllerInterface serverControllerInterface;
 	private GameInterface game;
+
 
     private StateMachine state;
 
@@ -209,6 +211,7 @@ public class GameController  implements GameControllerInterface, Runnable {
                     player.getName(), calcScore(player));
         }
 
+        serverControllerInterface.removeGameController(this);
     }
 
 
@@ -216,13 +219,13 @@ public class GameController  implements GameControllerInterface, Runnable {
     // *********************************
     // -------- Public Methods ---------
 
-    public GameController(GameInterface game)  {
+    public GameController(GameInterface game, ServerControllerInterface serverControllerInterface)  {
 
         this.game = game;
         playTimeOut = new Object(); // Lock
         chooseTimeOut = new Object(); // Lock
 //        pass(); // notifyAll to clear all the locks
-
+        this.serverControllerInterface=serverControllerInterface;
 
     }
 
@@ -400,6 +403,7 @@ public class GameController  implements GameControllerInterface, Runnable {
             state = StateMachine.ENDING;
             System.out.println("Game over---> There is only on player online");
             ((Game) game).endGame();
+            serverControllerInterface.removeGameController(this);
         }
     }
 }

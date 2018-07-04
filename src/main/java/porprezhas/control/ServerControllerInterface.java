@@ -16,6 +16,7 @@ public interface ServerControllerInterface  {
     boolean isAlreadyInGame(Player player) throws RemoteException;
     GameControllerInterface getGameController(Player player) throws RemoteException;
     void closedConnection(String username);
+    void removeGameController(GameControllerInterface gameControllerInterface);
 
     //int getGameControllerIndex(String username) throws RemoteException;
 }

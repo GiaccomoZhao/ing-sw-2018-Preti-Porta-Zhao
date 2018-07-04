@@ -41,6 +41,7 @@ public class CliClient {
     public static final String USE_TOOL_CARD = "card";
     public static final String SOCKET = "s";
     public static final String RMI = "r";
+    public static final String RETURN_TO_HOME = "return";
 
     public CliClient(InetAddress ip, int port) {
         this.in = new Scanner(System.in);
@@ -132,15 +133,17 @@ public class CliClient {
 
                         break;
                     default:
+                        if (!command.equals(RETURN_TO_HOME))
                         printHelp();
                         break;
                 }
 
             }
-        } while (!command.equals(LOGOUT_COMMAND));
+        } while (!command.equals(RETURN_TO_HOME));
 
-        //server.logout(username);
-        System.out.println("\t\tBYE!");
+        System.out.println("Type 'join' to start a new game");
+        System.out.println("Type 'single' to start a new single player game");
+        this.joinphase();
     }
 
     /**

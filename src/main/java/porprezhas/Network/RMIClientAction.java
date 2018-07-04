@@ -93,6 +93,23 @@ public class RMIClientAction implements ClientActionInterface{
         return false;
     }
 
+    @Override
+    public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+        this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
+        try {
+            if(server.joinGame(username, InetAddress.getLocalHost().getHostAddress(), myport)){
+
+                return true;
+
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * This method handles the case when an user that lost his connection tries to resume the match
      * after he logged with the old username.

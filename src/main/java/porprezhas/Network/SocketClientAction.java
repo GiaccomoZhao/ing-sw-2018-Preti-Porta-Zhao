@@ -103,6 +103,40 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     }
 
     @Override
+    public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+        this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
+
+        try {
+
+            socketOut.writeObject(new JoinAction(username));
+            socketOut.flush();
+            ((Answer) socketIn.readObject()).handle(this);
+            SocketClientAction socketClientAction=this;
+            Thread thread = new Thread(){
+                public void run() {
+                    Boolean bool=true;
+                    while(bool){
+                        try {
+
+                            ((Answer) socketIn.readObject()).handle(socketClientAction);
+                        } catch (IOException e) {
+                            if (e instanceof SocketException)
+                                bool=false;
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }}
+            };
+            thread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
     public boolean resumeGame(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
         viewUpdateHandlerInterface.setGameStarted(true);
@@ -266,5 +300,10 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
             } catch (Exception e) {
                 this.viewUpdateHandlerInterface.invalidUseToolCard(e);
             }
+    }
+
+    @Override
+    public void handle(CardEffectAnswer cardEffectAnswer) {
+        viewUpdateHandlerInterface.handleCardEffect(cardEffectAnswer.object);
     }
 }
