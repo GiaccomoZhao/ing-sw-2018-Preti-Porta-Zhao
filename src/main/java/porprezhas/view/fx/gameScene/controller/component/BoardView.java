@@ -50,6 +50,7 @@ public class BoardView extends GenericBoardView {// extends GridPane {
         timer.setVisible(bShow);
     }
 
+
     public void setTokens(int nTokens) {
         if (nTokens < 0) {
             throw new IndexOutOfBoundsException();

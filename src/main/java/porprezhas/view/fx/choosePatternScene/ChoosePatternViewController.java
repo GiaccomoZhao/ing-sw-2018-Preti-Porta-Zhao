@@ -60,7 +60,7 @@ public class ChoosePatternViewController implements Initializable, SceneControll
 
 
     /**
-     * set the stageManager
+     * setup the stageManager
      * @param stageManager the Object that creates this Scene Controller and manages all Stages
      * @param stageName    name of the Stage that contains this Scene
      */

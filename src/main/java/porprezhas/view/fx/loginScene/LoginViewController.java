@@ -94,7 +94,11 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     private String username;
 
-
+    /**
+     * Setup the stageManager
+     * @param stageManager the Object that creates this Scene Controller and manages all Stages
+     * @param stageName    name of the Stage that contains this Scene
+     */
 
 
     // Stage management
@@ -105,6 +109,12 @@ public class LoginViewController implements Initializable, SceneController, Move
         this.stageManager = stageManager;
         this.stageName = stageName;
     }
+
+    /**
+     * Create the fade out transition for the current stage
+     * and switch to the next one
+     *
+     */
 
     @Override
     public void goToNextStage() {
@@ -124,6 +134,11 @@ public class LoginViewController implements Initializable, SceneController, Move
         timeline.play();
 
     }
+
+    /**
+     * Create the fade in animation  for the next stage
+     *
+     */
 
     @Override
     public void setCurrentStageTransition() {
@@ -210,7 +225,11 @@ public class LoginViewController implements Initializable, SceneController, Move
     }
 
 
-
+    /**
+     * Initialize the stage for patternView
+     * @param location path to the resources
+     * @param resources
+     */
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -385,7 +404,10 @@ public class LoginViewController implements Initializable, SceneController, Move
     }
 
 
-
+    /**
+     *  Manages the join scene
+     * @param event
+     */
 
 
     @FXML
@@ -422,7 +444,10 @@ public class LoginViewController implements Initializable, SceneController, Move
         showText("Waiting for players...");
     }
 
-
+    /**
+     * Used to return to a previous started game
+     * @param event
+     */
 
     @FXML
     public void  onReturnViewButton(ActionEvent event) {
@@ -455,6 +480,11 @@ public class LoginViewController implements Initializable, SceneController, Move
             stageManager.setStage(GuiSettings.stageGameID, this.stageName);
         });
     }
+
+    /**
+     * Manages the post login event
+     * @param event
+     */
 
     @FXML
     public void loginDone(ActionEvent event) {
@@ -531,7 +561,10 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     }
 
-
+    /**
+     * Set the connection method to RMI
+     * @param event
+     */
 
     @FXML
     public void connectionMethodChooseRMI(ActionEvent event){
@@ -549,6 +582,10 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     }
 
+    /**
+     * Set the connection method to Socket
+     * @param event
+     */
 
     @FXML
     public void connectionMethodChooseSocket(ActionEvent event){
