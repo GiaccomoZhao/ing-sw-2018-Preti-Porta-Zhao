@@ -54,7 +54,20 @@ public  class ProxyObserverRMI extends TimerTask implements Observer
                     re.printStackTrace();
             }
         }
+        public void handleCardUpdate(Object object){
+            try {
 
+                remoteObserver.updateCardEffect(object);
+            } catch (RemoteException e) {
+                if(e instanceof ConnectException) {
+                    serverControllerInterface.closedConnection(username);
+
+                }
+                else
+                    e.printStackTrace();
+            }
+
+        }
 
         @Override
         public void run() {

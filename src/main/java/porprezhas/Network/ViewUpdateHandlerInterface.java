@@ -10,5 +10,6 @@ public interface ViewUpdateHandlerInterface {
     void invalidAction();
     void invalidDiceInsert(Exception e);
     void invalidUseToolCard(Exception e);
+    void handleCardEffect(Object object);
     void toolCardUsed();
 }

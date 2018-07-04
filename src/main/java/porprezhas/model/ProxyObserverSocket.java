@@ -1,6 +1,7 @@
 package porprezhas.model;
 
 
+import porprezhas.Network.command.CardEffectAnswer;
 import porprezhas.Network.command.UpdateAnswer;
 import porprezhas.control.ServerController;
 import porprezhas.control.ServerControllerInterface;
@@ -27,11 +28,11 @@ public class ProxyObserverSocket implements Observer {
         this.username=username;
 
     }
-int i=0;
+
     public void update(Observable modelObs, Object arg)
     {
 
-        if(true){
+
             try
             {
                 SerializableGameInterface serializableGameInterface= (SerializableGame) arg;
@@ -47,12 +48,28 @@ int i=0;
             }
             catch(Exception re)
             {
-                if(re instanceof SocketException) {
-                  //  serverControllerInterface.closedConnection(username);
-                }
+                re.printStackTrace();
             }
-        }
+
     }
 
+    public void handleCardUpdate(Object object){
+        try
+        {
+
+            CardEffectAnswer cardEffectAnswer = new CardEffectAnswer(object);
+            synchronized (lock){
+
+                out.reset();
+                out.writeObject(cardEffectAnswer);
+                out.flush();
+            }
+
+        }
+        catch(Exception re)
+        {
+            re.printStackTrace();
+        }
+    }
 
 }
