@@ -185,11 +185,7 @@ public class GameController  implements GameControllerInterface, Runnable {
             player.removeSkipTurnEffect();
 
             // pass to next player
-            // only if this is not the last round, actualRound == ROUND_NUM == 10th
-            // NOTE: at ending we have the same order of player in the game.PlayerList() during last round
-            if(game.getRoundTrack().getActualRound() == ROUND_NUM) {
-                game.rotatePlayer();
-            }
+            game.rotatePlayer();
         }
     }
 
