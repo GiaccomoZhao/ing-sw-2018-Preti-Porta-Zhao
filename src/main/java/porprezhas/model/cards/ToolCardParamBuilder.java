@@ -96,6 +96,20 @@ public class ToolCardParamBuilder {
     }
 */
 
+    /**
+     * get the quantity of Parameter need to set a Tool Card
+     * @param toolCardID tool card's Id
+     * @return  the quantity of integer ned to setup the given tool card
+     */
+    public int getParamQuantity(int toolCardID) {
+        int iCounter = 0;
+        for (int iParam = 0; iParam < parameterType[tc][step].length; iParam++) {
+            iCounter += parameterType[tc][step][iParam].getParamQuantity();
+        }
+        return iCounter;
+    }
+
+
     public ArrayList<Integer> getParams() {
         return params;
     }

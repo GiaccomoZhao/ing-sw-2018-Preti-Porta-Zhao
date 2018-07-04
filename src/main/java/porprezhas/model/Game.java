@@ -17,6 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import static porprezhas.model.Game.NotifyState.*;
+import static porprezhas.model.GameConstants.ROUND_NUM;
 import static porprezhas.model.cards.Card.Effect.TC8;
 import static porprezhas.model.GameConstants.BOARD_BOXES;
 

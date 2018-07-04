@@ -20,7 +20,9 @@ import static porprezhas.model.dices.Dice.MAX_DICE_NUMBER;
 import static porprezhas.model.dices.Dice.MIN_DICE_NUMBER;
 
 public interface ToolCardStrategy {
-    public static final int[][] parameterSizes = {{-1}, {2}, {4}, {4}, {8}, {3}, {1,2}, {0}, {2} ,{3}, {1}, {1,3}, {8}};   // skip first for better using index
+    // TODO: parameterSizes should be calculated by ToolCardParamBuilder, actually this is equals to the result of the calculation
+    // call getParamQuantity(tc.id)
+    public static final int[][] parameterSizes = {{-1}, {2}, {4}, {4}, {8}, {3}, {1,2}, {0}, {3} ,{3}, {1}, {1,3}, {8}};   // skip first for better using index
     ToolCardStrategy[] list = {
             new ToolCard1(),
             new ToolCard2(),

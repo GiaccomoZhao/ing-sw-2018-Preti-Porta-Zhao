@@ -260,10 +260,11 @@ public class GameController  implements GameControllerInterface, Runnable {
 //            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
             System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
             game.newRound(iRound);      // Prepare for the new round: Setup a new DraftPool
-            playRound();
+            playRound();        // rotate player at end of round, if it is not last one
             System.out.println("}");
         }
 
+        // last DRAFT POOL and ROUND TRACK
         game.newRound(ROUND_NUM);   // Put all dices in draft to the last cell of round track
         endGame();
 
