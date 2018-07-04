@@ -38,6 +38,64 @@
                   </SepiaTone>
                </effect>
             </ImageView>
+            <VBox fx:id="difficultyScene" alignment="CENTER" fillWidth="false" spacing="10.0">
+               <children>
+                  <Label style="-fx-border-color: #000000; -fx-background-color: #451403;" text="Choose Difficulty" textFill="#fffdfd">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="25.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="difficultyEasyViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Easy" textFill="#390f01">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="difficultyBeginnerViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Beginner" textFill="#390f01">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="difficultyNormalViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Normal" textFill="#390f01">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="difficultyHardViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Hard" textFill="#390f01">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="difficultyExtremeViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Extreme" textFill="#390f01">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets top="100.0" />
+               </padding>
+            </VBox>
             <VBox fx:id="loginScene" alignment="CENTER" fillWidth="false" spacing="10.0">
                <children>
                   <TextField fx:id="userNameTextField" prefHeight="26.0" prefWidth="142.0" promptText="Username" style="-fx-background-color: #FFF7DE;">
