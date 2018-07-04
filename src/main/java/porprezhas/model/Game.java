@@ -4,6 +4,8 @@ import porprezhas.Network.rmi.server.ModelObservable;
 import porprezhas.Useful;
 import porprezhas.control.GameController;
 import porprezhas.exceptions.diceMove.*;
+import porprezhas.exceptions.toolCard.AlreadyUsedExceptions;
+import porprezhas.exceptions.toolCard.NotEnoughTokenException;
 import porprezhas.model.dices.*;
 import porprezhas.model.dices.RoundTrack;
 
@@ -677,7 +679,7 @@ public class Game extends ModelObservable implements GameInterface {
         return !bCountClockwise;
     }
 
-
+/*
     public boolean useToolCard(int cardIndex, ToolCardParam param) {
         ToolCard toolCard = (ToolCard) toolCardList.get(cardIndex);
         boolean bSuccess;
@@ -694,15 +696,30 @@ public class Game extends ModelObservable implements GameInterface {
         }
 
         return bSuccess;
-    }
+    }*/
 
     public Boolean useToolCard(ToolCard toolCard, ToolCardParam toolCardParam){
-        Boolean result = toolCard.getStrategy().use(toolCardParam);
-        if (result){
-            this.gameNotifyState=  TOOL_CARD;
-            setChanged();
-            notifyObservers(new SerializableGame(this));
+        if (currentPlayer.isbUsedToolCard()) {  // check that there is only one insert at turn
+            throw new AlreadyUsedExceptions();
         }
+        if (toolCard.getTokensQuantity()+1> currentPlayer.getFavorToken())
+            throw new NotEnoughTokenException();
+        Boolean result = toolCard.getStrategy().use(toolCardParam);
+
+            if (result){
+                int tokenToRemove=1+toolCard.getTokensQuantity();
+                int currentToken =currentPlayer.getFavorToken();
+
+                currentPlayer.setFavorToken(currentToken-tokenToRemove );
+                if (toolCard.getTokensQuantity()== 0) {
+                    toolCard.addTokens();
+                }
+                currentPlayer.setUsedToolCard(true);
+                this.gameNotifyState=  TOOL_CARD;
+                setChanged();
+                notifyObservers(new SerializableGame(this));
+        }
+
         return result;
     }
 

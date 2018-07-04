@@ -34,6 +34,7 @@ public class CliClient {
 
     public static final String JOIN_COMMAND = "join";
     public static final String RESUME_COMMAND = "resume";
+    public static final String SINGLE_PLAYER = "single";
     public static final String LOGOUT_COMMAND = "logout";
     public static final String INSERT_DICE_COMMAND = "dice";
     public static final String PASS = "pass";
@@ -189,6 +190,7 @@ public class CliClient {
                    bLog=true;
                    System.out.println("Logged in!\n");
                    System.out.println("Type 'join' to start a new game");
+                   System.out.println("Type 'single' to start a new single player game");
 
                }
                else if (resultLogin == 1){
@@ -196,6 +198,8 @@ public class CliClient {
                    System.out.println("Logged in!");
                    System.out.println("There is an active game with this username");
                    System.out.println("Type 'resume' to resume the active game or 'join' to start a new game");
+                   System.out.println("Type 'single' to start a new single player game");
+
                }
                else {// Login Failed!!!
                    System.out.println("Invalid username");
@@ -214,7 +218,7 @@ public class CliClient {
     public void joinphase(){
 
         String command = in.nextLine();
-        while (!command.equals(JOIN_COMMAND) && !command.equals(RESUME_COMMAND)){
+        while (!command.equals(JOIN_COMMAND) && !command.equals(RESUME_COMMAND) && !command.equals(SINGLE_PLAYER)){
             System.out.println("Please type the correct command");
             command=in.nextLine();
         }
