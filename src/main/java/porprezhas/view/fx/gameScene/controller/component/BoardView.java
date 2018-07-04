@@ -57,15 +57,20 @@ public class BoardView extends GenericBoardView {// extends GridPane {
 
         int nTokenViews = getTokenQuantity();
         if (nTokenViews > nTokens) {
-            for (Node node : tokens.getChildren()) {
-                if (node instanceof TokenView) {
-                    tokens.getChildren().remove(node);
-                    nTokenViews--;
-                    if (nTokenViews == nTokens) {
-                        return;
-                    } } }
+            // remove excessive tokens
+            int nRemove = nTokenViews - nTokens;
+            for (int i = 0; i < nRemove; i++) {
+                // eliminate the first Tokenview he found
+                for (Node node : tokens.getChildren()) {
+                    if (node instanceof TokenView) {
+                        tokens.getChildren().remove(node);
+                        break;
+                    }
+                }
+            }
         } else
         if (nTokenViews < nTokens) {
+            // add missing tokens
             for (int i = 0; i < nTokens - nTokenViews; i++) {
                 tokens.getChildren().add(new TokenView());
             }
