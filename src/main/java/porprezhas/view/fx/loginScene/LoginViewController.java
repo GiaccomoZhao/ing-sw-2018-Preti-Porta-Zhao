@@ -157,6 +157,7 @@ public class LoginViewController implements Initializable, SceneController, Move
             if(null == username  ||  voidString.equals(username)) {
                 // show loginScene
                 loginScene.setVisible(true);
+                setScene();
                 joinScene.setVisible(false);
 
                 // Add the transition animation
@@ -234,16 +235,19 @@ public class LoginViewController implements Initializable, SceneController, Move
         clipWindow = clipToCircle(rootLayout);
         clipRadius = clipWindow.getRadius();
 
+        setScene();
 
-        connectionButtonsSetup();
-        joinButtonSetup();
-        difficultySceneSetup();
         setGameCursor();
 
 
         timeline = new Timeline();
     }
 
+    private void setScene(){
+        connectionButtonsSetup();
+        joinButtonSetup();
+        difficultySceneSetup();
+    }
 
 
 
