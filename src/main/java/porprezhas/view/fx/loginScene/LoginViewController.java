@@ -171,9 +171,10 @@ public class LoginViewController implements Initializable, SceneController, Move
         timeline.setOnFinished((actionEvent) -> {
             if(null == username  ||  voidString.equals(username)) {
                 // show loginScene
-                loginScene.setVisible(true);
+
                 setScene();
-                joinScene.setVisible(false);
+
+                showJoinScene();
 
                 // Add the transition animation
                 Timeline sceneFading = new Timeline();
@@ -269,6 +270,15 @@ public class LoginViewController implements Initializable, SceneController, Move
     }
 
 
+    private void showJoinScene(){
+        joinScene.setVisible(true);
+        loginScene.setVisible(false);
+        difficultyScene.setVisible(false);
+
+        joinViewButton.setVisible(true);
+        singlePlayerViewButton.setVisible(true);
+        warningText.setVisible(false);
+    }
 
     private void connectionButtonsSetup(){
         loginScene.setVisible(true);
