@@ -13,7 +13,13 @@ public class PrivateObjectiveCardTest {
 
     Dice die0, die1, die2, die3, die4,die5,die6,die7,die8,dieNull;
     Board board;
+
     PrivateObjectiveCard privateObjectiveCard1;
+    PrivateObjectiveCard privateObjectiveCard2;
+    PrivateObjectiveCard privateObjectiveCard3;
+    PrivateObjectiveCard privateObjectiveCard4;
+    PrivateObjectiveCard privateObjectiveCard5;
+
     Card.Effect effect;
 
     @Before
@@ -32,10 +38,11 @@ public class PrivateObjectiveCardTest {
         board = mock(Board.class);
 
 
-
-
-
         privateObjectiveCard1 = new PrivateObjectiveCard(Card.Effect.PRC1);
+        privateObjectiveCard2 = new PrivateObjectiveCard(Card.Effect.PRC2);
+        privateObjectiveCard3 = new PrivateObjectiveCard(Card.Effect.PRC3);
+        privateObjectiveCard4 = new PrivateObjectiveCard(Card.Effect.PRC4);
+        privateObjectiveCard5 = new PrivateObjectiveCard(Card.Effect.PRC5);
 
 
         when(die0.getDiceNumber()).thenReturn(1);
@@ -58,7 +65,7 @@ public class PrivateObjectiveCardTest {
         when(die6.getColorDice()).thenReturn(Dice.ColorDice.PURPLE);
         when(die7.getColorDice()).thenReturn(Dice.ColorDice.RED);
         when(die8.getColorDice()).thenReturn(Dice.ColorDice.GREEN);
-        when(die8.getColorDice()).thenReturn(Dice.ColorDice.WHITE);
+        when(dieNull.getColorDice()).thenReturn(Dice.ColorDice.WHITE);
 
 
         when(board.getDice(0,0)).thenReturn(die1);
@@ -87,11 +94,42 @@ public class PrivateObjectiveCardTest {
     }
 
     @Test
-    public void applyTest() {
+    public void applyCard1Test() {
 
         assertEquals(privateObjectiveCard1.apply(board),5);
 
+    }
+
+    @Test
+    public void applyCardVoidTest(){
 
     }
 
+    @Test
+    public void applyCard2Test() {
+
+        assertEquals(privateObjectiveCard2.apply(board),6);
+
+    }
+
+    @Test
+    public void applyCard3Test() {
+
+        assertEquals(privateObjectiveCard3.apply(board),4);
+
+    }
+
+    @Test
+    public void applyCard4Test() {
+
+        assertEquals(privateObjectiveCard4.apply(board),7);
+
+    }
+
+    @Test
+    public void applyCard5Test() {
+
+        assertEquals(privateObjectiveCard5.apply(board),6);
+
+    }
 }

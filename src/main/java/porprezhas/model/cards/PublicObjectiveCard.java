@@ -37,6 +37,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
           case PUC1:
 
               for(i=0; i < ROW; i++) {
+
+                  counter=0;
+                  helper=1;
+
                   for (j = 0; j <COLUMN; j++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
@@ -53,15 +57,21 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
           case PUC2:
               //Column with different colors
               for(j=0; j <COLUMN; j++) {
+
+                  counter=0;
+                  helper=1;
+
                   for (i = 0; i < ROW; i++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
                       counter = counter + (board.getDice(i, j).getColorDice().ordinal()+1);
                       helper= helper*(board.getDice(i, j).getColorDice().ordinal()+1);
+
                   }
-                  if((counter==10 && helper==24)||(counter==11 && helper==30)||(counter==12 && helper==40)||(counter==13 && helper==60)||(counter==14 && helper==120))
+                  if((counter==10 && helper==24)||(counter==11 && helper==30)||(counter==12 && helper==40)||(counter==13 && helper==60)||(counter==14 && helper==120)){
                       point++;
+                  }
               }
               return this.getNumScore()*point;
 
@@ -69,6 +79,10 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
           case PUC3:
             //Row with different numbers
               for(i=0; i < ROW; i++) {
+
+                  counter=0;
+                  helper=1;
+
                   for (j = 0; j <COLUMN; j++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
@@ -87,19 +101,26 @@ public class PublicObjectiveCard extends ObjectiveCard implements Serializable {
           case PUC4:
               //Column with different numbers
               for(j=0; j <COLUMN; j++) {
+
+                  counter=0;
+                  helper=1;
+
                   for (i = 0; i< ROW; i++){
                       if(board.getDice(i, j).getColorDice().equals(Dice.ColorDice.WHITE))
                           counter=100;
 
                       counter = counter + (board.getDice(i, j).getDiceNumber());
                       helper= helper*(board.getDice(i, j).getDiceNumber());
+
                   }
                   if((counter==10 && helper==24)||(counter==11 && helper==30)||(counter==12 && helper==36)
                           ||(counter==12 && helper==40)||(counter==13 && helper==48)||(counter==14 && helper==60)
                           ||(counter==13 && helper==60)||(counter==14 && helper==72)||(counter==15 && helper==90)
                           ||(counter==16 && helper==120)||(counter==14 && helper==120)||(counter==15 && helper==144)
-                          ||(counter==16 && helper==180)||(counter==17 && helper==240)||(counter==18 && helper==360))
+                          ||(counter==16 && helper==180)||(counter==17 && helper==240)||(counter==18 && helper==360)){
                       point++;
+                  }
+
               }
               return this.getNumScore()*point;
 
