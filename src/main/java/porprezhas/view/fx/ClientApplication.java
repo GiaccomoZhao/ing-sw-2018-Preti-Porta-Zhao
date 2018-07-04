@@ -5,7 +5,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import porprezhas.view.fx.gameScene.GuiSettings;
-import sun.plugin2.main.server.ResultID;
+
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 

@@ -13,4 +13,6 @@ public interface AnswerHandler {
     void handle(DiceInsertedAnswer diceInsertedAnswer);
 
     void handle(PatternAnswer patternAnswer);
+
+    void handle(UseToolCardAnswer useToolCardAnswer);
 }

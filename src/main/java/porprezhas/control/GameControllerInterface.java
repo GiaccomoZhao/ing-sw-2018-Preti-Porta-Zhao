@@ -14,8 +14,8 @@ public interface GameControllerInterface  {
     int calcScore(Player player);
     StateMachine getState() ;    // when server want to know what is game doing -- running or waiting player exit
     GameInterface getGame();
-
-   boolean choosePattern(Player player, int indexPatternType) ;
+    void freezePlayer(String username);
+    boolean choosePattern(Player player, int indexPatternType) ;
     boolean insertDice(String username, long diceID, Integer row, Integer column) throws NotYourTurnException;
     boolean resumeGame(String username);
     boolean useToolCard(String username, int cardIndex,  ArrayList<Integer> paramList) ;  // TODO:

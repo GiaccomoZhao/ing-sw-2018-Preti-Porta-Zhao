@@ -18,7 +18,7 @@ public interface GameInterface {
     Player getCurrentPlayer();
     Player rotatePlayer();  // modify current player, index to the list
     void orderPlayers();    // modify entire list
-    void freezePlayer(String username);
+    boolean freezePlayer(String username);
     Boolean isfreeze(Player player);
     void resumePlayer(String username);
     void updateAfterResumePlayer(String username);

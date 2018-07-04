@@ -1,13 +1,14 @@
 package porprezhas.control;
 
 import porprezhas.exceptions.diceMove.NotYourTurnException;
+import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
 import porprezhas.model.cards.Card;
 import porprezhas.model.cards.ToolCard;
 import porprezhas.model.cards.ToolCardParam;
-import porprezhas.model.database.DatabaseInterface;
+
 
 
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ public class GameController  implements GameControllerInterface, Runnable {
     // ---------- Attributes -----------
 
 	private GameInterface game;
-	private DatabaseInterface databaseInt;
+
     private StateMachine state;
 
     private final Object playTimeOut;
@@ -386,5 +387,15 @@ public class GameController  implements GameControllerInterface, Runnable {
             return false;
     }
 
+    @Override
+    public void freezePlayer(String username) {
+        //Remove the player from the list of Observer
+        ((Game)game).removeObserver(username);
 
+        if (!game.freezePlayer(username)) {
+            state = StateMachine.ENDING;
+            System.out.println("Game over---> There is only on player online");
+            ((Game) game).endGame();
+        }
+    }
 }

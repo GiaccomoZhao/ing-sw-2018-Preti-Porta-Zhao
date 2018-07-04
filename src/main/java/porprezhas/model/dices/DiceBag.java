@@ -1,10 +1,11 @@
 package porprezhas.model.dices;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class DiceBag {
+public class DiceBag implements Serializable {
 
     private ArrayList<Dice> diceSet;
 

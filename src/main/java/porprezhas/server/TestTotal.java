@@ -1,4 +1,4 @@
-package porprezhas;
+package porprezhas.server;
 
 import com.github.javafaker.Faker;
 import porprezhas.control.GameController;

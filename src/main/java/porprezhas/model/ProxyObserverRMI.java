@@ -31,6 +31,8 @@ public  class ProxyObserverRMI extends TimerTask implements Observer
             registry= LocateRegistry.getRegistry(ipClient, portClient);
             this.username=username;
             this.serverControllerInterface=serverControllerInterface;
+
+
             this.remoteObserver = (RemoteObserver) registry.lookup(username);
             timer = new Timer();
             timer.schedule(this, 0, 5000);

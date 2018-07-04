@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GuiSettings {
-    public static final boolean bFixedFont = true;
+    public static final boolean bFixedFont = false;
 
     // ***** Game GUI attributes *****
     // path

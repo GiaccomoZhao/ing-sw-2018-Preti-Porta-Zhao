@@ -14,9 +14,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
-import static porprezhas.model.Game.NotifyState.BOARD_CREATED;
-import static porprezhas.model.Game.NotifyState.DICE_INSERTED;
-import static porprezhas.model.Game.NotifyState.TOOL_CARD;
+import static porprezhas.model.Game.NotifyState.*;
 import static porprezhas.model.cards.Card.Effect.TC8;
 import static porprezhas.model.GameConstants.BOARD_BOXES;
 
@@ -50,7 +48,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK , RANKING, TOOL_CARD}
+    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK , RANKING, TOOL_CARD, ALT_GAME}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -578,7 +576,7 @@ public class Game extends ModelObservable implements GameInterface {
         return new ArrayList<Player>(playerList);
     }
 
-    public void freezePlayer(String username){
+    public boolean freezePlayer(String username){
         Player player;
        for (int i=0; i< this.playerList.size(); i++)
            if (playerList.get(i).getName().equals(username)) {
@@ -588,10 +586,17 @@ public class Game extends ModelObservable implements GameInterface {
                 setChanged();
 
                notifyObservers(new SerializableGame(this));
+               //If there is only one player in game
+               if (this.frozenPlayer.size() == playerList.size()-1) {
+                   return false;
+               }
                if (currentPlayer.equals(player))
                    player.passes(true);
-               return;
+               if (currentPlayer.equals(player))
+                   player.passes(true);
+               return true;
            }
+           return true;
     }
 
     @Override
@@ -699,6 +704,77 @@ public class Game extends ModelObservable implements GameInterface {
             notifyObservers(new SerializableGame(this));
         }
         return result;
+    }
+
+    /**
+     * This method handles the score of the solitaire game
+     * @param privateObjectiveNumber number of the private objective choosen by the user
+     */
+    public void calcSolitaireScore(int privateObjectiveNumber){
+        int scoreObjective=0;
+        int playerPoint;
+        for (List<Dice> list:
+             this.getRoundTrack().getTrack()) {
+            for (Dice dice:
+                 list) {
+                scoreObjective += dice.getDiceNumber();
+            }
+        }
+
+
+        int scorePublic = 0;
+        int scorePrivate = 0;
+        int holesNumber;
+        int nFavorToken;
+        int finalscore;
+        Player player =this.playerList.get(0);
+        Board board = player.getBoard();
+
+
+        //Number of free spaces on the board
+        holesNumber= BOARD_BOXES - board.getDiceQuantity();
+
+
+
+        // sum of private objectives
+        List<Card> privateObjectiveCardList = player.getPrivateObjectiveCardList();
+        if (null != privateObjectiveCardList) {
+
+                PrivateObjectiveCard privateObjectiveCard = (PrivateObjectiveCard) privateObjectiveCardList.get(privateObjectiveNumber);
+
+                scorePrivate += privateObjectiveCard.apply(board);
+        }
+        player.setPrivateScore(scorePrivate);
+
+        // sum of public objectives
+        List<Card> publicObjectiveCardList = this.getPublicObjectiveCardList();
+        if (null != publicObjectiveCardList) {
+            for (int i = 0; i < publicObjectiveCardList.size(); i++) {
+                PublicObjectiveCard publicObjectiveCard = (PublicObjectiveCard) publicObjectiveCardList.get(i);
+
+                scorePublic += publicObjectiveCard.apply(board);
+            }
+        }
+//        System.out.println(this + ": sum of public objectives = " + scorePublic);
+//        logger.info("" + Player.getName() + "\tSum of public objectives = " + scorePublic);
+
+        finalscore = scorePrivate + scorePublic - 3*holesNumber ;
+
+        if (finalscore<0)
+            finalscore=0;
+
+
+    }
+
+    public void endGame(){
+        for (Player player:
+             playerList) {
+            if (!isfreeze(player))
+                winner=player;
+        }
+        gameNotifyState=ALT_GAME;
+        setChanged();
+        notifyObservers(new SerializableGame(this));
     }
 
 }

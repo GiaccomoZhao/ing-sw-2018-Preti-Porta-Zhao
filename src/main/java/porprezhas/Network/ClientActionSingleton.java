@@ -2,6 +2,7 @@ package porprezhas.Network;
 
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 
+
 public class ClientActionSingleton {
 
     private volatile static ClientActionInterface clientActionInstance;     // volatile guarantee the sub-atomic action of new are done in order

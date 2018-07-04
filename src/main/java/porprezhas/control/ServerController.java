@@ -6,8 +6,7 @@ import porprezhas.Network.command.*;
 import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
-import porprezhas.model.cards.ToolCardParam;
-import porprezhas.model.database.DatabaseInterface;
+
 import porprezhas.model.Player;
 import porprezhas.Network.socket.SocketServerClientHandler;
 
@@ -36,7 +35,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     private List<GameControllerInterface> gameControllerList;
 
-	private DatabaseInterface databaseInterface;
+
 
 	private GameControllerFactory gameControllerFactory;
 
@@ -112,12 +111,13 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             // player is already in Game
             // TODO: send a message to client:
             // client.player.setGameController(gameController);
-            System.out.println("But he is already inside a running game. Putting new player in that game!");
+            System.out.println("But he is already inside a running game. ");
 
         } else {
             // Create a timer to auto Start a new game
-            if( 0 == playerBuffer.size() ) {
+            if( 1 == playerBuffer.size() ) {
                 queueTimeOut = new Timer();
+                System.out.println("TimeOut started");
                 queueTimeOut.schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -596,11 +596,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
         String username= useToolCardAction.username;
         GameControllerInterface gameControllerInterface= this.getGameControllerByUsername(username);
+        try {
+            if( this.getGameControllerByUsername(username).useToolCard(username, useToolCardAction.toolCardID, useToolCardAction.paramList))
+                return  new UseToolCardAnswer(true);
+        }catch (Exception e) {
+            return new UseToolCardAnswer(false, e);
+        }
 
-        if( this.getGameControllerByUsername(username).useToolCard(username, useToolCardAction.toolCardID, useToolCardAction.paramList))
-            return  new DiceInsertedAnswer(true);
-        else
-            return new DiceInsertedAnswer(false);
+            return new UseToolCardAnswer(false);
     }
 
 
@@ -647,6 +650,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 this.playerBuffer) {
             if (player.getName().equals(username)) {
                 playerBuffer.remove(player);
+                if (playerBuffer.size()==1) {
+                    queueTimeOut.cancel();
+                    System.out.println("TimeOut stopped");
+                    }
                 this.loggedPlayer.remove(player);
                 return;
             }
@@ -661,17 +668,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
 
         GameControllerInterface gameControllerInterface= getGameControllerByUsername(username);
-        Game game= (Game) gameControllerInterface.getGame();
+
 
         //If the user was using socket, he is removed from the map(username - ObjectOutputStream)
         if(this.socketUsers.containsKey(username))
             socketUsers.remove(username);
 
+        gameControllerInterface.freezePlayer(username);
 
-        //Remove the player from the list of Observer
-        game.removeObserver(username);
-
-        game.freezePlayer(username);
 
         this.inGameLostConnection.put(username, gameControllerInterface);
 

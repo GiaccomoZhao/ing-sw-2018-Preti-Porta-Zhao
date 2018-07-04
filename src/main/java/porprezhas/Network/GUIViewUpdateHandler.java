@@ -13,13 +13,16 @@ import porprezhas.view.fx.loginScene.LoginViewController;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class handles all the updates from the server for a GUI client
+ */
 public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
     private GameViewController gameViewController;
     private LoginViewController loginViewController;
     private String username;
     private ChoosePatternViewController patternViewController;
     private Boolean gameStarted = false;
-    private Boolean updateGui=false;
+
 
     public GUIViewUpdateHandler(GameViewController gameViewController, String username) {
         this.gameViewController = gameViewController;
@@ -213,6 +216,11 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             case RANKING:
                 System.out.println("Game finished");
+                Platform.runLater(
+                        () -> {
+                            gameViewController.updateMessage("The game is finished\n Press pass to see the results");
+                        }
+                );
                 break;
 
         }
@@ -228,16 +236,42 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     @Override
     public void invalidAction() {
-        gameViewController.updateMessage("It's not your turn!");
+
+        Platform.runLater(
+                () -> {
+                   gameViewController.updateMessage("It's not your turn!");
+                }
+        );
     }
 
     @Override
     public void invalidDiceInsert(Exception e) {
-        gameViewController.updateMessage(e.getMessage());
+
+        Platform.runLater(
+                () -> {
+                    gameViewController.updateMessage(e.getMessage());
+                }
+        );
     }
 
     @Override
     public void invalidUseToolCard(Exception e) {
-      gameViewController.updateMessage(e.getMessage());
+        Platform.runLater(
+                () -> {
+                    gameViewController.updateMessage(e.getMessage());
+                }
+        );
+
     }
+
+    @Override
+    public void toolCardUsed() {
+        Platform.runLater(
+                () -> {
+                    gameViewController.updateMessage("Tool card used!");
+                }
+        );
+
+    }
+
 }

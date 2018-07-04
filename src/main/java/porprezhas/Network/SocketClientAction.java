@@ -6,6 +6,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -34,6 +35,8 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
             socketOut = new ObjectOutputStream(socket.getOutputStream());
             socketIn = new ObjectInputStream(socket.getInputStream());
 
+        }catch (ConnectException e){
+            System.out.println("The server is not ready");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -240,7 +243,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     public void handle(DiceInsertedAnswer diceInsertedAnswer)  {
 
 
-        if (diceInsertedAnswer.answer.equals(false))
+        if (diceInsertedAnswer.answer.equals(false) && diceInsertedAnswer.exception!=null)
             try {
                 throw diceInsertedAnswer.exception;
             } catch (Exception e) {
@@ -254,5 +257,14 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     }
 
+    @Override
+    public void handle(UseToolCardAnswer useToolCardAnswer) {
 
+        if (useToolCardAnswer.answer.equals(false) && useToolCardAnswer.exception!=null)
+            try {
+                throw useToolCardAnswer.exception;
+            } catch (Exception e) {
+                this.viewUpdateHandlerInterface.invalidUseToolCard(e);
+            }
+    }
 }

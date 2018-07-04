@@ -15,6 +15,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static porprezhas.model.Game.NotifyState.ALT_GAME;
+
+/**
+ * This class receives all the game updates from the server and print those informations.
+ */
 public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     boolean bFixedFont = GuiSettings.bFixedFont;
 
@@ -44,22 +49,45 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
         this.gameStarted = gameStarted;
     }
 
+    /**
+     * This method is called when a not current user tries to make a pass move
+     */
     @Override
     public void invalidAction() {
         System.out.println("It's not your turn");
     }
 
+    /**
+     * This method prints the cause of the wrong answer to Dice insert.
+     * @param e the exception raised by the insert Dice action
+     */
     @Override
     public void invalidDiceInsert(Exception e) {
         System.out.println(e.getMessage());
     }
-
+    /**
+     * This method prints the cause of the wrong answer to Use ToolCard.
+     * @param e the exception raised by the use ToolCard action.
+     */
     @Override
     public void invalidUseToolCard(Exception e) {
         System.out.println(e.getMessage());
     }
 
+    @Override
+    public void toolCardUsed() {
 
+    }
+
+
+    /** This method prints the board of all players and their names
+     *
+     * @param bFixedFont    Boolean used to change the font
+     * @param numberOfPlayer    Number of the players
+     * @param players   List of the players
+     * @param currentPlayer Current Player of this turn
+     * @return true if the the print is successfully
+     */
     public boolean printAll(boolean bFixedFont, int numberOfPlayer, List<Player> players, Player currentPlayer) {
 
         Pattern pattern;
@@ -82,9 +110,6 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
            // pattern = player.getBoard().getPattern();
 
 
-            // start printing
-//        ╔╗╚════║║║╝
-//        ╧ ╤ ╟┼╢──│
 
             // print TOP border
             if (bFixedFont) {
@@ -234,6 +259,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
         return true; // printed successfully
     }
 
+    /**
+     * This method takes the notify from the server and use all his informations.
+     * It analyzes the type of NotifyStates and decides what to print.
+     * @param game This is the serializable and only-readable version of game
+     */
     public void update(SerializableGameInterface game){
 
 
@@ -252,6 +282,12 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             System.out.println("THE WINNER IS " + game.getWinner().getName() );
             return;
         }
+        if (state.equals(ALT_GAME)){
+            System.out.println("****** >>> GAME OVER <<< ******");
+            System.out.println("You are the only player in game");
+            System.out.println("*********** YOU WON! **********");
+            return;
+        }
         if(gameStarted) {
             System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
             for (Player player:
@@ -263,7 +299,8 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             }
             for (Player player:
                  players) {
-                System.out.printf(player.getName() + " has " + player.getFavorToken() + " token  ");
+                if (!player.getName().equals(username))
+                System.out.printf(player.getName() + " has " + player.getFavorToken() + " token.  ");
             }
             System.out.println(" ");
            System.out.println("Public cards:");
@@ -304,7 +341,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             printAll(bFixedFont, 4, game.getPlayerList(), game.getCurrentPlayer());
 
         }
-//①②③④⑤⑥⑦⑧⑨⑩
+
         switch(state){
 
             case NEW_TURN:
@@ -373,6 +410,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 else
                     saveDiceID(game.getDraftPool().diceList());
                 break;
+
         }
     }
 

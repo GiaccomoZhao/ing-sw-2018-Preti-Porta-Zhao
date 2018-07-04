@@ -13,6 +13,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
+/**
+ * This class implements all RMI actions
+ */
 public class RMIClientAction implements ClientActionInterface{
 
     private ServerRMIInterface server;
@@ -45,6 +48,14 @@ public class RMIClientAction implements ClientActionInterface{
         return null != server;
     }
 
+    /**
+     * This method handles RMI login
+     * @param username the username of the player that wants to try login
+     * @return the answer of the request:
+     * Username available
+     * Username not_available
+     * Username lost connection
+     */
     @Override
     public int login(String username) {
         try {
@@ -58,6 +69,13 @@ public class RMIClientAction implements ClientActionInterface{
         return -1;
     }
 
+    /**
+     *This method handles rmi Join
+     * It saves the viewUpdateHandler and tries to join, giving to the server the ip and the port
+     * of the registry of the client
+     * @param viewUpdateHandlerInterface The handler of all the answer of the server( cli or gui)
+     * @return
+     */
     @Override
     public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
@@ -75,6 +93,15 @@ public class RMIClientAction implements ClientActionInterface{
         return false;
     }
 
+    /**
+     * This method handles the case when an user that lost his connection tries to resume the match
+     * after he logged with the old username.
+     * It calls the setter setGameStarted(true) because he tells to the viewUpdateHandler that the game
+     * is running so that it can skip the "setup" phase.
+     *
+     * @param viewUpdateHandlerInterface the reference of the server update handler
+     * @return
+     */
     @Override
     public boolean resumeGame(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
@@ -88,8 +115,16 @@ public class RMIClientAction implements ClientActionInterface{
         return false;
     }
 
+    /**
+     * This method handles the rmi Dice insert action
+     *If the move isn't valid the server throws an exception and this method sends it to
+     * the viewUpdateHandler that handles the cause of the wrong answer
+     *
+     * @param diceID Id of the dice that the user wants to insert
+     * @param toRow Number of row
+     * @param toCol Number of column
+     */
     @Override
-
     public void insertDice(long diceID, int toRow, int toCol) {
 
         try {
@@ -140,7 +175,8 @@ public class RMIClientAction implements ClientActionInterface{
     public void choosePattern(int patternIndex) {
 
         try {
-            server.choosePattern(patternIndex, username);
+          server.choosePattern(patternIndex, username);
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }

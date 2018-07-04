@@ -21,7 +21,7 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
     private Boolean state = true;
     private int port;
 
-    public ClientObserver( ViewUpdateHandlerInterface viewUpdateHandlerInterface, String username, int port) throws RemoteException, NotBoundException {
+    public ClientObserver( ViewUpdateHandlerInterface viewUpdateHandlerInterface, String username, int port) throws RemoteException {
         super();
         this.port=port;
         Registry registry = LocateRegistry.createRegistry( port);
@@ -29,6 +29,7 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
 
     }
+
 
     @Override
     public void update( SerializableGameInterface arg) throws RemoteException {

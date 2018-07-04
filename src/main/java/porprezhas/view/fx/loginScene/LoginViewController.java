@@ -392,7 +392,7 @@ public class LoginViewController implements Initializable, SceneController, Move
             try {
                 ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
                 ((RMIClientAction) ClientActionSingleton.getClientAction()).setMyport(myPort);
-            } catch (RemoteException | NotBoundException e) {
+            } catch (RemoteException e) {
                 e.printStackTrace();
                 showWarningText("Could not Join");
             }
@@ -426,7 +426,8 @@ public class LoginViewController implements Initializable, SceneController, Move
         if(this.connectionType==RMI) {
             try {
                 ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
-            } catch (RemoteException | NotBoundException e) {
+                ((RMIClientAction) ClientActionSingleton.getClientAction()).setMyport(myPort);
+            } catch (RemoteException e) {
                 e.printStackTrace();
                 showWarningText("Could not Join");
             }

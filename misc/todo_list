@@ -1,3 +1,10 @@
+GUI: single player preparation scene
+GUI: ToolCard
+
+JAR!
+FIX LAST DRAW CALSCORE
+FIX TOKENS TOOL CARD
+------------------------------  for 17/06 zx die...
 View: test ToolCard in Gui and Cli
 
 GUI, to fix:
@@ -18,3 +25,6 @@ Control:
 
 
 UML
+
+JavaDoc
+Tests

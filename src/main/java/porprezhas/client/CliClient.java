@@ -1,9 +1,8 @@
-package porprezhas;
+package porprezhas.client;
 
 import porprezhas.Network.*;
 import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
-import porprezhas.view.fx.gameScene.state.DiceContainer;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -13,7 +12,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/*
+/**
 * This is the main class for CLI client.
 * The user can choose here which type of connection use and the type of game( single player or multiplayer).
 * */
@@ -22,15 +21,15 @@ public class CliClient {
 
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
     private String username;
-    private ServerRMIInterface server;
-    private Registry registry;
+
     private final Scanner in;
-    private ClientObserver clientObserver;
     private String typeConnection;
     private int port;
     private InetAddress ip;
 
     private int myPort=5000;
+    private Boolean alreadyIn=false;
+    private String command;
 
 
     public static final String JOIN_COMMAND = "join";
@@ -48,7 +47,17 @@ public class CliClient {
         this.port=port;
 
     }
+    public CliClient(InetAddress ip, int port, int myPort) {
+        this.in = new Scanner(System.in);
+        this.ip=ip;
+        this.port=port;
+        this.myPort=myPort;
 
+    }
+
+    /** This method prints all the possible moves of the player
+     *
+     */
     private void printHelp() {
         System.out.println(">>> Available game commands:");
 
@@ -58,7 +67,13 @@ public class CliClient {
     }
 
 
-
+    /**This is the central method of cli client.
+     * It calls all the phases needed to prepare the game and handles
+     * the input of the user.
+     *
+     * @throws RemoteException
+     * @throws NotBoundException
+     */
     public void runSagrada() throws RemoteException, NotBoundException {
         System.out.println("\t\tSAGRADA\t\t");
         System.out.println("Type 's' for socket or 'r' for Rmi");
@@ -72,11 +87,13 @@ public class CliClient {
 
 
 
-        String command;
-        do {
-            in.reset();
-            command =  in.nextLine();
 
+        do {
+            if (!alreadyIn) {
+                in.reset();
+                command = in.nextLine();
+            }
+            alreadyIn=false;
             String[] splittedStrings = command.split(" ");
 
 
@@ -121,10 +138,18 @@ public class CliClient {
             }
         } while (!command.equals(LOGOUT_COMMAND));
 
-        server.logout(username);
+        //server.logout(username);
         System.out.println("\t\tBYE!");
     }
 
+    /**
+     * This method handles login phase of cli user.
+     * It prepares all the connection information and calls clientActionSingleton.
+     * It prints also the result of this action with 3 possibilities:
+     * Username already taken
+     * Username available
+     * Username with lost connection
+     */
     public void loginPashe(){
        Boolean bLog=false;
        while (!bLog) {
@@ -137,7 +162,7 @@ public class CliClient {
            // Start the Connection to the server
            if (this.typeConnection.equals(RMI)) {
                try {
-                   System.out.println(ip.getHostAddress());
+
                    ClientActionSingleton.setClientActionInstance(new RMIClientAction(ip.getHostAddress(), port-2));
                } catch (RemoteException e) {
                    System.err.println(e.getMessage());
@@ -182,19 +207,25 @@ public class CliClient {
        }
     }
 
+    /**This method handles join phase of cli user. It handles both join and resume cases.
+     *
+     *
+     */
     public void joinphase(){
 
         String command = in.nextLine();
-
+        while (!command.equals(JOIN_COMMAND) && !command.equals(RESUME_COMMAND)){
+            System.out.println("Please type the correct command");
+            command=in.nextLine();
+        }
 
         if(command.equals(JOIN_COMMAND)){
             viewUpdateHandlerInterface = new CLIViewUpdateHandler(username);
         if(this.typeConnection.equals(RMI)) {
             try {
                 ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
+                ((RMIClientAction) ClientActionSingleton.getClientAction()).setMyport(myPort);
             } catch (RemoteException e) {
-                e.printStackTrace();
-            } catch (NotBoundException e) {
                 e.printStackTrace();
             }
         }
@@ -212,9 +243,8 @@ public class CliClient {
             if(this.typeConnection.equals(RMI)) {
                 try {
                     ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
+                    ((RMIClientAction) ClientActionSingleton.getClientAction()).setMyport(myPort);
                 } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (NotBoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -225,9 +255,22 @@ public class CliClient {
 
     }
 
+    /**With this method user can choose is pattern.
+     * If he wait too long and the pattern is choosen by the server
+     * and the game is started the command is the first move of the player.
+     * Boolean Already is used to skip a second request of input in thi case.
+     */
     public void choosePatternPhase(){
         in.reset();
-        int i= in.nextInt();
+        int i;
+        command=in.nextLine();
+        try {
+            i= Integer.parseInt(command);
+       }
+       catch (NumberFormatException e){
+           i=1;
+           alreadyIn=true;
+       }
         while (!(i<5 && i>0))
             i=in.nextInt();
         ClientActionSingleton.getClientAction().choosePattern(i-1);
