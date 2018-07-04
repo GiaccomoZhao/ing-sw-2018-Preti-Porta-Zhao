@@ -54,6 +54,12 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML VBox loginScene;
     @FXML AnchorPane joinScene;
     @FXML AnchorPane loginView;
+    @FXML VBox difficultyScene;
+    @FXML Button difficultyEasyViewButton;
+    @FXML Button difficultyBeginnerViewButton;
+    @FXML Button difficultyNormalViewButton;
+    @FXML Button difficultyHardViewButton;
+    @FXML Button difficultyExtremeViewButton;
 
 
 
@@ -231,6 +237,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         connectionButtonsSetup();
         joinButtonSetup();
+        difficultySceneSetup();
         setGameCursor();
 
 
@@ -258,6 +265,9 @@ public class LoginViewController implements Initializable, SceneController, Move
         );
     }
 
+    private void difficultySceneSetup(){
+        difficultyScene.setVisible(false);
+    }
 
 
 
@@ -506,6 +516,17 @@ public class LoginViewController implements Initializable, SceneController, Move
             showWarningText("⚠Choose an username⚠");
         }
     }
+
+
+    @FXML
+    public void  onSinglePlayerViewButton(ActionEvent event){
+
+        joinScene.setVisible(false);
+        difficultyScene.setVisible(true);
+
+
+    }
+
 
 
     @FXML
