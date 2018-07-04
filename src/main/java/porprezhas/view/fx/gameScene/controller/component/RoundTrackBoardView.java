@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import porprezhas.Useful;
 import porprezhas.model.GameConstants;
 import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.gameScene.state.DiceContainerType;
@@ -412,8 +413,31 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
         show(-1, true);         // Show all rounds
     }
 
+    /**
+     * @param actualRound   a positive value, index of current round, from 1 to ROUND_QUANTITY
+     *                      for value > ROUND_QUANTITY means gama over, no round is playing anymore
+     * @param dices     the new dice list to put in
+     */
     public void update(int actualRound, List<Dice>[] dices) {
-//        Dice[][] diceMatrix = new Dice[getROW()][ROUND_QUANTITY];
+        // set all images's in a line
+        if(actualRound > ROUND_QUANTITY) {
+            for (int i = 0; i < ROUND_QUANTITY; i++) {
+                ((ImageView)roundTrackNumbers.getChildren().get(i)).setTranslateY(0.0);
+            }
+
+            actualRound = ROUND_QUANTITY;
+
+        } else {
+            // update actual round image
+            if(Useful.isValueBetweenInclusive( actualRound, 2, ROUND_QUANTITY )) {
+                ((ImageView)roundTrackNumbers.getChildren().get(actualRound-2)).setTranslateY(0.0);
+            }
+            if(actualRound <= ROUND_QUANTITY) {
+                ((ImageView) roundTrackNumbers.getChildren().get(actualRound - 1)).setTranslateY(6.0);
+            }
+        }
+
+        Dice[][] diceMatrix = new Dice[getROW()][ROUND_QUANTITY];
 
         getBoard().getChildren().clear();
         for (int round = 0; round < actualRound; round++) {
@@ -427,14 +451,6 @@ public class RoundTrackBoardView extends GenericBoardView implements SubControll
                     } } }
         }
         show(-1, true);
-
-        // update actual round image
-        if(actualRound >= 2) {
-            ((ImageView)roundTrackNumbers.getChildren().get(actualRound-2)).setTranslateY(0.0);
-        }
-        if(actualRound <= ROUND_QUANTITY) {
-            ((ImageView) roundTrackNumbers.getChildren().get(actualRound - 1)).setTranslateY(6.0);
-        }
     }
 
     @Override

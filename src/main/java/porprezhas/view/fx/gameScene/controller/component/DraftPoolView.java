@@ -103,7 +103,8 @@ public class DraftPoolView implements DiceContainer {
 //        int offset = 0;     // offset is quantity of not DiceView instance found.
                             // 2018-7-4 actually it should be always 0, until we add view like border, color mask, image mask...
         final int size = stackPane.getChildren().size();
-        for (int index = 0; index < size; index++) {
+        int iRemoved = 0;
+        for (int index = 0; index < size - iRemoved; index++) {
             Node node = stackPane.getChildren().get(index);
 
             if(node instanceof DiceView) {
@@ -125,6 +126,8 @@ public class DraftPoolView implements DiceContainer {
                 } catch (DiceNotFoundInDraftPoolException e) {
                     // Remove dice views that is not present in server.model.draftPool
                     stackPane.getChildren().remove(index);
+                    iRemoved++;
+                    index--;    // check at the same index at next cycle
                 } }
         }
 

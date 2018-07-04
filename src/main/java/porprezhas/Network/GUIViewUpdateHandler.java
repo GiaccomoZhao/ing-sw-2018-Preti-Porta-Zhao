@@ -170,11 +170,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 }
                 final Player myPlayerFinal2=myPlayer2;
                 Platform.runLater(() -> {
+                    // setup Views
                     gameViewController.setupView(players, game.getToolCardList(), game.getPublicObjectiveCardList(), myPlayerFinal2.getPrivateObjectiveCardList());
 
-
-                });
-                Platform.runLater(() -> {
                     // change the bag position
                     gameViewController.updateFirstPlayer(game.getCurrentPlayer());
 
@@ -183,8 +181,8 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                     gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
                     gameViewController.updateTimer(game.getCurrentPlayer());
-                    for (Player player:
-                            game.getPlayerList()) {
+
+                    for (Player player: game.getPlayerList()) {
 
                         gameViewController.updateBoard(
                                 player.getPosition(),
@@ -200,14 +198,13 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                             gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
 
-                            for (Player player :
-                                    game.getPlayerList()) {
+                            for (Player player : game.getPlayerList()) {
 
                                 gameViewController.updateBoard(
                                         player.getPosition(),
                                         player.getBoard().getBoard());
                             }
-                    //TO_do token
+
                        gameViewController.updateTokens(game.getPlayerList());
 
                         });
@@ -216,11 +213,19 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             case RANKING:
                 System.out.println("Game finished");
-                Platform.runLater(
-                        () -> {
-                            gameViewController.updateMessage("The game is finished\n Press pass to see the results");
-                        }
-                );
+                // update the situation of game at end
+                Platform.runLater(() -> {
+                    gameViewController.updateDraftPool(game.getDraftPool().diceList());
+                    gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
+                    for (Player player : game.getPlayerList()) {
+                        gameViewController.updateBoard(
+                                player.getPosition(),
+                                player.getBoard().getBoard());
+                    }
+
+                    // let user go to result view pressing pass button
+                    gameViewController.setNextStageAble();
+                });
                 break;
 
         }

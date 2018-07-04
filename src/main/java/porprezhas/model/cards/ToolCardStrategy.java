@@ -495,7 +495,7 @@ class ToolCard5 implements ToolCardStrategy, Serializable {
      * @param draftPool draftpool of the game
      * @param iDiceDraftPool Index of the dice in the draftpool to swap
      * @param roundTrack roundtrack of the game
-     * @param indexRound index of the round considered in the roundtrack
+     * @param indexRound index of the round considered in the roundtrack, from 1
      * @param indexDiceRoundTrack index of the dice in the roundtrack to swap
      * @return the success of the operation
      */

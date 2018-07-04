@@ -119,7 +119,7 @@ public class ToolCardParamBuilder {
         int indexCounter = 0;
         int indexFirstNotSetOfType = NOT_DEFINED;
 
-        for (int iParam = 0; iParam < params.size(); iParam++) {
+        for (int iParam = 0; iParam < params.size() && iParam < parameterType[tc][step].length; iParam++) {
             if (type.equals(parameterType[tc][step][iParam])) {
 
                 for (int i = 0; i < parameterType[tc][step][iParam].getParamQuantity(); i++) {

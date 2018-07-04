@@ -126,6 +126,7 @@ public class DiceView extends ImageView implements SubController {
 
     public DiceView setImage(Dice dice) {
         setImage( new Image (getPathToDice(dice)) );
+        this.setCache(true);
         return this;
     }
 

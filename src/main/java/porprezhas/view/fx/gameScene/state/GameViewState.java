@@ -210,7 +210,7 @@ public class GameViewState implements SubController {
                 }
 
             } else if(idBoard == TRACK.toInt()) {
-                params.build(ToolCardParamType.values()[idBoard], diceView.getRow(), diceView.getColumn());
+                params.build(ToolCardParamType.values()[idBoard], diceView.getRow()+1, diceView.getColumn());   // index of round in game starts from 1 instead of 0
             }
 
             return this.action();
@@ -244,22 +244,24 @@ public class GameViewState implements SubController {
                 int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
                 params.build(ToolCardParamType.values()[idBoardFrom], indexDice);
 //                params.add(indexDice);
-            } else
-            if(idBoardFrom == DiceContainerType.BOARD1.toInt()  ||  idBoardFrom == DiceContainerType.TRACK.toInt()) {
+
+            } else if(idBoardFrom == DiceContainerType.BOARD1.toInt()) {
                 params.build(ToolCardParamType.values()[idBoardFrom], fromRow, fromCol);
-//                params.add( fromRow );
-//                params.add( fromCol );
+
+            } else if(idBoardFrom == DiceContainerType.TRACK.toInt()) {
+                params.build(ToolCardParamType.values()[idBoardFrom], fromRow+1, fromCol);
             }
 
             if(idBoardTo == DRAFT.toInt()) {
                 int indexDice = gameViewController.getDraftPoolView().getIndexByDiceID(diceView.getDiceID());
                 params.build(ToolCardParamType.values()[idBoardTo], indexDice);
 //                params.add(indexDice);
-            } else
-            if(idBoardTo >= DiceContainerType.BOARD1.toInt()  ||  idBoardTo == DiceContainerType.TRACK.toInt()) {
+
+            } else if(idBoardTo >= DiceContainerType.BOARD1.toInt()) {
                 params.build(ToolCardParamType.values()[BOARD1.toInt()], toRow, toCol);
-//                params.add( toRow );
-//                params.add( toCol );
+
+            } else if(idBoardFrom == DiceContainerType.TRACK.toInt()) {
+                params.build(ToolCardParamType.values()[idBoardFrom], fromRow+1, fromCol);
             }
 
             bSuccess = this.action();

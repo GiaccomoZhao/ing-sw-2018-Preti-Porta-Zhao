@@ -110,6 +110,8 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     private List<Object> diceContainers;
 
+    private boolean bNextStageAble = false;
+
 
     //  ***** Player attributes *****
     private int num_player;
@@ -699,7 +701,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     @FXML
     protected void onPass(ActionEvent event) {
         System.out.println("PASS");
-        // for test
+        // for test drafting
        /* Random random = new Random();
         List<Dice> diceList = new ArrayList<>();
         for (int i = 0; i < Game.GameConstants.MAX_DICE_PER_ROUND; i++) {
@@ -709,7 +711,12 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
             );
         }
         draftPoolView.reroll(diceList);*/
-       ClientActionSingleton.getClientAction().pass();
+
+       if(bNextStageAble) {
+           goToNextStage();
+       } else {
+           ClientActionSingleton.getClientAction().pass();
+       }
     }
 
     @FXML
@@ -773,6 +780,14 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     public void usingToolCard(Card.Effect effect) {
         state.useToolCard(effect);
+    }
+
+
+    public void setNextStageAble() {
+        bNextStageAble = true;
+        updateMessage("\t\tGame Over!!!\n\n" +
+                "Press PASS to see the Raking"
+        );
     }
 
 
@@ -868,7 +883,9 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
     public void updateTokens(List<Player> players) {
-        ;
+        for (int i = 0; i < players.size(); i++) {
+            boardList.get(i).setTokens(players.get(i).getFavorToken());
+        }
     }
 
     public void updateTimer(Player player) {

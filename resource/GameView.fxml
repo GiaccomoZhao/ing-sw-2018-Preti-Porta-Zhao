@@ -212,27 +212,6 @@
                                                                           </ImageView>
                                                                           <FlowPane fx:id="fx_tokens" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="32.0" rowValignment="TOP">
                                                                               <children>
-                                                                                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                                                                      <image>
-                                                                                          <Image url="other/circle.png" />
-                                                                                      </image>
-                                                                                      <FlowPane.margin>
-                                                                                          <Insets left="1.0" right="1.0" />
-                                                                                      </FlowPane.margin>
-                                                                                  </ImageView>
-                                                                                  <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-                                                                                      <image>
-                                                                                          <Image url="other/circle.png" />
-                                                                                      </image>
-                                                                                      <FlowPane.margin>
-                                                                                          <Insets />
-                                                                                      </FlowPane.margin>
-                                                                                  </ImageView>
-                                                                                  <ImageView fitHeight="16.0" fitWidth="16.0" layoutX="26.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-                                                                                      <image>
-                                                                                          <Image url="other/circle.png" />
-                                                                                      </image>
-                                                                                  </ImageView>
                                                                               </children>
                                                                               <VBox.margin>
                                                                                   <Insets left="10.0" />

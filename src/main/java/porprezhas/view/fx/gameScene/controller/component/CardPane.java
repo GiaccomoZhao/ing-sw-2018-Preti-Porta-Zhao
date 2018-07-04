@@ -52,6 +52,7 @@ public class CardPane implements SubController{
             ImageView imageView = null;
             try {
                 imageView = new ImageView(new Image(pathToCards + cards.get(i).effect.name + ".jpg"));
+                imageView.setCache(true);
             } catch (IllegalArgumentException e) {
                 System.err.println("The file with path+name = " + pathToCards + cards.get(i).effect.name + ".jpg" + " \t has not been found");
                 e.printStackTrace();

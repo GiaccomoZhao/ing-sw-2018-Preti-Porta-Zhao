@@ -1,10 +1,12 @@
 package porprezhas.view.fx.gameScene.controller.component;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
+import porprezhas.exceptions.diceMove.IndexOutOfBoardBoundsException;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 import porprezhas.model.dices.Dice;
 import porprezhas.model.dices.Pattern;
@@ -25,8 +27,15 @@ public class BoardView extends GenericBoardView {// extends GridPane {
         this.timer = timer;
     }
 
-    public FlowPane getTokens() {
-        return tokens;
+    public int getTokenQuantity() {
+        int iCounter = 0;
+
+        for (Node node : tokens.getChildren()) {
+            if(node instanceof TokenView) {
+                iCounter++;
+            }
+        }
+        return iCounter;
     }
 
     public void showBag(boolean bShow) {
@@ -39,6 +48,28 @@ public class BoardView extends GenericBoardView {// extends GridPane {
 
     public void showTimer(boolean bShow) {
         timer.setVisible(bShow);
+    }
+
+    public void setTokens(int nTokens) {
+        if (nTokens < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        int nTokenViews = getTokenQuantity();
+        if (nTokenViews > nTokens) {
+            for (Node node : tokens.getChildren()) {
+                if (node instanceof TokenView) {
+                    tokens.getChildren().remove(node);
+                    nTokenViews--;
+                    if (nTokenViews == nTokens) {
+                        return;
+                    } } }
+        } else
+        if (nTokenViews < nTokens) {
+            for (int i = 0; i < nTokens - nTokenViews; i++) {
+                tokens.getChildren().add(new TokenView());
+            }
+        }
     }
 
     // static field used for player pane

@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static porprezhas.model.GameConstants.ROUND_NUM;
 import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
 
 public class GameController  implements GameControllerInterface, Runnable {
@@ -255,13 +256,15 @@ public class GameController  implements GameControllerInterface, Runnable {
         }
 
         // ROUND phase
-        for (int iRound = 0; iRound < GameConstants.ROUND_NUM; iRound++) {
+        for (int iRound = 0; iRound < ROUND_NUM; iRound++) {
 //            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
             System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
             game.newRound(iRound);      // Prepare for the new round: Setup a new DraftPool
             playRound();
             System.out.println("}");
         }
+
+        game.newRound(ROUND_NUM);   // Put all dices in draft to the last cell of round track
         endGame();
 
         /* TODO: wait all players exit then thread terminates

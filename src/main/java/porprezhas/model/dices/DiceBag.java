@@ -35,6 +35,9 @@ public class DiceBag implements Serializable {
         int extraction;
         Dice die;
         while(iterator>0){
+            if(diceSet.size() == 0) {
+                return draftPool;   // maybe empty, but not null
+            }
 
             Random random = new Random();
 
