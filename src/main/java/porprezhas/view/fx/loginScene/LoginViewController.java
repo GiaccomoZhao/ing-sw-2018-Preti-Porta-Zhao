@@ -518,6 +518,17 @@ public class LoginViewController implements Initializable, SceneController, Move
 
 
     @FXML
+    public void  onSinglePlayerViewButton(ActionEvent event){
+
+        joinScene.setVisible(false);
+        difficultyScene.setVisible(true);
+
+
+    }
+
+
+
+    @FXML
     public void connectionMethodChooseRMI(ActionEvent event){
        //If the connection is already set to Socket, the rmi border is highlighted
         if (connectionType.equals(SOCKET)) {

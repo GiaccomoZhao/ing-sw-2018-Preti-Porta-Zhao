@@ -150,7 +150,7 @@
             </VBox>
             <AnchorPane fx:id="joinScene" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="singlePlayerViewButton" layoutX="218.0" layoutY="417.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: #FFF1C6;" text="SinglePlayer Mode" textFill="#390f01" AnchorPane.bottomAnchor="144.0">
+                  <Button fx:id="singlePlayerViewButton" layoutX="218.0" layoutY="417.0" mnemonicParsing="false" onAction="#onSinglePlayerViewButton" prefHeight="33.0" prefWidth="165.0" style="-fx-background-color: #FFF1C6;" text="SinglePlayer Mode" textFill="#390f01" AnchorPane.bottomAnchor="144.0">
                      <effect>
                         <DropShadow />
                      </effect>
