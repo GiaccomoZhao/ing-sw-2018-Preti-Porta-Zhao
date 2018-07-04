@@ -740,13 +740,14 @@ public class Game extends ModelObservable implements GameInterface {
             throw new NotEnoughTokenException();
         Boolean result = toolCard.getStrategy().use(toolCardParam);
             //jack
+        Object object=null;
             Observer currentObserver =(Observer) super.getObserverMap().get(currentPlayer.getName());
             if (currentObserver instanceof ProxyObserverSocket){
-                ;
+                ((ProxyObserverSocket) currentObserver).handleCardUpdate(object);
             }
             if (currentObserver instanceof ProxyObserverRMI){
                 //QUESTO METODO FA ARRIVARE OBJECT A GUI E A CLI
-                Object object=null;
+
                ((ProxyObserverRMI) currentObserver).handleCardUpdate(object);
             }
 

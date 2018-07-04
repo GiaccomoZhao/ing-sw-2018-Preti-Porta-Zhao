@@ -15,4 +15,6 @@ public interface AnswerHandler {
     void handle(PatternAnswer patternAnswer);
 
     void handle(UseToolCardAnswer useToolCardAnswer);
+
+    void handle(CardEffectAnswer cardEffectAnswer);
 }
