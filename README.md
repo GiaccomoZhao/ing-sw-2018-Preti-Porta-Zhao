@@ -26,3 +26,4 @@
     * GUI
     * SinglePlayer
     * Partite Multiple
+### 5.Note relative al codice
