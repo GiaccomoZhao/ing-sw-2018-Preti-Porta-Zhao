@@ -8,6 +8,7 @@ import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.choosePatternScene.ChoosePatternViewController;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.loginScene.LoginViewController;
+import porprezhas.view.fx.resultsScene.ResultViewController;
 
 import java.util.List;
 
@@ -15,10 +16,12 @@ import java.util.List;
  * This class handles all the updates from the server for a GUI client
  */
 public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
-    private GameViewController gameViewController;
     private LoginViewController loginViewController;
-    private String username;
     private ChoosePatternViewController patternViewController;
+    private GameViewController gameViewController;
+    private ResultViewController resultViewController;
+
+    private String username;
     private Boolean gameStarted = false;
 
 
@@ -33,6 +36,10 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     public void setLoginViewController(LoginViewController loginViewController) {
         this.loginViewController = loginViewController;
+    }
+
+    public void setResultViewController(ResultViewController ResultViewController) {
+        this.resultViewController = resultViewController;
     }
 
 
@@ -227,6 +234,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                     // notify user go to result view pressing pass button
                     gameViewController.setNextStageAble();
+
+                    // setup Result View
+//                    resultViewController.setup();       // TODO: change method name and give parameters
                 });
                 break;
             case ALT_GAME:

@@ -880,8 +880,11 @@ public class Game extends ModelObservable implements GameInterface {
                         ToolCardParamBuilder builder = new ToolCardParamBuilder(effect.ID, 1);
                         builder.build(ToolCardParamType.DIALOG_BOX, i);
                         builder.build(ToolCardParamType.BOARD, cell.getRow(), cell.getCol());
-                        useToolCard( effect.ID , builder.getParams());  // it will reset the effect, counter, inside the strategy
+                        boolean bResult = useToolCard( effect.ID , builder.getParams());  // it will reset the effect, counter, inside the strategy
 //                        currentPlayer.getBoard().insertDice(dice, cell.getRow(), cell.getCol(), Board.Restriction.ALL);
+                        if (bResult) {
+                            break; // insert only one dice
+                        }
                     } catch (Exception e) {
                         System.err.println("Can not insert Dice when it is possible in applyInsertEffect() with tool card n." + effect.ID);
                     }

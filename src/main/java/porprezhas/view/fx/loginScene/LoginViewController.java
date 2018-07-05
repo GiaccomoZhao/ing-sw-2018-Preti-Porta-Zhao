@@ -25,6 +25,7 @@ import porprezhas.view.fx.*;
 import porprezhas.view.fx.choosePatternScene.ChoosePatternViewController;
 import porprezhas.view.fx.gameScene.GuiSettings;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
+import porprezhas.view.fx.resultsScene.ResultViewController;
 
 import java.net.InetAddress;
 import java.net.URL;
@@ -427,7 +428,11 @@ public class LoginViewController implements Initializable, SceneController, Move
     public void onJoinButton(ActionEvent event) {
         System.out.println("Join button Clicked");
 
+        // assign View Controllers to GUI ViewUpdateHandler
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
         GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setResultViewController(Useful.convertInstanceOfObject(stageManager.getController(stageResultsID), ResultViewController.class));
 
 
          viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
@@ -448,8 +453,6 @@ public class LoginViewController implements Initializable, SceneController, Move
         }
         ClientActionSingleton.getClientAction().join(viewUpdateHandlerInterface);
 
-        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
-        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
         singlePlayerViewButton.setVisible(false);
         joinViewButton.setVisible(false);
 
