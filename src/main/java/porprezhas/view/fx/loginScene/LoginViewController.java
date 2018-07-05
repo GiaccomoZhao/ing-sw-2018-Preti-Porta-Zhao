@@ -171,6 +171,9 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         timeline.setDelay(Duration.millis(STAGE_FADE_IN/2));
 
+        // reset warning text that causes Lagg
+        warningText.setText("");
+
         // set Show Component transition Animation
         timeline.setOnFinished((actionEvent) -> {
             if(null == username  ||  voidString.equals(username)) {
@@ -437,7 +440,7 @@ public class LoginViewController implements Initializable, SceneController, Move
         ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
         ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setResultViewController(Useful.convertInstanceOfObject(stageManager.getController(stageResultsID), ResultViewController.class));
 
-        
+
         gameViewController.setUserName(username);
 
         System.out.println(viewUpdateHandlerInterface);

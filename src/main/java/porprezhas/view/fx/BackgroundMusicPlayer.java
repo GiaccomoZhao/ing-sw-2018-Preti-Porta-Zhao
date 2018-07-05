@@ -4,6 +4,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,18 +43,34 @@ public class BackgroundMusicPlayer {
         }
         // and then we can do a refresh of files in the folder
 
+        String jarDir = null;
+        CodeSource codeSource = BackgroundMusicPlayer.class.getProtectionDomain().getCodeSource();
+        try {
+            File jarFile = new File(codeSource.getLocation().toURI().getPath());
+            jarDir = jarFile.getParentFile().getPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            jarDir = new File(BackgroundMusicPlayer.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+
         // get resource path
-        String resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();
-        resourcePath = resourcePath.substring(1, resourcePath.length());
+        String resourcePath =  "";  // jarDir + "\\" + pathToMusic;   //BackgroundMusicPlayer.class.getResource("/" ).getPath();
+//        resourcePath = resourcePath.substring(1, resourcePath.length());
 
         // Convert the file url in file path format
         resourcePath = resourcePath.replaceAll("%20", " ");
         if(bDebug) {
-            System.out.println("music resource path = " + resourcePath + musicPath );
+            System.out.println("searching musinc in path: " + resourcePath + musicPath );
         }
 
         // Open the music directory
-        final File dir = new File(resourcePath + musicPath);
+        File dir = new File(resourcePath + musicPath);
         if (!dir.exists() && dir.isDirectory()) {
             System.err.println("Cannot find audio source directory: " + dir);
             return false;
@@ -59,6 +78,40 @@ public class BackgroundMusicPlayer {
 
         // Filter all .mp3 files
         String[] musicFiles = dir.list((dir1, name) -> name.endsWith(".mp3"));
+
+        boolean bJar = true;
+        if(null == musicFiles) {
+
+            bJar = false;
+
+            System.out.println("Using " + (bJar ? "jar" : "intelliJ") + "method");
+
+            // let's try again with intelliJ method
+            resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();
+            resourcePath = resourcePath.substring(1, resourcePath.length());
+
+            // Convert the file url in file path format
+            resourcePath = resourcePath.replaceAll("%20", " ");
+            if(bDebug) {
+                System.out.println("searching musinc in path: " + resourcePath + musicPath );
+            }
+
+            // Open the music directory
+            dir = new File(resourcePath + musicPath);
+            if (!dir.exists() && dir.isDirectory()) {
+                System.err.println("Cannot find audio source directory: " + dir);
+                return false;
+            }
+
+            // Filter all .mp3 files
+            musicFiles = dir.list((dir1, name) -> name.endsWith(".mp3"));
+
+
+            if(null == musicFiles) {
+                System.err.println("An Error has occurred: Incorrect music directory!");
+                return false;
+            }
+        } else
         if(musicFiles.length == 0) {
             System.err.println("0 .mp3 file found in : " + dir);
             return false;
@@ -70,15 +123,39 @@ public class BackgroundMusicPlayer {
         // Create MediaPlayers from all music contained in folder
         for (int i = 0; i < musicFiles.length; i++) {
             if(bDebug) {
-                System.out.println((i+1) + ". " + musicFiles[i]); }
-
-            // Convert the file url in correct format
-            musicFiles[i] = "file:///" + (dir + "\\" + musicFiles[i]).replace("\\", "/").replaceAll(" ", "%20");
+                System.out.println((i+1) + ". " + musicFiles[i]);
+            }
 
             // Setup a new MediaPlayer
-            MediaPlayer player = new MediaPlayer( new Media(musicFiles[i]) );
+            MediaPlayer player = null;
+            if(bJar) {
+                // Convert the file url in correct format
+                musicFiles[i] = dir + "\\" + (musicFiles[i]).replace("\\", "/").replaceAll(" ", "%20");
+                System.out.println(musicFiles[i]);
+
+                // get absolute path
+                String absoluteDir = "";
+                try {
+                    absoluteDir = new File( musicFiles[i]).toURI().toURL().toString();
+                    if (bDebug)
+                        System.out.println(absoluteDir);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+
+                player = new MediaPlayer(new Media(absoluteDir));
+
+            } else {
+                // Convert the file url in correct format
+                musicFiles[i] = "file:///" + (dir + "//" + musicFiles[i]).replace("\\", "/").replaceAll(" ", "%20");
+                System.out.println(musicFiles[i]);
+
+                player = new MediaPlayer(new Media(musicFiles[i]));
+            }
+
+            MediaPlayer finalPlayer = player;
             player.setOnError(() ->
-                    System.err.println("Media player error occurred: " + player.getError()));
+                    System.err.println("Media player error occurred: " + finalPlayer.getError()));
 
             // set: play background music randomly one after an other
             player.setOnEndOfMedia(() -> {

@@ -119,7 +119,7 @@ public class StageManager {
             }
 
             // set on closing stage closes whole application
-            tempStage.setOnCloseRequest(event -> Platform.setImplicitExit(true));
+//            tempStage.setOnCloseRequest(event -> Platform.setImplicitExit(true));
 
             // Save the loaded Stage and Controller in the HashMap
             this.addStage(stageName, tempStage);
