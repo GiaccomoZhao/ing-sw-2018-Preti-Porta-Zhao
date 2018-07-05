@@ -5,6 +5,7 @@ import porprezhas.control.GameController;
 import porprezhas.control.GameControllerInterface;
 import porprezhas.control.ServerController;
 import porprezhas.model.Game;
+import porprezhas.model.GameConstants;
 import porprezhas.model.Player;
 import porprezhas.model.dices.Dice;
 
@@ -27,6 +28,8 @@ public class TestTotal {
     private static final int port = 58090;
 
     public static void main(String[] args) throws RemoteException, InterruptedException {
+
+        GameConstants.setTimeoutQueueSec( Double.parseDouble(args[0]) );
 
 
         ServerController server;
