@@ -19,7 +19,7 @@
 ### 2. Coverage dei test
 ### 3. Diagrammi UML delle classi
 ### 4. Funzionalità implementate
-    * Regole Complete
+ *  * Regole Complete
     * CLI
     * RMI
     * Socket
