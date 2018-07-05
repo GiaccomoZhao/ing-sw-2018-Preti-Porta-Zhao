@@ -125,7 +125,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     gameViewController.updateFirstPlayer(game.getCurrentPlayer());
 
                     // re-roll dices of Draft pool
-                    gameViewController.updateDraftPool(game.getDraftPool().diceList());
+                    gameViewController.updateDraftPool(game.getDraftPool());
 
                     gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
 
@@ -157,7 +157,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                         // check different with new draft pool
                         // add / remove different dice
-                        gameViewController.updateDraftPool(game.getDraftPool());
+                        gameViewController.updateDraftPool(game.getDraftPool());    // this does animation only when it is need
 
                     }
 
@@ -185,7 +185,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     gameViewController.updateFirstPlayer(game.getCurrentPlayer());
 
                     // re-roll dices of Draft pool
-                    gameViewController.updateDraftPool(game.getDraftPool().diceList());
+                    gameViewController.updateDraftPool(game.getDraftPool());
 
                     gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
                     gameViewController.updateTimer(game.getCurrentPlayer());
@@ -203,7 +203,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 Platform.runLater(() -> {
                             gameViewController.setCanUseToolCard(false);
 
-                            gameViewController.updateDraftPool(game.getDraftPool().diceList());
+                            gameViewController.updateDraftPool(game.getDraftPool());
 
                             gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
 
@@ -224,7 +224,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println("Game finished");
                 // update the situation of game at end
                 Platform.runLater(() -> {
-                    gameViewController.updateDraftPool(game.getDraftPool().diceList());
+                    gameViewController.updateDraftPool(game.getDraftPool());
                     gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
                     for (Player player : game.getPlayerList()) {
                         gameViewController.updateBoard(
