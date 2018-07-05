@@ -44,8 +44,10 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML Button loginViewButton;
     @FXML TextField userNameTextField;
     @FXML Button joinViewButton;
+    @FXML Button exitJoinViewButton;
     @FXML Button loginViewRMIButton;
     @FXML Button loginViewSocketButton;
+    @FXML Button exitLoginViewButton;
     @FXML Button singlePlayerViewButton;
     @FXML Button returnViewButton;
     @FXML Text warningText;
@@ -61,7 +63,7 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML Button difficultyViewButtonNormal;
     @FXML Button difficultyViewButtonHard;
     @FXML Button difficultyViewButtonExtreme;
-
+    @FXML Button exitDifficultyViewButton;
 
 
     private Pane rootLayout;
@@ -633,5 +635,22 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     }
 
+    @FXML
+    public void onExitLoginViewButton(ActionEvent event){
+        Platform.exit();
+        System.exit(0);
 
+    }
+
+    @FXML
+    public void onExitJoinViewButton(ActionEvent event){
+        Platform.exit();
+        System.exit(0);
+    }
+
+    @FXML
+    public void onExitDifficultyViewButton(ActionEvent event){
+        Platform.exit();
+        System.exit(0);
+    }
 }
