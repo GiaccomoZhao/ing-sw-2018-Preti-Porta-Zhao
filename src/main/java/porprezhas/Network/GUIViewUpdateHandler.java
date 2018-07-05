@@ -236,7 +236,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     gameViewController.setNextStageAble();
 
                     // setup Result View
-//                    resultViewController.setup();       // TODO: change method name and give parameters
+                   resultViewController.resultSetup(game.getWinner(),game.getRanking(),game.getPlayerList());
                 });
                 break;
             case ALT_GAME:

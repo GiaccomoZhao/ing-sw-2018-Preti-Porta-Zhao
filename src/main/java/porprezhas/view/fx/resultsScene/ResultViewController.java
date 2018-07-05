@@ -11,7 +11,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -19,16 +21,39 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import porprezhas.model.Player;
+import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.*;
 import porprezhas.view.fx.gameScene.GuiSettings;
+import porprezhas.model.Game.*;
+
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static porprezhas.view.fx.gameScene.GuiSettings.*;
 
 public class ResultViewController implements Initializable, SceneController, MovebleWindowInterface {
+
+    @FXML Pane winnerPane;
+    @FXML Label winnerNameLabel;
+    @FXML Label winnerPointsLabel;
+
+    @FXML Pane noWinner1Pane;
+    @FXML Label noWinner1NameLabel;
+    @FXML Label noWinner1PointsLabel;
+
+    @FXML Pane noWinner2Pane;
+    @FXML Label noWinner2NameLabel;
+    @FXML Label noWinner2PointsLabel;
+
+    @FXML Pane noWinner3Pane;
+    @FXML Label noWinner3NameLabel;
+    @FXML Label noWinner3PointsLabel;
+
 
     @FXML
     private Button resultsViewCloseButton;
@@ -149,7 +174,40 @@ public class ResultViewController implements Initializable, SceneController, Mov
     }
 
 
+    public  void resultSetup(Player winner, HashMap ranking,List<Player> playerList) {
+        int i = 0;
 
+        String[] usernames = new String[3];
+        String[] points = new String[3];
+        int j=0;
+
+
+        winnerNameLabel.setText(winner.getName());
+        winnerPointsLabel.setText((String) ranking.get(winner).toString());
+
+        for (Player player: playerList ) {
+            if(!ranking.get(player).equals(winner)){
+                usernames[i] = player.getName();
+                points[i] = ranking.get(player).toString();
+                j++;
+             }
+        }
+
+        noWinner1NameLabel.setText(usernames[0]);
+        noWinner1PointsLabel.setText(points[0]);
+
+       if(j>0){
+           noWinner2NameLabel.setText(usernames[1]);
+           noWinner2PointsLabel.setText(points[1]);
+       }
+
+       if(j>1){
+        noWinner3NameLabel.setText(usernames[2]);
+        noWinner3PointsLabel.setText(points[2]);
+       }
+
+
+    }
 
 
     // FXML methods
