@@ -104,7 +104,7 @@ public class ToolCardParamBuilder {
      * @Param iStep      at which step you want to know the quantity
      * @return  the quantity of integer ned to setup the given tool card
      */
-    public int getParamQuantity(int toolCardID, int iStep) {
+    public static int getParamQuantity(int toolCardID, int iStep) {
         int iCounter = 0;
         for (int iParam = 0; iParam < parameterType[toolCardID][iStep].length; iParam++) {
             iCounter += parameterType[toolCardID][iStep][iParam].getParamQuantity();

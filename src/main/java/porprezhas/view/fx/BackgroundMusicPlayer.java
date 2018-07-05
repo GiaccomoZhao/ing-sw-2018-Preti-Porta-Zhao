@@ -83,11 +83,19 @@ public class BackgroundMusicPlayer {
         if(null == musicFiles) {
 
             bJar = false;
+//            System.out.println("Using " + (bJar ? "jar" : "intelliJ") + "method");
+            System.out.println("Using intellij");
 
-            System.out.println("Using " + (bJar ? "jar" : "intelliJ") + "method");
 
             // let's try again with intelliJ method
-            resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();
+            if(null != BackgroundMusicPlayer.class.getResource("/" ))
+                resourcePath = BackgroundMusicPlayer.class.getResource("/" ).getPath();
+            else if(null != BackgroundMusicPlayer.class.getResource("" ))
+                resourcePath = BackgroundMusicPlayer.class.getResource("" ).getPath();
+
+            if (bDebug)
+                System.out.println(resourcePath);
+
             resourcePath = resourcePath.substring(1, resourcePath.length());
 
             // Convert the file url in file path format
@@ -111,11 +119,14 @@ public class BackgroundMusicPlayer {
                 System.err.println("An Error has occurred: Incorrect music directory!");
                 return false;
             }
-        } else
-        if(musicFiles.length == 0) {
+        } else if(musicFiles.length == 0) {
             System.err.println("0 .mp3 file found in : " + dir);
             return false;
         }
+
+        if(bJar)
+            System.out.println("Using .jar");
+
 
         if(bDebug) {
             System.out.println("Music list found:"); }
