@@ -17,6 +17,9 @@ import static porprezhas.control.ServerController.ALREADY_IN_GAME;
 import static porprezhas.control.ServerController.USERNAME_ALREADY_TAKEN;
 import static porprezhas.control.ServerController.USERNAME_AVAILABLE;
 
+/**
+ * This class handles the actions from the client to the server when it uses Socket
+ */
 public class SocketClientAction implements ClientActionInterface, AnswerHandler {
 
     private String username;
@@ -27,6 +30,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     private ObjectInputStream socketIn;
     private ObjectOutputStream socketOut ;
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
+
 
 
     public SocketClientAction(InetAddress ip, int port) {
@@ -53,6 +57,13 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
         return null != socket;
     }
 
+    /**
+     * This method handles login action with Socket.
+     * It waits for the answer from the answer and sends it to the handler,
+     * that handles the answer of the login
+     * @param username username that the user wants
+     * @return the answer of the login
+     */
     @Override
     public int login(String username) {
         this.username=username;
@@ -70,6 +81,12 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     return USERNAME_ALREADY_TAKEN;
     }
 
+    /**
+     * This method handles the join action for Socket and creates a new Thread that receives
+     * all the answers and updates from the server
+     * @param viewUpdateHandlerInterface The handler(CLI or GUI) of the updates from the server
+     * @return
+     */
     @Override
     public boolean join(ViewUpdateHandlerInterface viewUpdateHandlerInterface)   {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
@@ -78,8 +95,12 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
             socketOut.writeObject(new JoinAction(username));
             socketOut.flush();
+
             ((Answer) socketIn.readObject()).handle(this);
-            SocketClientAction socketClientAction=this;
+
+
+                SocketClientAction socketClientAction=this;
+
            Thread thread = new Thread(){
                 public void run() {
                     Boolean bool=true;
@@ -103,7 +124,12 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
         }
     return true;
     }
-
+    /**
+     * This method handles the join action for single player for Socket and creates a new Thread that receives
+     * all the answers and updates from the server
+     * @param viewUpdateHandlerInterface The handler(CLI or GUI) of the updates from the server
+     * @return
+     */
     @Override
     public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface, Game.SolitaireDifficulty solitaireDifficulty) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
@@ -112,8 +138,11 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
             socketOut.writeObject(new JoinSinglePlayerAction(username, solitaireDifficulty));
             socketOut.flush();
+
             ((Answer) socketIn.readObject()).handle(this);
+
             SocketClientAction socketClientAction=this;
+
             Thread thread = new Thread(){
                 public void run() {
                     Boolean bool=true;
@@ -138,6 +167,11 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
         return true;
     }
 
+    /**
+     * This method handles the resume of a game after a lost connection for socket
+     * @param viewUpdateHandlerInterface he handler(CLI or GUI) of the updates from the server
+     * @return
+     */
     @Override
     public boolean resumeGame(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
@@ -173,6 +207,12 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
         return true;
     }
 
+    /**
+     * This method write a socket insert dice action
+     * @param diceID id of the dice
+     * @param row row of the board
+     * @param col column of the board
+     */
     @Override
     public void insertDice(long diceID, int row, int col) {
         try {
@@ -190,6 +230,9 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     }
 
+    /**
+     * This method writes a pass action for socket
+     */
     @Override
     public void pass() {
         try {
@@ -201,6 +244,13 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     }
 
+    /**
+     * This method writes a use tool card action for socket
+     * @param username username of the user
+     * @param toolCardID ID of the toolCard
+     * @param paramList List of param that the card needs
+     * @return
+     */
     @Override
     public boolean useToolCard(String username, int toolCardID, ArrayList<Integer> paramList) {
         try {
@@ -212,6 +262,10 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
         return true;
     }
 
+    /**
+     * This method writes a choose pattern action for socket
+     * @param patternIndex Index of the choosen pattern
+     */
     @Override
     public void choosePattern(int patternIndex) {
         try {
@@ -239,7 +293,10 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
         this.viewUpdateHandlerInterface = viewUpdateHandlerInterface;
     }
 
-
+    /**
+     * This method handles an update answer from the server and it passes it to the ViewUpdateHandler
+     * @param updateAnswer
+     */
     @Override
     public void handle(UpdateAnswer updateAnswer) {
 
@@ -247,6 +304,10 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     }
 
+    /**
+     * This method handles the Login action Answer from the server
+     * @param loginActionAnswer
+     */
     @Override
     public void handle(LoginActionAnswer loginActionAnswer) {
 
@@ -261,6 +322,10 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     }
 
+    /**
+     * This method handles the answer of join action
+     * @param joinActionAnswer
+     */
     @Override
     public void handle(JoinActionAnswer joinActionAnswer) {
 
@@ -268,6 +333,10 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     }
 
+    /**
+     * This method handles the pass action answer from the server and passe it to the view update handler
+     * @param passActionAnswer
+     */
     @Override
     public void handle(PassActionAnswer passActionAnswer) {
         if (!passActionAnswer.answer.equals(true))
@@ -275,6 +344,11 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     }
 
+    /**
+     * This method handles the answer of a dice insert. If the answer contains an exceptions it passes
+     * it to the view update handler
+     * @param diceInsertedAnswer
+     */
     @Override
     public void handle(DiceInsertedAnswer diceInsertedAnswer)  {
 
@@ -292,7 +366,11 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     public void handle(PatternAnswer patternAnswer) {
 
     }
-
+    /**
+     * This method handles the answer of a tool card use. If the answer contains an exceptions it passes
+     * it to the view update handler
+     * @param useToolCardAnswer
+     */
     @Override
     public void handle(UseToolCardAnswer useToolCardAnswer) {
 
@@ -304,6 +382,11 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
             }
     }
 
+    /**
+     * This method handles the answer for a second step of a card use. It passes the list of dice
+     * to view update handler.
+     * @param cardEffectAnswer
+     */
     @Override
     public void handle(CardEffectAnswer cardEffectAnswer) {
         viewUpdateHandlerInterface.handleCardEffect(cardEffectAnswer.diceList);

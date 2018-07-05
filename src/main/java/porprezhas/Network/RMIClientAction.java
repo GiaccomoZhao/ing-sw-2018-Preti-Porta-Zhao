@@ -167,6 +167,10 @@ public class RMIClientAction implements ClientActionInterface{
 
     }
 
+    /**
+     * This method asks to the server to do a pass action
+     * If the answer in false it calls viewUpdateHandler to notify the user of the cause
+     */
     @Override
     public void pass() {
         try {
@@ -178,6 +182,13 @@ public class RMIClientAction implements ClientActionInterface{
 
     }
 
+    /**
+     * This method asks to the server to do a use Toolcard  action
+     * @param username username of the player
+     * @param toolCardID Id of the toolCard
+     * @param paramList  List of values that the server needs to use the toolCard
+     * @return
+     */
     @Override
     public boolean useToolCard(String username, int toolCardID, ArrayList<Integer> paramList) {
         try {

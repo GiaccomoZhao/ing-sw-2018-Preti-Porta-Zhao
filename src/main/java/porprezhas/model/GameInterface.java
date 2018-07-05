@@ -29,7 +29,7 @@ public interface GameInterface {
     List<Card> getToolCardList();
     List<Card> getPublicObjectiveCardList();
     List<Player> getFrozenPlayer();
-    void calcSolitaireScore(int privateObjectiveNumber);
+    void calcSolitaireScore();
 
     boolean isSolitaire();
     boolean isFirstTurn();

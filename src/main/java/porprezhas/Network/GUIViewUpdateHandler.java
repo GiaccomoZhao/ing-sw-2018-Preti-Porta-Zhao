@@ -10,6 +10,8 @@ import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.loginScene.LoginViewController;
 import porprezhas.view.fx.resultsScene.ResultViewController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -236,11 +238,19 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     // notify user go to result view pressing pass button
                     gameViewController.setNextStageAble();
                     // setup Result View
+                    System.out.println(game.getWinner());
+                    System.out.println(game.getRanking());
+                    System.out.println(game.getPlayerList());
                    resultViewController.resultSetup(game.getWinner(),game.getRanking(),game.getPlayerList());
                 });
                 break;
             case ALT_GAME:
-                gameViewController.goToNextStage();
+                Platform.runLater(() -> {
+                    List<Player> listlastplayer= new ArrayList<>();
+                    listlastplayer.add(game.getWinner());
+                    resultViewController.resultSetup(game.getWinner(), game.getRanking(), listlastplayer);
+                    gameViewController.goToNextStage();
+                });
 
         }
 

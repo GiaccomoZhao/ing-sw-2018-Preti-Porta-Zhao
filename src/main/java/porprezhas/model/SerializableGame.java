@@ -37,10 +37,11 @@ public class SerializableGame implements SerializableGameInterface {
         this.gameNotifyState= game.getGameState();
         if (game.getFrozenPlayer().size()>0)
             this.quitPlayer= game.getFrozenPlayer().get(game.getFrozenPlayer().size()-1);
-        if(this.gameNotifyState.equals(Game.NotifyState.RANKING)){
+        if(this.gameNotifyState.equals(Game.NotifyState.RANKING) || this.gameNotifyState.equals(Game.NotifyState.ALT_GAME)){
             this.winner= game.getWinner();
             this.ranking=game.getRanking();
         }
+
 
     }
 

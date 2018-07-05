@@ -390,8 +390,5 @@ public class GameController  implements GameControllerInterface, Runnable {
         }
     }
 
-    public boolean solitaireChoose(int choosenPrivate){
-        game.calcSolitaireScore(choosenPrivate);
-       return true;
-    }
+
 }

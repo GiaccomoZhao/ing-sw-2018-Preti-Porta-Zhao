@@ -475,8 +475,12 @@ public class LoginViewController implements Initializable, SceneController, Move
         System.out.println("Return in game button Clicked");
 
         GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
+        viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
 
-         viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
+
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setResultViewController(Useful.convertInstanceOfObject(stageManager.getController(stageResultsID), ResultViewController.class));
 
         gameViewController.setUserName(username);
 
@@ -516,7 +520,7 @@ public class LoginViewController implements Initializable, SceneController, Move
             // Start the Connection to the server
             if (this.connectionType == RMI) {
                 try {
-                    ip = InetAddress.getLocalHost();
+                    ip = InetAddress.getByName("192.168.1.79");
                     ClientActionSingleton.setClientActionInstance(new RMIClientAction(ip.getHostAddress(), port-2 ));
                 } catch (RemoteException e) {
                     System.err.println(e.getMessage());
@@ -616,6 +620,10 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
 
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
+
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setResultViewController(Useful.convertInstanceOfObject(stageManager.getController(stageResultsID), ResultViewController.class));
         gameViewController.setUserName(username);
 
         System.out.println(viewUpdateHandlerInterface);

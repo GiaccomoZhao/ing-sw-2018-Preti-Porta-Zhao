@@ -19,5 +19,5 @@ public interface ActionHandler {
 
     Answer handle(JoinSinglePlayerAction joinSinglePlayerAction);
 
-    Answer handle( ChoosePrivateAction choosePrivateAction);
+
 }

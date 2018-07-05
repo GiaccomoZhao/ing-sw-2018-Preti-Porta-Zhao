@@ -1,5 +1,6 @@
 package porprezhas.client;
 
+
 import porprezhas.Network.*;
 import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
@@ -28,7 +29,7 @@ public class CliClient {
     private int port;
     private InetAddress ip;
 
-    private int myPort=5000;
+    private int myPort=50023;
     private Boolean alreadyIn=false;
     private String command;
 
@@ -42,7 +43,8 @@ public class CliClient {
     public static final String USE_TOOL_CARD = "card";
     public static final String SOCKET = "s";
     public static final String RMI = "r";
-    public static final String RETURN_TO_HOME = "return";
+    public static final String RETURN_TO_HOME = "exit";
+    public static final String SETTINGS= "settings";
 
     public CliClient(InetAddress ip, int port) {
         this.in = new Scanner(System.in);
@@ -67,6 +69,8 @@ public class CliClient {
         System.out.println("\t" + INSERT_DICE_COMMAND + "[index] [row] [column]: \t insert a new Dice");
         System.out.println("\t" + PASS + ":\t\t end your turn");
         System.out.println("\t" + USE_TOOL_CARD + ":\t\t use a tool card");
+        System.out.println("\tParams for toolCard:\n\tID of the card\n\tIndex of the dice or of the box\n\tRound+1 for the roundtrack");
+        System.out.println("\tFor the second step: card + Id of the card and the index of the choosen dice ");
     }
 
 
@@ -79,10 +83,15 @@ public class CliClient {
      */
     public void runSagrada() throws RemoteException, NotBoundException {
         System.out.println("\t\tSAGRADA\t\t");
-        System.out.println("Type 's' for socket or 'r' for Rmi");
-        typeConnection= in.nextLine();;
+        System.out.println("Type 's' for socket or 'r' for Rmi or 'settings' to change ip and port");
+        typeConnection= in.nextLine();
+        if (typeConnection.equals(SETTINGS))
+
+
         while(!typeConnection.equals(SOCKET) && !typeConnection.equals(RMI)){
-            System.out.println("Type 's' for socket or 'r' for Rmi");
+            if (typeConnection.equals(SETTINGS))
+                this.settingsAddress();
+            System.out.println("Type 's' for socket or 'r' for Rmi or 'settings' to change ip and port");
             typeConnection=in.nextLine();
         }
         this.loginPashe();
@@ -130,7 +139,7 @@ public class CliClient {
                         for (int i=2; i < splittedStrings.length; i ++)
                             paramList.add(Integer.parseInt(splittedStrings[i])-1);
 
-                            ClientActionSingleton.getClientAction().useToolCard(username,Integer.parseInt(splittedStrings[1])-1 , paramList);
+                            ClientActionSingleton.getClientAction().useToolCard(username,Integer.parseInt(splittedStrings[1]) , paramList);
 
                         break;
                     default:
@@ -142,9 +151,7 @@ public class CliClient {
             }
         } while (!command.equals(RETURN_TO_HOME));
 
-        System.out.println("Type 'join' to start a new game");
-        System.out.println("Type 'single' to start a new single player game");
-        this.joinphase();
+        System.exit(0);
     }
 
     /**
@@ -265,7 +272,12 @@ public class CliClient {
             System.out.println("Choose the level of difficulty from 1 to 5!");
             int level=0;
             command=in.nextLine();
-            level= Integer.parseInt(command);
+            try {
+                level= Integer.parseInt(command);
+            }catch (NumberFormatException e){
+                level=3;
+            }
+
             while (level<1 || level>5) {
                 System.out.println("Please type the correct number");
                 command = in.nextLine();
@@ -332,9 +344,19 @@ public class CliClient {
         ClientActionSingleton.getClientAction().choosePattern(i-1);
 
     }
+    public void settingsAddress(){
+        System.out.println("Type the ip address");
+        try {
+            ip=InetAddress.getByName(in.nextLine());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Type the port number");
+        port=Integer.parseInt(in.nextLine());
+    }
 
     public static void main(String[] args) throws UnknownHostException {
-        final int port = 58090+1;
+        final int port = 58091;
         CliClient cliClient = new CliClient(InetAddress.getLocalHost(), port);
         try {
             cliClient.runSagrada();

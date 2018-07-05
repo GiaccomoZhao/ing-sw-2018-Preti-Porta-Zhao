@@ -541,10 +541,6 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     }
 
-    @Override
-    public Boolean choosePrivate(String username, int choosen) throws RemoteException {
-        return null;
-    }
 
 
 
@@ -758,14 +754,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             return new PassActionAnswer(false);
     }
 
-    @Override
-    public Answer handle(ChoosePrivateAction choosePrivateAction) {
-        String username= choosePrivateAction.username;
-        int choosen= choosePrivateAction.choosen;
-        GameControllerInterface gameControllerInterface=this.getGameControllerByUsername(username);
-        gameControllerInterface.solitaireChoose(choosen);
-        return new PatternAnswer(true);
-    }
+
 
 
     // ******************************************************************************

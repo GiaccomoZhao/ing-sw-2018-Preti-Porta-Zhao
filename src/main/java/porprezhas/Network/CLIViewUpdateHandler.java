@@ -75,7 +75,14 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
     @Override
     public void handleCardEffect(List<Dice> diceList) {
-
+        System.out.println("This is the result of the use of the toolcard");
+        for (Dice dice:
+             diceList) {
+            String colorForm=  dice.getDiceColor().toString();
+            colorForm=colorForm.concat("]");
+            System.out.printf(" [%d %-6s   ", dice.getDiceNumber(), colorForm);
+        }
+        System.out.println("To complete the effect type 'card' + 'id' + params");
     }
 
     @Override
@@ -286,7 +293,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             System.out.println(" ");
             System.out.println("THE WINNER IS " + game.getWinner().getName() );
             System.out.println("");
-            System.out.println("Type 'return' to return to the first menu");
+            System.out.println("Type 'exit' to exit");
             return;
         }
         if (state.equals(ALT_GAME)){
@@ -295,7 +302,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             System.out.println("You are the only player in game");
             System.out.println("*********** YOU WON! **********");
             System.out.println("");
-            System.out.println("Type 'return' to return to the first menu");
+            System.out.println("Type 'exit' to exit");
             return;
         }
         if(gameStarted) {
@@ -304,7 +311,11 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                  game.getPlayerList()) {
                 if (player.getName().equals(username)){
                     System.out.println("Your favor tokens are " + player.getFavorToken());
-                    System.out.println("Private card: " + player.getPrivateObjectiveCardList().get(0));
+                    for (Card card:
+                         player.getPrivateObjectiveCardList()) {
+                        System.out.println("Private card: " + card);
+                    }
+
                 }
             }
             for (Player player:
@@ -316,12 +327,12 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
            System.out.println("Public cards:");
             for (Card card:
                  game.getPublicObjectiveCardList()) {
-                System.out.println(card.toString());
+                System.out.println( card.toString());
             }
             System.out.println("Tool cards:");
             for (Card card:
                     game.getToolCardList()) {
-                System.out.println(card.toString());
+                System.out.println(card.effect + " " +card.toString());
             }
             System.out.println();
             System.out.println();

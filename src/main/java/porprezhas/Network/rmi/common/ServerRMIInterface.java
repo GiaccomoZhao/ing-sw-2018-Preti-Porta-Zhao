@@ -21,5 +21,5 @@ public interface ServerRMIInterface extends Remote {
     Boolean passUser(String username) throws RemoteException;
     Boolean usedToolCard(String username, int toolCardID, ArrayList<Integer> paramList) throws RemoteException;
     Boolean resumeGame(String username, String ipClient, int portClient) throws RemoteException;
-    Boolean choosePrivate(String username, int choosen) throws RemoteException;
+
 }

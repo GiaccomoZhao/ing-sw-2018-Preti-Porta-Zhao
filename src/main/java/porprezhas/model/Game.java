@@ -640,31 +640,34 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public HashMap calcAllScore(){
-       if (!isSolitaire()) {
+
            int points = 0;
            int max = -1;
+           if (!isSolitaire()) {
+               for (Player player :
+                       this.playerList) {
+                   points = calcScore(player);
+                   if (points > max) {
+                       max = points;
+                       winner = player;
 
+                   } else if (points == max) {
 
-           for (Player player :
-                   this.playerList) {
-               points = calcScore(player);
-               if (points > max) {
-                   max = points;
-                   winner = player;
+                       handleDraw(player);
+                   }
+                   ranking.put(player, points);
 
-               } else if (points == max) {
-
-                   handleDraw(player);
                }
-               ranking.put(player, points);
 
+
+               gameNotifyState = NotifyState.RANKING;
+               setChanged();
+               notifyObservers(new SerializableGame(this));
            }
+           else
+               calcSolitaireScore();
 
-           gameNotifyState = NotifyState.RANKING;
-           setChanged();
-           notifyObservers(new SerializableGame(this));
 
-       }
         return ranking;
     }
 
@@ -897,9 +900,9 @@ public class Game extends ModelObservable implements GameInterface {
 
     /**
      * This method handles the score of the solitaire game
-     * @param privateObjectiveNumber number of the private objective choosen by the user
+     *
      */
-    public void calcSolitaireScore(int privateObjectiveNumber){
+    public void calcSolitaireScore(){
         int scoreObjective=0;
         int playerPoint;
         for (List<Dice> list:
@@ -928,10 +931,16 @@ public class Game extends ModelObservable implements GameInterface {
         // sum of private objectives
         List<Card> privateObjectiveCardList = player.getPrivateObjectiveCardList();
         if (null != privateObjectiveCardList) {
-
-                PrivateObjectiveCard privateObjectiveCard = (PrivateObjectiveCard) privateObjectiveCardList.get(privateObjectiveNumber);
-
-                scorePrivate += privateObjectiveCard.apply(board);
+                int scorePrivate1=0;
+                int scorePrivate2=0;
+                PrivateObjectiveCard privateObjectiveCard1 = (PrivateObjectiveCard) privateObjectiveCardList.get(0);
+                PrivateObjectiveCard privateObjectiveCard2 = (PrivateObjectiveCard) privateObjectiveCardList.get(1);
+                scorePrivate1 += privateObjectiveCard1.apply(board);
+                scorePrivate2 += privateObjectiveCard2.apply(board);
+                if (scorePrivate1>scorePrivate2)
+                    scorePrivate=scorePrivate1;
+                else
+                    scorePrivate=scorePrivate2;
         }
         player.setPrivateScore(scorePrivate);
 
@@ -954,10 +963,10 @@ public class Game extends ModelObservable implements GameInterface {
         ranking.put(player, finalscore);
         if (finalscore>scoreObjective)
             winner=player;
-        else winner=new Player(" the cpu: \n your finalscore is "
-                + finalscore + "\n and the objective score is: " + scoreObjective);
+        else winner=new Player("Objective score");
 
-
+        ranking.put(player, finalscore);
+        ranking.put(winner, scoreObjective);
         gameNotifyState = NotifyState.RANKING;
         setChanged();
         notifyObservers(new SerializableGame(this));
@@ -969,6 +978,7 @@ public class Game extends ModelObservable implements GameInterface {
             if (!isfreeze(player))
                 winner=player;
         }
+        ranking.put(winner, 0);
         gameNotifyState=ALT_GAME;
         setChanged();
         notifyObservers(new SerializableGame(this));
