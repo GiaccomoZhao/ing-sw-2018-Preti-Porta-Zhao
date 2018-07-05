@@ -17,7 +17,8 @@
     * Codice Persona: 10494506
     
 ### 2. Coverage dei test
-### 3. Diagrammi UML delle classi
+### [3. Diagrammi UML delle classi](https://github.com/GiaccomoZhao/ing-sw-2018-Preti-Porta-Zhao/tree/master/UML%20finali)
+
 ### 4. Funzionalità implementate
  *  * Regole Complete
     * CLI
