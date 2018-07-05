@@ -1,5 +1,6 @@
 package porprezhas.control;
 
+import porprezhas.Network.rmi.common.RemoteObserver;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.Network.command.*;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.ConnectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -51,11 +54,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     private HashMap rmiUsers;
 
+    private HashMap rmiTimer;
+
     private  Registry registry;
 
     private HashMap inGameLostConnection;
 
     Timer queueTimeOut;
+
 
     public final static int ALREADY_IN_GAME = 1;
     public final static int USERNAME_AVAILABLE = 0;
@@ -99,7 +105,9 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         this.gameControllerList.remove(gameControllerInterface);
 
     }
-
+    public void timeoutReset(){
+        this.queueTimeOut.cancel();
+    }
     public List<GameControllerInterface> getGameControllers() {
         return gameControllerList;
     }
@@ -128,6 +136,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                     public void run() {
                         try {
                             createNewGame();
+                            timeoutReset();
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -176,7 +185,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                         new Game(player, difficulty), this);
         gameControllerList.add( gameController );
         // NOTE: make player leave from the queue before creating single game
-        playerBuffer.remove(player);    // if player has joined but want play single game
+        //playerBuffer.remove(player);    // if player has joined but want play single game
 
         notifyClient(gameController);
         startThread(gameController);
@@ -296,24 +305,55 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
      */
     @Override
     public Boolean joinGame(String username, String ipClient, int portClient) throws RemoteException {
-
+        RemoteObserver remoteObserver;
         for (Player findPlayer:
                 loggedPlayer) {
             if(findPlayer.getName().equals(username)) {
+
                 List<String> paramList=new ArrayList<>(2);
                 paramList.add(ipClient);
                 paramList.add( String.valueOf(portClient));
                 rmiUsers.put(username, paramList);
+
                 this.join(findPlayer);
+                registry= LocateRegistry.getRegistry(ipClient, portClient);
+                try {
+                    remoteObserver = (RemoteObserver) registry.lookup(username);
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                    remoteObserver=null;
+                }
+                final RemoteObserver remoteObserver1= remoteObserver;
+                ServerControllerInterface serverControllerInterface=this;
+
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        try {
+                          remoteObserver1.checkState();
+                        } catch (ConnectException e) {
+                            serverControllerInterface.closedConnection(username);
+                            timer.cancel();
+
+                            } catch (RemoteException e) {
+                          //  serverControllerInterface.closedConnection(username);
+
+                        }
+                    }
+                },0, 1000);
                 return true;
             }
-        }
+
+              }
+
 
         return false;
     }
 
     @Override
-    public Boolean joinSinglePlayer(String username, String ipClient, int portClient) throws RemoteException {
+    public Boolean joinSinglePlayer(String username, String ipClient, int portClient, Game.SolitaireDifficulty solitaireDifficulty) throws RemoteException {
         for (Player findPlayer :
                 loggedPlayer) {
             if (findPlayer.getName().equals(username)) {
@@ -321,11 +361,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 paramList.add(ipClient);
                 paramList.add(String.valueOf(portClient));
                 rmiUsers.put(username, paramList);
-                this.join(findPlayer);
+               this.createNewGame(findPlayer, solitaireDifficulty);
                 return true;
             }
         }
-        return true;
+        return false;
     }
 
     /** This method handles the login request of a player
@@ -350,7 +390,9 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                     return ALREADY_IN_GAME;
             }
         }
-        loggedPlayer.add(new Player(username));
+
+            loggedPlayer.add(new Player(username));
+
 
 
         return USERNAME_AVAILABLE;
@@ -557,6 +599,25 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return new JoinActionAnswer(false);
     }
 
+    @Override
+    public Answer handle(JoinSinglePlayerAction joinSinglePlayerAction) {
+        String username= joinSinglePlayerAction.username;
+        Game.SolitaireDifficulty solitaireDifficulty = joinSinglePlayerAction.solitaireDifficulty;
+        for (Player findPlayer:
+                loggedPlayer) {
+            if(findPlayer.getName().equals(username)) {
+                try {
+                    this.createNewGame(findPlayer, solitaireDifficulty);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                return new JoinActionAnswer(true);
+
+            }
+        }
+        return new JoinActionAnswer(false);
+    }
+
     /** This method handles socket InsertDiceAction action.
      *
      *
@@ -647,6 +708,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     }
 
 
+
+
     // ******************************************************************************
     //
     // ----------------- Lost connection and resume game handler --------------------
@@ -673,13 +736,27 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 playerBuffer.remove(player);
                 if (playerBuffer.size()==1) {
                     queueTimeOut.cancel();
+                    if (this.rmiUsers.containsKey(username))
+                        rmiUsers.remove(username);
+
                     System.out.println("TimeOut stopped");
                     }
-                this.loggedPlayer.remove(player);
-                return;
+
             }
         }
 
+        if (getGameControllerByUsername(username)==null){
+
+            for (Player player:
+                 this.loggedPlayer) {
+                if (player.getName().equals(username)){
+                    if (this.socketUsers.containsKey(username))
+                        socketUsers.remove(username);
+                    this.loggedPlayer.remove(player);
+                    return;
+                }
+            }
+        }
         //If the player was in game, he is freeze;
         System.out.println(username + " lost the connection");
         try {
@@ -712,7 +789,8 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
     * @return          The boolean answer of the attempt to reconnect.
     */
     @Override
-    public Boolean resumeGame(String username) {
+    public Boolean resumeGame(String username, String ipClient, int portClient) throws RemoteException {
+        RemoteObserver remoteObserver;
         Boolean answer=false;
         if (this.inGameLostConnection.containsKey(username)) {
             answer = ((GameControllerInterface)this.inGameLostConnection.get(username)).resumeGame(username);
@@ -726,6 +804,33 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 }
                 game.updateAfterResumePlayer(username);
             }
+            registry= LocateRegistry.getRegistry(ipClient, portClient);
+            try {
+                remoteObserver = (RemoteObserver) registry.lookup(username);
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+                remoteObserver=null;
+            }
+            final RemoteObserver remoteObserver1= remoteObserver;
+            ServerControllerInterface serverControllerInterface=this;
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    try {
+                        remoteObserver1.checkState();
+                    } catch (ConnectException e) {
+                        serverControllerInterface.closedConnection(username);
+                        timer.cancel();
+
+                    } catch (RemoteException e) {
+                        //  serverControllerInterface.closedConnection(username);
+
+                    }
+                }
+            },0, 1000);
             this.inGameLostConnection.remove(username);
         }
         return answer;

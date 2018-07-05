@@ -17,6 +17,7 @@ public interface ServerControllerInterface  {
     GameControllerInterface getGameController(Player player) throws RemoteException;
     void closedConnection(String username);
     void removeGameController(GameControllerInterface gameControllerInterface);
+    void timeoutReset();
 
     //int getGameControllerIndex(String username) throws RemoteException;
 }

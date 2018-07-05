@@ -16,4 +16,6 @@ public interface ActionHandler {
     Answer handle(PassAction passAction);
 
     Answer handle(ResumeGameAction resumeGameAction);
+
+    Answer handle(JoinSinglePlayerAction joinSinglePlayerAction);
 }

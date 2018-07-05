@@ -28,14 +28,15 @@ public  class ProxyObserverRMI extends TimerTask implements Observer
             List<String> listParam= serverControllerInterface.getClientRmiAddress(username);
             this.ipClient=listParam.get(0);
             this.portClient=Integer.parseInt(listParam.get(1));
-            registry= LocateRegistry.getRegistry(ipClient, portClient);
-            this.username=username;
             this.serverControllerInterface=serverControllerInterface;
 
+            this.username=username;
 
+            registry= LocateRegistry.getRegistry(ipClient, portClient);
             this.remoteObserver = (RemoteObserver) registry.lookup(username);
-            timer = new Timer();
-            timer.schedule(this, 0, 5000);
+
+            //timer = new Timer();
+            //timer.schedule(this, 0, 5000);
 
         }
 
@@ -50,8 +51,7 @@ public  class ProxyObserverRMI extends TimerTask implements Observer
             {
                 if(re instanceof ConnectException)
                     serverControllerInterface.closedConnection(username);
-                else
-                    re.printStackTrace();
+
             }
         }
         public void handleCardUpdate(Object object){
@@ -63,8 +63,7 @@ public  class ProxyObserverRMI extends TimerTask implements Observer
                     serverControllerInterface.closedConnection(username);
 
                 }
-                else
-                    e.printStackTrace();
+
             }
 
         }

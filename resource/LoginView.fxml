@@ -42,7 +42,7 @@
                         <Font name="Book Antiqua" size="25.0" />
                      </font>
                   </Label>
-                  <Button fx:id="difficultyEasyViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Easy" textFill="#390f01">
+                  <Button fx:id="difficultyViewButtonEasy" cache="true" mnemonicParsing="false" onAction="#onDifficultyButton" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Easy" textFill="#390f01">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -53,7 +53,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="difficultyBeginnerViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Beginner" textFill="#390f01">
+                  <Button fx:id="difficultyViewButtonBeginner" cache="true" mnemonicParsing="false" onAction="#onDifficultyButton" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Beginner" textFill="#390f01">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -61,7 +61,7 @@
                         <Font name="Book Antiqua" size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="difficultyNormalViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Normal" textFill="#390f01">
+                  <Button fx:id="difficultyViewButtonNormal" cache="true" mnemonicParsing="false" onAction="#onDifficultyButton" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Normal" textFill="#390f01">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -69,7 +69,7 @@
                         <Font name="Book Antiqua" size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="difficultyHardViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Hard" textFill="#390f01">
+                  <Button fx:id="difficultyViewButtonHard" cache="true" mnemonicParsing="false" onAction="#onDifficultyButton" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Hard" textFill="#390f01">
                      <effect>
                         <DropShadow />
                      </effect>
@@ -77,7 +77,7 @@
                         <Font name="Book Antiqua" size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="difficultyExtremeViewButton" cache="true" mnemonicParsing="false" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Extreme" textFill="#390f01">
+                  <Button fx:id="difficultyViewButtonExtreme" cache="true" mnemonicParsing="false" onAction="#onDifficultyButton" prefHeight="39.0" prefWidth="190.0" style="-fx-background-color: #FFF1C6;" text="Extreme" textFill="#390f01">
                      <effect>
                         <DropShadow />
                      </effect>

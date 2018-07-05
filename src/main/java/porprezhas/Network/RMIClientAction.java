@@ -93,6 +93,12 @@ public class RMIClientAction implements ClientActionInterface{
         return false;
     }
 
+    /**This method handles rmi Join for single player mode
+     *It saves the viewUpdateHandler and tries to join, giving to the server the ip and the port
+     * of the registry of the client.
+     * @param viewUpdateHandlerInterface The handler of all the answer of the server( cli or gui)
+     * @return
+     */
     @Override
     public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
@@ -124,9 +130,11 @@ public class RMIClientAction implements ClientActionInterface{
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
        viewUpdateHandlerInterface.setGameStarted(true);
         try {
-            return server.resumeGame(username);
+            return server.resumeGame(username, InetAddress.getLocalHost().getHostAddress(), myport);
 
         } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         return false;

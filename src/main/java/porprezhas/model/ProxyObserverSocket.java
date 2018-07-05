@@ -48,7 +48,7 @@ public class ProxyObserverSocket implements Observer {
             }
             catch(Exception re)
             {
-                re.printStackTrace();
+               // re.printStackTrace();
             }
 
     }

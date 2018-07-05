@@ -9,6 +9,7 @@ import porprezhas.model.SerializableGameInterface;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 
 
@@ -19,11 +20,18 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
     private String username;
     private Boolean state = true;
     private int port;
-
+    private Registry registry;
     public ClientObserver( ViewUpdateHandlerInterface viewUpdateHandlerInterface, String username, int port) throws RemoteException {
         super();
         this.port=port;
-        Registry registry = LocateRegistry.createRegistry( port);
+            try {
+                registry = LocateRegistry.createRegistry( port);
+            }catch (ExportException e){
+                registry = LocateRegistry.getRegistry(port);
+                e.printStackTrace();
+            }
+
+
         registry.rebind(username,this );
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
 

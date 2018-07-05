@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import porprezhas.Network.*;
 import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.Useful;
+import porprezhas.model.Game;
 import porprezhas.view.fx.*;
 import porprezhas.view.fx.choosePatternScene.ChoosePatternViewController;
 import porprezhas.view.fx.gameScene.GuiSettings;
@@ -55,11 +56,11 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML AnchorPane joinScene;
     @FXML AnchorPane loginView;
     @FXML VBox difficultyScene;
-    @FXML Button difficultyEasyViewButton;
-    @FXML Button difficultyBeginnerViewButton;
-    @FXML Button difficultyNormalViewButton;
-    @FXML Button difficultyHardViewButton;
-    @FXML Button difficultyExtremeViewButton;
+    @FXML Button difficultyViewButtonEasy;
+    @FXML Button difficultyViewButtonBeginner;
+    @FXML Button difficultyViewButtonNormal;
+    @FXML Button difficultyViewButtonHard;
+    @FXML Button difficultyViewButtonExtreme;
 
 
 
@@ -173,7 +174,7 @@ public class LoginViewController implements Initializable, SceneController, Move
                 // show loginScene
 
                 setScene();
-                warningText.setVisible(false);
+               // warningText.setVisible(false);
 
                 // Add the transition animation
                 Timeline sceneFading = new Timeline();
@@ -277,7 +278,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         joinViewButton.setVisible(true);
         singlePlayerViewButton.setVisible(true);
-        warningText.setVisible(false);
+        warningText.setText("");
     }
 
     private void connectionButtonsSetup(){
@@ -569,6 +570,26 @@ public class LoginViewController implements Initializable, SceneController, Move
         difficultyScene.setVisible(true);
 
 
+    }
+
+    /**
+     * Try to start a new single player game with the selected difficulty
+     * @param event
+     */
+    @FXML
+    public void onDifficultyButton(ActionEvent event){
+        Button button= (Button) event.getSource();
+        String choosen= button.getId().substring(20, button.getId().length());
+        Game.SolitaireDifficulty solitaireDifficulty;
+        switch (choosen) {
+            case "easy":
+               solitaireDifficulty= Game.SolitaireDifficulty.EASY;
+                break;
+            case "beginner":
+                solitaireDifficulty= Game.SolitaireDifficulty.BEGINNER;
+                break;
+
+        }
     }
 
     /**
