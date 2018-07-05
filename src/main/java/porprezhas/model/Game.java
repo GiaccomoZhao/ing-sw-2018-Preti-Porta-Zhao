@@ -786,7 +786,7 @@ public class Game extends ModelObservable implements GameInterface {
                     this.getDiceBag(),
                     this.getCurrentPlayer().getBoard(),
                     this.isFirstTurn(),
-                    this.getCurrentPlayer().hasPickedDice(),
+                    !this.getCurrentPlayer().hasPickedDice(),   // required can pick dice
                     paramList
             );
             boolean bResult = this.useToolCard(toolCard, param);

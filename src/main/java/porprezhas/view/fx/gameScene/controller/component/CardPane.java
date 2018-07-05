@@ -68,7 +68,7 @@ public class CardPane implements SubController{
             imageView.fitHeightProperty().bind(cardPane.heightProperty().multiply(CARD_FIT_RATIO));
             imageView.setPreserveRatio(true);
 
-            // attach image to card view
+            // attach image to card views
             CardView cardView =  new CardView(cards.get(i));
             cardView.setGraphic(imageView);
 

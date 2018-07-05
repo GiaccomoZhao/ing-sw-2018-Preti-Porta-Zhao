@@ -74,7 +74,7 @@ public class DiceBox extends Stage{
 
     public void exit() {
 //        Platform.setImplicitExit(true);
-//        Platform.exit();
+        this.setAlwaysOnTop(false);
         this.hide();    // the same of .close()
     }
 }

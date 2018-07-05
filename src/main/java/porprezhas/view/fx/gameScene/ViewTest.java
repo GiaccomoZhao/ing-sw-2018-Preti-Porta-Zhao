@@ -184,7 +184,10 @@ public class ViewTest extends Application {
     private void quitGame() {
         Boolean bQuit = new ConfirmBox().display("Title", "Are you sure to quit during a Game?");
         if(bQuit) {
-            primaryStage.close();
+            Platform.exit();        // one of these exits is sufficient
+            System.exit(0);
+//            primaryStage.close();     // do never close a stage without showing an other, unless you close entire application too
+//          nextStage()
         }
     }
 

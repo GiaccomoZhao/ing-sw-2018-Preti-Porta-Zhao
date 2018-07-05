@@ -218,12 +218,12 @@ public class ResultViewController implements Initializable, SceneController, Mov
 
     @FXML
     public void handleCloseButtonAction(ActionEvent event) {
-        goToNextStage();
+//        goToNextStage();
 
-/*        Stage stage = (Stage)resultsViewCloseButton.getScene().getWindow();
+//        Stage stage = (Stage)resultsViewCloseButton.getScene().getWindow();
         Platform.exit();
         System.exit(0);
-*/
+
     }
 
 
