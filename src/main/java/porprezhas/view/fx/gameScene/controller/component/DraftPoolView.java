@@ -122,10 +122,14 @@ public class DraftPoolView implements DiceContainer {
                 DiceView diceView = (DiceView) node;
 
                 try {
+//                    int indexOf = diceToAdd.indexOf( DraftPool.getDiceByID( diceToAdd, diceView.getDiceID() ));
+//                    if (-1 != indexOf) {
+//                        ;
+//                    }
+
                     // check the present of dice in View
                     // Remove already existent dice from add list
-                    boolean bTrue =
-                            diceToAdd.remove(
+                    boolean bTrue = diceToAdd.remove(
                                     DraftPool.getDiceByID( diceToAdd, diceView.getDiceID() )   // this throws runtime exception
                     );    // remain dices will be added in View
                     if(!bTrue) {
