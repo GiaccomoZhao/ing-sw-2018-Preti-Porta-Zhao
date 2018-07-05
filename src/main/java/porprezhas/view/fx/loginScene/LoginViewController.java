@@ -429,14 +429,15 @@ public class LoginViewController implements Initializable, SceneController, Move
         System.out.println("Join button Clicked");
 
         // assign View Controllers to GUI ViewUpdateHandler
-        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
         GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
-        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
-        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setResultViewController(Useful.convertInstanceOfObject(stageManager.getController(stageResultsID), ResultViewController.class));
-
 
          viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
 
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setResultViewController(Useful.convertInstanceOfObject(stageManager.getController(stageResultsID), ResultViewController.class));
+
+        
         gameViewController.setUserName(username);
 
         System.out.println(viewUpdateHandlerInterface);

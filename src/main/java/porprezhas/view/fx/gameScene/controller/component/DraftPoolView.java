@@ -85,14 +85,25 @@ public class DraftPoolView implements DiceContainer {
     }
 
 
-    // on new round, create new dices
+    /**
+     * on new round, create new dices
+     * add and do rolling animation for all dice of list
+     * comparing with update(DraftPool), this is more faster and simply
+     *
+     * @param diceList the list of dice to put in view
+     */
     public void update(List<Dice> diceList) {
         roll(diceList);       // roll all dices
     }
 
 
-    // refresh existing dices
-    // add / remove different dices
+    /**
+     * refresh existing dices
+     * add / remove different dices
+     * this method rolls only missing dices
+     *
+     * @param draftPool the new draft pool of server, update the View equals to the server's
+     */
     public void update(DraftPool draftPool) {
         if(bDebug)
             System.out.println("refresh draft pool dices");

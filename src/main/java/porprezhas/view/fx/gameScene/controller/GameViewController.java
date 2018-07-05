@@ -859,9 +859,7 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
 
     // activates roll animation
     public void updateDraftPool(List<Dice> dices) {
-        Platform.runLater(() -> {
-            draftPoolView.update(dices);
-        });
+        draftPoolView.update(dices);
     }
 
     // active roll animation only for missing dices
