@@ -795,6 +795,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         if (this.inGameLostConnection.containsKey(username)) {
             answer = ((GameControllerInterface)this.inGameLostConnection.get(username)).resumeGame(username);
             if (answer){
+                List<String> paramList=new ArrayList<>(2);
+                paramList.add(ipClient);
+                paramList.add( String.valueOf(portClient));
+                rmiUsers.put(username, paramList);
                 GameInterface game =((GameControllerInterface)this.inGameLostConnection.get(username)).getGame();
                 try {
                     ((Game)game).addObserver(username,  this);
