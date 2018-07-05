@@ -143,7 +143,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                             e.printStackTrace();
                         }
                     }
-                }, secondsToMillis(TIMEOUT_QUEUE_SEC));
+                }, secondsToMillis( GameConstants.getTimeoutQueueSec() ));
             }
 
             playerBuffer.add(newPlayer);

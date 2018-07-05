@@ -24,6 +24,7 @@ public class ClientApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         // Create a new StageController
         stageController = new StageManager();
 
