@@ -91,7 +91,7 @@ public class LoginViewController implements Initializable, SceneController, Move
         RMI,SOCKET
     }
     //Default connection method: rmi
-    ConnectionType connectionType=RMI;
+    ConnectionType connectionType=SOCKET;
 
     private String username;
 

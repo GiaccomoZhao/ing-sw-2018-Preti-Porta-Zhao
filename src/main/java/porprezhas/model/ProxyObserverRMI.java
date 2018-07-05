@@ -5,6 +5,7 @@ import porprezhas.Network.rmi.common.ServerRMIInterface;
 import porprezhas.control.ServerController;
 import porprezhas.control.ServerControllerInterface;
 import porprezhas.model.SerializableGameInterface;
+import porprezhas.model.dices.Dice;
 
 import java.net.InetAddress;
 import java.rmi.ConnectException;
@@ -54,10 +55,11 @@ public  class ProxyObserverRMI extends TimerTask implements Observer
 
             }
         }
-        public void handleCardUpdate(Object object){
+
+        public void handleCardUpdate(List<Dice> diceList){
             try {
 
-                remoteObserver.updateCardEffect(object);
+                remoteObserver.updateCardEffect(diceList);
             } catch (RemoteException e) {
                 if(e instanceof ConnectException) {
                     serverControllerInterface.closedConnection(username);

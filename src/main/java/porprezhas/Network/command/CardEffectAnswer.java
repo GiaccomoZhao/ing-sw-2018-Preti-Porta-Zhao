@@ -1,12 +1,16 @@
 package porprezhas.Network.command;
 
+import porprezhas.model.dices.Dice;
+
+import java.util.List;
+
 public class CardEffectAnswer implements Answer {
 
-    public final Object object;
+    public final List<Dice> diceList;
 
 
-    public CardEffectAnswer(Object object) {
-        this.object = object;
+    public CardEffectAnswer(List<Dice> diceList) {
+        this.diceList = diceList;
     }
 
     @Override

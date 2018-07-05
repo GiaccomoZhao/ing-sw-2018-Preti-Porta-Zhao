@@ -131,7 +131,7 @@ public class Board implements Serializable {
 
     //Return true if dice1 can be placed adjacent to dice2 ignoring number restrictions
     public Boolean compatibleDiceWithColorRestrictions(Dice dice1, Dice dice2) {
-        if (dice1.getColorDice().equals(dice2.getColorDice()))
+        if (dice1.getDiceColor().equals(dice2.getDiceColor()))
             return false;
 
         return true;
@@ -499,6 +499,37 @@ public class Board implements Serializable {
             }
         }
     */
+
+    /**
+     * get the first place-able cell in the board for given dice
+     *
+     * @param dice  the dice to check
+     * @return  null, if it can NOT be placed in this board
+     *          a new CellPosition containing the row, col position of first place-able cell
+     */
+    public CellPosition canBePlaced(Dice dice) {
+/*
+        for (int row = 0; row < ROW  &&  !canBePlaced; row++) {
+            for (int col = 0; col < COLUMN  &&  !canBePlaced; col++) {
+                try{
+                    if (board.validMove(rolledDice, row, col)) {
+                        canBePlaced = true; }
+                }catch (Exception ignored){}
+            }
+        }
+*/
+        for (int row = 0; row < ROW; row++) {
+            for (int col = 0; col < COLUMN; col++) {
+                try{
+                    if (this.validMove(dice, row, col)) {
+                        return new CellPosition(row, col);
+                    }
+                }catch (Exception ignored){}
+            }
+        }
+        return null;
+    }
+
     public boolean validMove(Dice dice, int row, int col) {
         return validMove(dice, row, col, Restriction.ALL);
     }
@@ -571,7 +602,7 @@ public class Board implements Serializable {
                             sbConstraint.append("NUMBER ");
                             bNumber = true;
                         }
-                        if( dice.getColorDice().equals(notAdjacentDice.getColorDice())) {
+                        if( dice.getDiceColor().equals(notAdjacentDice.getDiceColor())) {
                             if(bNumber)
                                 sbConstraint.append("and ");
                             sbConstraint.append("COLOR ");
@@ -924,7 +955,7 @@ public class Board implements Serializable {
                 // print DICE
                 Dice dice = this.getDice(row, col);
                 number = (char) ('0' + dice.getDiceNumber());
-                color = dice.getColorDice().name().charAt(0);
+                color = dice.getDiceColor().name().charAt(0);
                 if (number == '0')
                     number = ' ';
                 if (color == 'W')

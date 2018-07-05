@@ -5,12 +5,14 @@ package porprezhas.Network.rmi.client;
 import porprezhas.Network.ViewUpdateHandlerInterface;
 import porprezhas.Network.rmi.common.RemoteObserver;
 import porprezhas.model.SerializableGameInterface;
+import porprezhas.model.dices.Dice;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 
 public class ClientObserver extends UnicastRemoteObject implements RemoteObserver {
@@ -52,7 +54,7 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
     }
 
     @Override
-    public void updateCardEffect(Object object) throws RemoteException {
-        viewUpdateHandlerInterface.handleCardEffect(object);
+    public void updateCardEffect(List<Dice> diceList) throws RemoteException {
+        viewUpdateHandlerInterface.handleCardEffect(diceList);
     }
 }

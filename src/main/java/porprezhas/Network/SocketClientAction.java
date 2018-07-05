@@ -304,6 +304,6 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
     @Override
     public void handle(CardEffectAnswer cardEffectAnswer) {
-        viewUpdateHandlerInterface.handleCardEffect(cardEffectAnswer.object);
+        viewUpdateHandlerInterface.handleCardEffect(cardEffectAnswer.diceList);
     }
 }

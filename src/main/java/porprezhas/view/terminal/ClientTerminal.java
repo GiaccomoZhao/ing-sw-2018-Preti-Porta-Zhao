@@ -47,7 +47,7 @@ public class ClientTerminal {
             for (int x = 0; x < board.getWidth(); x++) {
                 // print DICE
                 Dice dice = board.getDice(y, x);
-                System.out.format(" %d%C ", dice.getDiceNumber(), dice.getColorDice().name().charAt(0));
+                System.out.format(" %d%C ", dice.getDiceNumber(), dice.getDiceColor().name().charAt(0));
 
                 // print mid column separator
                 if (x != board.getWidth() - 1) {

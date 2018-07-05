@@ -4,12 +4,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import porprezhas.CircularArrayList;
 import porprezhas.model.dices.Dice;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 public class GuiSettings {
     public static final boolean bFixedFont = false;
@@ -110,7 +107,7 @@ public class GuiSettings {
 
 
     public static String getPathToDice(Dice dice) {
-        return pathToDice + dice.getDiceNumber() + dice.getColorDice().name().toLowerCase().charAt(0) + ".png";
+        return pathToDice + dice.getDiceNumber() + dice.getDiceColor().name().toLowerCase().charAt(0) + ".png";
     }
 
     // get the absolute path to the file with any extension. It is like */relativePath/fileName.*

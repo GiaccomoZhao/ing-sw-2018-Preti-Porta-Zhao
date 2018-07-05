@@ -4,6 +4,7 @@ import porprezhas.Network.rmi.common.RemoteObserver;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.Network.command.*;
+import porprezhas.exceptions.toolCard.ToolCardParameterException;
 import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
@@ -681,8 +682,10 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         try {
             if( this.getGameControllerByUsername(username).useToolCard(username, useToolCardAction.toolCardID, useToolCardAction.paramList))
                 return  new UseToolCardAnswer(true);
-        }catch (Exception e) {
+        }catch (ToolCardParameterException e) {
             return new UseToolCardAnswer(false, e);
+        }catch (Exception e) {
+            e.printStackTrace();
         }
 
             return new UseToolCardAnswer(false);

@@ -18,4 +18,5 @@ public interface GameViewUpdaterInterface {
     void updateTokens(List<Player> players);
 
     void updateMessage(String message);
+    void updateCardEffect(List<Dice> diceList);
 }

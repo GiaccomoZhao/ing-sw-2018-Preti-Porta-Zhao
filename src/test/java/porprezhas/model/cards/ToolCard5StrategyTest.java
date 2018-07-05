@@ -93,35 +93,35 @@ public class ToolCard5StrategyTest {
 
         assertTrue(toolCard5.getStrategy().use(param));
 
-        assertEquals(draftPool.getDiceByID(1).getColorDice(), Dice.ColorDice.BLUE);
+        assertEquals(draftPool.getDiceByID(1).getDiceColor(), Dice.ColorDice.BLUE);
         assertEquals(draftPool.getDiceByID(1).getDiceNumber(), 2);
 
-        assertEquals(roundTrack.getRoundDice(1).get(1).getColorDice(), Dice.ColorDice.PURPLE);
+        assertEquals(roundTrack.getRoundDice(1).get(1).getDiceColor(), Dice.ColorDice.PURPLE);
         assertEquals(roundTrack.getRoundDice(1).get(1).getDiceNumber(), 6);
 
 
-        assertEquals(draftPool.getDiceByID(11).getColorDice(), Dice.ColorDice.GREEN);
+        assertEquals(draftPool.getDiceByID(11).getDiceColor(), Dice.ColorDice.GREEN);
         assertEquals(draftPool.getDiceByID(11).getDiceNumber(), 5);
 
-        assertEquals(draftPool.getDiceByID(12).getColorDice(), Dice.ColorDice.YELLOW);
+        assertEquals(draftPool.getDiceByID(12).getDiceColor(), Dice.ColorDice.YELLOW);
         assertEquals(draftPool.getDiceByID(12).getDiceNumber(), 4);
 
-        assertEquals(draftPool.getDiceByID(13).getColorDice(), Dice.ColorDice.BLUE);
+        assertEquals(draftPool.getDiceByID(13).getDiceColor(), Dice.ColorDice.BLUE);
         assertEquals(draftPool.getDiceByID(13).getDiceNumber(), 3);
 
-        assertEquals(draftPool.getDiceByID(14).getColorDice(), Dice.ColorDice.RED);
+        assertEquals(draftPool.getDiceByID(14).getDiceColor(), Dice.ColorDice.RED);
         assertEquals(draftPool.getDiceByID(14).getDiceNumber(), 2);
 
-        assertEquals(roundTrack.getRoundDice(1).get(0).getColorDice(), Dice.ColorDice.RED);
+        assertEquals(roundTrack.getRoundDice(1).get(0).getDiceColor(), Dice.ColorDice.RED);
         assertEquals(roundTrack.getRoundDice(1).get(0).getDiceNumber(), 1);
 
-        assertEquals(roundTrack.getRoundDice(2).get(0).getColorDice(), Dice.ColorDice.YELLOW);
+        assertEquals(roundTrack.getRoundDice(2).get(0).getDiceColor(), Dice.ColorDice.YELLOW);
         assertEquals(roundTrack.getRoundDice(2).get(0).getDiceNumber(), 3);
 
-        assertEquals(roundTrack.getRoundDice(3).get(0).getColorDice(), Dice.ColorDice.GREEN);
+        assertEquals(roundTrack.getRoundDice(3).get(0).getDiceColor(), Dice.ColorDice.GREEN);
         assertEquals(roundTrack.getRoundDice(3).get(0).getDiceNumber(), 4);
 
-        assertEquals(roundTrack.getRoundDice(4).get(0).getColorDice(), Dice.ColorDice.PURPLE);
+        assertEquals(roundTrack.getRoundDice(4).get(0).getDiceColor(), Dice.ColorDice.PURPLE);
         assertEquals(roundTrack.getRoundDice(4).get(0).getDiceNumber(), 5);
 
     }

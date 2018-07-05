@@ -8,6 +8,7 @@ import porprezhas.model.dices.DiceBag;
 import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.RoundTrack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,7 +42,8 @@ public interface GameInterface {
             throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
 
-    Boolean useToolCard(ToolCard toolcard, ToolCardParam toolCardParam);
+    Boolean useToolCard(int cardIndex,  ArrayList<Integer> paramList);
+//    Boolean useToolCard(ToolCard toolcard, ToolCardParam toolCardParam);
     boolean setPattern(Player player, int indexPatternType);
 
     void newRound(int indexRound);
@@ -55,8 +57,9 @@ public interface GameInterface {
     Player getWinner();
     HashMap calcAllScore();
 
-
-
+    void resetCard();
+    void resetCardEffects();
+    void applyInsertEffect();
 
 
 }

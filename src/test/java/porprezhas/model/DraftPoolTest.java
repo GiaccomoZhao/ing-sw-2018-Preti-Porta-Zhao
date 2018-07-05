@@ -56,7 +56,7 @@ public class DraftPoolTest {
     public void chooseDiceTest(){
         assertEquals(draftPool.diceList().size(), 9);
 
-        assertEquals(draftPool.chooseDice(0).getColorDice(), die1.getColorDice());
+        assertEquals(draftPool.chooseDice(0).getDiceColor(), die1.getDiceColor());
 
         assertEquals(draftPool.diceList().size(), 8);
 
@@ -78,7 +78,7 @@ public class DraftPoolTest {
       assertEquals(draftPool.diceSubstitute(testDie,1 -1),die1);
       assertEquals(draftPool.diceList().size(),9);
       assertEquals(draftPool.diceList().get(0).getDiceNumber(),testDie.getDiceNumber());
-      assertEquals(draftPool.diceList().get(0).getColorDice(),testDie.getColorDice());
+      assertEquals(draftPool.diceList().get(0).getDiceColor(),testDie.getDiceColor());
 
     }
 
@@ -88,7 +88,7 @@ public class DraftPoolTest {
         draftPool.addDice(testDie);
         assertEquals(draftPool.diceList().size(),9);
         assertEquals(draftPool.diceList().get(draftPool.diceList().size()-1).getDiceNumber(),testDie.getDiceNumber());
-        assertEquals(draftPool.diceList().get(draftPool.diceList().size()-1).getColorDice(),testDie.getColorDice());
+        assertEquals(draftPool.diceList().get(draftPool.diceList().size()-1).getDiceColor(),testDie.getDiceColor());
     }
 
 

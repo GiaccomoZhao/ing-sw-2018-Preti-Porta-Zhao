@@ -302,8 +302,8 @@ public class ToolCard1StrategyTest {
 
         // check remain property does not change
         // dice property
-        assertEquals(dice1.getColorDice(), draftPool.diceList().get(0).getColorDice() );
-        assertEquals(dice1.getId(), draftPool.diceList().get(0).getId() );
+        assertEquals(dice1.getDiceColor(), draftPool.diceList().get(0).getDiceColor() );
+        assertEquals(dice1.getDiceID(), draftPool.diceList().get(0).getDiceID() );
         // draft pool property
         assertEquals(1, draftPool.diceList().size());
     }
@@ -325,8 +325,8 @@ public class ToolCard1StrategyTest {
 
         // check remain property does not change
         // dice property
-        assertEquals(dice6.getColorDice(), draftPool.diceList().get(0).getColorDice() );
-        assertEquals(dice6.getId(), draftPool.diceList().get(0).getId() );
+        assertEquals(dice6.getDiceColor(), draftPool.diceList().get(0).getDiceColor() );
+        assertEquals(dice6.getDiceID(), draftPool.diceList().get(0).getDiceID() );
         // draft pool property
         assertEquals(1, draftPool.diceList().size());
     }
@@ -349,8 +349,8 @@ public class ToolCard1StrategyTest {
 
         // check remain property does not changes
         // dice property
-        assertEquals(dice6.getColorDice(), draftPool.diceList().get(0).getColorDice() );
-        assertEquals(dice6.getId(), draftPool.diceList().get(0).getId() );
+        assertEquals(dice6.getDiceColor(), draftPool.diceList().get(0).getDiceColor() );
+        assertEquals(dice6.getDiceID(), draftPool.diceList().get(0).getDiceID() );
         // draft pool property
         assertEquals(1, draftPool.diceList().size());
     }
@@ -372,8 +372,8 @@ public class ToolCard1StrategyTest {
 
         // check remain property does not changes
         // dice property
-        assertEquals(dice1.getColorDice(), draftPool.diceList().get(0).getColorDice() );
-        assertEquals(dice1.getId(), draftPool.diceList().get(0).getId() );
+        assertEquals(dice1.getDiceColor(), draftPool.diceList().get(0).getDiceColor() );
+        assertEquals(dice1.getDiceID(), draftPool.diceList().get(0).getDiceID() );
         // draft pool property
         assertEquals(1, draftPool.diceList().size());
     }

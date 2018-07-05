@@ -1,6 +1,5 @@
 package porprezhas.model.cards;
 
-import javafx.scene.paint.Color;
 import org.junit.Before;
 import org.junit.Test;
 import porprezhas.model.dices.*;
@@ -78,12 +77,12 @@ public class ToolCard7StrategyTest {
 
         int previousDraftPoolSize = draftPool.diceList().size();
 
-        Dice.ColorDice previousColorDice1 = draftPoolDiceTest1.getColorDice();
-        Dice.ColorDice previousColorDice2 = draftPoolDiceTest2.getColorDice();
-        Dice.ColorDice previousColorDice3 = draftPoolDiceTest3.getColorDice();
-        Dice.ColorDice previousColorDice4 = draftPoolDiceTest4.getColorDice();
-        Dice.ColorDice previousColorDice5 = draftPoolDiceTest5.getColorDice();
-        Dice.ColorDice previousColorDice6 = draftPoolDiceTest6.getColorDice();
+        Dice.ColorDice previousColorDice1 = draftPoolDiceTest1.getDiceColor();
+        Dice.ColorDice previousColorDice2 = draftPoolDiceTest2.getDiceColor();
+        Dice.ColorDice previousColorDice3 = draftPoolDiceTest3.getDiceColor();
+        Dice.ColorDice previousColorDice4 = draftPoolDiceTest4.getDiceColor();
+        Dice.ColorDice previousColorDice5 = draftPoolDiceTest5.getDiceColor();
+        Dice.ColorDice previousColorDice6 = draftPoolDiceTest6.getDiceColor();
 
         assertTrue(toolCard7.getStrategy().use(param));
 
@@ -91,12 +90,12 @@ public class ToolCard7StrategyTest {
 
         assertEquals(draftPool.diceList().size(),previousDraftPoolSize);
 
-        assertEquals(draftPool.getDiceByID(1).getColorDice(),previousColorDice1);
-        assertEquals(draftPool.getDiceByID(2).getColorDice(),previousColorDice2);
-        assertEquals(draftPool.getDiceByID(3).getColorDice(),previousColorDice3);
-        assertEquals(draftPool.getDiceByID(4).getColorDice(),previousColorDice4);
-        assertEquals(draftPool.getDiceByID(5).getColorDice(),previousColorDice5);
-        assertEquals(draftPool.getDiceByID(6).getColorDice(),previousColorDice6);
+        assertEquals(draftPool.getDiceByID(1).getDiceColor(),previousColorDice1);
+        assertEquals(draftPool.getDiceByID(2).getDiceColor(),previousColorDice2);
+        assertEquals(draftPool.getDiceByID(3).getDiceColor(),previousColorDice3);
+        assertEquals(draftPool.getDiceByID(4).getDiceColor(),previousColorDice4);
+        assertEquals(draftPool.getDiceByID(5).getDiceColor(),previousColorDice5);
+        assertEquals(draftPool.getDiceByID(6).getDiceColor(),previousColorDice6);
     }
 
 }

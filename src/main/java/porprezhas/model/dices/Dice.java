@@ -55,11 +55,11 @@ public class Dice implements Serializable {
 
 
 
-    public long getId() {
+    public long getDiceID() {
         return id;
     }
 
-    public ColorDice getColorDice() {
+    public ColorDice getDiceColor() {
         return colorDice;
     }
 
