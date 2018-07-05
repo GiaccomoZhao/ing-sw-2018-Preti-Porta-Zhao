@@ -359,10 +359,10 @@ public class GameController  implements GameControllerInterface, Runnable {
         return false;
     }
 
-    public boolean useToolCard(String username, int cardIndex,  ArrayList<Integer> paramList){
+    public boolean useToolCard(String username, int cardID,  ArrayList<Integer> paramList){
         if (!this.game.getCurrentPlayer().getName().equals(username))
             throw new NotYourTurnException("It's not your turn");
-        return game.useToolCard(cardIndex, paramList);
+        return game.useToolCard(cardID, paramList);
     }
 
     @Override

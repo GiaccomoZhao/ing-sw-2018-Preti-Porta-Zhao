@@ -42,7 +42,7 @@ public interface GameInterface {
             throws IndexOutOfBoundsException, // NotYourTurnException, AlreadyPickedException,
             BoardCellOccupiedException, EdgeRestrictionException, PatternColorRestrictionException, PatternNumericRestrictionException, AdjacentRestrictionException;
 
-    Boolean useToolCard(int cardIndex,  ArrayList<Integer> paramList);
+    Boolean useToolCard(int cardID,  ArrayList<Integer> paramList);
 //    Boolean useToolCard(ToolCard toolcard, ToolCardParam toolCardParam);
     boolean setPattern(Player player, int indexPatternType);
 

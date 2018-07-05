@@ -2,6 +2,7 @@ package porprezhas.control;
 
 import porprezhas.Network.rmi.common.RemoteObserver;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
+import porprezhas.exceptions.GenericInvalidActionException;
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.Network.command.*;
 import porprezhas.exceptions.toolCard.ToolCardParameterException;
@@ -682,7 +683,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         try {
             if( this.getGameControllerByUsername(username).useToolCard(username, useToolCardAction.toolCardID, useToolCardAction.paramList))
                 return  new UseToolCardAnswer(true);
-        }catch (ToolCardParameterException e) {
+        }catch (GenericInvalidActionException e) {
             return new UseToolCardAnswer(false, e);
         }catch (Exception e) {
             e.printStackTrace();

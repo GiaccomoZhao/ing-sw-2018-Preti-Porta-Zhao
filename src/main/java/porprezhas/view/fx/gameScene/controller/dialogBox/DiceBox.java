@@ -1,5 +1,6 @@
 package porprezhas.view.fx.gameScene.controller.dialogBox;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -69,5 +70,11 @@ public class DiceBox extends Stage{
                         new DiceView(dice, 0,0, DiceContainerType.BOX.toInt())
                                 .addDragListener())
         );
+    }
+
+    public void exit() {
+//        Platform.setImplicitExit(true);
+//        Platform.exit();
+        this.hide();    // the same of .close()
     }
 }

@@ -18,7 +18,7 @@ public interface GameControllerInterface  {
     boolean choosePattern(Player player, int indexPatternType) ;
     boolean insertDice(String username, long diceID, Integer row, Integer column) throws NotYourTurnException;
     boolean resumeGame(String username);
-    boolean useToolCard(String username, int cardIndex,  ArrayList<Integer> paramList) ;  // TODO:
+    boolean useToolCard(String username, int cardID,  ArrayList<Integer> paramList);
     boolean passUser(String username);
 
 

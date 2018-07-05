@@ -93,6 +93,9 @@ public class GameViewState implements SubController {
         }
     }
 
+    /**
+     * reset, make all parameters and saved dice information empty
+     */
     public void clear() {
 //        iProcess = 0;
 
@@ -103,11 +106,6 @@ public class GameViewState implements SubController {
         toContainers.clear();
         param1.clear();
         param2.clear();
-
-        if(null != diceBox) {
-            diceBox.close();
-        }
-
     }
 
     public boolean hasUsingCard() {
@@ -122,9 +120,8 @@ public class GameViewState implements SubController {
 
         if(usingCard == null) {
             iProcess = 0;
-            clear();
             activate();
-            diceBox.close();
+            closeBox();
 
         } else {
             disable();
@@ -359,17 +356,28 @@ public class GameViewState implements SubController {
     }
 
     public void updateBox(List<Dice> diceList) {
-        if(bDebug) {
-            System.out.println("Show Dice Box");
-        }
-        if(!diceList.isEmpty()) {
+//        if(!diceList.isEmpty()) {
+        if(diceList.size() > 0) {
+            if(bDebug) {
+                System.out.println("Show Dice Box");
+            }
             while (iProcess == 1 && hasUsingCard()) {
                 diceBox = new DiceBox().display(
                         "TC" + usingCard.ID + ": " + usingCard.name,
                         diceList);
             }
         } else {
-            useToolCard(null);
+            if(bDebug) {
+                System.out.println("Close Dice Box");
+            }
+            useToolCard(null);  // close dialog box
+        }
+    }
+
+    public void closeBox() {
+        if(null != diceBox) {
+            diceBox.exit();
+            diceBox = null;
         }
     }
 }

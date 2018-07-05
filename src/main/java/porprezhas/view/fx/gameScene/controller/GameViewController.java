@@ -111,6 +111,9 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     private List<Object> diceContainers;
 
     private boolean bNextStageAble = false;
+    private boolean canInsertDice = false;
+    private boolean canUseToolCard = false;
+//    private String strAvailableAction = "";
 
 
     //  ***** Player attributes *****
@@ -325,7 +328,6 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
             roundTrackDiceTable.add(vBox, i, 1, 1, 8);
         }
 */
-
     }
 
 
@@ -889,6 +891,13 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
     }
 
     public void updateTimer(Player player) {
+        if(player.getPosition() == playerPosition) {
+            // print help
+            setCanUseToolCard(true);
+            setCanInsertDice(true);
+        } else {
+            updateMessage("Wait other players pass the turn to you");
+        }
         for (int i = 0; i < boardList.size(); i++) {
             BoardView boardView = boardList.get(i);
             if (i == player.getPosition()) {
@@ -915,5 +924,30 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
      */
     public void resetUseToolCard() {
             state.useToolCard(null);    // reset
+    }
+
+
+    public void setCanInsertDice(boolean can) {
+        canInsertDice = can;
+        updateHelp();
+    }
+    public void setCanUseToolCard(boolean can) {
+        canUseToolCard = can;
+        updateHelp();
+    }
+
+    /**
+     * build a help String and update it to user
+     */
+    public void updateHelp() {
+        StringBuilder stringBuilder = new StringBuilder("The available actions: \n");
+        if(canInsertDice)
+            stringBuilder.append("- Drag a Dice from Draft to your Board\n");
+        if(canUseToolCard)
+            stringBuilder.append("- use a Tool Card above\n");
+        stringBuilder.append("- pass your turn\n");
+//        strAvailableAction = stringBuilder.toString();
+
+        updateMessage(stringBuilder.toString());
     }
 }

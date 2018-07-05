@@ -1,5 +1,6 @@
 package porprezhas.view.fx;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -116,6 +117,9 @@ public class StageManager {
             for (StageStyle style : styles) {
                 tempStage.initStyle(style);
             }
+
+            // set on closing stage closes whole application
+            tempStage.setOnCloseRequest(event -> Platform.setImplicitExit(true));
 
             // Save the loaded Stage and Controller in the HashMap
             this.addStage(stageName, tempStage);

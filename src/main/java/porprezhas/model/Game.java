@@ -756,24 +756,25 @@ public class Game extends ModelObservable implements GameInterface {
         }
         return null;
     }
-
+/*
     private ToolCard getToolCardByIndex (int cardIndex) {
         ToolCard toolCard = null;
-        for (Card card : this.getToolCardList()) {
-            if (card.effect.ID == cardIndex)
-                toolCard=(ToolCard) card;
-        }
+        if(Useful.isValueBetweenInclusive(cardIndex, 0, toolCardList.size()-1))
+            toolCard = (ToolCard) toolCardList.get(cardIndex);
         return toolCard;
     }
+*/
     /**
-     * Check and then apply the tool card effect
-     * @param cardIndex index of tool card inside the available card list of actual game
+     * Check that it exists inside the available card list of actual game
+     * and then apply the tool card effect
+     *
+     * @param cardID ID of tool card
      * @param paramList the build tool card Integer parameters
      * @return is successful
      */
-    public Boolean useToolCard(int cardIndex,  ArrayList<Integer> paramList) {
+    public Boolean useToolCard(int cardID,  ArrayList<Integer> paramList) {
         // check that user uses an available tool card
-        ToolCard toolCard = getToolCardByIndex(cardIndex);
+        ToolCard toolCard = getToolCardByID(cardID);
         if(null == toolCard)    // user has not permission to use this tool card
             return false;
 
@@ -810,6 +811,7 @@ public class Game extends ModelObservable implements GameInterface {
         Boolean result = toolCard.getStrategy().use(toolCardParam);
 
         // check that this tool card need to return a dice list
+        // it needs when it has multiple steps
         if(ToolCardParamBuilder.getStep(toolCard.effect.ID) > 1) {
             Observer currentObserver = (Observer) super.getObserverMap().get(currentPlayer.getName());
             if (currentObserver instanceof ProxyObserverSocket) {
@@ -875,11 +877,10 @@ public class Game extends ModelObservable implements GameInterface {
                 CellPosition cell = currentPlayer.getBoard().canBePlaced(dice);
                 if(null != cell) {
                     try {
-                        ArrayList<Integer> integerParams = new ArrayList<>();
                         ToolCardParamBuilder builder = new ToolCardParamBuilder(effect.ID, 1);
                         builder.build(ToolCardParamType.DIALOG_BOX, i);
                         builder.build(ToolCardParamType.BOARD, cell.getRow(), cell.getCol());
-                        useToolCard(getToolCardIndexByID( effect.ID ), integerParams);  // it will reset the effect, counter, inside the strategy
+                        useToolCard( effect.ID , builder.getParams());  // it will reset the effect, counter, inside the strategy
 //                        currentPlayer.getBoard().insertDice(dice, cell.getRow(), cell.getCol(), Board.Restriction.ALL);
                     } catch (Exception e) {
                         System.err.println("Can not insert Dice when it is possible in applyInsertEffect() with tool card n." + effect.ID);

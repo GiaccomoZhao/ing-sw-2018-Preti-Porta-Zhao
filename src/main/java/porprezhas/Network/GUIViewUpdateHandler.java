@@ -129,6 +129,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
             case NEW_TURN:
                 Platform.runLater(() -> {
+                    gameViewController.resetUseToolCard();
                     gameViewController.updateTimer(game.getCurrentPlayer());
                 });
                 break;
@@ -138,6 +139,8 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                 System.out.println(game.getCurrentPlayer().getName() + " inserted a dice:");
 
                 Platform.runLater(() -> {
+                    gameViewController.setCanInsertDice( false );
+
                     for (Player player:
                             game.getPlayerList()) {
 
@@ -191,6 +194,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
             case TOOL_CARD:
 
                 Platform.runLater(() -> {
+                            gameViewController.setCanUseToolCard(false);
 
                             gameViewController.updateDraftPool(game.getDraftPool().diceList());
 
@@ -221,7 +225,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
                                 player.getBoard().getBoard());
                     }
 
-                    // let user go to result view pressing pass button
+                    // notify user go to result view pressing pass button
                     gameViewController.setNextStageAble();
                 });
                 break;
@@ -245,6 +249,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         Platform.runLater(
                 () -> {
                    gameViewController.updateMessage("It's not your turn!");
+                    gameViewController.resetUseToolCard();
                 }
         );
     }
@@ -283,7 +288,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
     public void handleCardEffect(List<Dice> diceList) {
         Platform.runLater(
                 () -> {
-                    gameViewController.updateMessage("Now, Do the next Action");
+                    gameViewController.updateMessage("Now, Drag the Dice inside the dialog box to your Board.");
                     gameViewController.updateCardEffect(diceList);
                 }
         );
