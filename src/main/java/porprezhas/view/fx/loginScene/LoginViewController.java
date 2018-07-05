@@ -2,6 +2,8 @@ package porprezhas.view.fx.loginScene;
 
 import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,6 +46,8 @@ public class LoginViewController implements Initializable, SceneController, Move
 
     @FXML Button loginViewButton;
     @FXML TextField userNameTextField;
+    @FXML TextField fx_ipTextField;
+    @FXML TextField fx_portTextField;
     @FXML Button joinViewButton;
     @FXML Button exitJoinViewButton;
     @FXML Button loginViewRMIButton;
@@ -51,14 +55,16 @@ public class LoginViewController implements Initializable, SceneController, Move
     @FXML Button exitLoginViewButton;
     @FXML Button singlePlayerViewButton;
     @FXML Button returnViewButton;
+
     @FXML Text warningText;
     @FXML ImageView loginViewImage;
     @FXML StackPane backgroundPane;
 
+    @FXML AnchorPane loginView;
     @FXML VBox loginScene;
     @FXML AnchorPane joinScene;
-    @FXML AnchorPane loginView;
     @FXML VBox difficultyScene;
+
     @FXML Button difficultyViewButtonEasy;
     @FXML Button difficultyViewButtonBeginner;
     @FXML Button difficultyViewButtonNormal;
@@ -85,9 +91,12 @@ public class LoginViewController implements Initializable, SceneController, Move
     private final String voidString = "";
 
 
+    private StringProperty user_port;
+    private StringProperty user_ip;
+
     private final int port = 58090+1;
     private InetAddress ip;
-    private int myPort= 33333;
+    private int myPort= 50023;
     private ViewUpdateHandlerInterface viewUpdateHandlerInterface;
 
     enum ConnectionType{
@@ -267,8 +276,23 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         setGameCursor();
 
+        setupNetworkAddress();
 
         timeline = new Timeline();
+    }
+
+    private void setupNetworkAddress() {
+        user_port = new SimpleStringProperty();
+        user_ip = new SimpleStringProperty();
+        user_port.setValue(String.valueOf(port));
+        try {
+            user_ip.setValue(InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        fx_portTextField.textProperty().bindBidirectional(user_port);
+        fx_ipTextField.textProperty().bindBidirectional(user_ip);
     }
 
     private void setScene(){
@@ -520,14 +544,16 @@ public class LoginViewController implements Initializable, SceneController, Move
             // Start the Connection to the server
             if (this.connectionType == RMI) {
                 try {
-                    ip = InetAddress.getByName("192.168.1.79");
-                    ClientActionSingleton.setClientActionInstance(new RMIClientAction(ip.getHostAddress(), port-2 ));
+//                    ip = InetAddress.getByName("192.168.1.79");
+                    System.out.println(user_ip.getValue());
+                    System.out.println(user_port.getValue());
+                    ClientActionSingleton.setClientActionInstance(new RMIClientAction(user_ip.getValue(), Integer.parseInt(user_port.getValue())-2 ));
                 } catch (RemoteException e) {
                     System.err.println(e.getMessage());
                 } catch (NotBoundException e) {
                     System.err.println(e.getMessage());
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
+//                } catch (UnknownHostException e) {
+//                    e.printStackTrace();
                 }
             }
             else if(this.connectionType == SOCKET){

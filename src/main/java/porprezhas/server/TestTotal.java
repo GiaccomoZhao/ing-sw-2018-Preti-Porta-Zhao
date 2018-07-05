@@ -29,7 +29,12 @@ public class TestTotal {
 
     public static void main(String[] args) throws RemoteException, InterruptedException {
 
-        GameConstants.setTimeoutQueueSec( Double.parseDouble(args[0]) );
+        if(args.length > 0)
+            GameConstants.setTimeoutQueueSec( Double.parseDouble(args[0]) );
+        if(args.length > 1) {
+            GameConstants.setTimeoutRoundSec(Double.parseDouble(args[1]));
+            GameConstants.setTimeoutRoundSolitaireSec(Double.parseDouble(args[1]));
+        }
 
 
         ServerController server;

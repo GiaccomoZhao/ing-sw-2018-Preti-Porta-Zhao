@@ -210,8 +210,8 @@ public class Game extends ModelObservable implements GameInterface {
     public long getRoundTimeOut() {
         return GameConstants.secondsToMillis(
                 isSolitaire() ?
-                        GameConstants.TIMEOUT_ROUND_SOLITAIRE_SEC :
-                        GameConstants.TIMEOUT_ROUND_SEC);
+                        GameConstants.getTimeoutRoundSolitaireSec() :
+                        GameConstants.getTimeoutRoundSec());
     }
 
     // *********************************
