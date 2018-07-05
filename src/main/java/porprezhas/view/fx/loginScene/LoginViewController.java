@@ -173,6 +173,7 @@ public class LoginViewController implements Initializable, SceneController, Move
 
         // reset warning text that causes Lagg
         warningText.setText("");
+        warningText.setOpacity(0);
 
         // set Show Component transition Animation
         timeline.setOnFinished((actionEvent) -> {

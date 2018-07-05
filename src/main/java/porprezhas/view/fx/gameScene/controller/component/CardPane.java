@@ -24,8 +24,15 @@ public class CardPane implements SubController{
     public CardPane(Pane cardPane, CardTab tab, String pathToCards) {
         this.cardPane = cardPane;
         this.pathToCards = pathToCards;
-        String filePath = getPathToFileIgnoreExt(pathToBorder, tab.name());
-        if(filePath != null) {
+        String filePath = null;
+        try {
+            filePath = getPathToFileIgnoreExt(pathToBorder, tab.name());
+        } catch (Exception e) {
+            e.printStackTrace();
+            cardBorder = null;
+            return;
+        }
+        if (filePath != null) {
             cardBorder = new Border(new BorderImage(
                     new Image(filePath),
                     new BorderWidths(BORDER_SIZE), Insets.EMPTY, // new Insets(10, 10, 10, 10),
@@ -52,7 +59,7 @@ public class CardPane implements SubController{
             ImageView imageView = null;
             try {
                 imageView = new ImageView(new Image(pathToCards + cards.get(i).effect.name + ".jpg"));
-                imageView.setCache(true);
+//                imageView.setCache(true);
             } catch (IllegalArgumentException e) {
                 System.err.println("The file with path+name = " + pathToCards + cards.get(i).effect.name + ".jpg" + " \t has not been found");
                 e.printStackTrace();

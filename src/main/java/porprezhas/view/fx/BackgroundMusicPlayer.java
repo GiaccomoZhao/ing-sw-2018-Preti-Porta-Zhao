@@ -6,6 +6,8 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,10 @@ public class BackgroundMusicPlayer {
             backgroundMusicPlayList.clear();
         }
         // and then we can do a refresh of files in the folder
+
+        // get absolute path of this jar, this works
+//        Path currentRelativePath = Paths.get("");
+//        String s = currentRelativePath.toAbsolutePath().toString();
 
         String jarDir = null;
         CodeSource codeSource = BackgroundMusicPlayer.class.getProtectionDomain().getCodeSource();
@@ -84,7 +90,7 @@ public class BackgroundMusicPlayer {
 
             bJar = false;
 //            System.out.println("Using " + (bJar ? "jar" : "intelliJ") + "method");
-            System.out.println("Using intellij");
+            System.out.println("Using intellij?");
 
 
             // let's try again with intelliJ method
@@ -125,7 +131,7 @@ public class BackgroundMusicPlayer {
         }
 
         if(bJar)
-            System.out.println("Using .jar");
+            System.out.println("Using .jar !");
 
 
         if(bDebug) {

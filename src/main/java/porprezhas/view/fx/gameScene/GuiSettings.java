@@ -7,6 +7,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import porprezhas.model.dices.Dice;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class GuiSettings {
     public static final boolean bFixedFont = false;
@@ -111,10 +115,68 @@ public class GuiSettings {
     }
 
     // get the absolute path to the file with any extension. It is like */relativePath/fileName.*
-    public static String getPathToFileIgnoreExt(String relativePath, String fileName) {
+    public static String getPathToFileIgnoreExt(String relativePath, String fileName) throws IOException {
+
+        final File jarFile = new File(GuiSettings.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+
+//        System.out.println("jarFile = " + jarFile);
+//        System.out.println(jarFile.toURI().toURL().toString());
+
+
+        if(jarFile.isFile()) {  // Run with JAR file
+
+            String resourcePath = GuiSettings.class.getResource("/" + pathToBorder + fileName + ".gif").toString();
+            if(relativePath == null)
+                resourcePath = GuiSettings.class.getResource("/" + pathToBorder + fileName + ".png").toString();
+            if(relativePath == null)
+                resourcePath = GuiSettings.class.getResource("/" + pathToBorder + fileName + ".jpg").toString();
+/*
+            // Convert to jar format
+            String resourcePath = "jar:" + jarFile.toURI().toURL().toString() + "!/" + relativePath;
+
+            // Convert to url format
+            resourcePath.replaceAll("%20", " ");
+            if(bDebug) {
+                System.out.println("searching \'" + fileName + "\' in resource path = " + resourcePath );
+            }
+
+            // Open the directory
+            final File dir = new File(resourcePath);
+            if (!dir.exists() && dir.isDirectory()) {
+                System.err.println("Cannot find source directory: " + dir);
+                return null;
+            }
+
+            System.out.println(dir.list());
+
+            // Filter
+            String[] filePath = dir.list((dir1, name) ->
+                    name.startsWith(fileName + ".")
+            );
+            if(filePath.length == 0) {
+                System.err.println("0 file found in : " + dir);
+                return null;
+            }
+
+            if(bDebug) {
+                System.out.println(filePath.length + " files found, returning: \t" + filePath[0]);
+            }
+
+*/            return resourcePath;
+
+        } else { // Run with IDE
+            return getPathToFileIgnoreExtIDE(relativePath, fileName);
+        }
+    }
+
+    public static String getPathToFileIgnoreExtIDE(String relativePath, String fileName) {
         // get resource path
-        System.out.println(GuiSettings.class.getResource("/" ));
-        String resourcePath = GuiSettings.class.getResource("/" ).getPath();  // get absolute path to resource
+        if(bDebug) {
+            System.out.println("getPathToFileIgnoreExt from " + relativePath + " \t file=" + fileName );
+            System.out.println(GuiSettings.class.getResource("/"));
+        }
+
+        String resourcePath = GuiSettings.class.getResource("/").getPath();  // get absolute path to resource
         resourcePath = resourcePath.substring(1, resourcePath.length());    // cut '/' at beginning of path
 
         // Convert the file url in file path format
