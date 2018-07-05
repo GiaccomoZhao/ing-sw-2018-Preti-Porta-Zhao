@@ -594,8 +594,45 @@ public class LoginViewController implements Initializable, SceneController, Move
             case "beginner":
                 solitaireDifficulty= Game.SolitaireDifficulty.BEGINNER;
                 break;
+            case "normal":
+                solitaireDifficulty=Game.SolitaireDifficulty.NORMAL;
+                break;
+            case "hard":
+                solitaireDifficulty=Game.SolitaireDifficulty.HARD;
+                break;
+            case "extreme":
+                solitaireDifficulty=Game.SolitaireDifficulty.EXTREME;
+                break;
 
+                default:
+                    solitaireDifficulty=Game.SolitaireDifficulty.NORMAL;
         }
+        GameViewController gameViewController = Useful.convertInstanceOfObject(stageManager.getController(stageGameID), GameViewController.class);
+
+
+        viewUpdateHandlerInterface = new GUIViewUpdateHandler(gameViewController, username);
+
+        gameViewController.setUserName(username);
+
+        System.out.println(viewUpdateHandlerInterface);
+        System.out.println(username);
+
+        if(this.connectionType==RMI) {
+            try {
+                ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
+                ((RMIClientAction) ClientActionSingleton.getClientAction()).setMyport(myPort);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                showWarningText("Could not Join");
+            }
+        }
+        ClientActionSingleton.getClientAction().joinSinglePlayer(viewUpdateHandlerInterface, solitaireDifficulty);
+
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setLoginViewController(Useful.convertInstanceOfObject(stageManager.getController(stageLoginID), LoginViewController.class));
+        ((GUIViewUpdateHandler) viewUpdateHandlerInterface).setPatternViewController(Useful.convertInstanceOfObject(stageManager.getController(stagePatternID), ChoosePatternViewController.class));
+
+        difficultyScene.setVisible(false);
+
     }
 
     /**

@@ -354,8 +354,18 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return false;
     }
 
+    /**
+     * This method handles the join of a new singlePlayer game with RMI
+     * @param username username of the user
+     * @param ipClient ipAddress of the client
+     * @param portClient port of the Rmi register of the client
+     * @param solitaireDifficulty difficulty choosen by the user
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public Boolean joinSinglePlayer(String username, String ipClient, int portClient, Game.SolitaireDifficulty solitaireDifficulty) throws RemoteException {
+        RemoteObserver remoteObserver;
         for (Player findPlayer :
                 loggedPlayer) {
             if (findPlayer.getName().equals(username)) {
@@ -363,12 +373,39 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
                 paramList.add(ipClient);
                 paramList.add(String.valueOf(portClient));
                 rmiUsers.put(username, paramList);
-               this.createNewGame(findPlayer, solitaireDifficulty);
+               this.createNewGame(findPlayer, solitaireDifficulty);registry= LocateRegistry.getRegistry(ipClient, portClient);
+                try {
+                    remoteObserver = (RemoteObserver) registry.lookup(username);
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                    remoteObserver=null;
+                }
+                final RemoteObserver remoteObserver1= remoteObserver;
+                ServerControllerInterface serverControllerInterface=this;
+
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            remoteObserver1.checkState();
+                        } catch (ConnectException e) {
+                            serverControllerInterface.closedConnection(username);
+                            timer.cancel();
+
+                        } catch (RemoteException e) {
+                            //  serverControllerInterface.closedConnection(username);
+
+                        }
+                    }
+                },0, 1000);
                 return true;
             }
         }
         return false;
     }
+
 
     /** This method handles the login request of a player
      *
@@ -504,6 +541,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
 
     }
 
+    @Override
+    public Boolean choosePrivate(String username, int choosen) throws RemoteException {
+        return null;
+    }
+
 
 
 
@@ -601,6 +643,11 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         return new JoinActionAnswer(false);
     }
 
+    /**
+     * This method handles the join of a single player game
+     * @param joinSinglePlayerAction
+     * @return
+     */
     @Override
     public Answer handle(JoinSinglePlayerAction joinSinglePlayerAction) {
         String username= joinSinglePlayerAction.username;
@@ -711,7 +758,14 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
             return new PassActionAnswer(false);
     }
 
-
+    @Override
+    public Answer handle(ChoosePrivateAction choosePrivateAction) {
+        String username= choosePrivateAction.username;
+        int choosen= choosePrivateAction.choosen;
+        GameControllerInterface gameControllerInterface=this.getGameControllerByUsername(username);
+        gameControllerInterface.solitaireChoose(choosen);
+        return new PatternAnswer(true);
+    }
 
 
     // ******************************************************************************
@@ -843,6 +897,7 @@ public class ServerController extends UnicastRemoteObject implements ServerContr
         }
         return answer;
     }
+
 
     /**resumeGame() method handles return in game for a user that lost his connection
      * and chooses to use SOCKET as new type of connection.

@@ -1,6 +1,7 @@
 package porprezhas.Network;
 
 import porprezhas.Network.command.*;
+import porprezhas.model.Game;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
 
         }catch (ConnectException e){
             System.out.println("The server is not ready");
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,12 +105,12 @@ public class SocketClientAction implements ClientActionInterface, AnswerHandler 
     }
 
     @Override
-    public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+    public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface, Game.SolitaireDifficulty solitaireDifficulty) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
 
         try {
 
-            socketOut.writeObject(new JoinAction(username));
+            socketOut.writeObject(new JoinSinglePlayerAction(username, solitaireDifficulty));
             socketOut.flush();
             ((Answer) socketIn.readObject()).handle(this);
             SocketClientAction socketClientAction=this;

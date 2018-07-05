@@ -53,7 +53,7 @@ public class Game extends ModelObservable implements GameInterface {
         }
     }
 
-    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK , RANKING, TOOL_CARD, ALT_GAME}
+    public enum NotifyState{NEW_TURN, CHOOSE_PATTERN, GAME_STARTED, NEXT_ROUND , DICE_INSERTED, BOARD_CREATED, PLAYER_QUIT, PLAYER_BACK , RANKING, TOOL_CARD, ALT_GAME, CHOOSE_PRIVATE}
 
     // *********************************
     // --- Declaration of Attributes ---
@@ -99,7 +99,7 @@ public class Game extends ModelObservable implements GameInterface {
         gameID = new Random().nextLong();   // transfer this to super()
         bSolitaire = true;
         solitaireDifficulty = difficulty;
-        playerList = new ArrayList<>();    // TODO: generalization
+        playerList = new ArrayList<>();
         frozenPlayer= new CopyOnWriteArrayList();
         playerList.add(player);
         privateObjectiveCardFactory = new PrivateObjectiveCardFactory(1);
@@ -169,10 +169,7 @@ public class Game extends ModelObservable implements GameInterface {
         return iCurrentPlayer;
     }
 
-    @Override
-    public DraftPool getDraftpoolRmi() throws RemoteException {
-        return this.draftPool;
-    }
+
 
     public Player getFirstPlayer() throws RemoteException{
         return this.playerList.get(iFirstPlayer);
@@ -402,8 +399,9 @@ public class Game extends ModelObservable implements GameInterface {
             for (int i = 0; i < playerList.size(); i++) {
                 Player player = playerList.get(i);
                 player.setPrivateObjectCardList(
-                        privateObjectiveCardFactory.createCard() );
+                        privateObjectiveCardFactory.createCard());
             }
+        }
 
             // give 2 random PatternCard to choose one from 4 faces
             List<Pattern.TypePattern> patternTypes = Arrays.asList(Pattern.TypePattern.values())
@@ -422,11 +420,11 @@ public class Game extends ModelObservable implements GameInterface {
 
             notifyObservers(new SerializableGame(this));
             // the caller will wait player choose() for a certain time
-        }
+
     }
 
     public void playerPostPrepare() {
-        if (!this.isSolitaire()) {
+        if (/*!this.isSolitaire()*/ true) {
             System.out.println();
             for (Player player : playerList) {
                 Board board = player.getBoard();
@@ -446,6 +444,15 @@ public class Game extends ModelObservable implements GameInterface {
 
             notifyObservers(new SerializableGame(this));
         }
+       /* Board board = playerList.get(0).getBoard();
+        if (board == null) {    // this control is done by setPattern() too, but i put this here to emphasize that the pattern can be chosen only one time
+            this.setPattern(playerList.get(0), 0);
+        }
+        // Notify Clients that Board are initialized
+        gameNotifyState = BOARD_CREATED;
+        setChanged();
+
+        notifyObservers(new SerializableGame(this));*/
     }
 
     public void gamePrepare() {
@@ -580,15 +587,7 @@ public class Game extends ModelObservable implements GameInterface {
         return false;
     }
 
-    @Override
-    public Player getActualPlayer() throws RemoteException {
-        return currentPlayer;
-    }
 
-    @Override
-    public ArrayList<Player> getPlayers() throws RemoteException {
-        return new ArrayList<Player>(playerList);
-    }
 
     public boolean freezePlayer(String username){
         Player player;
@@ -641,29 +640,31 @@ public class Game extends ModelObservable implements GameInterface {
     }
 
     public HashMap calcAllScore(){
-        int points=0;
-        int max=-1;
+       if (!isSolitaire()) {
+           int points = 0;
+           int max = -1;
 
 
-        for (Player player:
-             this.playerList) {
-            points = calcScore(player);
-            if (points > max){
-                max=points;
-                winner=player;
+           for (Player player :
+                   this.playerList) {
+               points = calcScore(player);
+               if (points > max) {
+                   max = points;
+                   winner = player;
 
-            }
-            else if (points==max) {
+               } else if (points == max) {
 
-                handleDraw(player);
-            }
-            ranking.put(player, points);
+                   handleDraw(player);
+               }
+               ranking.put(player, points);
 
-        }
+           }
 
-        gameNotifyState = NotifyState.RANKING;
-        setChanged();
-        notifyObservers(new SerializableGame(this));
+           gameNotifyState = NotifyState.RANKING;
+           setChanged();
+           notifyObservers(new SerializableGame(this));
+
+       }
         return ranking;
     }
 
@@ -950,8 +951,16 @@ public class Game extends ModelObservable implements GameInterface {
 
         if (finalscore<0)
             finalscore=0;
+        ranking.put(player, finalscore);
+        if (finalscore>scoreObjective)
+            winner=player;
+        else winner=new Player(" the cpu: \n your finalscore is "
+                + finalscore + "\n and the objective score is: " + scoreObjective);
 
 
+        gameNotifyState = NotifyState.RANKING;
+        setChanged();
+        notifyObservers(new SerializableGame(this));
     }
 
     public void endGame(){

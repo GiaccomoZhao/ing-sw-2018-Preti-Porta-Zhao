@@ -30,6 +30,7 @@ import porprezhas.model.Game.*;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -176,43 +177,39 @@ public class ResultViewController implements Initializable, SceneController, Mov
 
     public  void resultSetup(Player winner, HashMap ranking,List<Player> playerList) {
         int i = 0;
+       List<Player> players= new ArrayList<Player>();
 
-        String[] usernames = new String[3];
-        String[] points = new String[3];
-        int numberOfPlayerNotWinner=0;
 
 
         winnerNameLabel.setText(winner.getName());
-        winnerPointsLabel.setText((String) ranking.get(winner).toString());
+        winnerPointsLabel.setText((String.valueOf(ranking.get(winner))));
         
         noWinner1Pane.setVisible(false);
         noWinner2Pane.setVisible(false);
         noWinner3Pane.setVisible(false);
 
         for (Player player: playerList ) {
-            if(!ranking.get(player).equals(winner)){
-                usernames[i] = player.getName();
-                points[i] = ranking.get(player).toString();
-                numberOfPlayerNotWinner++;
+            if(!player.getName().equals(winner.getName())){
+                players.add(player);
              }
         }
 
-        noWinner1Pane.setVisible(true);
-        noWinner1NameLabel.setText(usernames[0]);
-        noWinner1PointsLabel.setText(points[0]);
-
-       if(numberOfPlayerNotWinner>0){
+        if (players.size()>0) {
+            noWinner1Pane.setVisible(true);
+            noWinner1NameLabel.setText(players.get(0).getName());
+            noWinner1PointsLabel.setText(String.valueOf( ranking.get(players.get(0))));
+        }
+       if(players.size()>1){
            noWinner2Pane.setVisible(true);
-           noWinner2NameLabel.setText(usernames[1]);
-           noWinner2PointsLabel.setText(points[1]);
+           noWinner2NameLabel.setText(players.get(1).getName());
+           noWinner2PointsLabel.setText(String.valueOf( ranking.get(players.get(1))));
        }
 
-       if(numberOfPlayerNotWinner>1){
-           noWinner3Pane.setVisible(true);
-           noWinner3NameLabel.setText(usernames[2]);
-           noWinner3PointsLabel.setText(points[2]);
-       }
-
+        if(players.size()>2){
+            noWinner3Pane.setVisible(true);
+            noWinner3NameLabel.setText(players.get(2).getName());
+            noWinner3PointsLabel.setText(String.valueOf( ranking.get(players.get(2))));
+        }
 
     }
 

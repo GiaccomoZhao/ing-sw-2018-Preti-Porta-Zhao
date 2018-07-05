@@ -20,6 +20,7 @@ public interface GameControllerInterface  {
     boolean resumeGame(String username);
     boolean useToolCard(String username, int cardID,  ArrayList<Integer> paramList);
     boolean passUser(String username);
+    boolean solitaireChoose(int choosenPrivate);
 
 
     // do i put this in concrete class or in interface? depends by getState method

@@ -18,4 +18,6 @@ public interface ActionHandler {
     Answer handle(ResumeGameAction resumeGameAction);
 
     Answer handle(JoinSinglePlayerAction joinSinglePlayerAction);
+
+    Answer handle( ChoosePrivateAction choosePrivateAction);
 }

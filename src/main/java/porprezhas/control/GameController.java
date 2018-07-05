@@ -192,6 +192,8 @@ public class GameController  implements GameControllerInterface, Runnable {
         List<Player> playerList = game.getPlayerList();
 
         state = StateMachine.ENDING;
+        if (game.isSolitaire())
+            ;
         game.calcAllScore();
         // print Board!
         System.out.println("" +  "\n\n");
@@ -386,5 +388,10 @@ public class GameController  implements GameControllerInterface, Runnable {
             ((Game) game).endGame();
             serverControllerInterface.removeGameController(this);
         }
+    }
+
+    public boolean solitaireChoose(int choosenPrivate){
+        game.calcSolitaireScore(choosenPrivate);
+       return true;
     }
 }

@@ -38,7 +38,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         this.loginViewController = loginViewController;
     }
 
-    public void setResultViewController(ResultViewController ResultViewController) {
+    public void setResultViewController(ResultViewController resultViewController) {
         this.resultViewController = resultViewController;
     }
 
@@ -91,8 +91,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                 Platform.runLater(() -> {
                     patternViewController.patternSetup(game.getUsernamePlayer(username).getPatternsToChoose());
+                    loginViewController.goToNextStage();
                 });
-                loginViewController.goToNextStage();
+
                 break;
 
 
@@ -234,7 +235,6 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
 
                     // notify user go to result view pressing pass button
                     gameViewController.setNextStageAble();
-
                     // setup Result View
                    resultViewController.resultSetup(game.getWinner(),game.getRanking(),game.getPlayerList());
                 });

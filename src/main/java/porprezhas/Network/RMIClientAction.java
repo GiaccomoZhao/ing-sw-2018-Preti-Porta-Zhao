@@ -3,6 +3,7 @@ package porprezhas.Network;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
 import porprezhas.exceptions.GenericInvalidActionException;
 import porprezhas.exceptions.toolCard.ToolCardParameterException;
+import porprezhas.model.Game;
 import porprezhas.view.fx.gameScene.state.DiceContainer;
 
 import java.net.InetAddress;
@@ -97,13 +98,15 @@ public class RMIClientAction implements ClientActionInterface{
      *It saves the viewUpdateHandler and tries to join, giving to the server the ip and the port
      * of the registry of the client.
      * @param viewUpdateHandlerInterface The handler of all the answer of the server( cli or gui)
-     * @return
+     * @param solitaireDifficulty The level of difficulty choosen by the user
+     *
+     *@return
      */
     @Override
-    public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface) {
+    public boolean joinSinglePlayer(ViewUpdateHandlerInterface viewUpdateHandlerInterface, Game.SolitaireDifficulty solitaireDifficulty) {
         this.viewUpdateHandlerInterface=viewUpdateHandlerInterface;
         try {
-            if(server.joinGame(username, InetAddress.getLocalHost().getHostAddress(), myport)){
+            if(server.joinSinglePlayer(username, InetAddress.getLocalHost().getHostAddress(), myport, solitaireDifficulty)){
 
                 return true;
 

@@ -10,6 +10,7 @@ import porprezhas.model.Game;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public abstract class ModelObservable extends Observable
-        implements RemoteObservable, Serializable {
+        implements  Serializable {
 
     HashMap observerMap;
 
@@ -27,7 +28,7 @@ public abstract class ModelObservable extends Observable
 
 
     public ModelObservable() throws RemoteException {
-        UnicastRemoteObject.exportObject(this, 0);
+
         observerMap=new HashMap();
 
     }

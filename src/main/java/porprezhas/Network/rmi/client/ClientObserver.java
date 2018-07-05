@@ -30,7 +30,7 @@ public class ClientObserver extends UnicastRemoteObject implements RemoteObserve
                 registry = LocateRegistry.createRegistry( port);
             }catch (ExportException e){
                 registry = LocateRegistry.getRegistry(port);
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
 

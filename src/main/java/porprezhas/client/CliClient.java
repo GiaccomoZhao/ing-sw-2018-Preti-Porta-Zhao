@@ -3,6 +3,7 @@ package porprezhas.client;
 import porprezhas.Network.*;
 import porprezhas.Network.rmi.client.ClientObserver;
 import porprezhas.Network.rmi.common.ServerRMIInterface;
+import porprezhas.model.Game;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -258,6 +259,54 @@ public class CliClient {
             if (ClientActionSingleton.getClientAction().resumeGame(viewUpdateHandlerInterface)) {
                 System.out.println("Resume the game successfully!\n");
             }
+        }
+
+        if(command.equals(SINGLE_PLAYER)){
+            System.out.println("Choose the level of difficulty from 1 to 5!");
+            int level=0;
+            command=in.nextLine();
+            level= Integer.parseInt(command);
+            while (level<1 || level>5) {
+                System.out.println("Please type the correct number");
+                command = in.nextLine();
+                level = Integer.parseInt(command);
+            }
+            Game.SolitaireDifficulty solitaireDifficulty;
+            switch (level){
+                case 1:
+                    solitaireDifficulty= Game.SolitaireDifficulty.EASY;
+                    break;
+                case 2:
+                    solitaireDifficulty= Game.SolitaireDifficulty.BEGINNER;
+                    break;
+                case 3:
+                    solitaireDifficulty=Game.SolitaireDifficulty.NORMAL;
+                    break;
+                case 4:
+                    solitaireDifficulty=Game.SolitaireDifficulty.HARD;
+                    break;
+                case 5:
+                    solitaireDifficulty=Game.SolitaireDifficulty.EXTREME;
+                    break;
+            default:
+                solitaireDifficulty=Game.SolitaireDifficulty.NORMAL;
+            }
+
+            viewUpdateHandlerInterface = new CLIViewUpdateHandler(username);
+            if(this.typeConnection.equals(RMI)) {
+                try {
+                    ClientObserver clientObserver = new ClientObserver(viewUpdateHandlerInterface, username, myPort);
+                    ((RMIClientAction) ClientActionSingleton.getClientAction()).setMyport(myPort);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ClientActionSingleton.getClientAction().joinSinglePlayer(viewUpdateHandlerInterface, solitaireDifficulty)) {
+                System.out.println("Joined in the game successfully!\n");
+                System.out.println("Wait until the game is ready to start");
+
+            }
+            this.choosePatternPhase();
         }
 
     }
