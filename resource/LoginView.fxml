@@ -118,17 +118,29 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </TextField>
-                  <Button fx:id="loginViewButton" cache="true" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
-                     <font>
-                        <Font name="Book Antiqua" size="18.0" />
-                     </font>
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </Button>
+                  <HBox prefHeight="45.0" prefWidth="225.0" spacing="25.0">
+                     <children>
+                        <TextField fx:id="ipTextField" prefHeight="25.0" prefWidth="100.0" promptText="IP" style="-fx-background-color: #FFF7DE;">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                           <font>
+                              <Font name="Book Antiqua" size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="portTextField" prefHeight="25.0" prefWidth="100.0" promptText="Port" style="-fx-background-color: #FFF7DE;">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                           <font>
+                              <Font name="Book Antiqua" size="12.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
+                  </HBox>
                   <HBox alignment="CENTER" fillHeight="false" spacing="25.0">
                      <children>
                         <Button fx:id="loginViewRMIButton" cache="true" mnemonicParsing="false" onAction="#connectionMethodChooseRMI" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FFF1C6;" text="RMI" textFill="#390f01">
@@ -152,6 +164,17 @@
                         <Insets top="20.0" />
                      </padding>
                   </HBox>
+                  <Button fx:id="loginViewButton" cache="true" mnemonicParsing="false" onAction="#loginDone" prefHeight="39.0" prefWidth="89.0" style="-fx-background-color: #FFF1C6;" text="Login" textFill="#390f01">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Button>
                   <Button fx:id="exitLoginViewButton" cache="true" mnemonicParsing="false" onAction="#onExitLoginViewButton" prefHeight="24.0" prefWidth="69.0" style="-fx-background-color: #451403;" text="Exit" textFill="#fffcfb">
                      <effect>
                         <DropShadow />

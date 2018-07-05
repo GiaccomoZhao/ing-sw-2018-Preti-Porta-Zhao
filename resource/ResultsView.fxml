@@ -14,9 +14,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="resultsView" fx:controller="porprezhas.view.fx.resultsScene.ResultViewController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="resultsView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="576.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="porprezhas.view.fx.resultsScene.ResultViewController">
    <children>
-      <ImageView fitHeight="800.0" fitWidth="576.0" layoutX="7.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ImageView fitHeight="800.0" fitWidth="576.0" layoutX="3.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="-2.0238037109375" AnchorPane.topAnchor="6.0">
          <image>
             <Image url="@background/Sagrada%20Familia.png" />
          </image>
@@ -44,87 +44,132 @@
             <MotionBlur radius="2.0" />
          </effect>
       </Label>
-      <Label blendMode="SRC_ATOP" layoutX="77.0" layoutY="192.0" text="1" textFill="#c6c302">
-         <font>
-            <Font name="Castellar" size="36.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="99.0" layoutY="198.0" text="Player 1">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="72.0" layoutY="235.0" text="punteggio 1">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="206.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@head/64x64x64/head_1.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="449.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@head/64x64x64/head_5.png" />
-         </image>
-      </ImageView>
-      <Label blendMode="SRC_ATOP" layoutX="316.0" layoutY="345.0" text="punteggio 2">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="353.0" layoutY="308.0" text="Player 2">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="320.0" layoutY="298.0" text="2" textFill="#757373">
-         <font>
-            <Font name="Castellar" size="36.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="73.0" layoutY="400.0" text="3" textFill="#8c4300">
-         <font>
-            <Font name="Castellar" size="36.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="99.0" layoutY="410.0" text="Player 3">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="72.0" layoutY="446.0" text="punteggio 3">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="206.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@head/64x64x64/head_8.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="449.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@head/64x64x64/head_11.png" />
-         </image>
-      </ImageView>
-      <Label blendMode="SRC_ATOP" layoutX="313.0" layoutY="538.0" text="punteggio 4">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="346.0" layoutY="503.0" text="Player 4">
-         <font>
-            <Font name="Bookshelf Symbol 7" size="24.0" />
-         </font>
-      </Label>
-      <Label blendMode="SRC_ATOP" layoutX="321.0" layoutY="494.0" text="4" textFill="#0a0500">
-         <font>
-            <Font name="Castellar" size="36.0" />
-         </font>
-      </Label>
-      <Button fx:id="resultsViewCloseButton" layoutX="262.0" layoutY="662.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" style="-fx-background-color: #DFD984;" text="Close" textFill="#4f2c06">
+      <Pane layoutX="124.0" layoutY="200.0" prefHeight="251.0" prefWidth="345.0">
+         <children>
+            <ImageView fitHeight="249.0" fitWidth="348.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@background/game.jpeg" />
+               </image>
+               <effect>
+                  <ColorAdjust brightness="0.51" contrast="0.6" saturation="-0.21" />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="118.0" fitWidth="101.0" layoutX="91.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@background/da985521b2ffcbb95a2ca9d3c9f39afa-1st-place-laurel-badge-by-vexels.png" />
+               </image>
+            </ImageView>
+            <Label blendMode="SRC_ATOP" layoutX="88.0" layoutY="126.0" text="Player 1">
+               <font>
+                  <Font name="Castellar" size="34.0" />
+               </font>
+            </Label>
+            <Label blendMode="SRC_ATOP" layoutX="87.0" layoutY="173.0" text="punteggio 1">
+               <font>
+                  <Font name="Bookshelf Symbol 7" size="32.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="197.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@head/64x64x64/head_1.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+      <Pane layoutX="27.0" layoutY="480.0" prefHeight="110.0" prefWidth="151.0">
+         <children>
+            <ImageView fitHeight="110.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@background/Parchment.00.jpg" />
+               </image>
+               <effect>
+                  <ColorAdjust brightness="0.16" contrast="0.19" saturation="0.07" />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="85.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@head/64x64x64/head_5.png" />
+               </image>
+            </ImageView>
+            <Label blendMode="SRC_ATOP" layoutX="16.0" layoutY="67.0" text="punteggio 2">
+               <font>
+                  <Font name="Bookshelf Symbol 7" size="18.0" />
+               </font>
+            </Label>
+            <Label blendMode="SRC_ATOP" layoutX="14.0" layoutY="19.0" text="Player 2">
+               <font>
+                  <Font name="Bookshelf Symbol 7" size="18.0" />
+               </font>
+            </Label>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+      <Pane layoutX="213.0" layoutY="480.0" prefHeight="110.0" prefWidth="151.0" style="-fx-background-color: #FFFFFF;">
+         <children>
+            <ImageView fitHeight="116.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <ColorAdjust brightness="0.16" contrast="0.19" saturation="0.07" />
+               </effect>
+               <image>
+                  <Image url="@background/Parchment.00.jpg" />
+               </image>
+            </ImageView>
+            <Label blendMode="SRC_ATOP" layoutX="14.0" layoutY="17.0" text="Player 3">
+               <font>
+                  <Font name="Bookshelf Symbol 7" size="18.0" />
+               </font>
+            </Label>
+            <Label blendMode="SRC_ATOP" layoutX="28.0" layoutY="65.0" text="punteggio 3">
+               <font>
+                  <Font name="Bookshelf Symbol 7" size="18.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="85.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@head/64x64x64/head_8.png" />
+               </image>
+            </ImageView>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+      <Pane layoutX="396.0" layoutY="480.0" prefHeight="110.0" prefWidth="146.0" style="-fx-background-color: #FFFFFF;">
+         <children>
+            <ImageView fitHeight="110.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <ColorAdjust brightness="0.16" contrast="0.19" saturation="0.07" />
+               </effect>
+               <image>
+                  <Image url="@background/Parchment.00.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="58.0" fitWidth="72.0" layoutX="85.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@head/64x64x64/head_11.png" />
+               </image>
+            </ImageView>
+            <Label blendMode="SRC_ATOP" layoutX="26.0" layoutY="64.0" text="punteggio 4">
+               <font>
+                  <Font name="Bookshelf Symbol 7" size="18.0" />
+               </font>
+            </Label>
+            <Label blendMode="SRC_ATOP" layoutX="14.0" layoutY="17.0" text="Player 4">
+               <font>
+                  <Font name="Bookshelf Symbol 7" size="18.0" />
+               </font>
+            </Label>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+      <Button fx:id="resultsViewCloseButton" layoutX="262.0" layoutY="662.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" style="-fx-background-color: #3A1101;" text="Close" textFill="#fffdfb">
          <font>
             <Font name="Book Antiqua" size="18.0" />
          </font>
