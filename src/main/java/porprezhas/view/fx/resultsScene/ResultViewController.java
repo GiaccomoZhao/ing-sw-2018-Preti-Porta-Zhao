@@ -179,31 +179,38 @@ public class ResultViewController implements Initializable, SceneController, Mov
 
         String[] usernames = new String[3];
         String[] points = new String[3];
-        int j=0;
+        int numberOfPlayerNotWinner=0;
 
 
         winnerNameLabel.setText(winner.getName());
         winnerPointsLabel.setText((String) ranking.get(winner).toString());
+        
+        noWinner1Pane.setVisible(false);
+        noWinner2Pane.setVisible(false);
+        noWinner3Pane.setVisible(false);
 
         for (Player player: playerList ) {
             if(!ranking.get(player).equals(winner)){
                 usernames[i] = player.getName();
                 points[i] = ranking.get(player).toString();
-                j++;
+                numberOfPlayerNotWinner++;
              }
         }
 
+        noWinner1Pane.setVisible(true);
         noWinner1NameLabel.setText(usernames[0]);
         noWinner1PointsLabel.setText(points[0]);
 
-       if(j>0){
+       if(numberOfPlayerNotWinner>0){
+           noWinner2Pane.setVisible(true);
            noWinner2NameLabel.setText(usernames[1]);
            noWinner2PointsLabel.setText(points[1]);
        }
 
-       if(j>1){
-        noWinner3NameLabel.setText(usernames[2]);
-        noWinner3PointsLabel.setText(points[2]);
+       if(numberOfPlayerNotWinner>1){
+           noWinner3Pane.setVisible(true);
+           noWinner3NameLabel.setText(usernames[2]);
+           noWinner3PointsLabel.setText(points[2]);
        }
 
 
