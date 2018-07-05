@@ -1,9 +1,6 @@
 package porprezhas.model.cards;
 import porprezhas.model.dices.Board;
 import porprezhas.model.dices.Dice;
-import porprezhas.model.dices.DiceBag;
-import porprezhas.model.dices.DraftPool;
-import porprezhas.model.dices.RoundTrack;
 
 import java.io.Serializable;
 
@@ -39,7 +36,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
 
                 for(i=0; i < ROW; i++) {
                     for (j = 0; j < COLUMN; j++){
-                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.RED))
+                        if(board.getDice(i, j).getDiceColor()==(Dice.ColorDice.RED))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -51,7 +48,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
 
                 for(i=0; i <ROW; i++) {
                     for (j = 0; j <COLUMN; j++){
-                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.YELLOW))
+                        if(board.getDice(i, j).getDiceColor()==(Dice.ColorDice.YELLOW))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -63,7 +60,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
 
                 for(i=0; i <ROW; i++) {
                     for (j = 0; j <COLUMN; j++){
-                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.GREEN))
+                        if(board.getDice(i, j).getDiceColor()==(Dice.ColorDice.GREEN))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -75,7 +72,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
 
                 for(i=0; i <ROW; i++) {
                     for (j = 0; j <COLUMN; j++){
-                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.BLUE))
+                        if(board.getDice(i, j).getDiceColor()==(Dice.ColorDice.BLUE))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 
@@ -87,7 +84,7 @@ public class PrivateObjectiveCard  extends ObjectiveCard implements Serializable
 
                 for(i=0; i <ROW; i++) {
                     for (j = 0; j <COLUMN; j++){
-                        if(board.getDice(i, j).getColorDice()==(Dice.ColorDice.PURPLE))
+                        if(board.getDice(i, j).getDiceColor()==(Dice.ColorDice.PURPLE))
                             point=point+board.getDice(i,j).getDiceNumber();
                     }
 

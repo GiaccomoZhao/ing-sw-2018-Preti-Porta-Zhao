@@ -56,16 +56,16 @@ public class PrivateObjectiveCardTest {
         when(die8.getDiceNumber()).thenReturn(3);
         when(dieNull.getDiceNumber()).thenReturn(0);
 
-        when(die0.getColorDice()).thenReturn(Dice.ColorDice.RED);
-        when(die1.getColorDice()).thenReturn(Dice.ColorDice.BLUE);
-        when(die2.getColorDice()).thenReturn(Dice.ColorDice.BLUE);
-        when(die3.getColorDice()).thenReturn(Dice.ColorDice.YELLOW);
-        when(die4.getColorDice()).thenReturn(Dice.ColorDice.YELLOW);
-        when(die5.getColorDice()).thenReturn(Dice.ColorDice.GREEN);
-        when(die6.getColorDice()).thenReturn(Dice.ColorDice.PURPLE);
-        when(die7.getColorDice()).thenReturn(Dice.ColorDice.RED);
-        when(die8.getColorDice()).thenReturn(Dice.ColorDice.GREEN);
-        when(dieNull.getColorDice()).thenReturn(Dice.ColorDice.WHITE);
+        when(die0.getDiceColor()).thenReturn(Dice.ColorDice.RED);
+        when(die1.getDiceColor()).thenReturn(Dice.ColorDice.BLUE);
+        when(die2.getDiceColor()).thenReturn(Dice.ColorDice.BLUE);
+        when(die3.getDiceColor()).thenReturn(Dice.ColorDice.YELLOW);
+        when(die4.getDiceColor()).thenReturn(Dice.ColorDice.YELLOW);
+        when(die5.getDiceColor()).thenReturn(Dice.ColorDice.GREEN);
+        when(die6.getDiceColor()).thenReturn(Dice.ColorDice.PURPLE);
+        when(die7.getDiceColor()).thenReturn(Dice.ColorDice.RED);
+        when(die8.getDiceColor()).thenReturn(Dice.ColorDice.GREEN);
+        when(dieNull.getDiceColor()).thenReturn(Dice.ColorDice.WHITE);
 
 
         when(board.getDice(0,0)).thenReturn(die1);

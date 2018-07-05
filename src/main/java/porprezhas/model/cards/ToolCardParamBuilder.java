@@ -35,6 +35,7 @@ public class ToolCardParamBuilder {
 
     public ToolCardParamBuilder(int toolCard, int step) {
         this.tc = toolCard;
+        this.step = step;
         params = new ArrayList<>();
         paramMap = new ArrayList<>();
 
@@ -55,6 +56,7 @@ public class ToolCardParamBuilder {
 
     /**
      * Build a Tool Card Parameter
+     * if the given parameter is not valid, then it will just be ignored
      * Note:
      *      forall( int i; i <= BOARD1; ToolCardParamType[i].equals(DiceContainerType[i]) )
      *
@@ -99,16 +101,20 @@ public class ToolCardParamBuilder {
     /**
      * get the quantity of Parameter need to set a Tool Card
      * @param toolCardID tool card's Id
+     * @Param iStep      at which step you want to know the quantity
      * @return  the quantity of integer ned to setup the given tool card
      */
-    public int getParamQuantity(int toolCardID) {
+    public int getParamQuantity(int toolCardID, int iStep) {
         int iCounter = 0;
-        for (int iParam = 0; iParam < parameterType[tc][step].length; iParam++) {
-            iCounter += parameterType[tc][step][iParam].getParamQuantity();
+        for (int iParam = 0; iParam < parameterType[toolCardID][iStep].length; iParam++) {
+            iCounter += parameterType[toolCardID][iStep][iParam].getParamQuantity();
         }
         return iCounter;
     }
 
+    public static int getStep(int toolCardID) {
+        return parameterType[toolCardID].length;
+    }
 
     public ArrayList<Integer> getParams() {
         return params;
@@ -175,7 +181,7 @@ public class ToolCardParamBuilder {
      */
     public ToolCardParamType getNext() {
         int index = getNextIndex();
-        if(index > 0) {
+        if(index >= 0) {
             return parameterType[tc][step][index];
         } else {
             return null;

@@ -903,4 +903,17 @@ public class GameViewController implements SceneController, GameViewUpdaterInter
         fx_message.setText(message);
     }
 
+    public void updateCardEffect(List<Dice> diceList) {
+        Platform.runLater(() -> {
+            state.updateBox(diceList);
+        });
+    }
+
+    /**
+     * reset all tool card parameters and
+     * close the dialog box containing the dice list
+     */
+    public void resetUseToolCard() {
+            state.useToolCard(null);    // reset
+    }
 }

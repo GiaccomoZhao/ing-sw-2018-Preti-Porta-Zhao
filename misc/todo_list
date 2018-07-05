@@ -7,19 +7,7 @@ JAR!
 ------------------------------  for 17/06 zx die...
 View: test ToolCard in Gui and Cli
 
-GUI, to fix:
-2. use non immediata per card n.4
-3. messaggio di exception
-7. tool card n.6 and n.11 to finish
-8. tc: 8
-9. last round -----------------------   FIXED
-10. use of tokens--------------------   FIXED
-11. last case of draw----------------   FIXED
-12. tokens in gui to fix-------------   FIXED
-13.test toolcard cli
-
-
-
+GUI: tool card n.6 and n.11 to finish
 Control:
 - fix single player
 

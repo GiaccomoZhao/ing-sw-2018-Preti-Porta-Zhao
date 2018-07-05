@@ -4,6 +4,7 @@ public enum DiceContainerType {
     DRAFT,
     TRACK,
     BAG,
+    BOX,    // dialog box
     BOARD1,
     BOARD2,
     BOARD3,

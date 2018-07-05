@@ -1,7 +1,6 @@
 package porprezhas.model.cards;
 
 import porprezhas.model.dices.*;
-import porprezhas.view.fx.gameScene.state.DiceContainerType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,7 @@ public class ToolCardParam {
     private final DiceBag diceBag;
     private final Board board;
     private final Boolean bFirstTurn;
+    private final Boolean hasPickedDice;
     private final List<Integer> params;
 
     enum IncDec {
@@ -51,12 +51,13 @@ public class ToolCardParam {
      * @param bFirstTurn current game's turn
      * @param params     parameters given by client
      */
-    public ToolCardParam(RoundTrack roundTrack, DraftPool draftPool, DiceBag diceBag, Board board, Boolean bFirstTurn, List<Integer> params) {
+    public ToolCardParam(RoundTrack roundTrack, DraftPool draftPool, DiceBag diceBag, Board board, Boolean bFirstTurn, Boolean canPickDice, List<Integer> params) {
         this.roundTrack = roundTrack;
         this.draftPool  = draftPool;
         this.diceBag    = diceBag;
         this.board      = board;
         this.bFirstTurn = bFirstTurn;
+        this.hasPickedDice = canPickDice;
         this.params     = params;
     }
 
@@ -76,7 +77,8 @@ public class ToolCardParam {
         this.draftPool  = draftPool;
         this.diceBag    = diceBag;
         this.board      = board;
-        this.bFirstTurn = false;
+        this.bFirstTurn = null;
+        this.hasPickedDice = null;
         this.params     = params;
     }
 
@@ -92,8 +94,9 @@ public class ToolCardParam {
         this.draftPool  = param.getDraftPool();
         this.diceBag    = param.getDiceBag();
         this.board      = param.getBoard();
-        this.bFirstTurn = param.getbFirstTurn();
+        this.bFirstTurn = param.isFirstTurn();
         this.params     = param.getParams().subList(fromIndex, toIndex);
+        this.hasPickedDice = null;
     }
 
     /**
@@ -113,7 +116,8 @@ public class ToolCardParam {
         this.draftPool  = param.getDraftPool();
         this.diceBag    = param.getDiceBag();
         this.board      = param.getBoard();
-        this.bFirstTurn = param.getbFirstTurn();
+        this.bFirstTurn = param.isFirstTurn();
+        this.hasPickedDice = null;
     }
 
     public RoundTrack getRoundTrack() {
@@ -132,7 +136,11 @@ public class ToolCardParam {
         return board;
     }
 
-    public Boolean getbFirstTurn() {
+    public Boolean hasPickedDice() {
+        return hasPickedDice;
+    }
+
+    public Boolean isFirstTurn() {
         return bFirstTurn;
     }
 

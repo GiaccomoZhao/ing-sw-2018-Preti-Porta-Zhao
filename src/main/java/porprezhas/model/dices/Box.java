@@ -62,7 +62,7 @@ public class Box implements Serializable {
         //Check Constraints
         if (restriction.hasColorRestriction() &&
                 !this.white() &&
-                !this.color.equals(dice.getColorDice()) ) {
+                !this.color.equals(dice.getDiceColor()) ) {
             return Boolean.FALSE;
         }
 
@@ -81,7 +81,7 @@ public class Box implements Serializable {
 /*    public Boolean checkConstraint(Dice dice){
         if(this.freeBox())
             return Boolean.TRUE;
-        if(!this.white() && this.color.equals(dice.getColorDice()))
+        if(!this.white() && this.color.equals(dice.getDiceColor()))
             return Boolean.TRUE;
         if(this.number== dice.getDiceNumber())
             return Boolean.TRUE;

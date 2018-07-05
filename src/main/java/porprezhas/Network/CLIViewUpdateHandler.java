@@ -7,7 +7,6 @@ import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.cards.Card;
 import porprezhas.model.dices.Box;
 import porprezhas.model.dices.Dice;
-import porprezhas.model.dices.DraftPool;
 import porprezhas.model.dices.Pattern;
 import porprezhas.view.fx.gameScene.GuiSettings;
 
@@ -75,7 +74,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     }
 
     @Override
-    public void handleCardEffect(Object object) {
+    public void handleCardEffect(List<Dice> diceList) {
 
     }
 
@@ -154,7 +153,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
                     // print DICE
                     Dice dice = player.getBoard().getDice(y, x);
                     number = (char) ('0' + dice.getDiceNumber());
-                    color = dice.getColorDice().name().charAt(0);
+                    color = dice.getDiceColor().name().charAt(0);
                     if (number == '0')
                         number = ' ';
                     if (color == 'W')
@@ -343,7 +342,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
             System.out.println();
             for (Dice dice :
                     game.getDraftPool().diceList()) {
-                String colorForm=  dice.getColorDice().toString();
+                String colorForm=  dice.getDiceColor().toString();
                 colorForm=colorForm.concat("]");
                 System.out.printf(" [%d %-6s   ", dice.getDiceNumber(), colorForm);
             }
@@ -434,7 +433,7 @@ public class CLIViewUpdateHandler implements ViewUpdateHandlerInterface {
     public void saveDiceID(List<Dice>  diceList) {
         idList.clear();
         for (int i = 0; i < diceList.size(); i++) {
-            idList.add(diceList.get(i).getId());
+            idList.add(diceList.get(i).getDiceID());
         }
     }
 }

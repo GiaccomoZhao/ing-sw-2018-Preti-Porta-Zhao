@@ -92,27 +92,27 @@ public class ToolCard9StrategyTest {
        assertTrue(toolCard9.getStrategy().use(param));
 
        assertEquals(board.getDice(3,4).getDiceNumber(),1);
-       assertEquals(board.getDice(3,4).getColorDice(), Dice.ColorDice.BLUE);
+       assertEquals(board.getDice(3,4).getDiceColor(), Dice.ColorDice.BLUE);
 
        assertEquals(board.getDice(0,0).getDiceNumber(),1);
-       assertEquals(board.getDice(0,0).getColorDice(),Dice.ColorDice.RED);
+       assertEquals(board.getDice(0,0).getDiceColor(),Dice.ColorDice.RED);
 
        assertEquals(board.getDice(0,1).getDiceNumber(),2);
-       assertEquals(board.getDice(0,1).getColorDice(), Dice.ColorDice.YELLOW);
+       assertEquals(board.getDice(0,1).getDiceColor(), Dice.ColorDice.YELLOW);
 
        assertEquals(board.getDice(0,2).getDiceNumber(),3);
-       assertEquals(board.getDice(0,2).getColorDice(), Dice.ColorDice.BLUE);
+       assertEquals(board.getDice(0,2).getDiceColor(), Dice.ColorDice.BLUE);
 
        assertEquals(board.getDice(1,3).getDiceNumber(),4);
-       assertEquals(board.getDice(1,3).getColorDice(), Dice.ColorDice.GREEN);
+       assertEquals(board.getDice(1,3).getDiceColor(), Dice.ColorDice.GREEN);
 
        assertEquals(board.getDice(1,1).getDiceNumber(),5);
-       assertEquals(board.getDice(1,1).getColorDice(), Dice.ColorDice.PURPLE);
+       assertEquals(board.getDice(1,1).getDiceColor(), Dice.ColorDice.PURPLE);
 
        assertEquals(board.getDice(2,0).getDiceNumber(),6);
-       assertEquals(board.getDice(2,0).getColorDice(), Dice.ColorDice.RED);
+       assertEquals(board.getDice(2,0).getDiceColor(), Dice.ColorDice.RED);
 
-       assertEquals(draftPool.getDiceByID(12).getColorDice(), Dice.ColorDice.YELLOW);
+       assertEquals(draftPool.getDiceByID(12).getDiceColor(), Dice.ColorDice.YELLOW);
        assertEquals(draftPool.getDiceByID(12).getDiceNumber(), 2);
 
 

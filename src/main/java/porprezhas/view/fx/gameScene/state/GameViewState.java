@@ -1,18 +1,19 @@
 package porprezhas.view.fx.gameScene.state;
 
+import porprezhas.Useful;
 import porprezhas.control.GameController;
 import porprezhas.exceptions.GameAbnormalException;
-import porprezhas.model.cards.Card;
-import porprezhas.model.cards.ToolCardParamBuilder;
-import porprezhas.model.cards.ToolCardParamType;
-import porprezhas.model.cards.ToolCardStrategy;
+import porprezhas.model.cards.*;
+import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.gameScene.controller.component.*;
+import porprezhas.view.fx.gameScene.controller.dialogBox.DiceBox;
 import porprezhas.view.fx.gameScene.controller.dialogBox.IncDecBox;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static porprezhas.model.cards.ToolCardParamType.DIALOG_BOX;
 import static porprezhas.view.fx.gameScene.GuiSettings.TRACK_DICE_ZOOM;
 import static porprezhas.view.fx.gameScene.GuiSettings.bDebug;
 import static porprezhas.view.fx.gameScene.state.DiceContainerType.BOARD1;
@@ -25,6 +26,8 @@ public class GameViewState implements SubController {
 
     Card.Effect usingCard;
     int iProcess;
+
+    DiceBox diceBox;
 
     // save params to send to server
     ToolCardParamBuilder params;// = new ToolCardParamBuilder();
@@ -68,6 +71,7 @@ public class GameViewState implements SubController {
         diceContainers.add(draftPoolView);
         diceContainers.add(roundTrackBoard);
         diceContainers.add(null);   // BAG
+        diceContainers.add(null);   // Dice Box
         diceContainers.add(board);
     }
 
@@ -90,7 +94,7 @@ public class GameViewState implements SubController {
     }
 
     public void clear() {
-        iProcess = 0;
+//        iProcess = 0;
 
         params = null; // new ToolCardParamBuilder();
 
@@ -100,20 +104,27 @@ public class GameViewState implements SubController {
         param1.clear();
         param2.clear();
 
+        if(null != diceBox) {
+            diceBox.close();
+        }
+
     }
 
-    public Card.Effect hasUsingCard() {
-        return usingCard;
+    public boolean hasUsingCard() {
+        return null != usingCard;
     }
 
 
     public void useToolCard(Card.Effect usingCard) {
         this.usingCard = usingCard;
+
         clear();
 
         if(usingCard == null) {
+            iProcess = 0;
             clear();
             activate();
+            diceBox.close();
 
         } else {
             disable();
@@ -190,7 +201,7 @@ public class GameViewState implements SubController {
     }
 
     public boolean clickDice(int idBoard, DiceView diceView) {
-        if( null != this.hasUsingCard() ) {
+        if( this.hasUsingCard() ) {
             if(null == params)
                 params = new ToolCardParamBuilder(usingCard.ID, iProcess);
 
@@ -202,7 +213,7 @@ public class GameViewState implements SubController {
                 if(usingCard.ID == Card.Effect.TC1.ID) {
                     Boolean incDec = new IncDecBox().display();
                     if(null != incDec) {
-                        params.build(ToolCardParamType.DIALOG_BOX, incDec ? 1 : 0);
+                        params.build(DIALOG_BOX, incDec ? 1 : 0);
                     } else {    // when user click X to close the dialog box
                         useToolCard(null);  // reset the view, as not used tool card
                         return false;
@@ -230,7 +241,7 @@ public class GameViewState implements SubController {
 */
 
 //        bSuccess = this.action();
-        if( null != this.hasUsingCard() ) {
+        if( this.hasUsingCard() ) {
 
             // build the params
             if(null == params)
@@ -245,11 +256,15 @@ public class GameViewState implements SubController {
                 params.build(ToolCardParamType.values()[idBoardFrom], indexDice);
 //                params.add(indexDice);
 
-            } else if(idBoardFrom == DiceContainerType.BOARD1.toInt()) {
+            } else if(Useful.isValueBetweenInclusive( idBoardTo,
+                    DiceContainerType.BOARD1.toInt(), DiceContainerType.BOARD4.toInt())) {
                 params.build(ToolCardParamType.values()[idBoardFrom], fromRow, fromCol);
 
             } else if(idBoardFrom == DiceContainerType.TRACK.toInt()) {
                 params.build(ToolCardParamType.values()[idBoardFrom], fromRow+1, fromCol);
+
+            } else if(idBoardFrom == DiceContainerType.BOX.toInt()) {
+                params.build(DIALOG_BOX, diceView.getRow());    // used only for TC11, getRow == index in the available dice list
             }
 
             if(idBoardTo == DRAFT.toInt()) {
@@ -257,7 +272,8 @@ public class GameViewState implements SubController {
                 params.build(ToolCardParamType.values()[idBoardTo], indexDice);
 //                params.add(indexDice);
 
-            } else if(idBoardTo >= DiceContainerType.BOARD1.toInt()) {
+            } else if(Useful.isValueBetweenInclusive( idBoardTo,
+                    DiceContainerType.BOARD1.toInt(), DiceContainerType.BOARD4.toInt())) {
                 params.build(ToolCardParamType.values()[BOARD1.toInt()], toRow, toCol);
 
             } else if(idBoardFrom == DiceContainerType.TRACK.toInt()) {
@@ -302,13 +318,20 @@ public class GameViewState implements SubController {
                     }
                 }
                 bResult = gameViewController.useToolCard(usingCard.ID, params.getParams());
-                useToolCard(null);
+
+                if(ToolCardParamBuilder.getStep(usingCard.ID) > 1 && iProcess == 0) {
+                    nextStage();
+
+                } else {
+                    // reset the state, user finished to use tool card
+                    useToolCard(null);
+                }
             } else {
                 if (bDebug) {
                     System.out.println("required param quantity = " + ToolCardStrategy.parameterSizes[ usingCard.ID ][iProcess] + "\t inputed = " + params.getParams().size());
                     System.out.println(params.getNext());
                     gameViewController.updateMessage("Using tool card N." + usingCard.ID + ":\n" +
-                            "Action the Dice in " + params.getNext() );
+                            "Action the Dice in/to " + params.getNext() );
                 }
             }
         }
@@ -318,6 +341,7 @@ public class GameViewState implements SubController {
                 if(savedDiceViews.size() > 0)
                     bResult = gameViewController.insertDice(savedDiceViews.get(0).getDiceID(), param1.get(0), param2.get(0) );
             }
+            // clear the parameters previously built
             clear();
         }
         return bResult;
@@ -327,5 +351,25 @@ public class GameViewState implements SubController {
     public void nextStage() {
         iProcess++;
         useToolCard(usingCard);
+    }
+
+
+    public DiceBox getDiceBox() {
+        return diceBox;
+    }
+
+    public void updateBox(List<Dice> diceList) {
+        if(bDebug) {
+            System.out.println("Show Dice Box");
+        }
+        if(!diceList.isEmpty()) {
+            while (iProcess == 1 && hasUsingCard()) {
+                diceBox = new DiceBox().display(
+                        "TC" + usingCard.ID + ": " + usingCard.name,
+                        diceList);
+            }
+        } else {
+            useToolCard(null);
+        }
     }
 }

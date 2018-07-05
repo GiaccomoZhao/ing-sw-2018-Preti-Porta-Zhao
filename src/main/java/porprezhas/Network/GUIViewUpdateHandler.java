@@ -5,12 +5,10 @@ import porprezhas.model.Game;
 import porprezhas.model.Player;
 import porprezhas.model.SerializableGameInterface;
 import porprezhas.model.dices.Dice;
-import porprezhas.view.fx.SceneController;
 import porprezhas.view.fx.choosePatternScene.ChoosePatternViewController;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
 import porprezhas.view.fx.loginScene.LoginViewController;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,7 +63,7 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
             System.out.println(" ");
             for (Dice dice :
                     game.getDraftPool().diceList()) {
-                String colorForm=  dice.getColorDice().toString();
+                String colorForm=  dice.getDiceColor().toString();
                 colorForm=colorForm.concat("]");
                 System.out.printf(" [%d %-6s   ", dice.getDiceNumber(), colorForm);
             }
@@ -192,8 +190,8 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
              break;
             case TOOL_CARD:
 
-
                 Platform.runLater(() -> {
+
                             gameViewController.updateDraftPool(game.getDraftPool().diceList());
 
                             gameViewController.updateRoundTrack(game.getRoundTrack().getActualRound(), game.getRoundTrack().getTrack());
@@ -266,9 +264,9 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         Platform.runLater(
                 () -> {
                     gameViewController.updateMessage(e.getMessage());
+                    gameViewController.resetUseToolCard();
                 }
         );
-
     }
 
     @Override
@@ -276,13 +274,18 @@ public class GUIViewUpdateHandler implements ViewUpdateHandlerInterface {
         Platform.runLater(
                 () -> {
                     gameViewController.updateMessage("Tool card used!");
+                    gameViewController.resetUseToolCard();
                 }
         );
-
     }
 
     @Override
-    public void handleCardEffect(Object object) {
-
+    public void handleCardEffect(List<Dice> diceList) {
+        Platform.runLater(
+                () -> {
+                    gameViewController.updateMessage("Now, Do the next Action");
+                    gameViewController.updateCardEffect(diceList);
+                }
+        );
     }
 }

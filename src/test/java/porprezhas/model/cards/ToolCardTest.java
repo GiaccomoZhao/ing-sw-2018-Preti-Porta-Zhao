@@ -147,7 +147,7 @@ public class ToolCardTest {
     public void useTest1(){
 
           toolCard1.use(boardTest,draftPoolTest,xFirst1,yFirst1,xSecond1,ySecond1,xFirst2,yFirst2,xSecond2,ySecond2,draftPoolDice1,num,operationChoose,roundTrackTest,diceBagTest);
-          assertEquals(draftPoolTest.chooseDice(1).getColorDice(),Dice.ColorDice.BLUE);
+          assertEquals(draftPoolTest.chooseDice(1).getDiceColor(),Dice.ColorDice.BLUE);
           assertEquals(draftPoolTest.chooseDice(1).getDiceNumber(),2);
 
     }
@@ -155,9 +155,9 @@ public class ToolCardTest {
     @Test
     public void useTest2(){
         toolCard2.use(boardTest,draftPoolTest,3,0,0,2,xFirst2,yFirst2,xSecond2,ySecond2,draftPoolDice1,num,operationChoose,roundTrackTest,diceBagTest);
-        assertEquals(boardTest.getDice(3,0).getColorDice(), Dice.ColorDice.WHITE);
+        assertEquals(boardTest.getDice(3,0).getDiceColor(), Dice.ColorDice.WHITE);
         assertEquals(boardTest.getDice(3,0).getDiceNumber(), 0);
-        assertEquals(boardTest.getDice(0,2).getColorDice(), Dice.ColorDice.PURPLE);
+        assertEquals(boardTest.getDice(0,2).getDiceColor(), Dice.ColorDice.PURPLE);
         assertEquals(boardTest.getDice(0,2).getDiceNumber(), 2);
 
     }
@@ -166,9 +166,9 @@ public class ToolCardTest {
     public void useTest3(){
 
         toolCard3.use(boardTest,draftPoolTest,1,3,2,1,xFirst2,yFirst2,xSecond2,ySecond2,draftPoolDice1,num,operationChoose,roundTrackTest,diceBagTest);
-        assertEquals(boardTest.getDice(1,3).getColorDice(), Dice.ColorDice.WHITE);
+        assertEquals(boardTest.getDice(1,3).getDiceColor(), Dice.ColorDice.WHITE);
         assertEquals(boardTest.getDice(1,3).getDiceNumber(), 0);
-        assertEquals(boardTest.getDice(2,1).getColorDice(), Dice.ColorDice.GREEN);
+        assertEquals(boardTest.getDice(2,1).getDiceColor(), Dice.ColorDice.GREEN);
         assertEquals(boardTest.getDice(2,1).getDiceNumber(), 3);
 
     }
@@ -177,13 +177,13 @@ public class ToolCardTest {
     public void useTest4(){
 
         toolCard4.use(boardTest,draftPoolTest,0,0,0,2,2,2,1,4,draftPoolDice1,num,operationChoose,roundTrackTest,diceBagTest);
-        assertEquals(boardTest.getDice(0,0).getColorDice(), Dice.ColorDice.WHITE);
+        assertEquals(boardTest.getDice(0,0).getDiceColor(), Dice.ColorDice.WHITE);
         assertEquals(boardTest.getDice(0,0).getDiceNumber(), 0);
-        assertEquals(boardTest.getDice(2,2).getColorDice(), Dice.ColorDice.WHITE);
+        assertEquals(boardTest.getDice(2,2).getDiceColor(), Dice.ColorDice.WHITE);
         assertEquals(boardTest.getDice(2,2).getDiceNumber(), 0);
-        assertEquals(boardTest.getDice(0,2).getColorDice(), Dice.ColorDice.YELLOW);
+        assertEquals(boardTest.getDice(0,2).getDiceColor(), Dice.ColorDice.YELLOW);
         assertEquals(boardTest.getDice(0,2).getDiceNumber(), 3);
-        assertEquals(boardTest.getDice(1,4).getColorDice(), Dice.ColorDice.RED);
+        assertEquals(boardTest.getDice(1,4).getDiceColor(), Dice.ColorDice.RED);
         assertEquals(boardTest.getDice(1,4).getDiceNumber(), 4);
 
     }
@@ -201,10 +201,10 @@ public class ToolCardTest {
     public void useTest6(){
 
         int previousDimension = draftPoolTest2.diceList().size();
-        Dice.ColorDice previousColor = draftPoolTest2.diceList().get(num).getColorDice();
+        Dice.ColorDice previousColor = draftPoolTest2.diceList().get(num).getDiceColor();
         toolCard6.use(boardTest,draftPoolTest2,0,0,0,0,0,0,0,0,diceNull,num,operationChoose,roundTrackTest,diceBagTest);
         assertEquals(draftPoolTest2.diceList().size(),previousDimension);
-        assertEquals(draftPoolTest2.diceList().get(draftPoolTest2.diceList().size()-1).getColorDice(),previousColor);
+        assertEquals(draftPoolTest2.diceList().get(draftPoolTest2.diceList().size()-1).getDiceColor(),previousColor);
 
     }
 */

@@ -108,14 +108,14 @@ public class TestTotal {
         /*while(newGameController.getState().isGameRunning()) {
 
 
-           /* if (game.getCurrentPlayer().isDicePickable()) {
+           /* if (game.getCurrentPlayer().hasPickedDice()) {
                 boolean bPlaced = false;
                 boolean bUsed = false;
                 for (int x = 0; !bPlaced && x < game.getCurrentPlayer().getBoard().getHeight(); x++) {
                     for (int y = 0; !bPlaced && y < game.getCurrentPlayer().getBoard().getWidth(); y++) {
                         Dice dice = game.getDraftPool().diceList().get(0);
                         if (newGameController.insertDice(0, x, y)) {
-                            System.out.printf("\t\tPlace dice %C%d at {%d,%d}\n\n", dice.getColorDice().name().charAt(0), dice.getDiceNumber(), x, y);
+                            System.out.printf("\t\tPlace dice %C%d at {%d,%d}\n\n", dice.getDiceColor().name().charAt(0), dice.getDiceNumber(), x, y);
                             bPlaced = true;
                         }
                     }

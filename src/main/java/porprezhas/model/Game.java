@@ -4,6 +4,7 @@ import porprezhas.Network.rmi.common.RemoteObserver;
 import porprezhas.Network.rmi.server.ModelObservable;
 import porprezhas.Useful;
 import porprezhas.control.GameController;
+import porprezhas.exceptions.GameAbnormalException;
 import porprezhas.exceptions.diceMove.*;
 import porprezhas.exceptions.toolCard.AlreadyUsedExceptions;
 import porprezhas.exceptions.toolCard.NotEnoughTokenException;
@@ -20,8 +21,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import static porprezhas.model.Game.NotifyState.*;
-import static porprezhas.model.GameConstants.ROUND_NUM;
-import static porprezhas.model.cards.Card.Effect.TC8;
 import static porprezhas.model.GameConstants.BOARD_BOXES;
 
 public class Game extends ModelObservable implements GameInterface {
@@ -289,6 +288,7 @@ public class Game extends ModelObservable implements GameInterface {
     public void newTurn() {
         currentPlayer.resetPickableDice();
         currentPlayer.setUsedToolCard(false);
+        this.resetCard();
 
         gameNotifyState = NotifyState.NEW_TURN;
         setChanged();
@@ -539,7 +539,7 @@ public class Game extends ModelObservable implements GameInterface {
 
         Dice dice = draftPool.diceList().get(indexDiceDraftPool);
 
-        if (!currentPlayer.isDicePickable()) {  // check that there is only one insert at turn
+        if (!currentPlayer.hasPickedDice()) {  // check that there is only one insert at turn
             throw new AlreadyPickedException(
                     "You have already Placed a Dice!\n" +
                     "Use Tool Card or Pass your turn please!"
@@ -731,7 +731,76 @@ public class Game extends ModelObservable implements GameInterface {
         return bSuccess;
     }*/
 
-    public Boolean useToolCard(ToolCard toolCard, ToolCardParam toolCardParam){
+
+    /**
+     * convert tool card id to index
+     *
+     * @param id the id of tool card
+     * @return  the index of tool card in the available card list
+     *          -1, it does not exist in the list
+     */
+    private int getToolCardIndexByID(int id) {
+        for (int i = 0; i < toolCardList.size(); i++) {
+            if (id == toolCardList.get(i).effect.ID) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private ToolCard getToolCardByID (int id) {
+        for (Card tc : toolCardList) {
+            if (id == tc.effect.ID) {
+                return (ToolCard) tc;
+            }
+        }
+        return null;
+    }
+
+    private ToolCard getToolCardByIndex (int cardIndex) {
+        ToolCard toolCard = null;
+        for (Card card : this.getToolCardList()) {
+            if (card.effect.ID == cardIndex)
+                toolCard=(ToolCard) card;
+        }
+        return toolCard;
+    }
+    /**
+     * Check and then apply the tool card effect
+     * @param cardIndex index of tool card inside the available card list of actual game
+     * @param paramList the build tool card Integer parameters
+     * @return is successful
+     */
+    public Boolean useToolCard(int cardIndex,  ArrayList<Integer> paramList) {
+        // check that user uses an available tool card
+        ToolCard toolCard = getToolCardByIndex(cardIndex);
+        if(null == toolCard)    // user has not permission to use this tool card
+            return false;
+
+        else {
+            ToolCardParam param = new ToolCardParam(
+                    this.getRoundTrack(),
+                    this.getDraftPool(),
+                    this.getDiceBag(),
+                    this.getCurrentPlayer().getBoard(),
+                    this.isFirstTurn(),
+                    this.getCurrentPlayer().hasPickedDice(),
+                    paramList
+            );
+            boolean bResult = this.useToolCard(toolCard, param);
+            return bResult;
+        }
+    }
+
+    /**
+     * apply the effect of a tool card
+     * if successful, save the card effect to the player, if it has
+     *
+     * @param toolCard  a ToolCard
+     * @param toolCardParam the built tool card parameter, including Game information and Integers
+     * @return is successful
+     */
+    private Boolean useToolCard(ToolCard toolCard, ToolCardParam toolCardParam){
         if (currentPlayer.isbUsedToolCard()) {  // check that there is only one insert at turn
             throw new AlreadyUsedExceptions();
         }
@@ -739,33 +808,86 @@ public class Game extends ModelObservable implements GameInterface {
         if (toolCard.getTokensQuantity()+1> currentPlayer.getFavorToken())
             throw new NotEnoughTokenException();
         Boolean result = toolCard.getStrategy().use(toolCardParam);
-            //jack
-        Object object=null;
-            Observer currentObserver =(Observer) super.getObserverMap().get(currentPlayer.getName());
-            if (currentObserver instanceof ProxyObserverSocket){
-                ((ProxyObserverSocket) currentObserver).handleCardUpdate(object);
-            }
-            if (currentObserver instanceof ProxyObserverRMI){
-                //QUESTO METODO FA ARRIVARE OBJECT A GUI E A CLI
 
-               ((ProxyObserverRMI) currentObserver).handleCardUpdate(object);
+        // check that this tool card need to return a dice list
+        if(ToolCardParamBuilder.getStep(toolCard.effect.ID) > 1) {
+            Observer currentObserver = (Observer) super.getObserverMap().get(currentPlayer.getName());
+            if (currentObserver instanceof ProxyObserverSocket) {
+                ((ProxyObserverSocket) currentObserver).handleCardUpdate((List<Dice>) toolCard.getStrategy().getReturn());
             }
+            if (currentObserver instanceof ProxyObserverRMI) {
+                ((ProxyObserverRMI) currentObserver).handleCardUpdate((List<Dice>) toolCard.getStrategy().getReturn());
+            }
+        }
 
         if (result){
-                int tokenToRemove=1+toolCard.getTokensQuantity();
-                int currentToken =currentPlayer.getFavorToken();
 
-                currentPlayer.setFavorToken(currentToken-tokenToRemove );
-                if (toolCard.getTokensQuantity()== 0) {
+            // add side Effect, the constraint, to the user player
+            if(ToolCard.hasEffect[toolCard.effect.ID -1])
+                currentPlayer.addEffect(toolCard.effect);
+
+//                if(ToolCardParamBuilder.getStep(toolCard.effect.ID) <= 1  ||
+            if(toolCard.getStrategy().getActualStep() == 0) {   // multi step card, resets to step = 0 when it finishes
+                // for 2 step card like tc6 and tc11, there is just after the second step
+                currentPlayer.setUsedToolCard(true);
+                // remove insert constraint sideEffect, because the second move has already be done
+                currentPlayer.removeInsertEffect();
+
+                // pay favor tokens
+                int tokenToRemove = 1 + toolCard.getTokensQuantity();
+                int currentToken = currentPlayer.getFavorToken();
+
+                currentPlayer.setFavorToken(currentToken - tokenToRemove);
+                if (toolCard.getTokensQuantity() == 0) {
                     toolCard.addTokens();
                 }
-                currentPlayer.setUsedToolCard(true);
+            }
+
+                // notify that a new
                 this.gameNotifyState=  TOOL_CARD;
                 setChanged();
                 notifyObservers(new SerializableGame(this));
         }
 
         return result;
+    }
+
+    public void resetCard() {
+        // reset tool card's return
+        toolCardList.forEach(card -> {
+            ((ToolCard) card).getStrategy().reset();
+        });
+    }
+
+    public void resetCardEffects() {
+        // remove all player's all effects
+        playerList.forEach(player -> {
+            player.removeAllEffect();
+        });
+    }
+
+    public void applyInsertEffect() {
+        Card.Effect effect = currentPlayer.getInsertEffect();
+        if(null != effect) {
+            List<Dice> diceList = (List) getToolCardByID(effect.ID).getStrategy().getReturn();  // I'm sure that all dice with Insert Effect has return as ArrayList<Dice>
+            for (int i = 0; i < diceList.size(); i++) {
+                Dice dice = diceList.get(i);
+                CellPosition cell = currentPlayer.getBoard().canBePlaced(dice);
+                if(null != cell) {
+                    try {
+                        ArrayList<Integer> integerParams = new ArrayList<>();
+                        ToolCardParamBuilder builder = new ToolCardParamBuilder(effect.ID, 1);
+                        builder.build(ToolCardParamType.DIALOG_BOX, i);
+                        builder.build(ToolCardParamType.BOARD, cell.getRow(), cell.getCol());
+                        useToolCard(getToolCardIndexByID( effect.ID ), integerParams);  // it will reset the effect, counter, inside the strategy
+//                        currentPlayer.getBoard().insertDice(dice, cell.getRow(), cell.getCol(), Board.Restriction.ALL);
+                    } catch (Exception e) {
+                        System.err.println("Can not insert Dice when it is possible in applyInsertEffect() with tool card n." + effect.ID);
+                    }
+                }
+            }
+            currentPlayer.removeInsertEffect();
+        }
     }
 
     /**

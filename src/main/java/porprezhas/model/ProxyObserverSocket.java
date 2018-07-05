@@ -5,10 +5,12 @@ import porprezhas.Network.command.CardEffectAnswer;
 import porprezhas.Network.command.UpdateAnswer;
 import porprezhas.control.ServerController;
 import porprezhas.control.ServerControllerInterface;
+import porprezhas.model.dices.Dice;
 
 import java.io.ObjectOutputStream;
 
 import java.net.SocketException;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -53,11 +55,11 @@ public class ProxyObserverSocket implements Observer {
 
     }
 
-    public void handleCardUpdate(Object object){
+    public void handleCardUpdate(List<Dice> diceList){
         try
         {
 
-            CardEffectAnswer cardEffectAnswer = new CardEffectAnswer(object);
+            CardEffectAnswer cardEffectAnswer = new CardEffectAnswer(diceList);
             synchronized (lock){
 
                 out.reset();

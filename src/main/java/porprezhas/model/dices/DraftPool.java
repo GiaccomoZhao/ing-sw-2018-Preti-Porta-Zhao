@@ -34,7 +34,7 @@ public class DraftPool implements Serializable {
     public static Dice getDiceByID(List<Dice> diceList, long diceID) {
 
         for (Dice dice : diceList) {
-            if( dice.getId() == diceID ) {
+            if( dice.getDiceID() == diceID ) {
                 return dice;
             }
         }
@@ -47,7 +47,7 @@ public class DraftPool implements Serializable {
     public int getDiceIndexByID(long diceID) {
 
         for (int i = 0; i < diceList().size(); i++) {
-            if( diceList().get(i).getId() == diceID ) {
+            if( diceList().get(i).getDiceID() == diceID ) {
                 return i;
             }
         }
@@ -60,7 +60,7 @@ public class DraftPool implements Serializable {
     public Dice getDiceByID(long diceID) {
 
         for (Dice dice : diceList()) {
-            if( dice.getId() == diceID ) {
+            if( dice.getDiceID() == diceID ) {
                 return dice;
             }
         }

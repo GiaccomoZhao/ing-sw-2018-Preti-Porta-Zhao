@@ -57,7 +57,7 @@ public class BoxTest {
                         assertEquals(true, box.checkConstraint(dice));
                     }
                 } else {    // colored
-                    if(!dice.getColorDice().equals(box.getColor()) ) {
+                    if(!dice.getDiceColor().equals(box.getColor()) ) {
 //                        System.out.println("box = " + box + " \tdice = " + dice);     // uncomment to understand where is error when test fails
                         assertEquals(false, box.checkConstraint(dice));
                     }

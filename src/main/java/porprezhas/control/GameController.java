@@ -5,10 +5,6 @@ import porprezhas.model.Game;
 import porprezhas.model.GameConstants;
 import porprezhas.model.GameInterface;
 import porprezhas.model.Player;
-import porprezhas.model.cards.Card;
-import porprezhas.model.cards.ToolCard;
-import porprezhas.model.cards.ToolCardParam;
-
 
 
 import java.text.SimpleDateFormat;
@@ -183,12 +179,13 @@ public class GameController  implements GameControllerInterface, Runnable {
             }
             // at end of the turn
 
-            // reset skip turn effect
-            player.removeSkipTurnEffect();
+            // check player's insert Constraint
+            game.applyInsertEffect();
 
             // pass to next player
             game.rotatePlayer();
         }
+        // at end of round
     }
 
     private void endGame() {
@@ -262,6 +259,7 @@ public class GameController  implements GameControllerInterface, Runnable {
         for (int iRound = 0; iRound < ROUND_NUM; iRound++) {
 //            System.out.format("\nRound %-2d starts: {\t%d\n", iRound + 1, game.getDiceBag().diceBagSize());
             System.out.format("" + "\nRound %-2d starts: {\n", iRound + 1);
+            game.resetCardEffects();
             game.newRound(iRound);      // Prepare for the new round: Setup a new DraftPool
             playRound();        // rotate player at end of round, if it is not last one
             System.out.println("}");
@@ -364,24 +362,7 @@ public class GameController  implements GameControllerInterface, Runnable {
     public boolean useToolCard(String username, int cardIndex,  ArrayList<Integer> paramList){
         if (!this.game.getCurrentPlayer().getName().equals(username))
             throw new NotYourTurnException("It's not your turn");
-
-        ToolCardParam param = new ToolCardParam(
-                game.getRoundTrack(),
-                game.getDraftPool(),
-                game.getDiceBag(),
-                game.getCurrentPlayer().getBoard(),
-                paramList
-        );
-
-        ToolCard toolCard=null;
-
-        for (Card card:
-             game.getToolCardList()) {
-            if (card.effect.ID == cardIndex)
-                toolCard=(ToolCard) card;
-        }
-        return game.useToolCard(toolCard, param);
-//       game.useToolCard();
+        return game.useToolCard(cardIndex, paramList);
     }
 
     @Override

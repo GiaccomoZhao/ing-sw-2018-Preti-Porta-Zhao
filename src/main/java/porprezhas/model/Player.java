@@ -146,7 +146,7 @@ public class Player implements Serializable {
         this.bUsedToolCard = bUsedToolCard;
     }
 
-    public boolean isDicePickable() {
+    public boolean hasPickedDice() {
         return pickableDice > 0;
     }
 
@@ -178,20 +178,54 @@ public class Player implements Serializable {
         pickableDice--;
     }
 
+    public Card.Effect getInsertEffect() {
+        if(toolCardEffect.contains( Card.Effect.TC6 ))
+            return Card.Effect.TC6;
+        if(toolCardEffect.contains( Card.Effect.TC11 ))
+            return Card.Effect.TC11;
+        return null;
+    }
+
+    public boolean hasInsertEffect() {
+        return null != getInsertEffect();
+    }
 
     public boolean hasSkipTurnEffect() {
         return toolCardEffect.contains( Card.Effect.TC8 );
+    }
+
+    public boolean hasEffect(Card.Effect effect) {
+        return toolCardEffect.contains(effect);
+    }
+
+    public boolean removeInsertEffect() {
+        return removeEffect(Card.Effect.TC6)  ||
+                removeEffect(Card.Effect.TC11);
     }
 
     public boolean removeSkipTurnEffect() {
         return removeEffect( Card.Effect.TC8 );
     }
 
+    /**
+     * add a new Effect, if it is not already present
+     *
+     * @param effect    the new effect to add
+     * @return  added or already existed
+     */
     public boolean addEffect(Card.Effect effect) {
-        return toolCardEffect.add(effect);
+        if(!hasEffect(effect))
+            return toolCardEffect.add(effect);
+        else
+            return false;
     }
 
-    public boolean removeEffect(Card.Effect effect) {
+    private boolean removeEffect(Card.Effect effect) {
         return toolCardEffect.remove(effect);
     }
+
+    public void removeAllEffect() {
+        toolCardEffect = new ArrayList<>();
+    }
+
 }

@@ -7,7 +7,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import porprezhas.model.dices.Dice;
 import porprezhas.view.fx.gameScene.controller.GameViewController;
-import porprezhas.view.fx.gameScene.state.DiceContainerType;
 
 import java.util.Scanner;
 
@@ -32,7 +31,7 @@ public class DiceView extends ImageView implements SubController {
             System.out.println("Create new DiceView from: " + getPathToDice(dice));
         setImage(dice);
         this.boardID = boardID;
-        this.diceID = dice.getId();
+        this.diceID = dice.getDiceID();
         this.column = column;
         this.row = row;
     }
@@ -131,7 +130,7 @@ public class DiceView extends ImageView implements SubController {
     }
 
 
-    public void addDragListener() {
+    public DiceView addDragListener() {
         this.setOnDragDetected(event -> {
             Dragboard dragboard = this.startDragAndDrop(TransferMode.MOVE);
 
@@ -156,6 +155,7 @@ public class DiceView extends ImageView implements SubController {
 //                }
             }
         });
+        return this;
     }
 
     // send a callback to gameViewController

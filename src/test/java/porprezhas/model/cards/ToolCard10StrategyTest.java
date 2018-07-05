@@ -75,19 +75,19 @@ public class ToolCard10StrategyTest {
         toolCard10.getStrategy().use(param);
 
         assertEquals(draftPool.getDiceByID(11).getDiceNumber(),2);
-        assertEquals(draftPool.getDiceByID(11).getColorDice(), Dice.ColorDice.GREEN);
+        assertEquals(draftPool.getDiceByID(11).getDiceColor(), Dice.ColorDice.GREEN);
 
         assertEquals(draftPool.getDiceByID(10).getDiceNumber(),6);
-        assertEquals(draftPool.getDiceByID(10).getColorDice(), Dice.ColorDice.PURPLE);
+        assertEquals(draftPool.getDiceByID(10).getDiceColor(), Dice.ColorDice.PURPLE);
 
         assertEquals(draftPool.getDiceByID(12).getDiceNumber(),4);
-        assertEquals(draftPool.getDiceByID(12).getColorDice(), Dice.ColorDice.YELLOW);
+        assertEquals(draftPool.getDiceByID(12).getDiceColor(), Dice.ColorDice.YELLOW);
 
         assertEquals(draftPool.getDiceByID(13).getDiceNumber(),3);
-        assertEquals(draftPool.getDiceByID(13).getColorDice(), Dice.ColorDice.BLUE);
+        assertEquals(draftPool.getDiceByID(13).getDiceColor(), Dice.ColorDice.BLUE);
 
         assertEquals(draftPool.getDiceByID(14).getDiceNumber(),2);
-        assertEquals(draftPool.getDiceByID(14).getColorDice(), Dice.ColorDice.RED);
+        assertEquals(draftPool.getDiceByID(14).getDiceColor(), Dice.ColorDice.RED);
 
     }
 

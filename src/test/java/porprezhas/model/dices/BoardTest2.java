@@ -101,12 +101,12 @@ public class BoardTest2 {
     @Test
     public void getDiceTest() {
 
-        assertEquals(board.getDice(0, 0).getColorDice(), die0.getColorDice());
+        assertEquals(board.getDice(0, 0).getDiceColor(), die0.getDiceColor());
         assertEquals(board.getDice(0, 0).getDiceNumber(), die0.getDiceNumber());
 
         board.insertDice(die, 0, 0);
         assertEquals(board.getDice(0, 0).getDiceNumber(), die.getDiceNumber());
-        assertEquals(board.getDice(0, 0).getColorDice(), die.getColorDice());
+        assertEquals(board.getDice(0, 0).getDiceColor(), die.getDiceColor());
 
     }
 
